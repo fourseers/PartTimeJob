@@ -12,6 +12,7 @@
     <artifactId>parttimejob</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>parttimejob</name>
+    <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -39,5 +40,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+        <module>auth</module>
+        <module>eureka-server</module>
+        <module>gateway</module>
+    </modules>
 
 </project>

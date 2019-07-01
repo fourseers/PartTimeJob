@@ -1,4 +1,4 @@
-package com.parttimejob.gateway;
+package com.fourseers.parttimejob.gateway;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

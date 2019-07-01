@@ -1,66 +1,61 @@
 // pages/register/register.js
 Page({
+  /*
+    可以从userInfo中获取：
+      用户性别gender，0位置、1男性、2女性
+      用户所在国家country
+      用户所在城市city
+  */
 
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    technology: [
+      {
+        id: 1,
+        name: "厨师"
+      },
+      {
+        id: 2,
+        name: "收银"
+      },
+      {
+        id: 3,
+        name: "打杂"
+      }
+    ],
+    currentTechnology: [],
+    name: '',
+    identity: '',
+    phoneNumber: ''
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
+  handleTechnologyChange({ detail = {} }) {
+    const index = this.data.currentTechnology.indexOf(detail.value);
+    index === -1 ? this.data.currentTechnology.push(detail.value) : this.data.currentTechnology.splice(index, 1);
+    this.setData({
+      currentTechnology: this.data.currentTechnology
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  getName: function(e){
+    this.setData({
+      name: e.detail.detail.value
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
+  getIdentity: function(e){
+    this.setData({
+      identity: e.detail.detail.value
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
+  getPhoneNumber: function(e){
+    this.setData({
+      phoneNumber: e.detail.detail.value
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  Register: function () {
+    
   }
+
 })

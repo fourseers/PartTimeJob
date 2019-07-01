@@ -1,2 +1,14 @@
 <!--pages/register/register.wxml-->
-<text>这是注册页面</text>
+<i-panel title="基础信息">
+  <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" />
+  <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" />
+  <i-input value="{{ phoneNumber }}" title="手机号" placeholder="请输入手机号" type='number' maxlength="11" bind:change="getPhoneNumber" />
+</i-panel>
+
+<i-panel title="进阶信息">
+  <i-checkbox-group current="{{currentTechnology}}" bind:change="handleTechnologyChange">
+    <i-checkbox wx:for="{{technology}}" position="right" wx:key="{{item.id}}" value="{{item.name}}">
+    </i-checkbox>
+  </i-checkbox-group>
+</i-panel>
+<i-button bind:click="Register">注册</i-button>

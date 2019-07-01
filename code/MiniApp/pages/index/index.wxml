@@ -1,37 +1,4 @@
-<!--index.wxml
-<view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{hasUserInfo ? app.globalData.userInfo : "你好}}</text>
-  </view>
-</view>-->
 <view class='container'>
   <i-icon type="trash" size="128" class="logo"></i-icon>
-</view>
-<view>
-  <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-  <block wx:else>
-    <i-card full title="{{userInfo.nickName}}" extra="你好" thumb="{{userInfo.avatarUrl}}">
-      <block wx:if="{{!isRegistered}}">
-        <view slot="content">您好，请注册</view>
-        <view slot="footer">
-          <i-button bind:click="handleClick">注册</i-button>
-        </view>
-      </block>
-      <block wx:else>
-        <view slot="content">
-          灵活用工平台欢迎您！
-        </view>
-        <view slot="footer">
-          灵活用工平台欢迎您！
-        </view>
-      </block>
-    </i-card>
-  </block>
+  <view>欢迎使用灵活用工平台</view>
 </view>

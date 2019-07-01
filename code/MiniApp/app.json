@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/register/register",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/user",
     "pages/user/user"
   ],
   "window": {
@@ -20,10 +20,10 @@
         "selectedIconPath": "assets/icons/about-selected.png"
       },
       {
-        "text": "log",
-        "pagePath": "pages/logs/logs",
-        "iconPath": "assets/icons/basketball.png",
-        "selectedIconPath": "assets/icons/basketball-selected.png"
+        "text": "我",
+        "pagePath": "pages/user/user",
+        "iconPath": "assets/icons/user.png",
+        "selectedIconPath": "assets/icons/user-selected.png"
       }
     ],
     "color": "#000",

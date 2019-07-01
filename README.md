@@ -1,5 +1,5 @@
 # The part-time job project main repository
-
+[![Build Status](https://travis-ci.org/fourseers/PartTimeJob.svg?branch=develop)](https://travis-ci.org/fourseers/PartTimeJob)
 > Final brand time TBD.
 
 You'll find what you want in the following folders:

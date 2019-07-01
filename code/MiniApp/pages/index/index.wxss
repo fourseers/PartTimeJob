@@ -1,0 +1,14 @@
+/**index.wxss**/
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo{
+  border-radius: 50%;
+}
+
+.headImage{
+  border-radius: 50%;
+}

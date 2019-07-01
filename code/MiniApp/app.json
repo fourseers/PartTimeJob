@@ -1,0 +1,33 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/user",
+    "pages/user/user"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "text": "关于",
+        "pagePath": "pages/index/index",
+        "iconPath": "assets/icons/about.png",
+        "selectedIconPath": "assets/icons/about-selected.png"
+      },
+      {
+        "text": "log",
+        "pagePath": "pages/logs/logs",
+        "iconPath": "assets/icons/basketball.png",
+        "selectedIconPath": "assets/icons/basketball-selected.png"
+      }
+    ],
+    "color": "#000",
+    "selectedColor": "#00f"
+  },
+  "sitemapLocation": "sitemap.json"
+}

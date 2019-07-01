@@ -1,5 +1,8 @@
 {
   "usingComponents": {
+    "i-cell": "../../dist/cell/index",
+    "i-divider": "../../dist/divider/index",
+    "i-toast": "../../dist/toast/index",
     "i-tag": "../../dist/tag/index",
     "i-input": "../../dist/input/index",
     "i-button": "../../dist/button/index",

@@ -10,7 +10,7 @@ Page({
     isRegistered: false,
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
 
   onLoad: function () {

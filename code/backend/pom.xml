@@ -42,9 +42,12 @@
     </build>
 
     <modules>
+        <module>arrangement</module>
         <module>auth</module>
+        <module>billing</module>
         <module>eureka-server</module>
         <module>gateway</module>
+        <module>warehouse</module>
     </modules>
 
 </project>

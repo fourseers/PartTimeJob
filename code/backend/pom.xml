@@ -45,6 +45,9 @@
         <module>auth</module>
         <module>eureka-server</module>
         <module>gateway</module>
+
+        <!-- business logic -->
+        <module>repo</module>
     </modules>
 
 </project>

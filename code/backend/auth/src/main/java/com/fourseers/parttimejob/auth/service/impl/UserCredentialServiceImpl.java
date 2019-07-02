@@ -4,7 +4,9 @@ import com.fourseers.parttimejob.auth.dao.UserCredentialDao;
 import com.fourseers.parttimejob.auth.entity.UserCredential;
 import com.fourseers.parttimejob.auth.service.UserCredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserCredentialServiceImpl implements UserCredentialService {
 
     @Autowired

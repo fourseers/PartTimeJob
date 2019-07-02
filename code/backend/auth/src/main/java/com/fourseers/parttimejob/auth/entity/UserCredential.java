@@ -1,14 +1,14 @@
-package entity;
+package com.fourseers.parttimejob.auth.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document("UserCredential")
-public class UserCrendential {
+public class UserCredential {
 
     public enum Role {
-        ROLE_USER, ROLE_MERCHANT, ROLE_ADMIN
-    };
+        ROLE_ADMIN, ROLE_MERCHANT, ROLE_USER
+    }
 
     @Field("username")
     private String username;

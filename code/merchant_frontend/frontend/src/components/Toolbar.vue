@@ -8,25 +8,36 @@
             <Icon type="ios-people" />
             注册
         </MenuItem>
+
         <Submenu name="3">
             <template slot="title">
                 <Icon type="ios-stats" />
-                统计分析
+                店铺管理
             </template>
-            <MenuGroup title="使用">
-                <MenuItem name="3-1">新增和启动</MenuItem>
-                <MenuItem name="3-2">活跃分析</MenuItem>
-                <MenuItem name="3-3">时段分析</MenuItem>
-            </MenuGroup>
-            <MenuGroup title="留存">
-                <MenuItem name="3-4">用户留存</MenuItem>
-                <MenuItem name="3-5">流失用户</MenuItem>
-            </MenuGroup>
+            <MenuItem name="3" to="/addshop">
+                <Icon type="ios-people" />
+                添加店铺
+            </MenuItem>
+            <MenuItem name="3" to="/manageshop">
+                <Icon type="ios-people" />
+                管理店铺
+            </MenuItem>
         </Submenu>
-        <MenuItem name="4">
-            <Icon type="ios-construct" />
-            综合设置
+        <Submenu name="4">
+            <template slot="title">
+                <Icon type="ios-stats" />
+                岗位管理
+            </template>
+            <MenuItem name="4" to="/postjob">
+                <Icon type="ios-people" />
+                发布岗位
+            </MenuItem>
+        </Submenu>
+        <MenuItem name="2" to="/infoconfig">
+            <Icon type="ios-people" />
+            商户信息
         </MenuItem>
+
     </Menu>
 </template>
 <script>

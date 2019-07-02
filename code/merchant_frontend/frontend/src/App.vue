@@ -13,13 +13,23 @@
 
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import PostJob from './views/PostJob.vue'
+import AddShop from './views/AddShop.vue'
+
+
+import ManageShop from './views/ManageShop.vue'
+import InfoConfig from './views/InfoConfig.vue'
 import Toolbar from './components/Toolbar.vue'
 export default {
   name: 'app',
   components: {
     Login,
     Register,
-    Toolbar
+    Toolbar,
+    PostJob,
+    AddShop,
+      ManageShop,
+      InfoConfig
   }
 }
 </script>

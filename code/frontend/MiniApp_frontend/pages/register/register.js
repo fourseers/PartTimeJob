@@ -9,6 +9,13 @@ Page({
       用户所在城市city
   */
 
+  /*
+    technology是所有职业倾向的数组，可以通过后端获得
+    chosenTechnology是用户选择的所有职业倾向
+    name是用户姓名
+    identity是用户身份证号
+    phoneNumber是用户手机号码
+  */
   data: {
     technology: [
       {
@@ -38,6 +45,7 @@ Page({
     phoneNumber: ''
   },
 
+  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
   chooseTechnology: function(e){
     var newChosen = this.data.chosenTechnology;
     var hasSame = false;
@@ -60,6 +68,7 @@ Page({
     }
   },
 
+  //这个方法实现了：用户点击已选tag后，将tag从已选中删除
   deleteTechnology: function(e) {
     var newChosen = this.data.chosenTechnology;
     var toChosen = this.data.technology;
@@ -72,24 +81,28 @@ Page({
     })
   },
 
+  //每次更新name的input组件后都重新获取name
   getName: function(e){
     this.setData({
       name: e.detail.detail.value
     })
   },
 
+  //每次更新identity的input组件后都重新获取identity
   getIdentity: function(e){
     this.setData({
       identity: e.detail.detail.value
     })
   },
 
+  //每次更新phoneNumbery的input组件后都重新获取phoneNumber
   getPhoneNumber: function(e){
     this.setData({
       phoneNumber: e.detail.detail.value
     })
   },
 
+  //这个方法用于提示用户已选相同倾向（已废弃）
   handleError() {
     $Toast({
       content: '您已选择相同倾向',
@@ -98,6 +111,7 @@ Page({
   },
 
   //向服务器发送请求
+  //使用wx.request
   Register: function () {
     
   }

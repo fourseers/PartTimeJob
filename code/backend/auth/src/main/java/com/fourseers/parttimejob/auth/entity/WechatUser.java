@@ -19,7 +19,7 @@ public class WechatUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UID")
+    @Column(name = "EMPLOYEE_ID")
     public Integer getUid() {
         return uid;
     }

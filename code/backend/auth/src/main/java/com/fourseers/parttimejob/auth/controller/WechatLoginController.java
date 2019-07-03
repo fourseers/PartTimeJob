@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+
 @RestController
 public class WechatLoginController {
 
@@ -17,16 +19,23 @@ public class WechatLoginController {
     @Value("${wechat.appsecret}")
     private String appsecret;
 
-    @Autowired
-    Wechat wechat;
+    private Wechat wechat;
 
     @Autowired
     WechatUserService wechatUserService;
 
+    @PostConstruct
+    public void init() {
+        wechat = Wechat.connect();
+    }
+
+    void setWechat(Wechat wechat) {
+        this.wechat = wechat;
+    }
+
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
-        String resp = wechat.auth(appid, appsecret, token, "authorization_code");
-        JSONObject respObject = (JSONObject) JSONObject.parse(resp);
+        JSONObject respObject = wechat.auth(appid, appsecret, token, "authorization_code");
         String sessionKey, openid;
         try {
             sessionKey = respObject.get("session_key").toString();
@@ -43,7 +52,7 @@ public class WechatLoginController {
         Pair<String, WechatUser> result = getWechatUser(body);
         if (result == null) {
             // TODO: Temporary token incorrect
-            return "failed";
+            return "invalid token";
         }
 
         WechatUser user = result.getValue();
@@ -53,7 +62,7 @@ public class WechatLoginController {
             return "success";
         } else {
             // TODO: ask user to register
-            return "failed";
+            return "not exist";
         }
     }
 
@@ -62,7 +71,7 @@ public class WechatLoginController {
         Pair<String, WechatUser> result = getWechatUser(body);
         if (result == null) {
             // TODO: Temporary token incorrect
-            return "failed";
+            return "invalid token";
         }
 
         String openid = result.getKey();
@@ -70,11 +79,17 @@ public class WechatLoginController {
 
         if (user != null) {
             // TODO: user exist
-            return "failed";
+            return "user exist";
         } else {
             user = new WechatUser();
             user.setOpenid(openid);
-            user.setName((String) body.get("username"));
+            user.setName(body.getString("name"));
+            user.setGender(body.getBoolean("gender"));
+            user.setIdentity(body.getString("identity"));
+            user.setPhone(body.getString("phone"));
+            user.setCountry(body.getString("country"));
+            user.setCity(body.getString("city"));
+            user.setEducation(body.getString("education"));
             wechatUserService.save(user);
             // TODO: return success
             return "success";

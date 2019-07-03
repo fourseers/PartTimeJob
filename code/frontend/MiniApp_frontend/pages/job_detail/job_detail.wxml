@@ -1,0 +1,66 @@
+<!--pages/job-detail/job_detail.wxml
+<i-tag
+      color="yellow"
+      checkable="{{true}}"
+      checked="{{true}}"
+      type="border"
+      class="i-tags"
+    >
+      {{education}}学历以上
+    </i-tag>
+    <i-tag
+      color="yellow"
+      checkable="{{true}}"
+      checked="{{true}}"
+      type="border"
+      class="i-tags"
+    >
+      只招{{need_gender === 1 ? "男" : "女"}}性
+    </i-tag>
+-->
+<i-panel i-class="title-box">
+  <i-cell title="{{job_name}}" label="只招{{need_amount}}人">
+    <view slot="icon">
+      <i-avatar size="large" shape="square" src="/assets/icons/job.png"></i-avatar>
+    </view>
+    <view slot="footer">
+      <view>
+        {{salary}}元/月
+      </view>
+    </view>
+  </i-cell>
+</i-panel>
+<i-panel i-class="detail-box">
+  <i-cell title="职位描述"></i-cell>
+  <i-cell>
+    <i-tag
+      wx:for="{{tags}}"
+      wx:key="{{index}}"
+      checkable="{{true}}"
+      name="{{index}}"
+      color="yellow"
+      checked="{{true}}"
+      type="border"
+      class="i-tags"
+    >
+      {{item.name}}
+    </i-tag>
+  </i-cell>
+  <i-cell label="{{job_detail}}"></i-cell>
+</i-panel>
+<i-panel>
+  <i-cell-group>
+    <i-cell>
+      开始时间：{{begin_data}}
+    </i-cell>
+    <i-cell>
+      结束时间：{{end_data}}
+    </i-cell>
+    <i-cell>
+      报名开始时间：{{begin_apply_data}}
+    </i-cell>
+    <i-cell>
+      报名结束时间：{{end_apply_data}}
+    </i-cell>
+  </i-cell-group>
+</i-panel>

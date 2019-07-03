@@ -1,1 +1,17 @@
 /* pages/register/register.wxss */
+.technology {
+  display: flex;
+  align-content: center;
+}
+
+.i-tags{
+  margin:20rpx;
+}
+
+.chosen-tags{
+  margin: 5rpx;
+}
+
+.tips{
+  margin-left: 100rpx;
+}

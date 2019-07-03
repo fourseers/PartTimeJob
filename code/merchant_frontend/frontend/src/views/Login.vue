@@ -72,9 +72,9 @@
             })
         }).then(response => {
             console.log(response.data);
-            if(response.data.message === 'success')
+            if(response.message === 'success')
             {
-               this.$token.savetoken(response.data.data);
+               this.$token.savetoken(response.data);
                 console.log(this.$token.loadToken());
             }
         })

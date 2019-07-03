@@ -7,11 +7,16 @@ import AddShop from '../views/AddShop.vue'
 
 import ManageShop from '../views/ManageShop.vue'
 import InfoConfig from '../views/InfoConfig.vue'
+
+import ConfirmCheckin from '../views/ConfirmCheckin.vue'
+
+import MonthlyBill from '../views/MonthlyBill.vue'
+
 const  routes =[
-        {
-            path: '/',
-            view: 'Login'
-        },
+    {
+        path: '/',
+        view: 'Login'
+    },
     {
         path: '/login',
         name: 'Login',
@@ -42,7 +47,18 @@ const  routes =[
         path: '/infoconfig',
         name: 'info config',
         component:InfoConfig
+    },
+    {
+        path: '/confirmcheckin',
+        name: 'confirmcheckin',
+        component:ConfirmCheckin
+    },
+    {
+        path: '/monthlybill',
+        name: 'monthlybill',
+        component:MonthlyBill
     }
+
 
 ]
 

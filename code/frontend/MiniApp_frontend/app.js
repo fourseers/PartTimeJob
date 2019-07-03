@@ -35,7 +35,7 @@ App({
         if (!res.authSetting["scope.userLocation"]) {
           wx.getLocation({
             success: res => {
-              console.log(res);
+              //console.log(res);
             }
           })
         }

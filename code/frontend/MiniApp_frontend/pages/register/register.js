@@ -1,5 +1,5 @@
 // pages/register/register.js
-const { $Toast } = require('../../dist/base/index');
+const { $Toast } = require("../../dist/base/index");
 
 Page({
   /*
@@ -51,8 +51,9 @@ Page({
     var hasSame = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen){
-      if (newChosen[index].id === e.detail.name)
+      if (newChosen[index].id === e.detail.name) {
         hasSame = true;
+      }
     }
     if (hasSame === false) {
       var toChosen = this.data.technology;
@@ -105,8 +106,8 @@ Page({
   //这个方法用于提示用户已选相同倾向（已废弃）
   handleError() {
     $Toast({
-      content: '您已选择相同倾向',
-      type: 'error'
+      content: "您已选择相同倾向",
+      type: "error"
     });
   },
 

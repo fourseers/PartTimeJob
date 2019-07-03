@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -20,16 +21,23 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
+    private static String TEST_RESOURCE_ID = "TESTID";
+
     @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    @Qualifier("userDetailsServiceBean")
+    private UserDetailsService userDetailsService;
+
 
     // use redis to store token
     @Autowired
     private RedisConnectionFactory connectionFactory;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Bean("redisTokenStore")
     public RedisTokenStore getRedisTokenStore() {
@@ -46,48 +54,28 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
-
+        String finalSecret = passwordEncoder.encode("123456");
         clients.inMemory()
                 .withClient("client_1")
-                .authorizedGrantTypes("password", "client_credentials")
-                .scopes("all","read", "write")
-                .authorities("client_credentials")
-                .accessTokenValiditySeconds(7200)
-                .secret(passwordEncoder.encode("123456"))
-
+                .resourceIds(TEST_RESOURCE_ID)
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("select")
+                .authorities("oauth2")
+                .secret(finalSecret)
                 .and().withClient("client_2")
+                .resourceIds(TEST_RESOURCE_ID)
                 .authorizedGrantTypes("password", "refresh_token")
-                .scopes("all","read", "write")
-                .accessTokenValiditySeconds(7200)
-                .refreshTokenValiditySeconds(10000)
-                .authorities("password")
-                .secret(passwordEncoder.encode("123456"))
-
-                .and().withClient("client_3").authorities("authorization_code","refresh_token")
-                .secret(passwordEncoder.encode("123456"))
-                .authorizedGrantTypes("password", "authorization_code")
-                .scopes("all","read", "write")
-                .accessTokenValiditySeconds(7200)
-                .refreshTokenValiditySeconds(10000)
-                .redirectUris("http://localhost:8080/callback","http://localhost:8080/signin")
-
-                .and().withClient("client_test")
-                .secret(passwordEncoder.encode("123456"))
-                .authorizedGrantTypes("all flow")
-                .authorizedGrantTypes("authorization_code", "client_credentials", "refresh_token","password", "implicit")
-                .redirectUris("http://localhost:8080/callback","http://localhost:8080/signin")
-                .scopes("all","read", "write")
-                .accessTokenValiditySeconds(7200)
-                .refreshTokenValiditySeconds(10000);
+                .scopes("server")
+                .authorities("oauth2")
+                .secret(finalSecret);
         // clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager)
-                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-                .accessTokenConverter(jwtAccessTokenConverter())
-                .tokenStore(getRedisTokenStore());
+        endpoints.tokenStore(getRedisTokenStore())
+                .authenticationManager(authenticationManager)
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
     @Override

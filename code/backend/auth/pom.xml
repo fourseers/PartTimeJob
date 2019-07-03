@@ -90,6 +90,7 @@
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-gson</artifactId>
 			<version>10.2.3</version>
+		</dependency>
 		<!-- redis dependencies -->
 		<dependency>
 			<groupId>redis.clients</groupId>

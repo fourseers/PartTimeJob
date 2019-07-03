@@ -54,182 +54,6 @@ Page({
             isChosen: false
           }
         ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
-      },
-      {
-        id: 1,
-        name: "工作二",
-        detail: "工作二的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          }
-        ]
       }
     ],
     position: "附近商家",
@@ -241,20 +65,20 @@ Page({
   },
 
   onPullDownRefresh() {
-    console.log("onRefresh");
+    //console.log("onRefresh");
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-    console.log("onBottom");
+    //console.log("onBottom");
     
   },
 
   choosePosition() {
     wx.chooseLocation({
-      success: res => {
+      success: (res) => {
         this.setData({
           position: res.address
         })

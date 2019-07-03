@@ -52,12 +52,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.github.openfeign</groupId>
-			<artifactId>feign-gson</artifactId>
-			<version>10.2.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.199</version>

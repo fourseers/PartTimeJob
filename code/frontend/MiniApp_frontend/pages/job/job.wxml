@@ -1,0 +1,30 @@
+<!--pages/job/job.wxml-->
+
+<i-panel class="cell-panel" title="cell 组">
+  <i-cell-group>
+    <i-cell 
+      wx:for="{{jobs}}"
+      wx:key="{{index}}"
+      is-link 
+      url="/pages/job_detail/job_detail?id={{item.id}}" 
+      title="{{item.name}}" 
+      label="{{item.detail}}"
+    >
+      <view slot="footer">
+        <i-tag
+          wx:for="{{item.tags}}"
+          wx:key="{{index}}"
+          bind:change="deleteTechnology"
+          checkable="{{true}}"
+          name="{{index}}"
+          color="yellow"
+          checked="{{true}}"
+          type="border"
+          class="i-tags"
+        >
+          {{item.name}}
+        </i-tag>
+      </view>
+    </i-cell>
+  </i-cell-group>
+</i-panel>

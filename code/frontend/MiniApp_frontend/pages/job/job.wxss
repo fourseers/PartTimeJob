@@ -1,0 +1,9 @@
+/* pages/job/job.wxss */
+.cell-panel{
+    display: block;
+    margin-top: 10px;
+}
+
+.i-tags{
+  margin:2rpx;
+}

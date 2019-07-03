@@ -1,0 +1,44 @@
+<!--pages/register/register.wxml-->
+<i-panel title="基础信息">
+  <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" />
+  <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" />
+  <i-input value="{{ phoneNumber }}" title="手机号" placeholder="请输入手机号" type='number' maxlength="11" bind:change="getPhoneNumber" />
+</i-panel>
+<i-panel title="职业倾向" hide-border="{{ true }}">
+  <i-cell title="已选倾向">
+    <view wx:if="{{chosenTechnology.length===0}}">
+      <text style='color: #D3D3D3'>请从下方选择您的职业倾向</text>
+    </view>
+    <i-tag
+      wx:for="{{chosenTechnology}}"
+      wx:key="{{index}}"
+      bind:change="deleteTechnology"
+      checkable="{{true}}"
+      name="{{index}}"
+      color="yellow"
+      checked="{{true}}"
+      type="border"
+      class="chosen-tags"
+    >
+      {{item.name}}
+    </i-tag>
+  </i-cell>
+  <i-divider content="" height="10"></i-divider>
+  <block wx:for="{{technology}}" wx:key="{{index}}">
+    <i-tag
+      wx:if="{{!item.isChosen}}"
+      bind:change="chooseTechnology"
+      checkable="{{true}}"
+      name="{{index}}"
+      color="yellow"
+      checked="{{false}}"
+      type="border"
+      class="i-tags"
+    >
+      {{item.name}}
+    </i-tag>
+  </block>
+</i-panel>
+<i-button bind:click="Register">注册</i-button>
+
+<i-toast id="toast" />

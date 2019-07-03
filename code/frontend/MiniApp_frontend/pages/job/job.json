@@ -1,7 +1,5 @@
 {
   "usingComponents": {
-    "i-sticky": "../../dist/sticky/index",
-    "i-sticky-item": "../../dist/sticky-item/index",
     "i-icon": "../../dist/icon/index",
     "i-avatar": "../../dist/avatar/index",
     "i-tag": "../../dist/tag/index",

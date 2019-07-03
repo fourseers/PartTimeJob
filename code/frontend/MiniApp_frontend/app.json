@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/job_detail/job_detail",
     "pages/index/index",
     "pages/logs/logs",
     "pages/user/user",
     "pages/register/register",
-    "pages/job/job",
-    "pages/job_detail/job_detail"
+    "pages/job/job"
   ],
   "window": {
     "backgroundTextStyle": "light",

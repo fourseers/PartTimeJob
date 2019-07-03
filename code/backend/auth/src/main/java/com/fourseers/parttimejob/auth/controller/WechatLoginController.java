@@ -3,11 +3,10 @@ package com.fourseers.parttimejob.auth.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.Null;
 
 @RestController
 public class WechatLoginController {
@@ -24,20 +23,30 @@ public class WechatLoginController {
     @Autowired
     WechatUserService wechatUserService;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@RequestBody JSONObject body) {
-        String token = (String) body.get("token");
-        String result = wechatAuthFeign.auth(appid, appsecret, token, "authorization_code");
-        JSONObject jsonObject = (JSONObject) JSONObject.parse(result);
+    private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
+        String token = (String) reqObject.get("token");
+        String resp = wechatAuthFeign.auth(appid, appsecret, token, "authorization_code");
+        JSONObject respObject = (JSONObject) JSONObject.parse(resp);
         String sessionKey, openid;
         try {
-            sessionKey = jsonObject.get("session_key").toString();
-            openid = jsonObject.get("openid").toString();
+            sessionKey = respObject.get("session_key").toString();
+            openid = respObject.get("openid").toString();
         } catch (NullPointerException ex) {
+            return null;
+        }
+
+        return new Pair<>(openid, wechatUserService.findByOpenid(openid));
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(@RequestBody JSONObject body) {
+        Pair<String, WechatUser> result = getWechatUser(body);
+        if (result == null) {
+            // TODO: Temporary token incorrect
             return "failed";
         }
 
-        WechatUser user = wechatUserService.findByOpenid(openid);
+        WechatUser user = result.getValue();
 
         if (user != null) {
             // TODO: return OAuth Token
@@ -50,18 +59,14 @@ public class WechatLoginController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@RequestBody JSONObject body) {
-        String token = (String) body.get("token");
-        String result = wechatAuthFeign.auth(appid, appsecret, token, "authorization_code");
-        JSONObject jsonObject = (JSONObject) JSONObject.parse(result);
-        String sessionKey, openid;
-        try {
-            sessionKey = jsonObject.get("session_key").toString();
-            openid = jsonObject.get("openid").toString();
-        } catch (NullPointerException ex) {
+        Pair<String, WechatUser> result = getWechatUser(body);
+        if (result == null) {
+            // TODO: Temporary token incorrect
             return "failed";
         }
 
-        WechatUser user = wechatUserService.findByOpenid(openid);
+        String openid = result.getKey();
+        WechatUser user = result.getValue();
 
         if (user != null) {
             // TODO: user exist
@@ -69,7 +74,7 @@ public class WechatLoginController {
         } else {
             user = new WechatUser();
             user.setOpenid(openid);
-            user.setUsername((String) body.get("username"));
+            user.setName((String) body.get("username"));
             wechatUserService.save(user);
             // TODO: return success
             return "success";

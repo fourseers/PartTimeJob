@@ -30,6 +30,15 @@ App({
             }
           })
         }
+        // 获取用户地址
+        // 可以在app.json中修改弹出的对话框
+        if (!res.authSetting["scope.userLocation"]) {
+          wx.getLocation({
+            success: res => {
+              //console.log(res);
+            }
+          })
+        }
       }
     })
   },

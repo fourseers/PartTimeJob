@@ -1,5 +1,11 @@
 language: java
 
+# safelist
+branches:
+    only:
+        - master
+        - develop
+
 # speed up building with maven cache
 cache:
     directories:

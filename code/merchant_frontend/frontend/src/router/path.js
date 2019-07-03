@@ -12,6 +12,9 @@ import ConfirmCheckin from '../views/ConfirmCheckin.vue'
 
 import MonthlyBill from '../views/MonthlyBill.vue'
 
+import AddCompany from '../views/AddCompany.vue'
+
+import SalaryStat from '../views/SalaryStat.vue'
 const  routes =[
     {
         path: '/',
@@ -57,7 +60,19 @@ const  routes =[
         path: '/monthlybill',
         name: 'monthlybill',
         component:MonthlyBill
+    },
+    {
+        path: '/addcompany',
+        name: 'addcompany',
+        component:AddCompany
     }
+    ,
+    {
+        path: '/salarystat',
+        name: 'salarystat',
+        component:SalaryStat
+    }
+
 
 
 ]

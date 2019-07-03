@@ -1,26 +1,23 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
-
 import Vuex from 'vuex'
-
-
-// routers
 import routes from './router/path.js'
 import token from './util/token.js'
-
 import iView from 'iview'
 import axios from 'axios'
 import qs from 'qs'
 
-Vue.prototype.$qs = qs;
-
-Vue.prototype.axios = axios;
-Vue.prototype.$token = token;
 import 'iview/dist/styles/iview.css';
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 axios.defaults.baseURL = "http://localhost:8079";
+
+Vue.prototype.$qs = qs;
+Vue.prototype.axios = axios;
+Vue.prototype.$token = token;
 
 const router = new VueRouter({
   mode: 'history',

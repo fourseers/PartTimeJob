@@ -6,8 +6,13 @@
                 <FormItem label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="店铺名称"></Input>
                 </FormItem>
-                <FormItem label="地址" prop="address">
-                    <Input v-model="formValidate.mail" placeholder="店铺地址"></Input>
+
+                <FormItem label="省份" prop="province">
+                    <Select v-model="formValidate.province" placeholder="选择省份">
+                        <Option value="beijing">北京</Option>
+                        <Option value="shanghai">上海</Option>
+                        <Option value="shenzhen">深圳</Option>
+                    </Select>
                 </FormItem>
                 <FormItem label="城市" prop="city">
                     <Select v-model="formValidate.city" placeholder="选择城市">
@@ -16,35 +21,24 @@
                         <Option value="shenzhen">深圳</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="Date">
-                    <Row>
-                        <Col span="11">
-                            <FormItem prop="date">
-                                <DatePicker type="date" placeholder="Select date" v-model="formValidate.date"></DatePicker>
-                            </FormItem>
-                        </Col>
-                        <Col span="2" style="text-align: center">-</Col>
-                        <Col span="11">
-                            <FormItem prop="time">
-                                <TimePicker type="time" placeholder="Select time" v-model="formValidate.time"></TimePicker>
-                            </FormItem>
-                        </Col>
-                    </Row>
+                <FormItem label="地址" prop="address">
+                    <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
                 </FormItem>
-                <FormItem label="营业领域" prop="interest">
-                    <CheckboxGroup v-model="formValidate.interest">
+
+                <FormItem label="营业领域" prop="industry">
+                    <CheckboxGroup v-model="formValidate.industry">
                         <Checkbox label="餐饮"></Checkbox>
                         <Checkbox label="衣服"></Checkbox>
                         <Checkbox label="教育"></Checkbox>
                         <Checkbox label="休闲"></Checkbox>
                     </CheckboxGroup>
                 </FormItem>
-                <FormItem label="公司介绍" prop="desc">
-                    <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+                <FormItem label="店铺介绍" prop="shop_intro">
+                    <Input v-model="formValidate.shop_intro" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-                    <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+                    <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
+                    <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
                 </FormItem>
             </Form>
         </Content>
@@ -56,42 +50,33 @@
             return {
                 formValidate: {
                     name: '',
-                    mail: '',
+                    province:'',
                     city: '',
-                    gender: '',
-                    interest: [],
-                    date: '',
-                    time: '',
-                    desc: ''
+                    address:'',
+                    industry:[],
+                    shop_intro: ''
                 },
                 ruleValidate: {
                     name: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        { required: true, message: '店铺名字不能为空', trigger: 'blur' }
                     ],
-                    mail: [
-                        { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-                        { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
+                    province: [
+                        { required: true, message: '请选择省份', trigger: 'change' }
                     ],
                     city: [
-                        { required: true, message: 'Please select the city', trigger: 'change' }
+                        { required: true, message: '请选择城市', trigger: 'change' }
                     ],
-                    gender: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                    address: [
+                        { required: true, message: '请填写地址', trigger: 'change' }
                     ],
-                    interest: [
-                        { required: true, type: 'array', min: 1, message: 'Choose at least one hobby', trigger: 'change' },
-                        { type: 'array', max: 2, message: 'Choose two hobbies at best', trigger: 'change' }
+                    industry: [
+                        { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },
+                        { type: 'array', max: 2, message: '最多选择两个营业领域', trigger: 'change' }
                     ],
-                    date: [
-                        { required: true, type: 'date', message: 'Please select the date', trigger: 'change' }
-                    ],
-                    time: [
-                        { required: true, type: 'string', message: 'Please select time', trigger: 'change' }
-                    ],
-                    desc: [
-                        { required: true, message: 'Please enter a personal introduction', trigger: 'blur' },
-                        { type: 'string', min: 20, message: 'Introduce no less than 20 words', trigger: 'blur' }
+                    shop_intro:[
+                        { required: true, message: '请填写店铺介绍', trigger: 'change' }
                     ]
+
                 }
             }
         },
@@ -114,7 +99,7 @@
 
 <style scoped>
     .content{
-        padding:100px 400px;
+        padding:50px 400px;
         background-color: #fff;
     }
     .ivu-btn {

@@ -22,7 +22,7 @@
                 </FormItem>
                 <br>
                 <FormItem>
-                    <Button class="ivu-btn" @click="handleSubmit('formInline')" >登录</Button>
+                    <Button class="ivu-btn" @click="handleSubmit('formInline')" >注册</Button>
                 </FormItem>
             </Form>
         </Content>

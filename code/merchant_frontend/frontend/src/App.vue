@@ -1,11 +1,15 @@
 <template>
   <div id="app">
-          <Toolbar/>
+      <Col span="4">
+      <Toolbar/>
+      </Col>
+      <Col span="20">
         <div id="core-view">
           <v-fade-transition mode="out-in">
             <router-view />
           </v-fade-transition>
         </div>
+      </Col>
   </div>
 </template>
 
@@ -20,6 +24,9 @@
     import Toolbar from './components/Toolbar.vue'
     import ConfirmCheckin from './views/ConfirmCheckin.vue'
     import MonthlyBill from './views/MonthlyBill.vue'
+    import AddCompany from './views/AddCompany.vue'
+
+    import SalaryStat from './views/SalaryStat.vue'
     export default {
   name: 'app',
   components: {
@@ -31,7 +38,9 @@
       ManageShop,
       InfoConfig,
       ConfirmCheckin,
-      MonthlyBill
+      MonthlyBill,
+      AddCompany,
+      SalaryStat
   }
 }
 </script>

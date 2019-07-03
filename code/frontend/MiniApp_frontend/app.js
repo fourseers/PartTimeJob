@@ -9,6 +9,7 @@ App({
     // 登录
     wx.login({
       success: res => {
+        // console.log(res);
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
@@ -27,6 +28,15 @@ App({
               if (this.userInfoReadyCallback) {
                 this.userInfoReadyCallback(res)
               }
+            }
+          })
+        }
+        // 获取用户地址
+        // 可以在app.json中修改弹出的对话框
+        if (!res.authSetting["scope.userLocation"]) {
+          wx.getLocation({
+            success: res => {
+              //console.log(res);
             }
           })
         }

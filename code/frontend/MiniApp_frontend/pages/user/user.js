@@ -4,16 +4,20 @@ const app = getApp()
 Page({
 
   /**
-   * 页面的初始数据
+   * isRegistered用于判断用户是否注册；如果没有注册，将显示“注册”button
+   * userInfo存储用户信息，从globalData复制
+   * hasUserInfo判断用户是否登录；如果没有登陆，就显示“获取用户头像”button
+   * canIUse调用接口，判断设备是否支持登录
    */
   data: {
     isRegistered: false,
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    canIUse: wx.canIUse("button.open-type.getUserInfo")
   },
 
-  onLoad: function () {
+  //生命周期函数
+  onLoad() {
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -41,7 +45,9 @@ Page({
       })
     }
   },
-  getUserInfo: function (e) {
+
+  //尝试获得用户信息，将用户信息发送给后端，判断用户是否注册
+  getUserInfo(e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
@@ -63,58 +69,11 @@ Page({
     })
   },
 
+  //用户按下“注册”button后跳转到登录页面
   handleRegister () {
     wx.navigateTo({
       url: "/pages/register/register",
     })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
 })

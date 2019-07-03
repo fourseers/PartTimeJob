@@ -35,15 +35,17 @@ App({
         // 可以在app.json中修改弹出的对话框
         if (!res.authSetting["scope.userLocation"]) {
           wx.getLocation({
+            type: "gcj02",
             success: res => {
-              //console.log(res);
+              this.globalData.userGPS = res;
             }
-          })
+          });
         }
       }
     })
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    userGPS: null,
   }
 })

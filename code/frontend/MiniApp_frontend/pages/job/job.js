@@ -54,26 +54,219 @@ Page({
             isChosen: false
           }
         ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
+      },
+      {
+        id: 1,
+        name: "工作二",
+        detail: "工作二的附加描述",
+        tags: [
+          {
+            id: 0,
+            name: "厨师",
+            isChosen: false
+          },
+          {
+            id: 1,
+            name: "收银",
+            isChosen: false
+          },
+          {
+            id: 2,
+            name: "打杂",
+            isChosen: false
+          }
+        ]
       }
-    ]
+    ],
+    position: "附近商家",
+    scrollTop: 0
   },
 
-  onLoad: function (options) {
-    console.log("onLoad");
+  onLoad(options) {
+    
   },
 
-  onPullDownRefresh: function () {
+  onPullDownRefresh() {
     console.log("onRefresh");
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom() {
     console.log("onBottom");
+    
   },
 
-  testClick(e) {
-    console.log(e);
+  choosePosition() {
+    wx.chooseLocation({
+      success: res => {
+        this.setData({
+          position: res.address
+        })
+      }
+    })
+  },
+
+  //页面滚动执行方式
+  //似乎用于实现吸顶组件
+  onPageScroll(event) {
+    this.setData({
+      scrollTop: event.scrollTop
+    })
   }
 })

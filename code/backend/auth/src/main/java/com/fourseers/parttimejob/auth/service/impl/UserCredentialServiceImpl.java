@@ -12,6 +12,11 @@ public class UserCredentialServiceImpl implements UserCredentialService {
     @Autowired
     UserCredentialDao userCredentialDao;
 
+    @Override
+    public UserCredential getById(long id) {
+        return userCredentialDao.findByRid(id);
+    }
+
     public UserCredential getByUsername(String username) {
         return userCredentialDao.findByUsername(username);
     }

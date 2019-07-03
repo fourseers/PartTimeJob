@@ -18,14 +18,14 @@ public class WechatLoginController {
     private String appsecret;
 
     @Autowired
-    WechatAuthFeign wechatAuthFeign;
+    Wechat wechat;
 
     @Autowired
     WechatUserService wechatUserService;
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
-        String resp = wechatAuthFeign.auth(appid, appsecret, token, "authorization_code");
+        String resp = wechat.auth(appid, appsecret, token, "authorization_code");
         JSONObject respObject = (JSONObject) JSONObject.parse(resp);
         String sessionKey, openid;
         try {

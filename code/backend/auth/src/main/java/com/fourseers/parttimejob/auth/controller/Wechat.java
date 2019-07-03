@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "wechatAuth", url = "https://api.weixin.qq.com/sns/")
-public interface WechatAuthFeign {
+public interface Wechat {
     @RequestMapping(value = "jscode2session", method = RequestMethod.GET)
     String auth(@RequestParam("appid") String appid,
                 @RequestParam("secret") String appsecret,

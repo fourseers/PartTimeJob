@@ -17,7 +17,7 @@ Page({
   },
 
   //生命周期函数
-  onLoad: function () {
+  onLoad() {
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -47,7 +47,7 @@ Page({
   },
 
   //尝试获得用户信息，将用户信息发送给后端，判断用户是否注册
-  getUserInfo: function (e) {
+  getUserInfo(e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,

@@ -46,15 +46,15 @@ Page({
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
-  chooseTechnology: function(e){
+  chooseTechnology(e){
     var newChosen = this.data.chosenTechnology;
     var hasSame = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen){
-      if (newChosen[index].id == e.detail.name)
+      if (newChosen[index].id === e.detail.name)
         hasSame = true;
     }
-    if (hasSame == false) {
+    if (hasSame === false) {
       var toChosen = this.data.technology;
       toChosen[e.detail.name].isChosen = true;
       newChosen.push(this.data.technology[e.detail.name]);
@@ -69,7 +69,7 @@ Page({
   },
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
-  deleteTechnology: function(e) {
+  deleteTechnology(e) {
     var newChosen = this.data.chosenTechnology;
     var toChosen = this.data.technology;
     var switchIndex = newChosen[e.detail.name].id;
@@ -82,21 +82,21 @@ Page({
   },
 
   //每次更新name的input组件后都重新获取name
-  getName: function(e){
+  getName(e){
     this.setData({
       name: e.detail.detail.value
     })
   },
 
   //每次更新identity的input组件后都重新获取identity
-  getIdentity: function(e){
+  getIdentity(e){
     this.setData({
       identity: e.detail.detail.value
     })
   },
 
   //每次更新phoneNumbery的input组件后都重新获取phoneNumber
-  getPhoneNumber: function(e){
+  getPhoneNumber(e){
     this.setData({
       phoneNumber: e.detail.detail.value
     })
@@ -112,7 +112,7 @@ Page({
 
   //向服务器发送请求
   //使用wx.request
-  Register: function () {
+  Register() {
     
   }
 

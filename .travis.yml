@@ -1,5 +1,10 @@
 language: java
 
+# speed up building with maven cache
+cache:
+    directories:
+        - $HOME/.m2
+
 before_install:
     - cd code/backend
     - chmod +x mvnw

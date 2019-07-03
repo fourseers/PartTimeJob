@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.auth.security;
+package com.fourseers.parttimejob.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +16,24 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+//    @Autowired
+//    private UserDetailsService userDetailsService;
+
+    // configure default password encoder
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Bean
     @Override
-    protected UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsServiceBean() {
         PasswordEncoder passwordEncoder = passwordEncoder();
 
         String finalPassword = passwordEncoder.encode("123456");
@@ -29,24 +44,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return manager;
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        AuthenticationManager manager = super.authenticationManagerBean();
-        return manager;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers().anyRequest()
+        // don't intercept any requests to oauth service
+        http.requestMatchers()
+                .anyRequest()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**").permitAll();
     }
-}
 
+
+}

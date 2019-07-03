@@ -1,9 +1,11 @@
 {
   "pages": [
-    "pages/register/register",
+    "pages/job_detail/job_detail",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/register/register",
+    "pages/job/job"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -20,6 +22,12 @@
         "selectedIconPath": "assets/icons/about-selected.png"
       },
       {
+        "text": "应聘",
+        "pagePath": "pages/job/job",
+        "iconPath": "assets/icons/job.png",
+        "selectedIconPath": "assets/icons/job-selected.png"
+      },
+      {
         "text": "我",
         "pagePath": "pages/user/user",
         "iconPath": "assets/icons/user.png",
@@ -29,5 +37,10 @@
     "color": "#000",
     "selectedColor": "#00f"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  }
 }

@@ -1,46 +1,62 @@
-package com.fourseers.parttimejob.auth.security;
+package com.fourseers.parttimejob.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthorizationServerConfigurer extends AuthorizationServerConfigurerAdapter {
+public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    private final String TEST_RESOURCE_ID = "TESTID_123456";
+    private static String TEST_RESOURCE_ID = "TESTID";
 
     @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    @Qualifier("userDetailsServiceBean")
+    private UserDetailsService userDetailsService;
 
-    @Bean
-    public RedisTokenStore getRedisTokenStore() {
-        return new RedisTokenStore(redisConnectionFactory);
-    }
+
+    // use redis to store token
+    @Autowired
+    private RedisConnectionFactory connectionFactory;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private PasswordEncoder passwordEncoder;
+
+    @Bean("redisTokenStore")
+    public RedisTokenStore getRedisTokenStore() {
+        return new RedisTokenStore(connectionFactory);
+    }
+
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey("123456");
+        return converter;
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        String finalSecret = new BCryptPasswordEncoder().encode("123456");
-        // 配置两个客户端，一个用于password认证一个用于client认证
-        clients.inMemory().withClient("client_1")
+        // https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
+        String finalSecret = passwordEncoder.encode("123456");
+        clients.inMemory()
+                .withClient("client_1")
                 .resourceIds(TEST_RESOURCE_ID)
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("select")
@@ -52,23 +68,23 @@ public class AuthorizationServerConfigurer extends AuthorizationServerConfigurer
                 .scopes("server")
                 .authorities("oauth2")
                 .secret(finalSecret);
+        // clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(getRedisTokenStore())
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
-
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        //允许表单认证
-        oauthServer
-                .tokenKeyAccess("permitAll()")         //url:/oauth/token_key,exposes public key for token verification if using JWT tokens
-                .checkTokenAccess("isAuthenticated()") //url:/oauth/check_token allow check token
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+
+        security.tokenKeyAccess("permitAll()")          // oauth/token_key
+                .checkTokenAccess("isAuthenticated()")  // oauth/check_token
                 .allowFormAuthenticationForClients();
     }
+
 
 }

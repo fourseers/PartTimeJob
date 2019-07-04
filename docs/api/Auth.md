@@ -21,9 +21,9 @@
        "code":200,
        "data":{
           "access_token":"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
-        	"token_type":"bearer",
+          "token_type":"bearer",
           "expires_in":3600,
-        	"refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
+          "refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
        },
        "message":"success"
     }
@@ -95,7 +95,7 @@
 
     | 参数名      | 必须 | 类型      | 描述                      |
     | ----------- | ---- | --------- | ------------------------- |
-    | `token`     | 是   | `String`  | 用户名                    |
+    | `token`     | 是   | `String`  | 前端从微信获取的临时口令     |
     | `name`      | 是   | `String`  | 姓名                      |
     | `gender`    | 是   | `Boolean` | 性别，0为女，1为男        |
     | `identity`  | 是   | `String`  | 身份证号，末位为X的用大写 |
@@ -111,9 +111,9 @@
        "code":200,
        "data":{
           "access_token":"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
-        	"token_type":"bearer",
+          "token_type":"bearer",
           "expires_in":3600,
-        	"refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
+          "refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
        },
        "message":"success"
     }
@@ -149,9 +149,9 @@
     {
        "code":200,
        "data":{
-        "access_token":"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
-        	"token_type":"bearer",
-        "expires_in":3600,
+          "access_token":"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3",
+          "token_type":"bearer",
+          "expires_in":3600,
         	"refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk"
        },
        "message":"success"

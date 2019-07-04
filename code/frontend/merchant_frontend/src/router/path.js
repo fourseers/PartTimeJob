@@ -1,20 +1,17 @@
 
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-
 import PostJob from '../views/PostJob.vue'
 import AddShop from '../views/AddShop.vue'
-
 import ManageShop from '../views/ManageShop.vue'
 import InfoConfig from '../views/InfoConfig.vue'
-
 import ConfirmCheckin from '../views/ConfirmCheckin.vue'
-
 import MonthlyBill from '../views/MonthlyBill.vue'
-
 import AddCompany from '../views/AddCompany.vue'
-
 import SalaryStat from '../views/SalaryStat.vue'
+import CheckinStat from '../views/CheckinStat.vue'
+import ScreenCV from '../views/ScreenCV.vue'
+import PostStat from '../views/PostStat.vue'
 const  routes =[
     {
         path: '/',
@@ -71,6 +68,25 @@ const  routes =[
         path: '/salarystat',
         name: 'salarystat',
         component:SalaryStat
+    }
+    ,
+    {
+        path: '/checkinstat',
+        name: 'checkinstat',
+        component:CheckinStat
+    }
+
+    ,
+    {
+        path: '/poststat',
+        name: 'poststat',
+        component:PostStat
+    }
+    ,
+    {
+        path: '/screenCV',
+        name: 'screenCV',
+        component:ScreenCV
     }
 
 

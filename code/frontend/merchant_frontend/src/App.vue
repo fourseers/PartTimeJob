@@ -25,8 +25,10 @@
     import ConfirmCheckin from './views/ConfirmCheckin.vue'
     import MonthlyBill from './views/MonthlyBill.vue'
     import AddCompany from './views/AddCompany.vue'
-
     import SalaryStat from './views/SalaryStat.vue'
+    import CheckinStat from './views/CheckinStat.vue'
+    import ScreenCV from './views/ScreenCV.vue'
+    import PostStat from './views/PostStat.vue'
     export default {
   name: 'app',
   components: {
@@ -40,7 +42,10 @@
       ConfirmCheckin,
       MonthlyBill,
       AddCompany,
-      SalaryStat
+      SalaryStat,
+      CheckinStat,
+      ScreenCV,
+      PostStat
   }
 }
 </script>

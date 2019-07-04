@@ -22,21 +22,22 @@ public class WechatLoginController {
     private Wechat wechat;
 
     @Autowired
-    WechatUserService wechatUserService;
+    private WechatUserService wechatUserService;
 
     @PostConstruct
     public void init() {
         wechat = Wechat.connect();
     }
 
-    void setWechat(Wechat wechat) {
+    protected void setWechat(Wechat wechat) {
         this.wechat = wechat;
     }
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
         JSONObject respObject = wechat.auth(appid, appsecret, token, "authorization_code");
-        String sessionKey, openid;
+        String sessionKey;
+        String openid;
         try {
             sessionKey = respObject.get("session_key").toString();
             openid = respObject.get("openid").toString();

@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 public class WechatUserServiceImpl implements WechatUserService {
 
     @Autowired
-    WechatUserDao wechatUserDao;
+    private WechatUserDao wechatUserDao;
 
     public WechatUser findByOpenid(String openid) {
         return wechatUserDao.findByOpenid(openid);

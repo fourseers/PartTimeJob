@@ -37,10 +37,10 @@ public class WechatLoginControllerTest {
     private Wechat wechat;
 
     @Autowired
-    WechatLoginController wechatLoginController;
+    private WechatLoginController wechatLoginController;
 
     @Autowired
-    WechatUserService wechatUserService;
+    private WechatUserService wechatUserService;
 
     class AssertionDecoder implements Decoder {
 
@@ -61,7 +61,7 @@ public class WechatLoginControllerTest {
     }
 
     @Before
-    public void setup() {
+    public void setUp() {
         mockClient = new MockClient();
         byte[] successData = "{openid: \"fake_openid\", session_key: \"fake_session_key\"}".getBytes();
         byte[] invalidCodeData = "{\"errcode\":40029,\"errmsg\":\"invalid code, hints: [ req_id: XhbdFMwgE-6VaIaA ]\"}".getBytes();

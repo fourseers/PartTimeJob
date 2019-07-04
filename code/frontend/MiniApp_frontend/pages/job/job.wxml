@@ -34,3 +34,4 @@
     </i-cell>
   </i-cell-group>
 </view>
+<i-toast id="toast" />

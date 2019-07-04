@@ -122,10 +122,6 @@
 				<groupId>org.springframwork.cloud</groupId>
 				<artifactId>spring-cloud-security</artifactId>
 			</dependency>
-			<dependency>
-				<groupId>org.springframwork.security.oauth</groupId>
-				<artifactId>spring-security-oauth2</artifactId>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

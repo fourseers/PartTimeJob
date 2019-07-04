@@ -3,10 +3,13 @@ package com.fourseers.parttimejob.auth.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
-import javafx.util.Pair;
+import com.fourseers.parttimejob.auth.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 
@@ -56,7 +59,7 @@ public class WechatLoginController {
             return "invalid token";
         }
 
-        WechatUser user = result.getValue();
+        WechatUser user = result.getSecond();
 
         if (user != null) {
             // TODO: return OAuth Token
@@ -75,8 +78,8 @@ public class WechatLoginController {
             return "invalid token";
         }
 
-        String openid = result.getKey();
-        WechatUser user = result.getValue();
+        String openid = result.getFirst();
+        WechatUser user = result.getSecond();
 
         if (user != null) {
             // TODO: user exist

@@ -32,9 +32,9 @@
   - 字段说明：
   
     | 字段            | 类型     | 描述                     |
-  | --------------- | -------- | ------------------------ |
+    | --------------- | -------- | ------------------------ |
     | `code`          | `int`    | 状态码，成功200，失败400 |
-  | `access_token`  | `String` | OAuth令牌                |
+    | `access_token`  | `String` | OAuth令牌                |
     | `token_type`    | `String` | Token类型，总是为Bearer   |
     | `expire_in`     | `int`    | 令牌过期时间             |
     | `refresh_token` | `String` | 更新令牌                 |

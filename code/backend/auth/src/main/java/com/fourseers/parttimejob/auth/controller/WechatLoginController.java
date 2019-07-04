@@ -3,10 +3,13 @@ package com.fourseers.parttimejob.auth.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
-import javafx.util.Pair;
+import com.fourseers.parttimejob.auth.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 
@@ -22,21 +25,22 @@ public class WechatLoginController {
     private Wechat wechat;
 
     @Autowired
-    WechatUserService wechatUserService;
+    private WechatUserService wechatUserService;
 
     @PostConstruct
     public void init() {
         wechat = Wechat.connect();
     }
 
-    void setWechat(Wechat wechat) {
+    protected void setWechat(Wechat wechat) {
         this.wechat = wechat;
     }
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
         JSONObject respObject = wechat.auth(appid, appsecret, token, "authorization_code");
-        String sessionKey, openid;
+        String sessionKey;
+        String openid;
         try {
             sessionKey = respObject.get("session_key").toString();
             openid = respObject.get("openid").toString();
@@ -55,7 +59,7 @@ public class WechatLoginController {
             return "invalid token";
         }
 
-        WechatUser user = result.getValue();
+        WechatUser user = result.getSecond();
 
         if (user != null) {
             // TODO: return OAuth Token
@@ -74,8 +78,8 @@ public class WechatLoginController {
             return "invalid token";
         }
 
-        String openid = result.getKey();
-        WechatUser user = result.getValue();
+        String openid = result.getFirst();
+        WechatUser user = result.getSecond();
 
         if (user != null) {
             // TODO: user exist

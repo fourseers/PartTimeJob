@@ -76,7 +76,8 @@
             },
            register()
             {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
+                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io";
+                //测试用的url
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "*",

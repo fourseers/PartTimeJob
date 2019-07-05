@@ -51,6 +51,8 @@
     export default {
         data () {
             return {
+                longtitude:0.0,
+                latitude: 0.0,
                 formValidate: {
                     name: '',
                     province:'',
@@ -88,7 +90,8 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
+                        // this.$Message.success('Success!');
+                        this.addShop()
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -96,9 +99,43 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            addShop()
+            {
+                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "*",
+                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/shop",
+                    data: this.$qs.stringify({
+                        shop_name: this.formInline.shop_name,
+                        province: this.formInline.province,
+                        city:this.formInline.city,
+                        address:this.formInline.address,
+                        longitude:this.longitude,
+                        latitude:this.latitude,
+                        brand:this.formInline.brand,
+                        industry:this.formInline.industry,
+                        shop_intro:this.formInline. shop_intro
+                    })
+                }).then(response => {
+                    console.log(response.data);
+                    if(response.message === 'success')
+                    {
+                        //
+                    }
+                })
+                    .catch(error => {
+                        JSON.stringify(error);
+                        console.log(error)
+                    })
+            }
             }
         }
-    }
 </script>
 
 <style scoped>

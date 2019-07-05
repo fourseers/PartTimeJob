@@ -14,3 +14,7 @@
 .i-tags{
   margin:20rpx;
 }
+
+.job-map{
+  width: 100%;
+}

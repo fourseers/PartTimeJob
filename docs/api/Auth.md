@@ -103,9 +103,10 @@
     | `country`   | 是   | `String`  | 国家                      |
     | `city`      | 是   | `String`  | 城市                      |
     | `education` | 是   | `String`  | 文化水平                  |
-
-  - 返回结果：
-
+  | `tags` | 是 | `tag[]` | 用户选择的所有技术tag.属性包括id和名称等 |
+  
+- 返回结果：
+  
     ```json
     {
        "code":200,
@@ -117,10 +118,10 @@
        },
        "message":"success"
     }
-    ```
-
-  - 字段说明：
-
+  ```
+  
+- 字段说明：
+  
     | 字段            | 类型     | 描述                     |
     | --------------- | -------- | ------------------------ |
     | `code`          | `int`    | 状态码，成功200，失败400 |
@@ -128,8 +129,8 @@
     | `token_type`    | `String` | Token类型，总是为Bearer  |
     | `expire_in`     | `int`    | 令牌过期时间             |
     | `refresh_token` | `String` | 更新令牌                 |
-    | `message`       | `String` | 注册信息                 |
-
+  | `message`       | `String` | 注册信息                 |
+  
 - 用户登录接口
   - 请求格式：POST
 

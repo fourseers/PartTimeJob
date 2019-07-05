@@ -5,6 +5,8 @@ Page({
 
   /**
    * 页面的初始数据
+   * 除visible外的所有变量都通过向后端发送请求来获得
+   * visible用于决定是否显示对话框
    */
   data: {
     job_name: "fourseers",
@@ -69,6 +71,7 @@ Page({
 
   /**
    * 生命周期函数--监听页面加载
+   * onLoad的时候似乎不能调用this.setData，实际情况要与后端通信后决定
    */
   onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
@@ -102,6 +105,8 @@ Page({
 
   // 对话框确定后发送岗位申请
   handleSendApply() {
+    // TODO
+    // 发送岗位申请请求
     app.globalData.showSendMessage = true;
     wx.navigateBack({
       

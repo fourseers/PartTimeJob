@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.auth.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
@@ -25,6 +26,7 @@ public class WechatLoginController {
     @Value("${app.wechat_user_prefix}")
     private String wechatUserPrefix;
 
+    @Autowired
     private Wechat wechat;
 
     @Autowired
@@ -35,7 +37,7 @@ public class WechatLoginController {
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
-        JSONObject respObject = wechat.auth(appid, appsecret, token, "authorization_code");
+        JSONObject respObject = JSON.parseObject(wechat.auth(appid, appsecret, token, "authorization_code"));
         String sessionKey;
         String openid;
         try {

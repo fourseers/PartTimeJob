@@ -75,17 +75,17 @@ public class WechatLoginControllerTest {
         JSONObject wechatSuccessResponse = new JSONObject();
         wechatSuccessResponse.put("openid", "fake_openid");
         wechatSuccessResponse.put("session_key", "fake_session_key");
-        when(wechat.auth("fake_appid", "fake_appsecret", "fake_token", "authorization_code")).thenReturn(wechatSuccessResponse);
+        when(wechat.auth("fake_appid", "fake_appsecret", "fake_token", "authorization_code")).thenReturn(wechatSuccessResponse.toJSONString());
 
         JSONObject wechatInvalidCodeResponse = new JSONObject();
         wechatInvalidCodeResponse.put("errorcode", 40029);
         wechatInvalidCodeResponse.put("errmsg", "invalid code, hints: [ req_id: XhbdFMwgE-6VaIaA ]");
-        when(wechat.auth("fake_appid", "fake_appsecret", "invalid_token", "authorization_code")).thenReturn(wechatInvalidCodeResponse);
+        when(wechat.auth("fake_appid", "fake_appsecret", "invalid_token", "authorization_code")).thenReturn(wechatInvalidCodeResponse.toJSONString());
 
         JSONObject wechatNotExistIdResponse = new JSONObject();
         wechatNotExistIdResponse.put("openid", "no_exist_openid");
         wechatNotExistIdResponse.put("session_key", "not_exist_session_key");
-        when(wechat.auth("fake_appid", "fake_appsecret", "not_exist_token", "authorization_code")).thenReturn(wechatNotExistIdResponse);
+        when(wechat.auth("fake_appid", "fake_appsecret", "not_exist_token", "authorization_code")).thenReturn(wechatNotExistIdResponse.toJSONString());
 
         JSONObject successResponse = JSON.parseObject(
                 "{\n" +

@@ -30,9 +30,6 @@ public class CompanyControllerTest {
     CompanyService companyService;
 
     @Autowired
-    CompanyController companyController;
-
-    @Autowired
     MockMvc mockMvc;
 
     @Before

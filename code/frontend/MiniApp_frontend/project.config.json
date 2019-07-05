@@ -7,8 +7,7 @@
 		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
-		"minified": true,
-		"newFeature": true,
+		"minified": 		"newFeature": true,
 		"autoAudits": false,
 		"checkInvalidKey": true
 	},

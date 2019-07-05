@@ -1,4 +1,6 @@
 // pages/job-detail/job_detail.js
+const app = getApp();
+
 Page({
 
   /**
@@ -7,11 +9,19 @@ Page({
   data: {
     job_name: "fourseers",
     job_detail: "这里是详细描述",
-    begin_date: new Date(),
-    end_date: new Date(),
+    begin_year: (new Date()).getFullYear(),
+    begin_month: (new Date()).getMonth(),
+    begin_date: (new Date()).getDate(),
+    end_year: (new Date()).getFullYear(),
+    end_month: (new Date()).getMonth(),
+    end_date: (new Date()).getDate(),
     need_amount: 4,
-    begin_apply_date: new Date(),
-    end_apply_date: new Date(),
+    begin_apply_year: (new Date()).getFullYear(),
+    begin_apply_month: (new Date()).getMonth(),
+    begin_apply_date: (new Date()).getDate(),
+    end_apply_year: (new Date()).getFullYear(),
+    end_apply_month: (new Date()).getMonth(),
+    end_apply_date: (new Date()).getDate(),
     salary: "5K-10K",
     create_time: new Date(),
     //need_gender: 0,
@@ -38,69 +48,45 @@ Page({
         isChosen: false
       }
     ],
-    shop_name: "",
-    brand: "",
-    industry: "",
-    address: "",
-    company_name: "",
+    shop_name: "软件学院",
+    brand: "前端",
+    industry: "板砖",
+    address: "上海市闵行区上海交通大学",
+    company_name: "脚痛大学",
     //shop_id不用显示，但是可以用于跳转页面
-    shop_id: 0
+    shop_id: 0,
+    //用于对话框的变量
+    visible: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
-    console.log(options);
+    //console.log(options);
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  // 按立即报名按钮后弹出对话框
+  handleClickApply() {
+    this.setData({
+      visible: true
+    });
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
+  // 对话框确定后发送岗位申请
+  handleSendApply() {
+    app.globalData.showSendMessage = true;
+    wx.navigateBack({
+      
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  // 对话框取消后隐藏对话框
+  handleClose() {
+    this.setData({
+      visible: false
+    })
   }
+
 })

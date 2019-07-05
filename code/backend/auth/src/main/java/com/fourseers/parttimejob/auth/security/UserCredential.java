@@ -1,25 +1,22 @@
-package com.fourseers.parttimejob.auth.entity;
+package com.fourseers.parttimejob.auth.security;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@Document("UserCredential")
-public class UserCredential {
+import java.io.Serializable;
+
+@JsonSerialize
+public class UserCredential implements Serializable {
 
     public enum Role {
         ROLE_ADMIN, ROLE_MERCHANT, ROLE_USER
     }
 
-    @Field("username")
     private String username;
 
-    @Field("rid")
     private long rid;
 
-    @Field("password")
     private String password;
 
-    @Field("role")
     private Role role;
 
     public String getUsername() {

@@ -7,6 +7,10 @@
   margin-bottom: 20rpx;
 }
 
+.date-box{
+  margin-bottom: 20rpx;
+}
+
 .i-tags{
   margin:20rpx;
 }

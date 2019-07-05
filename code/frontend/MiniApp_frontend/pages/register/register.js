@@ -1,5 +1,6 @@
 // pages/register/register.js
 const { $Toast } = require("../../dist/base/index");
+const app = getApp();
 
 Page({
   /*
@@ -39,10 +40,12 @@ Page({
         isChosen: false
       }
     ],
+    educationList: ["博士毕业", "硕士毕业", "本科毕业", "大专毕业", "高中毕业"],
     chosenTechnology: [],
     name: '',
     identity: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    education: ''
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
@@ -96,10 +99,17 @@ Page({
     })
   },
 
-  //每次更新phoneNumbery的input组件后都重新获取phoneNumber
+  //每次更新phoneNumber的input组件后都重新获取phoneNumber
   getPhoneNumber(e){
     this.setData({
       phoneNumber: e.detail.detail.value
+    })
+  },
+
+  //每次更新education的input组件后都重新获取education
+  getEducation(e){
+    this.setData({
+      education: this.data.educationList[e.detail.value]
     })
   },
 
@@ -114,7 +124,28 @@ Page({
   //向服务器发送请求
   //使用wx.request
   Register() {
-    
+    console.log(app.globalData.userInfo);
+    let postData = {
+      "name": this.data.name,
+      "gender": app.globalData.userInfo.gender,
+      "identity": this.data.identity,
+      "phone": this.data.phoneNumber,
+      "country": app.globalData.userInfo.country,
+      "city": app.globalData.userInfo.city,
+      "education": this.data.education
+    };
+    wx.request({
+      url: 'http://202.120.40.8:8079/api/wechat/register',
+      data: postData,
+      method: "POST",
+      success: (res) => {
+        //通过res来判断用户是否注册
+        console.log(res);
+      },
+      fail: () => {
+        this.globalData.isRegistered = false;
+      }
+    })
   }
 
 })

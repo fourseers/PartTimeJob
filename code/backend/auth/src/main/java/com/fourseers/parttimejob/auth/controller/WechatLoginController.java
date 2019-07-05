@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.auth.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
@@ -17,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class WechatLoginController {
 
     @Value("${wechat.appid}")
-    private String appid;
+    private String APP_ID;
 
     @Value("${wechat.appsecret}")
-    private String appsecret;
+    private String APP_SECRET;
 
     @Value("${app.wechat_user_prefix}")
-    private String wechatUserPrefix;
+    private String WECHAT_USER_PREFIX;
+
+    @Value("${app.wechat_password_placeholder}")
+    private String WECHAT_PASSWD_PLACEHOLDER;
 
     @Autowired
     private Wechat wechat;
@@ -36,7 +40,7 @@ public class WechatLoginController {
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
-        JSONObject respObject = wechat.auth(appid, appsecret, token, "authorization_code");
+        JSONObject respObject = JSON.parseObject(wechat.auth(APP_ID, APP_SECRET, token, "authorization_code"));
         String sessionKey;
         String openid;
         try {
@@ -68,7 +72,7 @@ public class WechatLoginController {
         if (user != null) {
             response.put("status", 200);
             response.put("message", "success");
-            response.put("data", oauth.getToken(wechatUserPrefix + user.getOpenid(), "", "password").getString("data"));
+            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER,"password").getString("data"));
             return new ResponseEntity<>(response, status);
         } else {
             response.put("status", 400);
@@ -111,7 +115,7 @@ public class WechatLoginController {
             wechatUserService.save(user);
             response.put("status", 200);
             response.put("message", "success");
-            response.put("data", oauth.getToken(wechatUserPrefix + user.getOpenid(), "", "password"));
+            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER, "password"));
             return new ResponseEntity<>(response, status);
         }
     }

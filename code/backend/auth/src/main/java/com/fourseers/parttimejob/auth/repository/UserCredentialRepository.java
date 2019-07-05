@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.auth.repository;
 
-import com.fourseers.parttimejob.auth.entity.UserCredential;
+import com.fourseers.parttimejob.auth.security.UserCredential;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

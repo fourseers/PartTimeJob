@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,7 +22,8 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    private static String TEST_RESOURCE_ID = "TESTID";
+    @Value("${app.test_resource_id:TESTID}")
+    private String TEST_RESOURCE_ID;
 
     @Autowired
     @Qualifier("authenticationManagerBean")
@@ -54,20 +56,26 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
-        String finalSecret = passwordEncoder.encode("123456");
+        String wechatClientSecret = passwordEncoder.encode("123456");
+        String webClientSecret = passwordEncoder.encode("123456");
         clients.inMemory()
-                .withClient("client_1")
-                .resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("select")
+                .withClient("wechatClient")
+                .secret(wechatClientSecret)
+                //.resourceIds(TEST_RESOURCE_ID)
+                .authorizedGrantTypes("password", "client_credentials", "refresh_token")
+                //.scopes("select")
                 .authorities("oauth2")
-                .secret(finalSecret)
                 .and().withClient("client_2")
                 .resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("password", "refresh_token")
+                .authorizedGrantTypes("password", "client_credentials", "refresh_token")
                 .scopes("server")
                 .authorities("oauth2")
-                .secret(finalSecret);
+                .secret(webClientSecret)
+                .and().withClient("_internalMS")
+                //.resourceIds(TEST_RESOURCE_ID)
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                //.scopes("select")
+                .authorities("oauth2");
         // clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 

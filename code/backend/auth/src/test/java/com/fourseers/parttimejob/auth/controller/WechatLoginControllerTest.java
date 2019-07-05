@@ -43,6 +43,9 @@ public class WechatLoginControllerTest {
     @Value("${app.wechat_user_prefix}")
     private String wechatUserPrefix;
 
+    @Value("${app.wechat_password_placeholder")
+    private String WECHAT_PASSWD_PLACEHOLDER;
+
 
     private MockMvc mockMvc;
 
@@ -99,7 +102,7 @@ public class WechatLoginControllerTest {
                 "   },\n" +
                 "   \"message\":\"success\"\n" +
                 "}");
-        when(oauth.getToken(wechatUserPrefix + "fake_openid", "", "password")).thenReturn(successResponse);
+        when(oauth.getToken(wechatUserPrefix + "fake_openid", WECHAT_PASSWD_PLACEHOLDER, "password")).thenReturn(successResponse);
 
 //        JSONObject userNotExistResponse = JSON.parseObject(
 //                "{\n" +

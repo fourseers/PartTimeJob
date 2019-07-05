@@ -24,6 +24,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
+    @Value("${app.wechat_password_placeholder}")
+    private String WECHAT_PASSWD_PLACEHOLDER;
+
     @Autowired
     private WechatUserService wechatUserService;
 
@@ -49,7 +52,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             if(wechatUser == null)
                 throw new UsernameNotFoundException(String.format("Wechat user with openid[%s] not found.", openid));
             userCredential.setUsername(s);
-            userCredential.setPassword(passwordEncoder.encode(""));
+            userCredential.setPassword(passwordEncoder.encode(WECHAT_PASSWD_PLACEHOLDER));
             userCredential.setRole(ROLE_USER);
             userCredential.setRid(wechatUser.getUid());
         } else {

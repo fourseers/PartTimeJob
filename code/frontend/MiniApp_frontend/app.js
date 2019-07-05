@@ -15,7 +15,7 @@ App({
           "token": res.code
         }
         wx.request({
-          url: 'http://202.120.40.8:8079/api/wechat/login',
+          url: this.globalData.backendIP + this.globalData.loginAPI,
           data: postData,
           method: "POST",
           success: (res) => {
@@ -64,5 +64,7 @@ App({
     userGPS: null,
     isRegistered: false,
     showSendMessage: false,
+    backendIP: "http://202.120.40.8:8079",
+    loginAPI: "/api/wechat/login"
   }
 })

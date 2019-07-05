@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class WechatLoginController {
@@ -54,7 +51,7 @@ public class WechatLoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> login(@RequestBody JSONObject body) {
+    public ResponseEntity<JSONObject> login(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         Pair<String, WechatUser> result = getWechatUser(body);
 
         JSONObject response = new JSONObject();
@@ -72,7 +69,7 @@ public class WechatLoginController {
         if (user != null) {
             response.put("status", 200);
             response.put("message", "success");
-            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER,"password").getString("data"));
+            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER,"password", basicAuth));
             return new ResponseEntity<>(response, status);
         } else {
             response.put("status", 400);
@@ -82,7 +79,7 @@ public class WechatLoginController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> register(@RequestBody JSONObject body) {
+    public ResponseEntity<JSONObject> register(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         Pair<String, WechatUser> result = getWechatUser(body);
 
         JSONObject response = new JSONObject();
@@ -115,7 +112,7 @@ public class WechatLoginController {
             wechatUserService.save(user);
             response.put("status", 200);
             response.put("message", "success");
-            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER, "password"));
+            response.put("data", oauth.getToken(WECHAT_USER_PREFIX + user.getOpenid(), WECHAT_PASSWD_PLACEHOLDER, "password", basicAuth));
             return new ResponseEntity<>(response, status);
         }
     }

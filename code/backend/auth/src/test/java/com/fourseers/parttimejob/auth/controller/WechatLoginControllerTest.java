@@ -102,7 +102,8 @@ public class WechatLoginControllerTest {
                 "   },\n" +
                 "   \"message\":\"success\"\n" +
                 "}");
-        when(oauth.getToken(wechatUserPrefix + "fake_openid", WECHAT_PASSWD_PLACEHOLDER, "password")).thenReturn(successResponse);
+        // TODO add basic auth
+        when(oauth.getToken(wechatUserPrefix + "fake_openid", WECHAT_PASSWD_PLACEHOLDER, "password", "")).thenReturn(successResponse);
 
 //        JSONObject userNotExistResponse = JSON.parseObject(
 //                "{\n" +

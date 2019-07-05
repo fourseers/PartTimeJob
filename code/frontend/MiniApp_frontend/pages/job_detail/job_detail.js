@@ -52,15 +52,11 @@ Page({
     brand: "前端",
     industry: "板砖",
     address: "上海市闵行区上海交通大学",
-    company_name: "脚痛大学",
-    longitude: 0.0,
-    latitude: 0.0,
+    company_name: "脚痛大学",\
     //shop_id不用显示，但是可以用于跳转页面
     shop_id: 0,
     //用于对话框的变量
     visible: false,
-    //location保存商家地址
-    location: null
   },
 
   /**
@@ -69,23 +65,6 @@ Page({
   onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
     //console.log(options);
-    if(this.data.location === null){
-      wx.getLocation({
-        type: "gcj02",
-        success: res => {
-          this.setData({
-            location: res
-          })
-        }
-      }).bind(this);
-    }
-    console.log(location);
-    /*
-    this.setData({
-      latitude: app.globalData.userGPS.latitude,
-      longitude: app.globalData.userGPS.longitude
-    });
-    */
   },
 
   // 按立即报名按钮后弹出对话框

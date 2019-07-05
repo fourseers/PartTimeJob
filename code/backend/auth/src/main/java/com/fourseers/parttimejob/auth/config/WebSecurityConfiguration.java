@@ -44,15 +44,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return manager;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // don't intercept any requests to oauth service
-        http.requestMatchers()
-                .anyRequest()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/oauth/**").permitAll();
-    }
-
-
 }

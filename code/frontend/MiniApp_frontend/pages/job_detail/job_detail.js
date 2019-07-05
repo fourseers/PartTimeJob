@@ -57,6 +57,14 @@ Page({
     shop_id: 0,
     //用于对话框的变量
     visible: false,
+    longitude: 0.0,
+    latitude: 0.0,
+    markers: [{
+      id: 1,
+      latitude: 0.0,
+      longitude: 0.0,
+      name: ''
+    }],
   },
 
   /**
@@ -65,6 +73,24 @@ Page({
   onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
     //console.log(options);
+  },
+
+  onShow() {
+    wx.getLocation({
+      type: "gcj02",
+      success: res => {
+        this.setData({
+          longitude: res.longitude,
+          latitude: res.latitude,
+          markers: [{
+            id: 1,
+            latitude: res.latitude,
+            longitude: res.longitude,
+            name: '软件学院'
+          }]
+        })
+      }
+    });
   },
 
   // 按立即报名按钮后弹出对话框

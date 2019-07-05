@@ -52,7 +52,7 @@ Page({
     brand: "前端",
     industry: "板砖",
     address: "上海市闵行区上海交通大学",
-    company_name: "脚痛大学",\
+    company_name: "脚痛大学",
     //shop_id不用显示，但是可以用于跳转页面
     shop_id: 0,
     //用于对话框的变量

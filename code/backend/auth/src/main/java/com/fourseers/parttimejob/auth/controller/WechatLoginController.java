@@ -6,12 +6,12 @@ import com.fourseers.parttimejob.auth.service.WechatUserService;
 import com.fourseers.parttimejob.auth.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
 
 @RestController
 public class WechatLoginController {
@@ -22,19 +22,16 @@ public class WechatLoginController {
     @Value("${wechat.appsecret}")
     private String appsecret;
 
+    @Value("${app.wechat_user_prefix}")
+    private String wechatUserPrefix;
+
     private Wechat wechat;
 
     @Autowired
     private WechatUserService wechatUserService;
 
-    @PostConstruct
-    public void init() {
-        wechat = Wechat.connect();
-    }
-
-    protected void setWechat(Wechat wechat) {
-        this.wechat = wechat;
-    }
+    @Autowired
+    OAuth oauth;
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
         String token = (String) reqObject.get("token");
@@ -52,38 +49,54 @@ public class WechatLoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@RequestBody JSONObject body) {
+    public ResponseEntity<JSONObject> login(@RequestBody JSONObject body) {
         Pair<String, WechatUser> result = getWechatUser(body);
+
+        JSONObject response = new JSONObject();
+        HttpStatus status = HttpStatus.OK;
+
         if (result == null) {
-            // TODO: Temporary token incorrect
-            return "invalid token";
+            response.put("status", 400);
+            response.put("message", "invalid token");
+            status = HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(response, status);
         }
 
         WechatUser user = result.getSecond();
 
         if (user != null) {
-            // TODO: return OAuth Token
-            return "success";
+            response.put("status", 200);
+            response.put("message", "success");
+            response.put("data", oauth.getToken(wechatUserPrefix + user.getOpenid(), "", "password").getString("data"));
+            return new ResponseEntity<>(response, status);
         } else {
-            // TODO: ask user to register
-            return "not exist";
+            response.put("status", 400);
+            response.put("message", "user not exist");
+            return new ResponseEntity<>(response, status);
         }
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@RequestBody JSONObject body) {
+    public ResponseEntity<JSONObject> register(@RequestBody JSONObject body) {
         Pair<String, WechatUser> result = getWechatUser(body);
+
+        JSONObject response = new JSONObject();
+        HttpStatus status = HttpStatus.OK;
+
         if (result == null) {
-            // TODO: Temporary token incorrect
-            return "invalid token";
+            response.put("status", 400);
+            response.put("message", "invalid token");
+            status = HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(response, status);
         }
 
         String openid = result.getFirst();
         WechatUser user = result.getSecond();
 
         if (user != null) {
-            // TODO: user exist
-            return "user exist";
+            response.put("status", 400);
+            response.put("message", "user exist");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         } else {
             user = new WechatUser();
             user.setOpenid(openid);
@@ -95,8 +108,10 @@ public class WechatLoginController {
             user.setCity(body.getString("city"));
             user.setEducation(body.getString("education"));
             wechatUserService.save(user);
-            // TODO: return success
-            return "success";
+            response.put("status", 200);
+            response.put("message", "success");
+            response.put("data", oauth.getToken(wechatUserPrefix + user.getOpenid(), "", "password"));
+            return new ResponseEntity<>(response, status);
         }
     }
 

@@ -11,6 +11,11 @@ cache:
     directories:
         - $HOME/.m2
 
+services:
+  - mysql
+  - mongodb
+  - redis-server
+
 before_install:
     - cd code/backend
     - chmod +x mvnw

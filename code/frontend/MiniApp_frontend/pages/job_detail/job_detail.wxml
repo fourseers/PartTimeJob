@@ -30,6 +30,7 @@
     </view>
   </i-cell>
 </i-panel>
+<i-button bind:click="handleClickApply" type="success" shape="circle" size="small">立即报名</i-button>
 <i-panel i-class="detail-box">
   <i-cell title="职位描述"></i-cell>
   <i-cell>
@@ -48,19 +49,22 @@
   </i-cell>
   <i-cell label="{{job_detail}}"></i-cell>
 </i-panel>
-<i-panel>
+<i-panel i-class="date-box">
   <i-cell-group>
     <i-cell>
-      开始时间：{{begin_data}}
+      上班时间：{{begin_year}}年{{begin_month}}月{{begin_date}}日 ~ {{end_year}}年{{end_month}}月{{end_date}}日
     </i-cell>
     <i-cell>
-      结束时间：{{end_data}}
-    </i-cell>
-    <i-cell>
-      报名开始时间：{{begin_apply_data}}
-    </i-cell>
-    <i-cell>
-      报名结束时间：{{end_apply_data}}
+      报名时间：{{begin_apply_year}}年{{begin_apply_month}}月{{begin_apply_date}}日 ~ {{end_apply_year}}年{{end_apply_month}}月{{end_apply_date}}日
     </i-cell>
   </i-cell-group>
 </i-panel>
+<i-panel>
+  <i-cell title="工作地点" label="{{address}}"></i-cell>
+  <map></map>
+  <i-cell title="公司信息" label="{{company_name}}--{{shop_name}}--{{industry}}--{{brand}}"></i-cell>
+</i-panel>
+
+<i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
+    <view>您确定要应聘这个岗位吗</view>
+</i-modal>

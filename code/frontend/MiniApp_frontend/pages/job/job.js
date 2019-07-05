@@ -1,4 +1,7 @@
 // pages/job/job.js
+const { $Toast } = require('../../dist/base/index');
+const app = getApp();
+
 Page({
 
   /**
@@ -6,33 +9,6 @@ Page({
    */
   data: {
     jobs: [
-      {
-        id: 0,
-        name: "工作一",
-        detail: "工作一的附加描述",
-        tags: [
-          {
-            id: 0,
-            name: "厨师",
-            isChosen: false
-          },
-          {
-            id: 1,
-            name: "收银",
-            isChosen: false
-          },
-          {
-            id: 2,
-            name: "打杂",
-            isChosen: false
-          },
-          {
-            id: 3,
-            name: "测试行超出会发生什么情况啦啦啦啦啦啦",
-            isChosen: false
-          }
-        ]
-      },
       {
         id: 1,
         name: "工作二",
@@ -60,22 +36,27 @@ Page({
     scrollTop: 0
   },
 
-  onLoad(options) {
-    
+  /*
+   * 如果从job_detail确认应聘并返回，那就显示应聘成功的toast
+   */
+  onShow(options) {
+    if (app.globalData.showSendMessage) {
+      this.handleSuccess();
+    }
+    app.globalData.showSendMessage = false;
   },
 
+  // 上拉刷新
   onPullDownRefresh() {
     //console.log("onRefresh");
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
+  // 触底加载更多
   onReachBottom() {
     //console.log("onBottom");
-    
   },
 
+  //选择位置
   choosePosition() {
     wx.chooseLocation({
       success: (res) => {
@@ -86,11 +67,12 @@ Page({
     })
   },
 
-  //页面滚动执行方式
-  //似乎用于实现吸顶组件
-  onPageScroll(event) {
-    this.setData({
-      scrollTop: event.scrollTop
-    })
+  //显示toast的function
+  handleSuccess() {
+    $Toast({
+      content: '申请岗位成功',
+      type: 'success'
+    });
   }
+
 })

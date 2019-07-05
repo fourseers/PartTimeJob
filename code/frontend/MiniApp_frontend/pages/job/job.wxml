@@ -1,9 +1,11 @@
 <!--pages/job/job.wxml-->
-<i-cell title="{{position}}" i-class="top-bar" bind:click="choosePosition">
-  <view slot="icon">
-    <i-icon type="coordinates" size="28" color="#80848f"></i-icon>
-  </view>
-</i-cell>
+<view class="top-bar">
+  <i-cell title="{{position}}" bind:click="choosePosition">
+    <view slot="icon">
+      <i-icon type="coordinates" size="28" color="#80848f"></i-icon>
+    </view>
+  </i-cell>
+</view>
 <view class="cell-container">
   <i-cell-group>
     <i-cell 
@@ -34,3 +36,4 @@
     </i-cell>
   </i-cell-group>
 </view>
+<i-toast id="toast" />

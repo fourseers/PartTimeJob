@@ -9,8 +9,23 @@ App({
     // 登录
     wx.login({
       success: res => {
-        // console.log(res);
+        console.log(res);
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        let postData = {
+          "token": res.code
+        }
+        wx.request({
+          url: this.globalData.backendIP + this.globalData.loginAPI,
+          data: postData,
+          method: "POST",
+          success: (res) => {
+            //通过res来判断用户是否注册
+            console.log(res);
+          },
+          fail: () => {
+            this.globalData.isRegistered = false;
+          }
+        })
       }
     })
     // 获取用户信息
@@ -47,5 +62,9 @@ App({
   globalData: {
     userInfo: null,
     userGPS: null,
+    isRegistered: false,
+    showSendMessage: false,
+    backendIP: "http://202.120.40.8:8079",
+    loginAPI: "/api/wechat/login"
   }
 })

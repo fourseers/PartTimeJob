@@ -3,6 +3,11 @@
   <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" />
   <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" />
   <i-input value="{{ phoneNumber }}" title="手机号" placeholder="请输入手机号" type='number' maxlength="11" bind:change="getPhoneNumber" />
+  <i-cell is-link>
+    <picker bind:change="getEducation" value="{{educationList.length}}" range="{{educationList}}">
+      请选择文化水平: {{education}}
+    </picker>
+  </i-cell>
 </i-panel>
 <i-panel title="职业倾向" hide-border="{{ true }}">
   <i-cell title="已选倾向">

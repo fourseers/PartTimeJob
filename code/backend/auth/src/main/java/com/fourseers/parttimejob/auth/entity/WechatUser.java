@@ -1,9 +1,11 @@
 package com.fourseers.parttimejob.auth.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table(name = "WECHATUSER")
 public class WechatUser {
 
     private Integer uid;
@@ -19,7 +21,6 @@ public class WechatUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "EMPLOYEE_ID")
     public Integer getUid() {
         return uid;
     }
@@ -28,7 +29,6 @@ public class WechatUser {
         this.uid = uid;
     }
 
-    @Column(name = "OPENID")
     public String getOpenid() {
         return openid;
     }
@@ -37,7 +37,6 @@ public class WechatUser {
         this.openid = openid;
     }
 
-    @Column(name = "NAME")
     public String getName() {
         return name;
     }
@@ -46,7 +45,6 @@ public class WechatUser {
         this.name = name;
     }
 
-    @Column(name = "GENDER")
     public Boolean getGender() {
         return gender;
     }
@@ -55,7 +53,6 @@ public class WechatUser {
         this.gender = gender;
     }
 
-    @Column(name = "IDENTITY")
     public String getIdentity() {
         return identity;
     }
@@ -64,7 +61,6 @@ public class WechatUser {
         this.identity = identity;
     }
 
-    @Column(name = "PHONE")
     public String getPhone() {
         return phone;
     }
@@ -73,7 +69,6 @@ public class WechatUser {
         this.phone = phone;
     }
 
-    @Column(name = "COUNTRY")
     public String getCountry() {
         return country;
     }
@@ -82,7 +77,6 @@ public class WechatUser {
         this.country = country;
     }
 
-    @Column(name = "CITY")
     public String getCity() {
         return city;
     }
@@ -91,7 +85,6 @@ public class WechatUser {
         this.city = city;
     }
 
-    @Column(name = "EDUCATION")
     public String getEducation() {
         return education;
     }

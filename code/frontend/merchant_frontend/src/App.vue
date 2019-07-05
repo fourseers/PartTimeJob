@@ -1,15 +1,23 @@
 <template>
   <div id="app">
-      <Col span="4">
-      <Toolbar/>
-      </Col>
-      <Col span="20">
-        <div id="core-view">
-          <v-fade-transition mode="out-in">
-            <router-view />
-          </v-fade-transition>
-        </div>
-      </Col>
+
+      <Layout>
+          <Header style="background-color: #fff" ></Header>
+          <Layout>
+              <Sider hide-trigger
+                     style="background-color: #fff">
+                  <Toolbar/>
+              </Sider>
+              <Content  style="background-color: #fff" >
+                  <v-fade-transition mode="out-in">
+                      <router-view />
+                  </v-fade-transition>
+              </Content>
+          </Layout>
+          <Footer  style="background-color: #fff"></Footer>
+      </Layout>
+
+
   </div>
 </template>
 
@@ -58,6 +66,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: black;
+}
+
+element.style {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    flex: 0 0 200px;
 }
 </style>

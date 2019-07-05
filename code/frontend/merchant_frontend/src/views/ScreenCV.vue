@@ -1,6 +1,5 @@
 <template>
     <div>
-        <Layout>
             <Row >
             <Select v-model="post_chosen" style="width:200px;  margin:10px">
                 <OptionGroup label="店铺1">
@@ -39,8 +38,6 @@
                 </Carousel>
             </div>
             </Row>
-        </Layout>
-
     </div>
 </template>
 

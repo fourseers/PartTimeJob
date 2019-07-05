@@ -16,9 +16,12 @@
                 <Carousel v-model="value1"   class="content">
                     <li style="list-style:none" v-for="item in CVList">
                         <CarouselItem >
-                            <ul id="v-for-object" >
+                            <ul id="v-for-object" class="cv">
                                 <li v-for="(value, name) in item">
+                                   <p  class="cv-item">
                                     {{ name }}: {{ value }}
+                                   </p>
+                                    <br>
                                 </li>
                             </ul>
                             <div class="buttons">
@@ -147,7 +150,7 @@
     .content{
         margin:10px 50px 50px;
         background-color: #fff;
-        height:400px;
+        height:500px;
     }
     ul li{
         list-style:none;
@@ -163,7 +166,20 @@
         background-color:  #fff;
         border-color:#d63031;
     }
+    .reject:hover
+    {
+        color:  #fff;
+        background-color: #ff7675;
+        border-color:#d63031;
+    }
     .buttons{
         margin:200px;
+    }
+    .cv{
+        padding-left:150px;
+        padding-top:50px;
+    }
+    .cv-item{
+       float:left;
     }
 </style>

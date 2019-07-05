@@ -24,6 +24,9 @@
                 <FormItem label="地址" prop="address">
                     <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
                 </FormItem>
+                <FormItem label="品牌" prop="brand">
+                    <Input v-model="formValidate.brand" placeholder="品牌"></Input>
+                </FormItem>
 
                 <FormItem label="营业领域" prop="industry">
                     <CheckboxGroup v-model="formValidate.industry">
@@ -54,7 +57,8 @@
                     city: '',
                     address:'',
                     industry:[],
-                    shop_intro: ''
+                    shop_intro: '',
+                    brand:''
                 },
                 ruleValidate: {
                     name: [

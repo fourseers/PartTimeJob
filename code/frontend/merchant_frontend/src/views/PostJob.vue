@@ -43,6 +43,12 @@
                     </Col>
                     </Row>
                 </FormItem>
+                <FormItem label="性别要求" prop="gender">
+                    <CheckboxGroup v-model="formValidate.gender">
+                        <Checkbox label="女"></Checkbox>
+                        <Checkbox label="男"></Checkbox>
+                    </CheckboxGroup>
+                </FormItem>
                 <FormItem label="学历要求" prop="education">
                     <CheckboxGroup v-model="formValidate.education">
                         <Checkbox label="小学"></Checkbox>
@@ -81,8 +87,8 @@
                 formValidate: {
                     name: '',
                     shop: '',
-                    gender: '',
-                    education:'',
+                    gender:[],
+                    education:[],
                     begin_date: '',
                     end_date:'',
                     job_detail:''
@@ -97,11 +103,10 @@
                         { required: true, message: '请选择店铺', trigger: 'change' }
                     ],
                     gender: [
-                        { required: true, message: '请选择岗位要求的性别', trigger: 'change' }
+                        { required: true,type: 'array', min: 1,  message: '请选择岗位要求的性别', trigger: 'change' }
                     ],
                     education: [
-                        { required: true, type: 'array', min: 1, message: '最少选择一个学历', trigger: 'change' },
-                        { type: 'array', max: 1, message: '最多选择一个学历', trigger: 'change' }
+                        { required: true, type: 'array', max: 1, message: '最多选择一个学历', trigger: 'change' }
                     ],
                     begin_date: [
                         { required: true, type: 'date', message: '请选择开始招聘时间', trigger: 'change' }
@@ -120,6 +125,7 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('Success!');
+                        console.log( this.formValidate.begin_date)
                     } else {
                         this.$Message.error('Fail!');
                     }

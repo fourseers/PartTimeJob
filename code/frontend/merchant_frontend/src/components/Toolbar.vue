@@ -44,6 +44,10 @@
                 <Icon type="ios-people" />
                 发布岗位
             </MenuItem>
+        <MenuItem name="17" to="/showjobs">
+            <Icon type="ios-people" />
+            查看已发布岗位
+        </MenuItem>
         <MenuItem name="11" to="/confirmcheckin">
             <Icon type="ios-people" />
             确认打卡

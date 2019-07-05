@@ -29,6 +29,7 @@
     import CheckinStat from './views/CheckinStat.vue'
     import ScreenCV from './views/ScreenCV.vue'
     import PostStat from './views/PostStat.vue'
+    import ShowJobs from './views/ShowJobs.vue'
     export default {
   name: 'app',
   components: {
@@ -45,7 +46,8 @@
       SalaryStat,
       CheckinStat,
       ScreenCV,
-      PostStat
+      PostStat,
+      ShowJobs
   }
 }
 </script>

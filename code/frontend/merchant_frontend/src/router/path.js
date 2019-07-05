@@ -12,10 +12,13 @@ import SalaryStat from '../views/SalaryStat.vue'
 import CheckinStat from '../views/CheckinStat.vue'
 import ScreenCV from '../views/ScreenCV.vue'
 import PostStat from '../views/PostStat.vue'
+
+import ShowJobs from '../views/ShowJobs.vue'
 const  routes =[
     {
         path: '/',
-        view: 'Login'
+        view: 'Login',
+        component:Login
     },
     {
         path: '/login',
@@ -88,6 +91,13 @@ const  routes =[
         name: 'screenCV',
         component:ScreenCV
     }
+    ,
+    {
+        path: '/showjobs',
+        name: 'showjobs',
+        component:ShowJobs
+    }
+
 
 
 

@@ -84,15 +84,19 @@
                                 }, '发放工资'),
                                 h('Button', {
                                     props: {
+                                        type:'error',
                                         size: 'small'
                                     },
                                     style: {
                                     color: '#d63031',
                                         borderColor:'#d63031',
+                                        backgroundColor:'#fff',
                                     marginRight: '5px',
                                     marginTop:'5px',
                                         marginBottom:'5px'
+
                                     },
+
                                     on: {
                                         click: () => {
 
@@ -143,9 +147,5 @@
         margin-right:50px;
         background-color: #fff;
     }
-    .ivu-btn-default
-    {
-        background-color:  #fff;
-        border-color: #d63031;
-    }
+
 </style>

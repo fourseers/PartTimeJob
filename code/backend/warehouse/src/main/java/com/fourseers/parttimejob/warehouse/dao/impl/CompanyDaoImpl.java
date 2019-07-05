@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dao.impl;
 
-import com.fourseers.parttimejob.warehouse.Repository.CompanyRepository;
+import com.fourseers.parttimejob.warehouse.repository.CompanyRepository;
 import com.fourseers.parttimejob.warehouse.dao.CompanyDao;
 import com.fourseers.parttimejob.warehouse.entity.Company;
 import org.springframework.beans.factory.annotation.Autowired;

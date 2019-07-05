@@ -9,6 +9,7 @@ public class Company {
 
     private Integer companyId;
     private String companyName;
+    private Integer adminId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +30,14 @@ public class Company {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    @Column(name = "ADMIN_ID")
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
     }
 }

@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.entity.Company;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 
@@ -19,21 +18,30 @@ public class CompanyController {
     private CompanyService companyService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public JSONObject createCompany(@RequestBody Company company) {
+    public ResponseEntity<JSONObject> createCompany(@RequestBody JSONObject body,
+                                                    @RequestHeader("x-internal-token") Integer userId) {
         JSONObject jsonObject = new JSONObject();
+
+        Company company = new Company();
+        company.setCompanyName(body.getString("companyName"));
+        company.setAdminId(userId);
+
+        HttpStatus status = HttpStatus.OK;
         try {
             if (companyService.findByCompanyName(company.getCompanyName()) != null) {
-                jsonObject.put("code", 400);
+                jsonObject.put("status", 400);
                 jsonObject.put("message", "company name exist");
+                status = HttpStatus.BAD_REQUEST;
             } else {
                 companyService.save(company);
-                jsonObject.put("code", 200);
+                jsonObject.put("status", 200);
                 jsonObject.put("message", "success");
             }
         } catch (ConstraintViolationException ex) {
-            jsonObject.put("code", 400);
+            jsonObject.put("status", 400);
             jsonObject.put("message", "failed");
+            status = HttpStatus.BAD_REQUEST;
         }
-        return jsonObject;
+        return new ResponseEntity<>(jsonObject, status);
     }
 }

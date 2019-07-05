@@ -25,6 +25,7 @@ public class WechatLoginController {
     @Value("${app.wechat_user_prefix}")
     private String wechatUserPrefix;
 
+    @Autowired
     private Wechat wechat;
 
     @Autowired

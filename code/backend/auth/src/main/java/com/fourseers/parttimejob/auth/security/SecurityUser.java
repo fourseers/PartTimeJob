@@ -1,6 +1,5 @@
 package com.fourseers.parttimejob.auth.security;
 
-import com.fourseers.parttimejob.auth.entity.UserCredential;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

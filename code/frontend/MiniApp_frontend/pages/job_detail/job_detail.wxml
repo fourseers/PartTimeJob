@@ -1,23 +1,4 @@
-<!--pages/job-detail/job_detail.wxml
-<i-tag
-      color="yellow"
-      checkable="{{true}}"
-      checked="{{true}}"
-      type="border"
-      class="i-tags"
-    >
-      {{education}}学历以上
-    </i-tag>
-    <i-tag
-      color="yellow"
-      checkable="{{true}}"
-      checked="{{true}}"
-      type="border"
-      class="i-tags"
-    >
-      只招{{need_gender === 1 ? "男" : "女"}}性
-    </i-tag>
--->
+<!--pages/job-detail/job_detail.wxml-->
 <i-panel i-class="title-box">
   <i-cell title="{{job_name}}" label="只招{{need_amount}}人">
     <view slot="icon">
@@ -61,7 +42,7 @@
 </i-panel>
 <i-panel>
   <i-cell title="工作地点" label="{{address}}"></i-cell>
-  <map></map>
+  <map id="job_map" class="job-map" longitude="{{longitude}}" latitude="{{latitude}}"></map>
   <i-cell title="公司信息" label="{{company_name}}--{{shop_name}}--{{industry}}--{{brand}}"></i-cell>
 </i-panel>
 

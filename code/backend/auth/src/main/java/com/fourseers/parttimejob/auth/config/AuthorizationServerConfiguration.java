@@ -30,9 +30,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    @Qualifier("userDetailsServiceBean")
+    @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
-
 
     // use redis to store token
     @Autowired
@@ -62,28 +61,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .withClient("wechatClient")
                 .secret(wechatClientSecret)
                 //.resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                //.scopes("select")
-                .authorities("oauth2")
-                .and().withClient("client_2")
+                .authorizedGrantTypes("password", "refresh_token")
+                .scopes("user")
+                .and().withClient("webClient")
                 .resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("password", "client_credentials", "refresh_token")
-                .scopes("server")
+                .authorizedGrantTypes("password", "refresh_token")
                 .authorities("oauth2")
-                .secret(webClientSecret)
-                .and().withClient("_internalMS")
-                //.resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                //.scopes("select")
-                .authorities("oauth2");
+                .scopes("merchant")
+                .secret(webClientSecret);
         // clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(getRedisTokenStore())
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .authenticationManager(authenticationManager)
-                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+                .userDetailsService(userDetailsService);
     }
 
     @Override

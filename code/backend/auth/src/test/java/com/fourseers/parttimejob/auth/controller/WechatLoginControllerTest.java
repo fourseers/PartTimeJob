@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,9 +42,9 @@ public class WechatLoginControllerTest {
     private OAuth oauth;
 
     @Value("${app.wechat_user_prefix}")
-    private String wechatUserPrefix;
+    private String WECHAT_USER_PREFIX;
 
-    @Value("${app.wechat_password_placeholder")
+    @Value("${app.wechat_password_placeholder}")
     private String WECHAT_PASSWD_PLACEHOLDER;
 
 
@@ -92,18 +93,14 @@ public class WechatLoginControllerTest {
 
         JSONObject successResponse = JSON.parseObject(
                 "{\n" +
-                "   \"status\":200,\n" +
-                "   \"data\":{\n" +
-                "      \"access_token\":\"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3\",\n" +
-                "      \"token_type\":\"bearer\",\n" +
-                "      \"expires_in\":3600,\n" +
-                "      \"refresh_token\":\"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk\",\n" +
-                "      \"scope\":\"server\"\n" +
-                "   },\n" +
-                "   \"message\":\"success\"\n" +
+                "   \"access_token\":\"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3\",\n" +
+                "   \"token_type\":\"bearer\",\n" +
+                "   \"expires_in\":3600,\n" +
+                "   \"refresh_token\":\"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk\",\n" +
+                "   \"scope\":\"server\"\n" +
                 "}");
-        // TODO add basic auth
-        when(oauth.getToken(wechatUserPrefix + "fake_openid", WECHAT_PASSWD_PLACEHOLDER, "password", "")).thenReturn(successResponse);
+
+        when(oauth.getToken(WECHAT_USER_PREFIX + "fake_openid", WECHAT_PASSWD_PLACEHOLDER, "password", "Basic d2VjaGF0Q2xpZW50OjEyMzQ1Ng==")).thenReturn(successResponse);
 
 //        JSONObject userNotExistResponse = JSON.parseObject(
 //                "{\n" +
@@ -111,7 +108,7 @@ public class WechatLoginControllerTest {
 //                "   \"message\":\"invalid token\"\n" +
 //                "}"
 //        );
-//        when(oauth.getToken(wechatUserPrefix + "in", "", "password")).thenReturn(successResponse);
+//        when(oauth.getToken(WECHAT_USER_PREFIX + "in", "", "password")).thenReturn(successResponse);
     }
 
     @Test
@@ -119,6 +116,7 @@ public class WechatLoginControllerTest {
         JSONObject body = new JSONObject();
         body.put("token", "fake_token");
         MvcResult result = mockMvc.perform(post("/login")
+                .header(HttpHeaders.AUTHORIZATION, "Basic d2VjaGF0Q2xpZW50OjEyMzQ1Ng==")
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

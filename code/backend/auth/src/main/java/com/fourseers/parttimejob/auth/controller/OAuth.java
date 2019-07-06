@@ -13,7 +13,8 @@ public interface OAuth {
     @PostMapping("/oauth/token")
     JSONObject getToken(@RequestParam String username,
                         @RequestParam String password,
-                        @RequestParam("grant_type") String grantType);
+                        @RequestParam("grant_type") String grantType,
+                        @RequestHeader("Authorization") String basicAuth);
 
     @GetMapping("/oauth/check_token")
     JSONObject checkToken(@RequestParam("token") String accessToken,

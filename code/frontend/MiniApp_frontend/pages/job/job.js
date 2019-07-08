@@ -43,8 +43,8 @@ Page({
   onShow(options) {
     if (app.globalData.showSendMessage) {
       this.handleSuccess();
+      app.globalData.showSendMessage = false;
     }
-    app.globalData.showSendMessage = false;
   },
 
   // 上拉刷新

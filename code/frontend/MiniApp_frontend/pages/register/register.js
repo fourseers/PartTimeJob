@@ -1,6 +1,8 @@
 // pages/register/register.js
 const { $Toast } = require("../../dist/base/index");
 const app = getApp();
+import request from "../../api/request.js"
+import { register } from "../../api/url.js"
 
 Page({
   /*
@@ -152,29 +154,70 @@ Page({
 
   //向服务器发送请求
   //使用wx.request
-  Register() {
-    console.log(app.globalData.userInfo);
-    let postData = {
-      "name": this.data.name,
-      "gender": app.globalData.userInfo.gender,
-      "identity": this.data.identity,
-      "phone": this.data.phoneNumber,
-      "country": app.globalData.userInfo.country,
-      "city": app.globalData.userInfo.city,
-      "education": this.data.education
-    };
-    wx.request({
-      url: 'http://202.120.40.8:8079/api/wechat/register',
-      data: postData,
-      method: "POST",
-      success: (res) => {
-        //通过res来判断用户是否注册
-        console.log(res);
-      },
-      fail: () => {
-        this.globalData.isRegistered = false;
-      }
-    })
+  register() {
+    //console.log(app.globalData.userInfo);
+    if (this.data.name_error || this.data.name === ""){
+      $Toast({
+        content: "请输入正确的姓名",
+        type: "error"
+      });
+    }
+    else if (this.data.identity_error || this.data.identity === ""){
+      $Toast({
+        content: "请输入正确的身份证号",
+        type: "error"
+      });
+    }
+    else if (this.data.phone_error || this.data.phoneNumber === ""){
+      $Toast({
+        content: "请输入正确的手机号",
+        type: "error"
+      });
+    }
+    else if (this.data.education === ""){
+      $Toast({
+        content: "请选择文化水平",
+        type: "error"
+      });
+    }
+    else{
+      wx.login({
+        success: res => {
+          var req = new request();
+          var postData = {
+            "name": this.data.name,
+            "gender": app.globalData.userInfo.gender,
+            "identity": this.data.identity,
+            "phone": this.data.phoneNumber,
+            "country": app.globalData.userInfo.country,
+            "city": app.globalData.userInfo.city,
+            "education": this.data.education,
+            "token": res.code
+          };
+          req.postRequest(app.globalData.host + register, JSON.stringify(postData)).then(res => {
+            if (res.statusCode === 400) {
+              app.globalData.isRegistered = false;
+              $Toast({
+                content: "注册失败",
+                type: "error"
+              });
+            }
+            else if (res.statusCode === 200) {
+              app.globalData.isRegistered = true;
+              app.globalData.showSendMessage = true;
+              wx.navigateBack({
+                
+              })
+            }
+            else {
+              app.globalData.isRegistered = false;
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      })
+    }
   }
 
 })

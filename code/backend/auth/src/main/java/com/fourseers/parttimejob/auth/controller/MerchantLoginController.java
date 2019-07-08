@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class MerchantLoginController {
 
     @Autowired
-    private OAuth oauth;
+    private OAuth oAuth;
 
     @Autowired
     private MerchantUserService merchantUserService;
@@ -24,14 +24,14 @@ public class MerchantLoginController {
             @RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         String username = body.getString("username");
         String password = body.getString("password");
-        if(username == null || password == null)
+        if(username == null || username.isEmpty() || password == null || password.isEmpty())
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "Doesn't have sufficient params.");
 
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUsername(username);
         merchantUser.setPassword(password);
         if(merchantUserService.register(merchantUser)) {
-            JSONObject response = oauth.getToken(username, password, "password", basicAuth);
+            JSONObject response = oAuth.getToken(username, password, "password", basicAuth);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "User exists.");
@@ -44,7 +44,7 @@ public class MerchantLoginController {
             @RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         String username = body.getString("username");
         String password = body.getString("password");
-        JSONObject response = oauth.getToken(username, password, "password", basicAuth);
+        JSONObject response = oAuth.getToken(username, password, "password", basicAuth);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -75,6 +75,14 @@ Page({
       content: '注册成功',
       type: 'success'
     });
+  },
+
+  handleSchedule() {
+    console.log("schedule");
+  },
+
+  handleInform() {
+    console.log("information");
   }
 
 })

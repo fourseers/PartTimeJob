@@ -11,7 +11,28 @@
       <view class="information">
         <i-button wx:if="{{!isRegistered}}" bind:click="handleRegister">注册</i-button>
         <block wx:else>
-          <view>这里显示其他信息</view>
+          <view>
+            <i-grid>
+              <i-row>
+                <i-grid-item>
+                  <i-button bind:click="handleSchedule" inline>
+                    时间安排
+                  </i-button>
+                </i-grid-item>
+                <i-grid-item>
+                  <i-grid-icon>
+                    <i-icon size="24" type="close" />
+                    <i-grid-label>暂无</i-grid-label>
+                  </i-grid-icon>
+                </i-grid-item>
+                <i-grid-item>
+                  <i-button bind:click="handleInform" inline>
+                    个人信息
+                  </i-button>
+                </i-grid-item>
+              </i-row>
+            </i-grid>
+          </view>
         </block>
       </view>
     </block>

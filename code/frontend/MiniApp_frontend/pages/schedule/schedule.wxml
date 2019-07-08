@@ -1,4 +1,4 @@
-<!--pages/schedule/schedule.wxml-->
+<!--pages/schedule/schedule.wxml
 
 <view class="table" bindtouchstart="handleTouchStart" bindtouchmove="handleTouchMove" bindtouchend="handleTouchEnd">
   <view class="tr bg-w">
@@ -11,16 +11,33 @@
     <view class="th">五</view>
     <view class="th">六</view>
   </view>
-  <block wx:for="{{listData}}" wx:key="{{code}}">
-    <view class="tr" id="{{index}}">
-      <view class="td" id="0">{{item[0]}}</view>
-      <view class="{{item[1] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[2] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[3] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[4] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[5] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[6] ? 'td choose-g' : 'td'}}" ></view>
-      <view class="{{item[7] ? 'td choose-g' : 'td'}}" ></view>
+  <block wx:for="{{listData}}" wx:key="{{code}}" wx:for-index="groupIndex">
+    <view class="tr" id="{{groupIndex}}">
+      <view class="td">{{item[0]}}</view>
+      <block wx:for="{{listData[groupIndex]}}" wx:key="{{code}}" wx:for-index="cellIndex">
+        <view class="{{item[cellIndex] ? 'td choose-g' : 'td'}}" wx:if="{{cellIndex !== 0}}">{{item[cellIndex] ? "添加" : ""}}</view>
+      </block>
     </view>
   </block>
 </view>
+
+<scroll-view class="table-t" bindtouchstart="handleTouchStart" bindtouchmove="handleTouchMove" bindtouchend="handleTouchEnd" scroll-x="{{true}}">-->
+<scroll-view class="table-t" scroll-x>
+  <view class="head-column">
+    <view class="head-cell"></view>
+    <view class="head-cell">日</view>
+    <view class="head-cell">一</view>
+    <view class="head-cell">二</view>
+    <view class="head-cell">三</view>
+    <view class="head-cell">四</view>
+    <view class="head-cell">五</view>
+    <view class="head-cell">六</view>
+  </view>
+  <view class="scroll-table" >
+    <view class="row">
+      <block wx:for="{{timeList}}">
+        <view class="row-head-cell">{{item}}时</view>
+      </block>
+    </view>
+  </view>
+</scroll-view>

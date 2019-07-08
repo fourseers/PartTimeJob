@@ -63,7 +63,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userCredential.setRid(merchantUser.getUid());
             userCredential.setRole(ROLE_MERCHANT);
             userCredential.setUsername(merchantUser.getUsername());
-            userCredential.setPassword(merchantUser.getPassword());
+            userCredential.setPassword(passwordEncoder.encode(merchantUser.getPassword()));
         }
 
         return new SecurityUser(userCredential);

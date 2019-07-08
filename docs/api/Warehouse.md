@@ -42,21 +42,21 @@
 
 - 返回格式：JSON
 
-- 接口名称：`/merchant/shop`
+- 接口名称：`/merchant/shop/`
 
 - 请求参数：
 
-  | 参数名       | 必须 | 类型     | 描述         |
-  | ------------ | ---- | -------- | ------------ |
-  | `shop_name`  | 是   | `String` | 店铺名称     |
-  | `province`   | 是   | `String` | 店铺所在省份 |
-  | `city`       | 是   | `String` | 店铺所在城市 |
-  | `address`    | 是   | `String` | 店铺地址     |
-  | `longitude`  | 是   | `Float`  | 经度         |
-  | `latitude`   | 是   | `Float`  | 纬度         |
-  | `brand`      | 是   | `String` | 品牌         |
-  | `industry`   | 是   | `String` | 营业领域     |
-  | `shop_intro` | 是   | `String` | 店铺介绍     |
+  | 参数名              | 必须 | 类型     | 描述         |
+  | ------------------- | ---- | -------- | ------------ |
+  | `shop_name`         | 是   | `String` | 店铺名称     |
+  | `province`          | 是   | `String` | 店铺所在省份 |
+  | `city`              | 是   | `String` | 店铺所在城市 |
+  | `address`           | 是   | `String` | 店铺地址     |
+  | `longitude`         | 是   | `Float`  | 经度         |
+  | `latitude`          | 是   | `Float`  | 纬度         |
+  | `brand`             | 是   | `String` | 品牌         |
+  | `industry`          | 是   | `String` | 营业领域     |
+  | `shop_introduction` | 是   | `String` | 店铺介绍     |
 
 - 返回结果：
 
@@ -142,9 +142,9 @@
         "shop":{
            "shop_id":1,
            "shop_name":"yidiandian",
-           "shop_introduction":"really nice tea",
-           "shop_province":"Shanghai",
-           "shop_city":"Shanghai",
+           "introduction":"really nice tea",
+           "province":"Shanghai",
+           "city":"Shanghai",
            "latitude":121.48,
            "longitude":31.22,
            "brand":"yidiandian",
@@ -292,9 +292,11 @@
   }
   ```
 
-- 字段说明：
+  
 
-  | 字段      | 类型        | 描述                     |
-  | --------- | ----------- | ------------------------ |
-  | `status`  | `int`       | 状态码，成功200，失败400 |
-  | `message` | `String`    | 请求结果                 |
+- 字段说明：
+  | 字段      | 类型     | 描述                     |
+  | --------- | -------- | ------------------------ |
+  | `status`  | `int`    | 状态码，成功200，失败400 |
+  | `job`     | `Job`    | 商家的所有job信息        |
+  | `message` | `String` | 请求结果                 |

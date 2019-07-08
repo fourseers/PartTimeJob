@@ -14,16 +14,16 @@
 
                     <FormItem label="省份" prop="province">
                         <Select v-model="formValidate.province" placeholder="选择省份">
-                            <Option value="beijing">北京</Option>
-                            <Option value="shanghai">上海</Option>
-                            <Option value="shenzhen">深圳</Option>
+                            <Option value="北京">北京</Option>
+                            <Option value="上海">上海</Option>
+                            <Option value="深圳">深圳</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="城市" prop="city">
                         <Select v-model="formValidate.city" placeholder="选择城市">
-                            <Option value="beijing">北京</Option>
-                            <Option value="shanghai">上海</Option>
-                            <Option value="shenzhen">深圳</Option>
+                            <Option value="北京">北京</Option>
+                            <Option value="上海">上海</Option>
+                            <Option value="深圳">深圳</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="地址" prop="address">
@@ -46,7 +46,7 @@
                     </FormItem>
                     <FormItem>
                         <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-                        <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+                        <Button @click="handleReset()" style="margin-left: 8px">初始</Button>
                     </FormItem>
                 </Form>
             </Col>
@@ -62,11 +62,11 @@
                 formValidate: {
                     shop_name: this.$route.params.shop_name,
                     province: this.$route.params.province,
-                    city: '',
-                    address:'',
-                    industry:[],
-                    shop_intro: '',
-                    brand:''
+                    city: this.$route.params.city,
+                    address: this.$route.params.address,
+                    industry: this.$route.params.industry,
+                    shop_intro: this.$route.params.shop_intro,
+                    brand:this.$route.params.brand
                 },
                 ruleValidate: {
                     shop_name: [
@@ -105,42 +105,14 @@
                     }
                 })
             },
-            handleReset (name) {
-                this.$refs[name].resetFields();
-            },
-            addShop()
-            {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "*",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/shop",
-                    data: this.$qs.stringify({
-                        shop_name: this.formInline.shop_name,
-                        province: this.formInline.province,
-                        city:this.formInline.city,
-                        address:this.formInline.address,
-                        longitude:this.longitude,
-                        latitude:this.latitude,
-                        brand:this.formInline.brand,
-                        industry:this.formInline.industry,
-                        shop_intro:this.formInline. shop_intro
-                    })
-                }).then(response => {
-                    console.log(response.data);
-                    if(response.message === 'success')
-                    {
-                        //
-                    }
-                })
-                    .catch(error => {
-                        JSON.stringify(error);
-                        console.log(error)
-                    })
+            handleReset () {
+                this.formValidate.shop_name= this.$route.params.shop_name;
+                this.formValidate.province= this.$route.params.province;
+                this.formValidate.city= this.$route.params.city;
+                this.formValidate.address= this.$route.params.address;
+                this.formValidate.industry= this.$route.params.industry;
+                this.formValidate.shop_intro= this.$route.params.shop_intro;
+                this.formValidate.brand=this.$route.params.brand;
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.auth.entity;
+package com.fourseers.parttimejob.warehouse.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -7,19 +7,19 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class MerchantUser {
 
-    private Integer uid;
+    private Integer userId;
     private String username;
     private String password;
     private Company company;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getUid() {
-        return uid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @NotBlank

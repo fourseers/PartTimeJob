@@ -13,7 +13,8 @@ import 'iview/dist/styles/iview.css';
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
-axios.defaults.baseURL = "http://localhost:8079";
+axios.defaults.baseURL = "http://202.120.40.8:30552";
+//部署服务器
 
 Vue.prototype.$qs = qs;
 Vue.prototype.axios = axios;
@@ -32,4 +33,5 @@ Vue.use(Vuex);
 new Vue({
   router,
   render: h => h(App),
+  baseURL:axios.defaults.baseURL
 }).$mount('#app');

@@ -3,10 +3,18 @@
     <Layout >
         <Content class="content">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="名称" prop="name">
-                    <Input v-model="formValidate.name" placeholder="店铺名称"></Input>
+                <FormItem label="名称" prop="shop_name">
+                    <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
                 </FormItem>
-
+                <Upload
+                        multiple
+                        type="drag"
+                        action="//jsonplaceholder.typicode.com/posts/">
+                    <div style="padding: 2px 0; width:100px; height: 70px;">
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <p>点击或者拖拽上传图片</p>
+                    </div>
+                </Upload>
                 <FormItem label="省份" prop="province">
                     <Select v-model="formValidate.province" placeholder="选择省份">
                         <Option value="beijing">北京</Option>
@@ -54,7 +62,7 @@
                 longtitude:0.0,
                 latitude: 0.0,
                 formValidate: {
-                    name: '',
+                    shop_name: '',
                     province:'',
                     city: '',
                     address:'',
@@ -63,7 +71,7 @@
                     brand:''
                 },
                 ruleValidate: {
-                    name: [
+                    shop_name: [
                         { required: true, message: '店铺名字不能为空', trigger: 'blur' }
                     ],
                     province: [
@@ -112,15 +120,15 @@
                     method: 'post',
                     url: prefix +"/merchant/shop",
                     data: this.$qs.stringify({
-                        shop_name: this.formInline.shop_name,
-                        province: this.formInline.province,
-                        city:this.formInline.city,
-                        address:this.formInline.address,
+                        shop_name:this.formValidate.shop_name,
+                        province: this.formValidate.province,
+                        city:this.formValidate.city,
+                        address:this.formValidate.address,
                         longitude:this.longitude,
                         latitude:this.latitude,
-                        brand:this.formInline.brand,
-                        industry:this.formInline.industry,
-                        shop_intro:this.formInline. shop_intro
+                        brand:this.formValidate.brand,
+                        industry:this.formValidate.industry,
+                        shop_intro:this.formValidate.shop_intro
                     })
                 }).then(response => {
                     console.log(response.data);

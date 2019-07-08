@@ -14,11 +14,6 @@
                         key: 'name',
                         render: (h, params) => {
                             return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'person'
-                                    }
-                                }),
                                 h('strong', params.row.name)
                             ]);
                         }
@@ -131,9 +126,6 @@
                     title: 'User Info',
                     content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
                 })
-            },
-            remove (index) {
-                this.data6.splice(index, 1);
             }
         }
     }

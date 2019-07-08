@@ -12,8 +12,9 @@ import SalaryStat from '../views/SalaryStat.vue'
 import CheckinStat from '../views/CheckinStat.vue'
 import ScreenCV from '../views/ScreenCV.vue'
 import PostStat from '../views/PostStat.vue'
-
 import ShowJobs from '../views/ShowJobs.vue'
+import ShopDetail from '../views/ShopDetail.vue'
+
 const  routes =[
     {
         path: '/',
@@ -96,6 +97,12 @@ const  routes =[
         path: '/showjobs',
         name: 'showjobs',
         component:ShowJobs
+    }
+    ,
+    {
+        path: '/shopdetail',
+        name: 'shopdetail',
+        component:ShopDetail
     }
 
 

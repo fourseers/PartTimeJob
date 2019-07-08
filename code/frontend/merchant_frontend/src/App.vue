@@ -1,24 +1,29 @@
 <template>
-  <div id="app">
+    <div id="app">
 
-      <Layout>
-          <Header style="background-color: #fff" ></Header>
-          <Layout>
-              <Sider hide-trigger
-                     style="background-color: #fff">
-                  <Toolbar/>
-              </Sider>
-              <Content  style="background-color: #fff" >
-                  <v-fade-transition mode="out-in">
-                      <router-view />
-                  </v-fade-transition>
-              </Content>
-          </Layout>
-          <Footer  style="background-color: #fff"></Footer>
-      </Layout>
+        <Layout>
+            <Header style="background-color: #fff" >
+                    <div style="text-align:center">
+                        <h1>灵活用工平台</h1>
+                    </div>
+
+            </Header>
+            <Layout>
+                <Sider hide-trigger
+                       style="background-color: #fff">
+                    <Toolbar/>
+                </Sider>
+                <Content  style="background-color: #fff" >
+                    <v-fade-transition mode="out-in">
+                        <router-view />
+                    </v-fade-transition>
+                </Content>
+            </Layout>
+            <Footer  style="background-color: #fff"></Footer>
+        </Layout>
 
 
-  </div>
+    </div>
 </template>
 
 <script>
@@ -38,41 +43,44 @@
     import ScreenCV from './views/ScreenCV.vue'
     import PostStat from './views/PostStat.vue'
     import ShowJobs from './views/ShowJobs.vue'
+    import ShopDetail from './views/ShopDetail.vue'
+
     export default {
-  name: 'app',
-  components: {
-    Login,
-    Register,
-    Toolbar,
-    PostJob,
-    AddShop,
-      ManageShop,
-      InfoConfig,
-      ConfirmCheckin,
-      MonthlyBill,
-      AddCompany,
-      SalaryStat,
-      CheckinStat,
-      ScreenCV,
-      PostStat,
-      ShowJobs
-  }
-}
+        name: 'app',
+        components: {
+            Login,
+            Register,
+            Toolbar,
+            PostJob,
+            AddShop,
+            ManageShop,
+            InfoConfig,
+            ConfirmCheckin,
+            MonthlyBill,
+            AddCompany,
+            SalaryStat,
+            CheckinStat,
+            ScreenCV,
+            PostStat,
+            ShowJobs,
+            ShopDetail
+        }
+    }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: black;
-}
+    #app {
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: black;
+    }
 
-element.style {
-    width: 200px;
-    min-width: 200px;
-    max-width: 200px;
-    flex: 0 0 200px;
-}
+    element.style {
+        width: 200px;
+        min-width: 200px;
+        max-width: 200px;
+        flex: 0 0 200px;
+    }
 </style>

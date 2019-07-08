@@ -24,6 +24,14 @@ public class MerchantUserServiceImpl implements MerchantUserService {
     }
 
     @Override
+    public boolean register(MerchantUser user) {
+        if(findByUsername(user.getUsername()) != null)
+            return false;
+        merchantUserDao.save(user);
+        return true;
+    }
+
+    @Override
     public void save(MerchantUser user) {
         merchantUserDao.save(user);
     }

@@ -9,5 +9,6 @@ public interface MerchantUserService {
     MerchantUser findById(Integer id);
     MerchantUser findByUsername(String username);
 
+    boolean register(MerchantUser user);
     void save(MerchantUser user);
 }

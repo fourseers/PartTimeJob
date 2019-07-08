@@ -24,8 +24,10 @@ public class MerchantLoginController {
             @RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         String username = body.getString("username");
         String password = body.getString("password");
-        if(username == null || username.isEmpty() || password == null || password.isEmpty())
-            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "Doesn't have sufficient params.");
+        if(username == null || username.isEmpty())
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "Empty username.");
+        if(password == null || password.isEmpty())
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "Empty password.");
 
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUsername(username);

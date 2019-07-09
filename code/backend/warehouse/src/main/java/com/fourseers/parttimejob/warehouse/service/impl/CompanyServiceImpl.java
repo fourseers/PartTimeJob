@@ -26,6 +26,12 @@ public class CompanyServiceImpl implements CompanyService {
         companyDao.save(company);
     }
 
+    public void save(Company company, String bossName) {
+        MerchantUser boss = merchantUserDao.findByUsername(bossName);
+        company.setBoss(boss);
+        companyDao.save(company);
+    }
+
     public Company findByCompanyName(String companyName) {
         return companyDao.findByCompanyName(companyName);
     }

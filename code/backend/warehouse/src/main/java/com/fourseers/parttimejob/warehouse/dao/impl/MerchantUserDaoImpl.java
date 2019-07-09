@@ -19,4 +19,8 @@ public class MerchantUserDaoImpl implements MerchantUserDao {
     public MerchantUser findByUserId(Integer userId) {
         return merchantUserRepository.findByUserId(userId);
     }
+
+    public MerchantUser findByUsername(String username) {
+        return merchantUserRepository.findByUsername(username);
+    }
 }

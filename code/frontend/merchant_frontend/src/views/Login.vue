@@ -24,8 +24,8 @@
 </template>
 <script>
 
-    import token from '../util/token.js'
   export default {
+    name: 'Login',
     data () {
       return {
           state:"",
@@ -49,8 +49,8 @@
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('Success!');
-          this.login()
+            //this.$Message.success('Success!');
+            this.login()
 
           } else {
             this.$Message.error('Fail!');
@@ -58,21 +58,24 @@
         })
       },
         login(){
-        var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io";
+        var prefix="auth";
           //测试用的url
         this.axios({
             headers: {
-                'Access-Control-Allow-Origin': this.baseURL,
-                'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+              'Access-Control-Allow-Origin': "*",
+                'Content-type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
             },
             method: 'post',
-            url: "/merchant/login",
+          dataType:"json",
+          crossDomain: true,
+            url: prefix+ "/merchant/login",
             data: this.$qs.stringify({
                 username: this.formInline.user,
                 password: this.formInline.password
             })
         }).then(response => {
-            console.log(response.data);
+            console.log(response);
             if(response.message === 'success')
             {
                this.$token.savetoken(response.data);

@@ -67,7 +67,6 @@
             handleSubmit: function (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
                         this.register();
                     } else {
                         this.$Message.error('Fail!');
@@ -76,13 +75,17 @@
             },
            register()
             {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io";
+                var prefix="auth";
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "*",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
+
                     },
+                    dataType: 'jsonp',
+                    crossDomain: true,
                     method: 'post',
                     url: prefix +"/merchant/register",
                     data: this.$qs.stringify({

@@ -1,15 +1,8 @@
-package com.fourseers.parttimejob.warehouse.entity;
+package com.fourseers.parttimejob.warehouse.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class WechatUser {
+public class WechatUserInfoDto {
 
     private Integer userId;
-    private String openid;
     private String name;
     private Boolean gender;
     private String identity;
@@ -18,22 +11,12 @@ public class WechatUser {
     private String city;
     private String education;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getUserId() {
         return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(String openid) {
-        this.openid = openid;
     }
 
     public String getName() {

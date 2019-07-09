@@ -1,14 +1,17 @@
-package com.fourseers.parttimejob.auth.dao.impl;
+package com.fourseers.parttimejob.warehouse.dao.impl;
 
-import com.fourseers.parttimejob.auth.dao.TagDao;
-import com.fourseers.parttimejob.auth.entity.Tag;
-import com.fourseers.parttimejob.auth.repository.TagRepository;
+import com.fourseers.parttimejob.warehouse.dao.TagDao;
+import com.fourseers.parttimejob.warehouse.entity.Tag;
+import com.fourseers.parttimejob.warehouse.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Positive;
+import java.util.List;
 
+@Component
 public class TagDaoImpl implements TagDao {
 
     @Autowired
@@ -27,6 +30,11 @@ public class TagDaoImpl implements TagDao {
     @Override
     public Tag getOne(@Positive Integer id) {
         return tagRepository.getOne(id);
+    }
+
+    @Override
+    public List<Tag> getAll() {
+        return tagRepository.findAll();
     }
 
     @Override

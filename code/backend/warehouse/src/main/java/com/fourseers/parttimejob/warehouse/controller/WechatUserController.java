@@ -1,13 +1,11 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/user")
+@RestController("/user")
 public class WechatUserController {
 
     @GetMapping("/info")
-    public void getMapping
+    public U
 }

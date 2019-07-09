@@ -1,8 +1,8 @@
-package com.fourseers.parttimejob.auth.service.impl;
+package com.fourseers.parttimejob.warehouse.service.impl;
 
-import com.fourseers.parttimejob.auth.dao.TagDao;
-import com.fourseers.parttimejob.auth.entity.Tag;
-import com.fourseers.parttimejob.auth.service.TagService;
+import com.fourseers.parttimejob.warehouse.dao.TagDao;
+import com.fourseers.parttimejob.warehouse.entity.Tag;
+import com.fourseers.parttimejob.warehouse.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +17,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> get(int pageCount, int pageSize) {
         return tagDao.get(pageCount, pageSize).getContent();
+    }
+
+    @Override
+    public List<Tag> getAll() {
+        return tagDao.getAll();
     }
 }

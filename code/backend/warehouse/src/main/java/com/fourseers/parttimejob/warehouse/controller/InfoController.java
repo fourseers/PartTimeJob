@@ -1,7 +1,7 @@
-package com.fourseers.parttimejob.auth.controller;
+package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.auth.service.TagService;
+import com.fourseers.parttimejob.warehouse.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/info")
+@RequestMapping("/user")
 public class InfoController {
 
     private static String[] education_list = {
@@ -22,14 +22,17 @@ public class InfoController {
     @Autowired
     private TagService tagService;
 
-    @GetMapping("/user-register")
+    @GetMapping("/register-info")
     public ResponseEntity<JSONObject> getUserRegisterInfo(
             @RequestParam(required = false) Integer pageOffset,
             @RequestParam(required = false) Integer pageSize
     ) {
-        JSONObject resp = new JSONObject()
-                .fluentPut("education", education_list)
-                .fluentPut("tags", tagService.get(pageOffset, pageSize));
+        JSONObject resp = new JSONObject().fluentPut("education", education_list);
+        if(pageOffset != null) {
+            pageSize = (pageSize != null) ? pageSize : 10;
+            resp.fluentPut("tags", tagService.get(pageOffset, pageSize));
+        } else
+            resp.fluentPut("tags", tagService.getAll());
         return new ResponseEntity<>(resp, OK);
     }
 }

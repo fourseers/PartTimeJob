@@ -33,6 +33,8 @@ public class CompanyController {
             }
         } catch (ConstraintViolationException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "failed");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }
     }
 }

@@ -24,12 +24,16 @@ public class CompanyServiceImpl implements CompanyService {
         MerchantUser boss = merchantUserDao.findByUserId(bossId);
         company.setBoss(boss);
         companyDao.save(company);
+        boss.setCompany(company);
+        merchantUserDao.save(boss);
     }
 
     public void save(Company company, String bossName) {
         MerchantUser boss = merchantUserDao.findByUsername(bossName);
         company.setBoss(boss);
         companyDao.save(company);
+        boss.setCompany(company);
+        merchantUserDao.save(boss);
     }
 
     public Company findByCompanyName(String companyName) {

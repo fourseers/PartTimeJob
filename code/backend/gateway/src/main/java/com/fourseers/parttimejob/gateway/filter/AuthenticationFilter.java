@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -18,8 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Configuration
-@Order(-1)
-public class AuthenticationFilter implements GlobalFilter {
+public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private final static String BASIC_AUTH_TOKEN = "Authorization";
     private final static String CLIENT_TOKEN = "x-access-token";
@@ -77,6 +76,11 @@ public class AuthenticationFilter implements GlobalFilter {
         DataBuffer buffer = serverWebExchange.getResponse()
                 .bufferFactory().wrap("Forbidden, access token not found.".getBytes());
         return serverWebExchange.getResponse().writeWith(Flux.just(buffer));
+    }
+
+    @Override
+    public int getOrder() {
+        return -1;
     }
 
     public static class Config {

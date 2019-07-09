@@ -1,6 +1,13 @@
 # 商家端接口定义
 > * 测试环境地址：http://GATEWAY_DOMAIN:30553
 > * 接口统一前缀：`/warehouse`
+> * 统一返回参数：
+>
+> | 参数名  | 参数类型  | 描述                                       |
+> | ------- | --------- | ------------------------------------------ |
+> | status  | `Integer` | 响应状态码，成功返回200，非法请求返回400。 |
+> | message | `String`  | 响应描述信息。                             |
+> | data    | `Object`  | 自定义响应结构化数据，可为NULL。           |
 
 [TOC]
 
@@ -27,36 +34,28 @@
   } 
   ```
 
-- 字段说明：
 
-  | 字段      | 类型     | 描述                     |
-  | --------- | -------- | ------------------------ |
-  | `status`  | `int`    | 状态码，成功200，失败400 |
-  | `message` | `String` | 请求结果                 |
-
-
-
-##商家添加店铺
+## 商家添加店铺
 
 - 请求格式：POST
 
 - 返回格式：JSON
 
-- 接口名称：`/merchant/shop`
+- 接口名称：`/merchant/shop/`
 
 - 请求参数：
 
-  | 参数名       | 必须 | 类型     | 描述         |
-  | ------------ | ---- | -------- | ------------ |
-  | `shop_name`  | 是   | `String` | 店铺名称     |
-  | `province`   | 是   | `String` | 店铺所在省份 |
-  | `city`       | 是   | `String` | 店铺所在城市 |
-  | `address`    | 是   | `String` | 店铺地址     |
-  | `longitude`  | 是   | `Float`  | 经度         |
-  | `latitude`   | 是   | `Float`  | 纬度         |
-  | `brand`      | 是   | `String` | 品牌         |
-  | `industry`   | 是   | `String` | 营业领域     |
-  | `shop_intro` | 是   | `String` | 店铺介绍     |
+  | 参数名              | 必须 | 类型     | 描述         |
+  | ------------------- | ---- | -------- | ------------ |
+  | `shop_name`         | 是   | `String` | 店铺名称     |
+  | `province`          | 是   | `String` | 店铺所在省份 |
+  | `city`              | 是   | `String` | 店铺所在城市 |
+  | `address`           | 是   | `String` | 店铺地址     |
+  | `longitude`         | 是   | `Float`  | 经度         |
+  | `latitude`          | 是   | `Float`  | 纬度         |
+  | `brand`             | 是   | `String` | 品牌         |
+  | `industry`          | 是   | `String` | 营业领域     |
+  | `shop_introduction` | 是   | `String` | 店铺介绍     |
 
 - 返回结果：
 
@@ -66,14 +65,6 @@
      "message":"success"
   } 
   ```
-
-- 字段说明：
-
-  | 字段  | 类型 | 描述                     |
-  | ----- | ---- | ------------------------ |
-  | `status` | `int`  | 状态码，成功200，失败400 |
-  | `message` | `String` | 请求结果 					|
-
 
 
 ## 商家获取全部店铺
@@ -95,9 +86,9 @@
            {
               "shop_id":1,
               "shop_name":"yidiandian",
-              "shop_introduction":"really nice tea",
-              "shop_province":"Shanghai",
-              "shop_city":"Shanghai",
+              "introduction":"really nice tea",
+              "province":"Shanghai",
+              "city":"Shanghai",
               "latitude":121.48,
               "longitude":31.22,
               "brand":"yidiandian",
@@ -112,13 +103,9 @@
   
 - 字段说明：
 
-  | 字段      | 类型         | 描述                     |
-  | --------- | ------------ | ------------------------ |
-  | `status`  | `int`        | 状态码，成功200，失败400 |
-  | `shops`   | `List<Shop>` | 商家拥有的所有店铺信息   |
-  | `message` | `String`     | 请求结果                 |
-
-
+  | 字段    | 类型         | 描述                   |
+  | ------- | ------------ | ---------------------- |
+  | `shops` | `List<Shop>` | 商家拥有的所有店铺信息 |
 
 ## 商家获取单个店铺
 
@@ -142,9 +129,9 @@
         "shop":{
            "shop_id":1,
            "shop_name":"yidiandian",
-           "shop_introduction":"really nice tea",
-           "shop_province":"Shanghai",
-           "shop_city":"Shanghai",
+           "introduction":"really nice tea",
+           "province":"Shanghai",
+           "city":"Shanghai",
            "latitude":121.48,
            "longitude":31.22,
            "brand":"yidiandian",
@@ -160,11 +147,7 @@
 
   | 字段      | 类型         | 描述                     |
   | --------- | ------------ | ------------------------ |
-  | `status`  | `int`        | 状态码，成功200，失败400 |
   | `shop`   | `Shop` | 商家拥有的所有店铺信息   |
-  | `message` | `String`     | 请求结果                 |
-
-
 
 ## 商家发布岗位
 
@@ -200,12 +183,6 @@
   }
   ```
 
-- 字段说明：
-
-  | 字段      | 类型     | 描述                     |
-  | --------- | -------- | ------------------------ |
-  | `status`  | `int`    | 状态码，成功200，失败400 |
-  | `message` | `String` | 请求结果                 |
 
 ## 商家获取全部岗位
 
@@ -248,9 +225,7 @@
 
   | 字段      | 类型        | 描述                     |
   | --------- | ----------- | ------------------------ |
-  | `status`  | `int`       | 状态码，成功200，失败400 |
   | `jobs`    | `List<Job>` | 商家的所有job信息        |
-  | `message` | `String`    | 请求结果                 |
 
 ## 商家获取单个岗位
 
@@ -293,8 +268,6 @@
   ```
 
 - 字段说明：
-
-  | 字段      | 类型        | 描述                     |
-  | --------- | ----------- | ------------------------ |
-  | `status`  | `int`       | 状态码，成功200，失败400 |
-  | `message` | `String`    | 请求结果                 |
+  | 字段  | 类型  | 描述              |
+  | ----- | ----- | ----------------- |
+  | `job` | `Job` | 商家的所有job信息 |

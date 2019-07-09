@@ -6,8 +6,8 @@
   
 }
 .scroll-table {
-  height: 96rpx;
   margin-left: 3rem;
+  display: flex;
 }
 .head-column {
   display: flex;
@@ -27,18 +27,20 @@
   display: flex;
   align-items: center;
 }
-.row {
+.column {
   display: flex;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 }
-.row-head-cell {
-  width: 180rpx;
+.column-head-cell {
+  width: 3rem;
+  height: 96rpx;
   justify-content: center;
   background: #fdcb6e;
-  color: #c8d6e5;
+  color: #fff;
   align-items: center;
+  display: flex;
 }
 .cell {
   width: 3rem;
@@ -47,10 +49,10 @@
   color: #fff;
   display: flex;
   align-items: center;
+  background: #f8f8f9;
 }
 .choose-g{
-  width: 282rpx;
-  height: 115rpx;
+  width: 3rem;
+  height: 96rpx;
   background: #5cadff;
-  border: 1rpx solid darkgray;
 }

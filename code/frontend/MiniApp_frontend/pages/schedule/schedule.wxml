@@ -33,10 +33,15 @@
     <view class="head-cell">五</view>
     <view class="head-cell">六</view>
   </view>
-  <view class="scroll-table" >
-    <view class="row">
-      <block wx:for="{{timeList}}">
-        <view class="row-head-cell">{{item}}时</view>
+  <view> 
+    <view class="scroll-table" bindtap="handleTap">
+      <block wx:for="{{schedule[0]}}" wx:for-index="time" wx:key="{{schedule[time]}}">
+        <view class="column">
+          <view class="column-head-cell">{{timeList[time]}}时</view>
+          <block wx:for="{{week}}" wx:for-index="date" wx:key="{{week[date]}}">
+            <view class="{{schedule[date][time] ? 'cell choose-g' : 'cell'}}" id="{{date * 24 + time}}">{{schedule[date][time] ? "添加" : ""}}</view>
+          </block>
+        </view>
       </block>
     </view>
   </view>

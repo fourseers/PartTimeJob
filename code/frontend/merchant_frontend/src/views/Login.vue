@@ -28,8 +28,8 @@
     name: 'Login',
     data () {
       return {
-          state:"",
-          code:"",
+        state:"",
+        code:"",
         formInline: {
           user: '',
           password: ''
@@ -57,36 +57,34 @@
           }
         })
       },
-        login(){
+      login(){
         var prefix="auth";
-          //测试用的url
         this.axios({
-            headers: {
-              'Access-Control-Allow-Origin': "*",
-                'Content-type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-            },
-            method: 'post',
-          dataType:"json",
+          headers: {
+            'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+            'Content-type': 'application/json',
+            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+          },
+          method: 'post',
           crossDomain: true,
-            url: prefix+ "/merchant/login",
-            data: this.$qs.stringify({
-                username: this.formInline.user,
-                password: this.formInline.password
-            })
+          url: prefix+ "/merchant/login",
+          data:{
+            username: this.formInline.user,
+            password: this.formInline.password
+          }
         }).then(response => {
-            console.log(response);
-            if(response.message === 'success')
-            {
-               this.$token.savetoken(response.data);
-                console.log(this.$token.loadToken());
-            }
+          console.log(response);
+          if(response.message === 'success')
+          {
+            this.$token.savetoken(response.data);
+            console.log(this.$token.loadToken());
+          }
         })
-            .catch(error => {
-                JSON.stringify(error)
-                console.log(error)
-            })
-    }
+                .catch(error => {
+                  JSON.stringify(error)
+                  console.log(error)
+                })
+      }
     }
   }
 </script>

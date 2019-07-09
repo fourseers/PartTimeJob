@@ -80,7 +80,7 @@
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
 
                     },
@@ -88,12 +88,12 @@
                     crossDomain: true,
                     method: 'post',
                     url: prefix +"/merchant/register",
-                    data: this.$qs.stringify({
+                    data: {
                         username: this.formInline.user,
                         password: this.formInline.password
-                    })
+                    }
                 }).then(response => {
-                    console.log(response.data);
+                    console.log(response);
                     if(response.message === 'success')
                     {
                         this.$token.savetoken(response.data);

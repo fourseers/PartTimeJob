@@ -60,7 +60,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             MerchantUser merchantUser = merchantUserService.findByUsername(s);
             if(merchantUser == null)
                 throw new UsernameNotFoundException(String.format("Merchant user with username[%s] not found.", s));
-            userCredential.setRid(merchantUser.getUid());
+            userCredential.setRid(merchantUser.getUserId());
             userCredential.setRole(ROLE_MERCHANT);
             userCredential.setUsername(merchantUser.getUsername());
             userCredential.setPassword(passwordEncoder.encode(merchantUser.getPassword()));

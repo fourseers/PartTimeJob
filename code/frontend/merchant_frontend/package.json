@@ -1,44 +1,31 @@
 {
-  "name": "frontend",
+  "name": "vue-test",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@babel/generator": "^7.5.0",
-    "@babel/highlight": "^7.5.0",
     "axios": "^0.19.0",
-    "babel": "^6.23.0",
-    "convert-source-map": "^1.6.0",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
-    "error-stack-parser": "^2.0.2",
-    "html-tags": "^3.0.0",
-    "invariant": "^2.2.4",
     "iview": "^3.4.2",
-    "lodash.kebabcase": "^4.1.1",
-    "merge-source-map": "^1.1.0",
-    "node-ipc": "^9.1.1",
-    "open": "^6.4.0",
-    "prettier": "^1.18.2",
-    "regenerator-transform": "^0.14.0",
-    "string.prototype.padstart": "^3.0.0",
-    "svg-tags": "^1.0.0",
-    "to-fast-properties": "^2.0.0",
-    "trim-right": "^1.0.1",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.6",
-    "vuelidate": "^0.7.4",
+    "vue-router": "^3.0.7",
     "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-plugin-babel": "^3.9.0",
+    "@vue/cli-plugin-eslint": "^3.9.0",
+    "@vue/cli-plugin-unit-jest": "^3.9.0",
+    "@vue/cli-service": "^3.9.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-template-compiler": "^2.6.10"
@@ -52,14 +39,7 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {
-      "vue/no-parsing-error": [
-        2,
-        {
-          "x-invalid-end-tag": false
-        }
-      ]
-    },
+    "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
     }

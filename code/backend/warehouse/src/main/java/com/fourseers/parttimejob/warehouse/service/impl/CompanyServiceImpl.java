@@ -1,7 +1,9 @@
 package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.fourseers.parttimejob.warehouse.dao.CompanyDao;
+import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
 import com.fourseers.parttimejob.warehouse.entity.Company;
+import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyDao companyDao;
 
-    public void save(Company company) {
+    @Autowired
+    private MerchantUserDao merchantUserDao;
+
+    public void save(Company company, int bossId) {
+        MerchantUser boss = merchantUserDao.findByUserId(bossId);
+        company.setBoss(boss);
         companyDao.save(company);
     }
 

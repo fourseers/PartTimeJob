@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.auth.util;
+package com.fourseers.parttimejob.warehouse.util;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;

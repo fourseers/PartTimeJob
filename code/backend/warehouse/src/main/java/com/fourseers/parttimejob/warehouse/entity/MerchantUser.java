@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.auth.entity;
+package com.fourseers.parttimejob.warehouse.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

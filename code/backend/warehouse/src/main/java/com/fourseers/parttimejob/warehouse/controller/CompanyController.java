@@ -20,7 +20,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> createCompany(@RequestBody JSONObject body,
-                                                    @RequestHeader("x-internal-token") Integer userId) {
+                                                    @RequestHeader("x-internal-token") String bossName) {
         Company company = new Company();
         company.setCompanyName(body.getString("company_name"));
 
@@ -28,7 +28,7 @@ public class CompanyController {
             if (companyService.findByCompanyName(company.getCompanyName()) != null) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "company name exists");
             } else {
-                companyService.save(company, userId);
+                companyService.save(company, bossName);
                 return ResponseBuilder.build(HttpStatus.OK, null, "success");
             }
         } catch (ConstraintViolationException ex) {

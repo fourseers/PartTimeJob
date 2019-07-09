@@ -15,6 +15,16 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
     @Query("select shop " +
            "from Shop shop inner join MerchantUser merchantUser " +
+           "on shop.shopId = ?1 and merchantUser.username = ?2 and shop.company = merchantUser.company")
+    Shop findByShopIdAndUsername(int shopId, String username);
+
+    @Query("select shop " +
+           "from Shop shop inner join MerchantUser merchantUser " +
            "on merchantUser.userId = ?1 and shop.company = merchantUser.company")
     List<Shop> findAllByUserId(int userId);
+
+    @Query("select shop " +
+           "from Shop shop inner join MerchantUser merchantUser " +
+           "on merchantUser.username = ?1 and shop.company = merchantUser.company")
+    List<Shop> findAllByUsername(String username);
 }

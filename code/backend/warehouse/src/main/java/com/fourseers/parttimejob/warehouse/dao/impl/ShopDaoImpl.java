@@ -22,7 +22,15 @@ public class ShopDaoImpl implements ShopDao {
         return shopRepository.findByShopIdAndUserId(shopId, userId);
     }
 
+    public Shop findByShopIdAndUsername(int shopId, String username) {
+        return shopRepository.findByShopIdAndUsername(shopId, username);
+    }
+
     public List<Shop> findAllByUserId(int userId) {
         return shopRepository.findAllByUserId(userId);
+    }
+
+    public List<Shop> findAllByUsername(String username) {
+        return shopRepository.findAllByUsername(username);
     }
 }

@@ -47,6 +47,6 @@ public class MerchantLoginController {
         String username = body.getString("username");
         String password = body.getString("password");
         JSONObject response = oAuth.getToken(username, password, "password", basicAuth);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseBuilder.build(HttpStatus.OK, response, "OK");
     }
 }

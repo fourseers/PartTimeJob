@@ -15,8 +15,13 @@ public class GlobalFeignExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<JSONObject> handleFeignStatusException(FeignException e, HttpServletResponse response) {
+        response.setStatus(e.status());
         HttpStatus status = HttpStatus.resolve(e.status());
         String message = status == null ? "" : status.getReasonPhrase();
-        return ResponseBuilder.build(e.status(), JSON.parseObject(e.contentUTF8()), message);
+        int value = status == null ? 400 : status.value();
+        String content = e.contentUTF8();
+        if(content == null)
+            content = "{'error': 'invalid_grant', 'error_desciption': 'Incorrect username or password'}";
+        return ResponseBuilder.build(value, JSON.parseObject(content), message);
     }
 }

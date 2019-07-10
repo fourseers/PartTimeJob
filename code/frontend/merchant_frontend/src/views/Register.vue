@@ -30,6 +30,8 @@
 </template>
 <script>
     export default {
+
+        name: "Register",
         data () {
             const validatePass = (rule, value, callback) => {
                 // console.log(rule)
@@ -67,7 +69,6 @@
             handleSubmit: function (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
                         this.register();
                     } else {
                         this.$Message.error('Fail!');
@@ -76,31 +77,40 @@
             },
            register()
             {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
+                var prefix="auth";
+                //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "*",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
+
                     },
                     method: 'post',
                     url: prefix +"/merchant/register",
-                    data: this.$qs.stringify({
+                    data: {
                         username: this.formInline.user,
                         password: this.formInline.password
-                    })
+                    }
                 }).then(response => {
                     console.log(response.data);
-                    if(response.message === 'success')
+                    if(response.data.status === 200 )
                     {
-                        this.$token.savetoken(response.data);
+
+                        this.$Message.success('注册成功');
+                        this.$token.savetoken(response.data.data);
                         console.log(this.$token.loadToken());
                     }
 
+                    this.$router.push({ name: "postjob"});
+                }).catch(error=> {
+                    if(error.response){
+                        if(error.response.data.message === "User exists.")
+                        {
+                            this.$Message.error('用户名已存在');
+                        }
+                    }
                 })
-                    .catch(error => {
-                        JSON.stringify(error)
-                        console.log(error)
-                    })
             }
         }
     }

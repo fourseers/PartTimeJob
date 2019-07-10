@@ -3,10 +3,18 @@
     <Layout >
         <Content class="content">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="名称" prop="name">
-                    <Input v-model="formValidate.name" placeholder="店铺名称"></Input>
+                <FormItem label="名称" prop="shop_name">
+                    <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
                 </FormItem>
-
+                <Upload
+                        multiple
+                        type="drag"
+                        action="//jsonplaceholder.typicode.com/posts/">
+                    <div style="padding: 2px 0; width:100px; height: 70px;">
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <p>点击或者拖拽上传图片</p>
+                    </div>
+                </Upload>
                 <FormItem label="省份" prop="province">
                     <Select v-model="formValidate.province" placeholder="选择省份">
                         <Option value="beijing">北京</Option>
@@ -23,6 +31,9 @@
                 </FormItem>
                 <FormItem label="地址" prop="address">
                     <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
+                </FormItem>
+                <FormItem label="品牌" prop="brand">
+                    <Input v-model="formValidate.brand" placeholder="品牌"></Input>
                 </FormItem>
 
                 <FormItem label="营业领域" prop="industry">
@@ -46,18 +57,22 @@
 </template>
 <script>
     export default {
+        name: "AddShop",
         data () {
             return {
+                longitude:0.2,
+                latitude: 0.2,
                 formValidate: {
-                    name: '',
+                    shop_name: '',
                     province:'',
                     city: '',
                     address:'',
                     industry:[],
-                    shop_intro: ''
+                    shop_intro: '',
+                    brand:''
                 },
                 ruleValidate: {
-                    name: [
+                    shop_name: [
                         { required: true, message: '店铺名字不能为空', trigger: 'blur' }
                     ],
                     province: [
@@ -67,11 +82,14 @@
                         { required: true, message: '请选择城市', trigger: 'change' }
                     ],
                     address: [
+                        { required: true, message: '请填写品牌', trigger: 'change' }
+                    ],
+                    brand: [
                         { required: true, message: '请填写地址', trigger: 'change' }
                     ],
                     industry: [
                         { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },
-                        { type: 'array', max: 2, message: '最多选择两个营业领域', trigger: 'change' }
+                        { type: 'array', max: 1, message: '最多选择一个营业领域', trigger: 'change' }
                     ],
                     shop_intro:[
                         { required: true, message: '请填写店铺介绍', trigger: 'change' }
@@ -84,7 +102,8 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
+
+                        this.addShop()
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -92,16 +111,60 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            addShop()
+            {
+                console.log(this.formValidate);
+                console.log(this.longitude);
+                console.log(this.latitude);
+                console.log(this.formValidate.industry[0]);
+                var prefix="/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/shop",
+                    data:  {
+                        shop_name:this.formValidate.shop_name,
+                        province: this.formValidate.province,
+                        city:this.formValidate.city,
+                        address:this.formValidate.address,
+                        longitude:this.longitude,
+                        latitude:this.latitude,
+                        brand:this.formValidate.brand,
+                        industry:this.formValidate.industry[0],
+                        introduction:this.formValidate.shop_intro
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        console.log("success");
+                        this.$Message.success('添加店铺成功');
+                    }
+                })
+                    .catch(error => {
+                        this.$Message.error('添加店铺失败')
+                        JSON.stringify(error);
+                        console.log(error)
+                    })
             }
         }
     }
 </script>
 
 <style scoped>
+
     .content{
-        padding:50px 400px;
+        padding:100px;
         background-color: #fff;
     }
+    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

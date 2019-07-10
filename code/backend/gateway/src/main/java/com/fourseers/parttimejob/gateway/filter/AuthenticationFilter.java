@@ -37,7 +37,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         // check if should be authenticated
-        if (exchange.getRequest().getPath().toString().startsWith("/auth"))
+        String path = exchange.getRequest().getPath().toString();
+        if (path.startsWith("/auth") || path.endsWith("register-info"))
             return chain.filter(exchange);
 
         Logger logger = LoggerFactory.getLogger(this.getClass());

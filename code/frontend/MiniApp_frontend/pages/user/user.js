@@ -24,6 +24,10 @@ Page({
       app.globalData.showSendMessage = false;
       this.handleRegisterSuccess();
     }
+    if (app.globalData.showModifySuccess) {
+      app.globalData.showModifySuccess = false;
+      this.handleModifySuccess();
+    }
     this.setData({
       isRegistered: app.globalData.isRegistered
     })
@@ -76,6 +80,13 @@ Page({
       content: '注册成功',
       type: 'success'
     });
+  },
+
+  handleModifySuccess() {
+    $Toast({
+      content: "修改信息成功",
+      type: "success"
+    })
   },
 
   handleSchedule() {

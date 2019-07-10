@@ -1,9 +1,9 @@
-package com.fourseers.parttimejob.auth.entity;
+package com.fourseers.parttimejob.warehouse.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class WechatUser {
@@ -18,6 +18,7 @@ public class WechatUser {
     private String city;
     private String education;
 
+    private Set<Tag> tags;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,5 +92,14 @@ public class WechatUser {
 
     public void setEducation(String education) {
         this.education = education;
+    }
+
+    @ManyToMany(cascade = CascadeType.REFRESH)
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

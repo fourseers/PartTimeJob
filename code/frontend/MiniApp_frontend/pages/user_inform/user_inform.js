@@ -1,28 +1,76 @@
 // pages/user_inform/user_inform.js
+const app = getApp();
+import request from "../../api/request.js";
+import { host, user_info, register_data } from "../../api/url.js";
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    gender: false,
-    name: "",
+    gender: true,
+    name: "SJH",
     name_error: false,
-    identity: "",
+    identity: "310110123456781000",
     identity_error: false,
-    phoneNumber: "",
+    phoneNumber: "13812345678",
     phone_error: false,
-    country: "",
+    country: "China",
     country_error: false,
-    city: "",
+    city: "Shanghai",
     city_error: false,
-    education: "",
-    educationList: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"]
+    education: "primary school",
+    educationList: [],
+    isLoading: false
   },
 
-  //onshow的时候从后端获取当前用户的信息，填充为用户表单上的默认信息
   onShow(){
+    var req = new request();
 
+    // 向后台获取注册元数据, 包括文化水平list、tags list
+    req.getRequest(host + register_data, null).then(res => {
+      if (res.statusCode === 200) {
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          educationList: res.data.education,
+          technology: tags,
+        })
+      }
+      else if (res.statusCode === 400) {
+        // TODO: 添加请求不返回200的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
+
+    //onshow的时候从后端获取当前用户的信息，填充为用户表单上的默认信息
+    req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        var info = res.data.data.info;
+        this.setData({
+          name: info.name,
+          gender: info.gender,
+          identity: info.identity,
+          phoneNumber: info.phone,
+          country: info.country,
+          city: info.city,
+          education: info.education
+        })
+      }
+      if (res.statusCode === 400) {
+        // TODO: 添加请求不返回200的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
   },
 
   //用于性别switch的切换

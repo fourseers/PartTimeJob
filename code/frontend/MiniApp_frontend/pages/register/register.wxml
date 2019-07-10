@@ -44,6 +44,6 @@
     </i-tag>
   </block>
 </i-panel>
-<i-button bind:click="register">注册</i-button>
+<i-button bind:click="register" type="primary" loading="{{isLoading}}">注册</i-button>
 
 <i-toast id="toast" />

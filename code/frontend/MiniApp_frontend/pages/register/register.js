@@ -2,7 +2,7 @@
 const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js"
-import { register } from "../../api/url.js"
+import { host, register, register_data } from "../../api/url.js"
 
 Page({
   /*
@@ -50,7 +50,8 @@ Page({
     identity_error: false,
     phoneNumber: '',
     phone_error: false,
-    education: ''
+    education: '',
+    isLoading: false,
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
@@ -75,6 +76,31 @@ Page({
     else{
       this.handleError();
     }
+  },
+
+  //onshow触发的时候向后台获取注册元数据
+  onShow(){
+    var req = new request();
+    req.getRequest(host + register_data, null).then(res => {
+      if(res.statusCode === 200){
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          educationList: res.data.education,
+          technology: tags,
+        })
+      }
+      else if (res.statusCode === 400){
+        // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    })
   },
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
@@ -183,6 +209,9 @@ Page({
     else{
       wx.login({
         success: res => {
+          this.setData({
+            isLoading: true,
+          })
           var req = new request();
           var postData = {
             "name": this.data.name,
@@ -194,13 +223,16 @@ Page({
             "education": this.data.education,
             "token": res.code
           };
-          req.postRequest(app.globalData.host + register, JSON.stringify(postData)).then(res => {
+          req.postRequest(host + register, JSON.stringify(postData)).then(res => {
             if (res.statusCode === 400) {
               app.globalData.isRegistered = false;
               $Toast({
                 content: "注册失败",
                 type: "error"
               });
+              this.setData({
+                isLoading: false
+              })
             }
             else if (res.statusCode === 200) {
               app.globalData.isRegistered = true;

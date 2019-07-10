@@ -87,9 +87,6 @@ public class JobController {
         if (shopId == null && jobId == null) {
             try {
                 List<Job> jobs = jobService.findByUsername(username);
-                if (jobs.size() == 0) {
-                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
-                }
                 body.put("jobs", jobs);
             } catch (RuntimeException ex) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
@@ -98,9 +95,6 @@ public class JobController {
         } else if (shopId != null && jobId == null) {
             try {
                 List<Job> jobs = jobService.findByShopIdAndUsername(shopId, username);
-                if (jobs.size() == 0) {
-                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
-                }
                 body.put("jobs", jobs);
             } catch (RuntimeException ex) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
@@ -109,9 +103,6 @@ public class JobController {
         } else if (jobId != null && shopId == null) {
             try {
                 Job job = jobService.findByJobIdAndUsername(jobId, username);
-                if (job == null) {
-                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist or not belong to");
-                }
 
                 body.put("job", job);
             } catch (RuntimeException ex) {

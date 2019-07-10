@@ -69,7 +69,11 @@ public class JobServiceImpl implements JobService {
         }
         for (Shop shop : user.getCompany().getShops()) {
             if (shop.getShopId() == shopId) {
-                return jobDao.findByShop(shop);
+                List<Job> jobs = jobDao.findByShop(shop);
+                if (jobs.size() == 0) {
+                    throw new RuntimeException("job not exist");
+                }
+                return jobs;
             }
         }
 
@@ -87,6 +91,10 @@ public class JobServiceImpl implements JobService {
 
         for (Shop shop : user.getCompany().getShops()) {
             jobs.addAll(jobDao.findByShop(shop));
+        }
+
+        if (jobs.size() == 0) {
+            throw new RuntimeException("job not exist");
         }
 
         return jobs;

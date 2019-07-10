@@ -14,6 +14,12 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagDao tagDao;
 
+
+    @Override
+    public void addOne(Tag tag) {
+        tagDao.save(tag);
+    }
+
     @Override
     public List<Tag> get(int pageCount, int pageSize) {
         return tagDao.get(pageCount, pageSize).getContent();

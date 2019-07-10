@@ -115,13 +115,13 @@
 - 接口名称：`warehouse/user/info`
 - 请求参数：
 
-| 参数名    | 是否必要 | 参数类型                     | 参数描述     |
-| --------- | -------- | ---------------------------- | ------------ |
-| phone     | 否       | `String`                     | 手机号       |
-| country   | 否       | `String`                     | 国家         |
-| city      | 否       | `String`                     | 城市         |
-| education | 否       | `String`                     | 教育经历     |
-| tag       | 否       | List<Pair<Integer, String> > | 感兴趣的标签 |
+| 参数名    | 是否必要 | 参数类型        | 参数描述       |
+| --------- | -------- | --------------- | -------------- |
+| phone     | 否       | `String`        | 手机号         |
+| country   | 否       | `String`        | 国家           |
+| city      | 否       | `String`        | 城市           |
+| education | 否       | `String`        | 教育经历       |
+| tag       | 否       | `List<Integer>` | 感兴趣的标签ID |
 
 - 备注：
   - 用户信息通过鉴权头部提取，故无需提供用户ID参数。

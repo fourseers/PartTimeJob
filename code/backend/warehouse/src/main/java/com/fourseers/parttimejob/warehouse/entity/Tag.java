@@ -1,8 +1,9 @@
 package com.fourseers.parttimejob.warehouse.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,6 +18,7 @@ public class Tag {
     private String name;
 
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.REFRESH)
+    @JsonBackReference
     private Set<WechatUser> users;
 
     // TODO elasticsearch tag vector for similarity

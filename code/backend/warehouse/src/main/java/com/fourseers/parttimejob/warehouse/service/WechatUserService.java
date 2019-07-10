@@ -15,7 +15,7 @@ public interface WechatUserService {
 
     WechatUserInfoDto getUserInfo(WechatUser user);
 
-    boolean updateUserInfo(WechatUser user, WechatUserInfoDto userInfo);
+    boolean updateUserInfo(WechatUser user, JSONObject userInfo);
 
     void save(WechatUser user);
 }

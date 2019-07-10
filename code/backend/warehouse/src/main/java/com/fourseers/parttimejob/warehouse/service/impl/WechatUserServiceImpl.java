@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.warehouse.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
 import com.fourseers.parttimejob.warehouse.dao.WechatUserDao;
 import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
@@ -47,25 +49,31 @@ public class WechatUserServiceImpl implements WechatUserService {
     }
 
     @Override
-    public boolean updateUserInfo(WechatUser user, WechatUserInfoDto userInfoDto) {
-        if(userInfoDto.getGender() != null)
-            user.setGender(userInfoDto.getGender());
-        if(userInfoDto.getCity() != null)
-            user.setCity(userInfoDto.getCity());
-        if(userInfoDto.getCountry() != null)
-            user.setCountry(userInfoDto.getCountry());
-        if(userInfoDto.getIdentity() != null)
-            user.setIdentity(userInfoDto.getIdentity());
-        if(userInfoDto.getPhone() != null)
-            user.setPhone(userInfoDto.getPhone());
-        if(userInfoDto.getEducation() != null)
-            user.setEducation(userInfoDto.getEducation());
-        if(userInfoDto.getTags() != null) {
-            Set<Tag> tags = userInfoDto.getTags();
+    public boolean updateUserInfo(WechatUser user, JSONObject userInfoDto) {
+        if(userInfoDto.getString("name") != null)
+            user.setName(userInfoDto.getString("name"));
+        if(userInfoDto.getBoolean("gender") != null)
+            user.setGender(userInfoDto.getBoolean("gender"));
+        if(userInfoDto.getString("country") != null)
+            user.setCountry(userInfoDto.getString("country"));
+        if(userInfoDto.getString("city") != null)
+            user.setCity(userInfoDto.getString("city"));
+        if(userInfoDto.getString("identity") != null)
+            user.setIdentity(userInfoDto.getString("identity"));
+        if(userInfoDto.getString("phone") != null)
+            user.setPhone(userInfoDto.getString("phone"));
+        if(userInfoDto.getString("education") != null)
+            user.setEducation(userInfoDto.getString("education"));
+        if(userInfoDto.getJSONArray("tags") != null) {
+            JSONArray tags = userInfoDto.getJSONArray("tags");
             Set<Tag> trueTags = new HashSet<>();
-            for (Tag tag: tags) {
-                Tag trueTag = tagDao.getOne(tag.getId());
-                if(trueTag != null) trueTags.add(trueTag);
+            for(int i = 0; i < tags.size(); i++) {
+                Tag tag = tagDao.getOne(tags.getInteger(i));
+                System.out.println(tag);
+                if(tag != null)
+                    trueTags.add(tag);
+                else
+                    return false;
             }
             user.setTags(trueTags);
         }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TagDaoImpl implements TagDao {
@@ -29,7 +30,8 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag getOne(@Positive Integer id) {
-        return tagRepository.getOne(id);
+        Optional<Tag> result = tagRepository.findById(id);
+        return result.isPresent() ? result.get() : null;
     }
 
     @Override

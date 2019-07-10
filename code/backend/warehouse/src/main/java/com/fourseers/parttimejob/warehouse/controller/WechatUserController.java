@@ -29,12 +29,14 @@ public class WechatUserController {
 
     @PostMapping("/info")
     public ResponseEntity<JSONObject> updateUserInfo(
-            @RequestBody WechatUserInfoDto userInfo,
+            @RequestBody(required = true) JSONObject userInfo,
             @RequestHeader("x-internal-token") String internalToken) {
         WechatUser user = wechatUserService.findByInternalToken(internalToken);
         if(user == null)
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST);
-        wechatUserService.updateUserInfo(user, userInfo);
-        return ResponseBuilder.build(HttpStatus.OK);
+        if(wechatUserService.updateUserInfo(user, userInfo))
+            return ResponseBuilder.build(HttpStatus.OK);
+        else
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "Invalid tag list, check your tag ids.");
     }
 }

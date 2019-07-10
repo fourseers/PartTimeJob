@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface TagService {
 
+    void addOne(Tag tag);
+
     List<Tag> get(int pageCount, int pageSize);
     List<Tag> getAll();
 }

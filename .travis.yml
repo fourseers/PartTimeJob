@@ -22,6 +22,9 @@ before_install:
 
 # codecov settings
 
+env:
+  - CODECOV_TOKEN="49c711de-e2db-4229-9b3c-bf4691540668"
+
 script: "mvn cobertura:cobertura"
 
 after_success:

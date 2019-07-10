@@ -19,3 +19,10 @@ services:
 before_install:
     - cd code/backend
     - chmod +x mvnw
+
+# codecov settings
+
+script: "mvn cobertura:cobertura"
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

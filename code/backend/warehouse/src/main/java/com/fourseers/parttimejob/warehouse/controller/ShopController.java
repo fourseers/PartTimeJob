@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/merchant/shop/")
+@RequestMapping(value = "/merchant/shop")
 public class ShopController {
 
     @Autowired
     private ShopService shopService;
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> createShop(@RequestBody ShopDto shop,
                                                  @RequestHeader("x-internal-token") String username) {
 
@@ -44,7 +44,7 @@ public class ShopController {
         return ResponseBuilder.build(HttpStatus.OK, null, "success");
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> getShop(@RequestParam(value = "shop_id", required = false) Integer shopId,
                                               @RequestHeader("x-internal-token") String username) {
 

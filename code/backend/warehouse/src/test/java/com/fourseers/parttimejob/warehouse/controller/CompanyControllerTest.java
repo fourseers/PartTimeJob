@@ -64,7 +64,7 @@ public class CompanyControllerTest {
 
         JSONObject body = new JSONObject();
         body.put("company_name", "锤子");
-        MvcResult result = mockMvc.perform(post("/merchant/company/")
+        MvcResult result = mockMvc.perform(post("/merchant/company")
                 .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -86,7 +86,7 @@ public class CompanyControllerTest {
 
         JSONObject body = new JSONObject();
         body.put("company_name", "Another Apple");
-        MvcResult result = mockMvc.perform(post("/merchant/company/")
+        MvcResult result = mockMvc.perform(post("/merchant/company")
                 .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -104,7 +104,7 @@ public class CompanyControllerTest {
 
         JSONObject body = new JSONObject();
         body.put("company_name", "Apple");
-        MvcResult result = mockMvc.perform(post("/merchant/company/")
+        MvcResult result = mockMvc.perform(post("/merchant/company")
                 .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -122,7 +122,7 @@ public class CompanyControllerTest {
 
         JSONObject body = new JSONObject();
         body.put("company_name", "a_very_very_very_very_very_very_very_very_very_very_very_very_long_company_name");
-        MvcResult result = mockMvc.perform(post("/merchant/company/")
+        MvcResult result = mockMvc.perform(post("/merchant/company")
                 .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))

@@ -16,6 +16,7 @@
 </template>
 <script>
     export default {
+        name: "AddCompany",
         data () {
             return {
                 formValidate: {
@@ -66,7 +67,7 @@
                         }
                     })
                         .catch(error => {
-                            JSON.stringify(error);
+                            //JSON.stringify(error);
                             console.log(error)
                         })
             }

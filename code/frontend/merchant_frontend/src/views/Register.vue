@@ -30,6 +30,8 @@
 </template>
 <script>
     export default {
+
+        name: "Register",
         data () {
             const validatePass = (rule, value, callback) => {
                 // console.log(rule)
@@ -99,6 +101,7 @@
                         console.log(this.$token.loadToken());
                     }
 
+                    this.$router.push({ name: "postjob"});
                 })
                     .catch(error => {
                         JSON.stringify(error)

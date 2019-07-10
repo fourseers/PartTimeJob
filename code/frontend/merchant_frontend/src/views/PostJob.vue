@@ -135,6 +135,8 @@
 <script>
 
     export default {
+
+        name: "PostJob",
         data () {
             const validateAmount = (rule, value, callback) => {
                 if (value === 0) {

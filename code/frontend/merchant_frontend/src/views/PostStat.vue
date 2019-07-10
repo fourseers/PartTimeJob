@@ -11,6 +11,8 @@
     import echarts from 'echarts'
 
     export default {
+
+        name: "PostStat",
         data() {
             return {
                 echarts1_option:{

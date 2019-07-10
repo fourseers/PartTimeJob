@@ -55,6 +55,7 @@
 </template>
 <script>
     export default {
+        name: "ShopDetail",
         data () {
             return {
                 longtitude:0.0,

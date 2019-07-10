@@ -11,6 +11,8 @@
     import echarts from 'echarts'
 
     export default {
+
+        name: "SalaryStat",
         data() {
             return {
                 echarts1_option:{

@@ -6,6 +6,7 @@
 </template>
 <script>
     export default {
+        name: "ConfirmCheckin",
         data () {
             return {
                 columns7: [

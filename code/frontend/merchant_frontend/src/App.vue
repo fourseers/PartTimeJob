@@ -48,8 +48,8 @@
     export default {
         name: 'app',
         components: {
-            Login,
-            Register,
+            'Login':Login,
+            'Register':Register,
             Toolbar,
             PostJob,
             AddShop,

@@ -43,6 +43,8 @@
 
 <script>
     export default {
+
+        name: "ScreeenCV",
         data () {
             return {
                 postList1: [

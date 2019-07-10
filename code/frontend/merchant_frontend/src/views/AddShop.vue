@@ -57,10 +57,11 @@
 </template>
 <script>
     export default {
+        name: "AddShop",
         data () {
             return {
-                longtitude:0.0,
-                latitude: 0.0,
+                longitude:0.2,
+                latitude: 0.2,
                 formValidate: {
                     shop_name: '',
                     province:'',
@@ -114,6 +115,9 @@
             addShop()
             {
                 console.log(this.formValidate);
+                console.log(this.longitude);
+                console.log(this.latitude);
+                console.log(this.formValidate.industry[0]);
                 var prefix="/warehouse"
                 //测试用的url
                 this.axios({
@@ -134,7 +138,7 @@
                         latitude:this.latitude,
                         brand:this.formValidate.brand,
                         industry:this.formValidate.industry[0],
-                        shop_intro:this.formValidate.shop_intro
+                        introduction:this.formValidate.shop_intro
                     }
                 }).then(response => {
                     console.log(response);
@@ -148,8 +152,8 @@
                         console.log(error)
                     })
             }
-            }
         }
+    }
 </script>
 
 <style scoped>

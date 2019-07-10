@@ -49,10 +49,6 @@
         }
       }
     },
-    mounted:{
-
-
-    },
     methods: {
       handleSubmit(name) {
 

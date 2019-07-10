@@ -19,37 +19,3 @@ describe('Login.vue', () => {
         })
     });
 })
-
-jest.mock('axios', () => ({
-    post: jest.fn()
-}));
-
-import axios from 'axios';
-
-describe('Test for axios post', () => {
-    let wrapper;
-
-    beforeEach(() => {
-        axios.post.mockClear();
-        wrapper = shallowMount(Login);
-    });
-
-    afterEach(() => {
-        wrapper.destroy();
-    });
-
-    // 点击按钮后调用了 handleSubmit 方法
-    it('login Fn should be called', () => {
-        const mockFn = jest.fn();
-        wrapper.setMethods({handleSubmit: mockFn});
-        wrapper.find('button').trigger('click');
-        expect(mockFn).toBeCalled();
-    });
-
-    // 点击按钮后调用了axios.post方法
-    it('axios.post Fn should be called', () => {
-        const URL =  "http://202.120.40.8:30552";
-        wrapper.find('button').trigger('click');
-        expect(axios.post).toBeCalledWith(URL)
-    });
-});

@@ -5,6 +5,7 @@
 </template>
 <script>
     export default {
+        name: "ManageShop",
         data () {
             return {
                 columns7: [
@@ -128,8 +129,7 @@
                 shops:[]
             }
         },
-        monuted:{
-            function() {
+        created: function() {
                 var prefix = "/warehouse"
                 //测试用的url
                 this.axios({
@@ -140,13 +140,12 @@
                         'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
-                    url: prefix + "/merchant/company",
-                    data: {}
+                    url: prefix + "/merchant/shop"
                 }).then(response => {
                     console.log(response);
-                    if(response.status ===  200){
+                    if(response.data.status ===  200){
 
-                        this.shops = response.data;
+                        this.shops = response.data.data.shops;
                         console.log("success");
                     }
                 })
@@ -154,9 +153,9 @@
                         JSON.stringify(error);
                         console.log(error)
                     })
-            }
 
-        },
+
+            },
         methods: {
             show (index) {
                 this.$Modal.info({

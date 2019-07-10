@@ -1,3 +1,14 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "i-switch": "../../dist/switch/index",
+    "i-cell": "../../dist/cell/index",
+    "i-divider": "../../dist/divider/index",
+    "i-toast": "../../dist/toast/index",
+    "i-tag": "../../dist/tag/index",
+    "i-input": "../../dist/input/index",
+    "i-button": "../../dist/button/index",
+    "i-panel": "../../dist/panel/index",
+    "i-checkbox-group": "../../dist/checkbox-group/index",
+    "i-checkbox": "../../dist/checkbox/index"
+  }
 }

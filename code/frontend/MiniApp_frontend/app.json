@@ -1,13 +1,13 @@
 {
   "pages": [
+    "pages/user_inform/user_inform",
     "pages/index/index",
     "pages/job_detail/job_detail",
     "pages/logs/logs",
     "pages/user/user",
     "pages/register/register",
     "pages/job/job",
-    "pages/schedule/schedule",
-    "pages/user_inform/user_inform"
+    "pages/schedule/schedule"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -4,7 +4,7 @@
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
       <i-panel class="cell-panel-demo">
-        <i-cell title="" is-link value="{{userInfo.nickName}}">
+        <i-cell title="" value="{{userInfo.nickName}}">
           <i-avatar size="large" src="{{userInfo.avatarUrl}}"></i-avatar>
         </i-cell>
       </i-panel>

@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <Content class="content">
+    <Content class="content" v-if="!this.$root.logged  " >
       <br>
       <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
         <FormItem prop="user">
@@ -19,6 +19,10 @@
           <Button class="ivu-btn" @click="handleSubmit('formInline')" >登录</Button>
         </FormItem>
       </Form>
+    </Content>
+
+    <Content class="content" v-if="this.$root.logged  " >
+      <p>您已经登录</p>
     </Content>
   </Layout>
 </template>
@@ -45,8 +49,16 @@
         }
       }
     },
+    mounted:{
+
+
+    },
     methods: {
       handleSubmit(name) {
+
+        console.log(this.$token.loadToken() )
+
+        console.log( this.$token.loadToken().access_token === "null")
         this.$refs[name].validate((valid) => {
           if (valid) {
             //this.$Message.success('Success!');
@@ -74,11 +86,13 @@
           }
         }).then(response => {
           console.log(response);
-          if(response.message === 'success')
+          if(response.status === 200)
           {
             this.$token.savetoken(response.data);
             console.log(this.$token.loadToken());
           }
+          this.$root.logged =true;
+          this.$router.push({ name: "postjob"})
         })
                 .catch(error => {
                   JSON.stringify(error)

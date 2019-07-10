@@ -81,11 +81,14 @@
                         { required: true, message: '请选择城市', trigger: 'change' }
                     ],
                     address: [
+                        { required: true, message: '请填写品牌', trigger: 'change' }
+                    ],
+                    brand: [
                         { required: true, message: '请填写地址', trigger: 'change' }
                     ],
                     industry: [
                         { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },
-                        { type: 'array', max: 2, message: '最多选择两个营业领域', trigger: 'change' }
+                        { type: 'array', max: 1, message: '最多选择一个营业领域', trigger: 'change' }
                     ],
                     shop_intro:[
                         { required: true, message: '请填写店铺介绍', trigger: 'change' }
@@ -98,7 +101,7 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        // this.$Message.success('Success!');
+
                         this.addShop()
                     } else {
                         this.$Message.error('Fail!');
@@ -110,16 +113,18 @@
             },
             addShop()
             {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
+                console.log(this.formValidate);
+                var prefix="/warehouse"
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "*",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Content-type': 'application/json',
+                        'Authorization': this.$token.loadToken().access_token,
                     },
                     method: 'post',
                     url: prefix +"/merchant/shop",
-                    data: this.$qs.stringify({
+                    data:  {
                         shop_name:this.formValidate.shop_name,
                         province: this.formValidate.province,
                         city:this.formValidate.city,
@@ -127,14 +132,15 @@
                         longitude:this.longitude,
                         latitude:this.latitude,
                         brand:this.formValidate.brand,
-                        industry:this.formValidate.industry,
+                        industry:this.formValidate.industry[0],
                         shop_intro:this.formValidate.shop_intro
-                    })
+                    }
                 }).then(response => {
-                    console.log(response.data);
+                    console.log(response);
                     if(response.message === 'success')
                     {
-                        //
+                        // // this.$Message.success('Success!');
+                        console.log("success");
                     }
                 })
                     .catch(error => {
@@ -147,10 +153,12 @@
 </script>
 
 <style scoped>
+
     .content{
-        padding:50px 400px;
+        padding:100px;
         background-color: #fff;
     }
+    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

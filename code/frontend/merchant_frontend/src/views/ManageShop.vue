@@ -29,8 +29,8 @@
                                     width: "100px",
                                     height: "100px",
                                 }
-                                })
-                            }
+                            })
+                        }
                     },
                     {
                         title: '省份',
@@ -126,6 +126,33 @@
                     }
                 ]
             }
+        },
+        monuted:{
+            function() {
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Content-type': 'application/json',
+                        'Authorization': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/company",
+                    data: {}
+                }).then(response => {
+                    console.log(response);
+                    if (response.message === 'success') {
+
+                        console.log("success");
+                    }
+                })
+                    .catch(error => {
+                        JSON.stringify(error);
+                        console.log(error)
+                    })
+            }
+
         },
         methods: {
             show (index) {

@@ -15,6 +15,8 @@ import PostStat from '../views/PostStat.vue'
 import ShowJobs from '../views/ShowJobs.vue'
 import ShopDetail from '../views/ShopDetail.vue'
 
+import Logout from '../views/Logout.vue'
+
 const  routes =[
     {
         path: '/',
@@ -23,7 +25,7 @@ const  routes =[
     },
     {
         path: '/login',
-        name: 'Login',
+        name: 'login',
         component:Login
     },
     {
@@ -44,7 +46,7 @@ const  routes =[
     },
     {
         path: '/postjob',
-        name: 'post job',
+        name: 'postjob',
         component:PostJob
     },
     {
@@ -103,6 +105,12 @@ const  routes =[
         path: '/shopdetail',
         name: 'shopdetail',
         component:ShopDetail
+    }
+    ,
+    {
+        path: '/logout',
+        name: 'logout',
+        component:Logout
     }
 
 

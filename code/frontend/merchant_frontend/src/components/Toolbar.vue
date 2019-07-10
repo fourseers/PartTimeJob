@@ -1,8 +1,13 @@
 <template>
     <Menu id="menu"  :theme="theme1"  active-name="1"   >
-        <MenuItem name="1" to="/login">
+        <MenuItem name="1" to="/login"  v-if="!this.$root.logged" >
             <Icon type="md-log-in" />
             登录
+        </MenuItem>
+
+        <MenuItem name="17" to="/logout" v-if="this.$root.logged " >
+            <Icon type="md-log-out" />
+            登出
         </MenuItem>
         <MenuItem name="2" to="/register">
             <Icon type="md-log-in" />
@@ -13,14 +18,14 @@
                 <Icon type="ios-paper" />
                 商户信息管理
             </template>
-        <MenuItem name="4" to="/infoconfig">
-            <Icon type="ios-paper" />
-            商户信息修改
-        </MenuItem>
-        <MenuItem name="5" to="/addcompany">
-            <Icon type="ios-paper" />
-            注册公司
-        </MenuItem>
+            <MenuItem name="4" to="/infoconfig">
+                <Icon type="ios-paper" />
+                商户信息修改
+            </MenuItem>
+            <MenuItem name="5" to="/addcompany">
+                <Icon type="ios-paper" />
+                注册公司
+            </MenuItem>
         </Submenu>
         <MenuItem name="6" to="/screenCV">
             <Icon type="ios-people" />
@@ -40,10 +45,10 @@
                 管理店铺
             </MenuItem>
         </Submenu>
-            <MenuItem name="10" to="/postjob">
-                <Icon type="md-create" />
-                发布岗位
-            </MenuItem>
+        <MenuItem name="10" to="/postjob">
+            <Icon type="md-create" />
+            发布岗位
+        </MenuItem>
         <MenuItem name="17" to="/showjobs">
             <Icon type="ios-people" />
             查看已发布岗位
@@ -71,9 +76,11 @@
             </MenuItem>
             <MenuItem name="16" to="/salarystat">
                 <Icon type="ios-stats" />
-               工资支出
+                工资支出
             </MenuItem>
+
         </Submenu>
+
     </Menu>
 </template>
 <script>
@@ -83,6 +90,11 @@
             return {
                 theme1: 'light'
             }
+        },
+        methods:{
+
+        },
+        computed:{
         }
 
     }

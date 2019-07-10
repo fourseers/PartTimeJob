@@ -49,14 +49,15 @@
                     //测试用的url
                     this.axios({
                         headers: {
-                            'Access-Control-Allow-Origin': "*",
-                            'Content-type': 'application/json'
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                            'Content-type': 'application/json',
+                            'Authorization': this.$token.loadToken().access_token,
                         },
                         method: 'post',
                         url: prefix +"/merchant/company",
-                        data: this.$qs.stringify({
+                        data:  {
                             company_name:this.formValidate.company_name
-                        })
+                        }
                     }).then(response => {
                         console.log(response);
                         if(response.message === 'success')
@@ -75,10 +76,12 @@
 </script>
 
 <style scoped>
+
     .content{
-        padding:100px 400px;
+        padding:100px;
         background-color: #fff;
     }
+    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

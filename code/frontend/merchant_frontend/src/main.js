@@ -33,5 +33,10 @@ Vue.use(Vuex);
 new Vue({
   router,
   render: h => h(App),
-  baseURL:axios.defaults.baseURL
+  baseURL:axios.defaults.baseURL,
+
+  data: function () {
+    return {
+      logged: false,
+    }}
 }).$mount('#app');

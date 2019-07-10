@@ -2,10 +2,13 @@
 
     <Layout >
         <Content class="content">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate"   >
+                <Row>
                 <FormItem label="名称" prop="name">
                     <Input v-model="formValidate.name" placeholder="岗位名称"></Input>
                 </FormItem>
+                </Row>
+                <Row>
                 <FormItem label="店铺" prop="shop">
                     <Select v-model="formValidate.shop" placeholder="选择店铺">
                         <Option value="beijing">店铺1</Option>
@@ -13,12 +16,21 @@
                         <Option value="shenzhen">店铺3</Option>
                     </Select>
                 </FormItem>
+
+                </Row>
+                <Row>
                 <FormItem label="招聘数量" prop="need_amount">
                     <Input   v-model="formValidate.need_amount" placeholder="招聘数量" number></Input>
                 </FormItem>
+
+                </Row>
+                <Row>
                 <FormItem label="日薪" prop="salary">
                     <Input   v-model="formValidate.salary" placeholder="日薪" number></Input>
                 </FormItem>
+
+                </Row>
+                <Row>
                 <FormItem label="工作时间">
                     <Row>
                         <Col span="11">
@@ -45,6 +57,8 @@
                     </Row>
                 </FormItem>
 
+                </Row>
+                <Row>
                 <FormItem label="招聘时间">
                     <Row>
                         <Col span="11">
@@ -70,6 +84,9 @@
                         </Col>
                     </Row>
                 </FormItem>
+
+                </Row>
+                <Row>
                 <FormItem label="性别要求" prop="gender">
                     <CheckboxGroup v-model="formValidate.gender">
                         <Checkbox label="女"></Checkbox>
@@ -87,6 +104,8 @@
                     </CheckboxGroup>
                 </FormItem>
 
+                </Row>
+                <Row>
 
                 <FormItem label="Tag" prop="job_tag">
                         <Tag v-for="item in count" :key="item" :name="item" closable @on-close="handleClose2">{{ item }}</Tag>
@@ -94,14 +113,21 @@
 
 
                 </FormItem>
+
+                </Row>
+                <Row>
                 <FormItem label="岗位要求" prop="job_detail">
                     <Input v-model="formValidate.job_detail" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
                 </FormItem>
 
+                </Row>
+                <Row>
                 <FormItem>
                     <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
                     <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
                 </FormItem>
+
+                </Row>
             </Form>
         </Content>
     </Layout>
@@ -292,9 +318,10 @@
 
 <style scoped>
     .content{
-        padding:50px 400px;
+        padding:100px;
         background-color: #fff;
     }
+
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

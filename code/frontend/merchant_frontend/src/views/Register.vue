@@ -84,7 +84,6 @@
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
 
                     },
-                    dataType: 'jsonp',
                     crossDomain: true,
                     method: 'post',
                     url: prefix +"/merchant/register",

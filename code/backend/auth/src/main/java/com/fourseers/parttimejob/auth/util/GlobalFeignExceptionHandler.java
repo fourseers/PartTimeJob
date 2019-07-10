@@ -16,7 +16,7 @@ public class GlobalFeignExceptionHandler {
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<JSONObject> handleFeignStatusException(FeignException e, HttpServletResponse response) {
         HttpStatus status = HttpStatus.resolve(e.status());
-        String message = status == null ? "" : status.toString();
+        String message = status == null ? "" : status.getReasonPhrase();
         return ResponseBuilder.build(e.status(), JSON.parseObject(e.contentUTF8()), message);
     }
 }

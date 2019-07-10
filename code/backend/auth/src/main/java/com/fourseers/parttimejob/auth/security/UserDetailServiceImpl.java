@@ -54,7 +54,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userCredential.setUsername(s);
             userCredential.setPassword(passwordEncoder.encode(WECHAT_PASSWD_PLACEHOLDER));
             userCredential.setRole(ROLE_USER);
-            userCredential.setRid(wechatUser.getUid());
+            userCredential.setRid(wechatUser.getUserId());
         } else {
             // merchant user
             MerchantUser merchantUser = merchantUserService.findByUsername(s);

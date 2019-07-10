@@ -1,7 +1,9 @@
 package com.fourseers.parttimejob.warehouse.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
 import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.netflix.config.WatchedUpdateListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +15,7 @@ public interface WechatUserService {
 
     WechatUserInfoDto getUserInfo(WechatUser user);
 
-    boolean updateUserInfo(WechatUser user, WechatUserInfoDto userInfoDto);
+    boolean updateUserInfo(WechatUser user, WechatUserInfoDto userInfo);
 
     void save(WechatUser user);
 }

@@ -1,8 +1,15 @@
 package com.fourseers.parttimejob.warehouse.dto;
 
+import com.fourseers.parttimejob.warehouse.entity.Tag;
+
+import javax.validation.constraints.NotNull;
+import java.util.Set;
+
 public class WechatUserInfoDto {
 
+    @NotNull
     private Integer userId;
+
     private String name;
     private Boolean gender;
     private String identity;
@@ -10,6 +17,7 @@ public class WechatUserInfoDto {
     private String country;
     private String city;
     private String education;
+    private Set<Tag> tags;
 
     public Integer getUserId() {
         return userId;
@@ -71,7 +79,13 @@ public class WechatUserInfoDto {
         return education;
     }
 
-    public void setEducation(String education) {
-        this.education = education;
+    public void setEducation(String education) { this.education = education; }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

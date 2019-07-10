@@ -2,6 +2,8 @@ package com.fourseers.parttimejob.warehouse.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Tag {
@@ -13,6 +15,9 @@ public class Tag {
     @NotBlank
     @Column(unique = true)
     private String name;
+
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.REFRESH)
+    private Set<WechatUser> users;
 
     // TODO elasticsearch tag vector for similarity
 
@@ -31,5 +36,13 @@ public class Tag {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<WechatUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<WechatUser> users) {
+        this.users = users;
     }
 }

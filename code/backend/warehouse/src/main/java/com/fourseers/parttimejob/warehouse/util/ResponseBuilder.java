@@ -27,4 +27,12 @@ public class ResponseBuilder {
             return null;
         return build(httpStatus, data, message);
     }
+
+    public static ResponseEntity<JSONObject> build(HttpStatus status, JSONObject data) {
+        return build(status, data, status.getReasonPhrase());
+    }
+
+    public static ResponseEntity<JSONObject> build(HttpStatus status) {
+        return build(status, null, status.getReasonPhrase());
+    }
 }

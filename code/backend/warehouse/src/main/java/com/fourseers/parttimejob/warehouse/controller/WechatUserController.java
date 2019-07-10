@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 public class WechatUserController {
 
     @Autowired
@@ -35,5 +36,5 @@ public class WechatUserController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST);
         wechatUserService.updateUserInfo(user, userInfoDto);
         return ResponseBuilder.build(HttpStatus.OK);
-    }1
+    }
 }

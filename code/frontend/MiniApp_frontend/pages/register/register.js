@@ -1,6 +1,8 @@
 // pages/register/register.js
 const { $Toast } = require("../../dist/base/index");
 const app = getApp();
+import request from "../../api/request.js"
+import { host, register, register_data } from "../../api/url.js"
 
 Page({
   /*
@@ -40,12 +42,16 @@ Page({
         isChosen: false
       }
     ],
-    educationList: ["博士毕业", "硕士毕业", "本科毕业", "大专毕业", "高中毕业"],
+    educationList: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
     chosenTechnology: [],
     name: '',
+    name_error: false,
     identity: '',
+    identity_error: false,
     phoneNumber: '',
-    education: ''
+    phone_error: false,
+    education: '',
+    isLoading: false,
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
@@ -72,6 +78,31 @@ Page({
     }
   },
 
+  //onshow触发的时候向后台获取注册元数据
+  onShow(){
+    var req = new request();
+    req.getRequest(host + register_data, null).then(res => {
+      if(res.statusCode === 200){
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          educationList: res.data.education,
+          technology: tags,
+        })
+      }
+      else if (res.statusCode === 400){
+        // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    })
+  },
+
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
   deleteTechnology(e) {
     var newChosen = this.data.chosenTechnology;
@@ -87,23 +118,49 @@ Page({
 
   //每次更新name的input组件后都重新获取name
   getName(e){
-    this.setData({
-      name: e.detail.detail.value
-    })
+    if(e.detail.detail.value.length <= 1){
+      this.setData({
+        name_error: true
+      })
+    }
+    else {
+      this.setData({
+        name: e.detail.detail.value,
+        name_error: false
+      })
+    }
   },
 
   //每次更新identity的input组件后都重新获取identity
   getIdentity(e){
-    this.setData({
-      identity: e.detail.detail.value
-    })
+    var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    if(reg.test(e.detail.detail.value) === false){
+      this.setData({
+        identity_error: true
+      })
+    }
+    else {
+      this.setData({
+        identity: e.detail.detail.value,
+        identity_error: false
+      })
+    }
   },
 
   //每次更新phoneNumber的input组件后都重新获取phoneNumber
   getPhoneNumber(e){
-    this.setData({
-      phoneNumber: e.detail.detail.value
-    })
+    var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    if(reg.test(e.detail.detail.value) === false){
+      this.setData({
+        phone_error: true
+      })
+    }
+    else {
+      this.setData({
+        phoneNumber: e.detail.detail.value,
+        phone_error: false
+      })
+    }
   },
 
   //每次更新education的input组件后都重新获取education
@@ -123,29 +180,79 @@ Page({
 
   //向服务器发送请求
   //使用wx.request
-  Register() {
-    console.log(app.globalData.userInfo);
-    let postData = {
-      "name": this.data.name,
-      "gender": app.globalData.userInfo.gender,
-      "identity": this.data.identity,
-      "phone": this.data.phoneNumber,
-      "country": app.globalData.userInfo.country,
-      "city": app.globalData.userInfo.city,
-      "education": this.data.education
-    };
-    wx.request({
-      url: 'http://202.120.40.8:8079/api/wechat/register',
-      data: postData,
-      method: "POST",
-      success: (res) => {
-        //通过res来判断用户是否注册
-        console.log(res);
-      },
-      fail: () => {
-        this.globalData.isRegistered = false;
-      }
-    })
+  register() {
+    //console.log(app.globalData.userInfo);
+    if (this.data.name_error || this.data.name === ""){
+      $Toast({
+        content: "请输入正确的姓名",
+        type: "error"
+      });
+    }
+    else if (this.data.identity_error || this.data.identity === ""){
+      $Toast({
+        content: "请输入正确的身份证号",
+        type: "error"
+      });
+    }
+    else if (this.data.phone_error || this.data.phoneNumber === ""){
+      $Toast({
+        content: "请输入正确的手机号",
+        type: "error"
+      });
+    }
+    else if (this.data.education === ""){
+      $Toast({
+        content: "请选择文化水平",
+        type: "error"
+      });
+    }
+    else{
+      wx.login({
+        success: res => {
+          this.setData({
+            isLoading: true,
+          })
+          var req = new request();
+          var postData = {
+            "name": this.data.name,
+            "gender": app.globalData.userInfo.gender,
+            "identity": this.data.identity,
+            "phone": this.data.phoneNumber,
+            "country": app.globalData.userInfo.country,
+            "city": app.globalData.userInfo.city,
+            "education": this.data.education,
+            "token": res.code
+          };
+          req.postRequest(host + register, JSON.stringify(postData)).then(res => {
+            if (res.statusCode === 400) {
+              app.globalData.isRegistered = false;
+              $Toast({
+                content: "注册失败",
+                type: "error"
+              });
+            }
+            else if (res.statusCode === 200) {
+              app.globalData.isRegistered = true;
+              app.globalData.showSendMessage = true;
+              app.globalData.access_token = res.data.data.access_token;
+              app.globalData.expires_in = res.data.data.expires_in;
+              app.globalData.refresh_token = res.data.data.refresh_token;
+              wx.navigateBack({
+                
+              })
+            }
+            else {
+              app.globalData.isRegistered = false;
+            }
+          }).catch(err => {
+            console.log(err)
+          });
+          this.setData({
+            isLoading: false
+          });
+        }
+      })
+    }
   }
 
 })

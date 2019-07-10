@@ -1,4 +1,7 @@
 //app.js
+import request from "./api/request.js"
+import { login } from "./api/url.js"
+
 App({
   onLaunch: function () {
     // 展示本地存储能力
@@ -9,22 +12,32 @@ App({
     // 登录
     wx.login({
       success: res => {
-        console.log(res);
+        var req = new request();
+        //console.log(res);
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        let postData = {
+        var postData = {
           "token": res.code
         }
-        wx.request({
-          url: this.globalData.backendIP + this.globalData.loginAPI,
-          data: postData,
-          method: "POST",
-          success: (res) => {
-            //通过res来判断用户是否注册
-            console.log(res);
-          },
-          fail: () => {
+        req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
+          if (res.statusCode === 400) {
+            this.globalData.isRegistered = false;
+            wx.showToast({
+              title: res.data.message,
+              icon: "none"
+            })
+          }
+          else if (res.statusCode === 200) {
+            this.globalData.isRegistered = true;
+            this.globalData.access_token = res.data.data.access_token;
+            this.globalData.expires_in = res.data.data.expires_in;
+            this.globalData.refresh_token = res.data.data.refresh_token;
+          }
+          else{
             this.globalData.isRegistered = false;
           }
+        }).catch(err => {
+          //console.log(err)
+          this.globalData.isRegistered = false;
         })
       }
     })
@@ -64,7 +77,10 @@ App({
     userGPS: null,
     isRegistered: false,
     showSendMessage: false,
-    backendIP: "http://202.120.40.8:8079",
-    loginAPI: "/api/wechat/login"
+    showModifySuccess: false,
+    host: "http://202.120.40.8:30552",
+    access_token: null,
+    refresh_token: null,
+    token_expires_in: null,
   }
 })

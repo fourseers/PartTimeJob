@@ -8,6 +8,13 @@
 > | status  | `Integer` | 响应状态码，成功返回200，非法请求返回400。 |
 > | message | `String`  | 响应描述信息。                             |
 > | data    | `Object`  | 自定义响应结构化数据，可为NULL。           |
+>
+> - 默认鉴权请求头：
+>
+> | 头部名称       | 头部内容                         | 描述                 |
+> | -------------- | -------------------------------- | -------------------- |
+> | x-access-token | `access token`                   | 用户鉴定access token |
+> | Authorization  | `HTTP Basic Auth base64编码信息` | 客户端鉴定token      |
 
 [TOC]
 

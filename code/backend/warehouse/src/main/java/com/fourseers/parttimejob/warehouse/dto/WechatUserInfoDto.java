@@ -1,15 +1,15 @@
-package com.fourseers.parttimejob.auth.entity;
+package com.fourseers.parttimejob.warehouse.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fourseers.parttimejob.warehouse.entity.Tag;
 
-@Entity
-public class WechatUser {
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
+public class WechatUserInfoDto {
+
+    @NotNull
     private Integer userId;
-    private String openid;
+
     private String name;
     private Boolean gender;
     private String identity;
@@ -17,24 +17,14 @@ public class WechatUser {
     private String country;
     private String city;
     private String education;
+    private Set<Tag> tags;
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getUserId() {
         return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    public String getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(String openid) {
-        this.openid = openid;
     }
 
     public String getName() {
@@ -89,7 +79,13 @@ public class WechatUser {
         return education;
     }
 
-    public void setEducation(String education) {
-        this.education = education;
+    public void setEducation(String education) { this.education = education; }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

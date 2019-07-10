@@ -22,7 +22,7 @@
 
 - 请求格式：GET
 - 返回格式：JSON
-- 接口名称：`auth/info/user-register`
+- 接口名称：`warehouse/info/register-info`
 - 请求参数：
 | 参数名     | 必须 | 类型      | 描述                |
 | ---------- | ---- | --------- | ------------------- |
@@ -95,7 +95,8 @@
             "phone": "13812345678",
             "country": "China",
             "city": "Shanghai",
-            "education": "primary school"
+            "education": "primary school",
+            "tags": []
         }
     },
     "message": "OK",

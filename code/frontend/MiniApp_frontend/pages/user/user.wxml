@@ -9,26 +9,28 @@
         </i-cell>
       </i-panel>
       <view class="information">
-        <i-button wx:if="{{!isRegistered}}" bind:click="handleRegister">注册</i-button>
+        <i-button wx:if="{{isRegistered}}" bind:click="handleRegister">注册</i-button>
         <block wx:else>
           <view>
             <i-grid>
               <i-row>
-                <i-grid-item>
-                  <i-button bind:click="handleSchedule" inline>
-                    时间安排
-                  </i-button>
+                <i-grid-item id="个人信息" bind:tap="handleTapGrid">
+                  <i-grid-icon>
+                    <i-icon size="24" type="businesscard" />
+                    <i-grid-label>信息</i-grid-label>
+                  </i-grid-icon>
                 </i-grid-item>
-                <i-grid-item>
+                <i-grid-item id="" bind:tap="handleTapGrid">
                   <i-grid-icon>
                     <i-icon size="24" type="close" />
                     <i-grid-label>暂无</i-grid-label>
                   </i-grid-icon>
                 </i-grid-item>
-                <i-grid-item>
-                  <i-button bind:click="handleInform" inline>
-                    个人信息
-                  </i-button>
+                <i-grid-item id="日程" bind:tap="handleTapGrid">
+                  <i-grid-icon>
+                    <i-icon size="24" type="activity" />
+                    <i-grid-label>日程</i-grid-label>
+                  </i-grid-icon>
                 </i-grid-item>
               </i-row>
             </i-grid>

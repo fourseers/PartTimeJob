@@ -78,11 +78,32 @@ Page({
   },
 
   handleSchedule() {
-    console.log("schedule");
+    wx.navigateTo({
+      url: "/pages/schedule/schedule",
+    })
   },
 
   handleInform() {
-    console.log("information");
+    wx.navigateTo({
+      url: "/pages/user_inform/user_inform",
+    })
+  },
+
+  handleTapGrid(e) {
+    switch (e.currentTarget.id){
+      case "个人信息":
+        this.handleInform();
+        break;
+      case "日程":
+        this.handleSchedule();
+        break;
+      default:
+        wx.showToast({
+          title: "敬请期待",
+          icon: "none",
+        });
+        break;
+    }
   }
 
 })

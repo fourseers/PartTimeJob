@@ -147,7 +147,7 @@ public class MerchantLoginControllerTest {
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
 //        assertEquals("400", response.getString("status"));
-        assertEquals("", response.getString("data"));
+        assertEquals(null, response.getString("data"));
     }
 
     @Test

@@ -1,0 +1,40 @@
+<!--pages/schedule/schedule.wxml-->
+<scroll-view class="table-t" scroll-x>
+  <view class="head-column">
+    <view class="head-cell"></view>
+    <view class="head-cell">日</view>
+    <view class="head-cell">一</view>
+    <view class="head-cell">二</view>
+    <view class="head-cell">三</view>
+    <view class="head-cell">四</view>
+    <view class="head-cell">五</view>
+    <view class="head-cell">六</view>
+  </view>
+  <view> 
+    <view class="scroll-table" bindtap="handleTap">
+      <block wx:for="{{schedule[0]}}" wx:for-index="time" wx:key="{{schedule[time]}}">
+        <view class="column">
+          <view class="column-head-cell">{{timeList[time]}}时</view>
+          <block wx:for="{{week}}" wx:for-index="date" wx:key="{{week[date]}}">
+            <view class="{{scheduleClass[schedule[date][time]]}}" id="{{date * 24 + time}}">
+              <block wx:if="{{schedule[date][time] == 1}}">{{schedule[date][time] ? "添加" : ""}}</block>
+              <block wx:if="{{schedule[date][time] == 3}}">{{schedule[date][time] ? "删除" : ""}}</block>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+</scroll-view>
+<i-row>
+  <block wx:for="{{tags}}" wx:key="name">
+    <i-col i-class="color-col" span="12">
+      <i-card i-class="color">
+        <view slot="content" class="{{item.class}}">
+          <view class="color-item-title">{{item.name}}</view>
+        </view>
+      </i-card>
+    </i-col>
+  </block>
+</i-row>
+<i-button bind:click="handleAdd" type="primary" disabled="{{newAdd}}">修改</i-button>

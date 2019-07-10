@@ -5,6 +5,8 @@ Page({
 
   /**
    * 页面的初始数据
+   * 除visible外的所有变量都通过向后端发送请求来获得
+   * visible用于决定是否显示对话框
    */
   data: {
     job_name: "fourseers",
@@ -57,14 +59,41 @@ Page({
     shop_id: 0,
     //用于对话框的变量
     visible: false,
+    longitude: 0.0,
+    latitude: 0.0,
+    markers: [{
+      id: 1,
+      latitude: 0.0,
+      longitude: 0.0,
+      name: ''
+    }],
   },
 
   /**
    * 生命周期函数--监听页面加载
+   * onLoad的时候似乎不能调用this.setData，实际情况要与后端通信后决定
    */
   onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
     //console.log(options);
+  },
+
+  onShow() {
+    wx.getLocation({
+      type: "gcj02",
+      success: res => {
+        this.setData({
+          longitude: res.longitude,
+          latitude: res.latitude,
+          markers: [{
+            id: 1,
+            latitude: res.latitude,
+            longitude: res.longitude,
+            name: '软件学院'
+          }]
+        })
+      }
+    });
   },
 
   // 按立即报名按钮后弹出对话框
@@ -76,6 +105,8 @@ Page({
 
   // 对话框确定后发送岗位申请
   handleSendApply() {
+    // TODO
+    // 发送岗位申请请求
     app.globalData.showSendMessage = true;
     wx.navigateBack({
       

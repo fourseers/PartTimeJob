@@ -18,13 +18,13 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/merchant")
+@RequestMapping(value = "/merchant/job")
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @RequestMapping(value = "/job", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> addJob(@RequestBody JSONObject body,
                                              @RequestHeader("x-internal-token") String username) {
 
@@ -77,5 +77,50 @@ public class JobController {
         }
 
         return ResponseBuilder.build(HttpStatus.OK, null, "success");
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
+                                             @RequestParam(value = "shop_id", required = false) Integer shopId,
+                                             @RequestHeader("x-internal-token") String username) {
+        JSONObject body = new JSONObject();
+        if (shopId == null && jobId == null) {
+            try {
+                List<Job> jobs = jobService.findByUsername(username);
+                if (jobs.size() == 0) {
+                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
+                }
+                body.put("jobs", jobs);
+            } catch (RuntimeException ex) {
+                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+            }
+
+        } else if (shopId != null && jobId == null) {
+            try {
+                List<Job> jobs = jobService.findByShopIdAndUsername(shopId, username);
+                if (jobs.size() == 0) {
+                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
+                }
+                body.put("jobs", jobs);
+            } catch (RuntimeException ex) {
+                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+            }
+
+        } else if (jobId != null && shopId == null) {
+            try {
+                Job job = jobService.findByJobIdAndUsername(jobId, username);
+                if (job == null) {
+                    return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist or not belong to");
+                }
+
+                body.put("job", job);
+            } catch (RuntimeException ex) {
+                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+            }
+
+        } else {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
+        }
+        return ResponseBuilder.build(HttpStatus.OK, body, "success");
     }
 }

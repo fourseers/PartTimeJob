@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -65,9 +66,9 @@ public class JobControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
 
-        Job job = jobService.findByJobId(1);
+        Job job = jobService.findByJobIdAndUsername(2, managerName);
         assertNotNull(job);
-        assertEquals(new Integer(1), job.getJobId());
+        assertEquals(new Integer(2), job.getJobId());
         assertEquals(new Integer(1), job.getShop().getShopId());
         assertEquals(2, job.getTagList().size());
     }
@@ -115,7 +116,7 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                .fluentAdd(2);
-        body.fluentPut("shop_id", 2)
+        body.fluentPut("shop_id", 3)
             .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "Tue, 16 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_date", "Wed, 17 Jul 2019 16:00:00 GMT")
@@ -297,6 +298,197 @@ public class JobControllerTest {
                 .header("x-internal-token", managerName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsSuccess() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertNotNull(response.getJSONObject("data"));
+        assertNotNull(response.getJSONObject("data").getJSONArray("jobs"));
+        assertEquals(1, response.getJSONObject("data").getJSONArray("jobs").size());
+    }
+
+    @Test
+    public void getAllJobsNoExist() throws Exception {
+        String managerName = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("job not exist", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsNoCompany() throws Exception {
+        String managerName = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to a company", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsInOneShopSuccess() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("shop_id", "2"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertNotNull(response.getJSONObject("data"));
+        assertNotNull(response.getJSONObject("data").getJSONArray("jobs"));
+        assertEquals(1, response.getJSONObject("data").getJSONArray("jobs").size());
+        assertEquals("seller", response.getJSONObject("data").getJSONArray("jobs").getJSONObject(0).getString("job_name"));
+    }
+
+    @Test
+    public void getAllJobsInOneShopNoExist() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("shop_id", "4"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("job not exist", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsInOneShopNoCompany() throws Exception {
+        String managerName = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("shop_id", "1"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to a company", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsInOneShopNotBelongTo() throws Exception {
+        String managerName = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("shop_id", "1"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void getAllJobsInOneShopNotExist() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("shop_id", "666"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void getOneJobSuccess() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("job_id", "1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertNotNull(response.getJSONObject("data"));
+        assertNotNull(response.getJSONObject("data").getJSONObject("job"));
+        assertNotNull(response.getJSONObject("data").getJSONObject("job").getString("job_name"));
+        assertEquals("seller", response.getJSONObject("data").getJSONObject("job").getString("job_name"));
+    }
+
+    @Test
+    public void getOneJobNoCompany() throws Exception {
+        String managerName = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("job_id", "1"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to a company", response.getString("message"));
+    }
+
+    @Test
+    public void getOneJobNotBelongTo() throws Exception {
+        String managerName = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("job_id", "1"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("job not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void getOneJobNotExist() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("job_id", "4"))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("job not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void getJobBothShopIdAndJobId() throws Exception {
+        String managerName = "葛越";
+
+        MvcResult result = mockMvc.perform(get("/merchant/job")
+                .header("x-internal-token", managerName)
+                .param("job_id", "1")
+                .param("shop_id", "1"))
                 .andExpect(status().is(400))
                 .andReturn();
 

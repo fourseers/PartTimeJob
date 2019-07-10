@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -35,6 +37,7 @@ public class Tag {
     }
 
     @ManyToMany(mappedBy = "tagList")
+    @JsonIgnore
     public List<Job> getJobList() {
         return jobList;
     }

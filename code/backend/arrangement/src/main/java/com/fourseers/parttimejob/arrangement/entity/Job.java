@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -139,6 +141,7 @@ public class Job {
     }
 
     @ManyToOne
+    @JsonIgnore
     public Shop getShop() {
         return shop;
     }

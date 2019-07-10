@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -111,6 +113,7 @@ public class Shop {
     }
 
     @ManyToOne
+    @JsonIgnore
     public Company getCompany() {
         return company;
     }
@@ -120,6 +123,7 @@ public class Shop {
     }
 
     @OneToMany(mappedBy = "shop")
+    @JsonIgnore
     public List<Job> getJobList() {
         return jobList;
     }

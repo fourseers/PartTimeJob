@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -39,7 +41,55 @@ public class JobServiceImpl implements JobService {
 
     }
 
-    public Job findByJobId(int jobId) {
-        return jobDao.findByJobId(jobId);
+    public Job findByJobIdAndUsername(int jobId, String username) {
+        MerchantUser user = merchantUserDao.findByUsername(username);
+
+        if (user.getCompany() == null) {
+            throw new RuntimeException("user does not belong to a company");
+        }
+
+        Job job = jobDao.findByJobId(jobId);
+        if (job == null) {
+            throw new RuntimeException("job not exist or not belong to");
+        }
+        for (Shop shop : user.getCompany().getShops()) {
+            if (job.getShop().getShopId().equals(shop.getShopId())) {
+                return job;
+            }
+        }
+
+        throw new RuntimeException("job not exist or not belong to");
+    }
+
+    public List<Job> findByShopIdAndUsername(int shopId, String username) {
+        MerchantUser user = merchantUserDao.findByUsername(username);
+
+        if (user.getCompany() == null) {
+            throw new RuntimeException("user does not belong to a company");
+        }
+        for (Shop shop : user.getCompany().getShops()) {
+            if (shop.getShopId() == shopId) {
+                return jobDao.findByShop(shop);
+            }
+        }
+
+        throw new RuntimeException("shop not exist or not belong to");
+    }
+
+    public List<Job> findByUsername(String username) {
+        MerchantUser user = merchantUserDao.findByUsername(username);
+
+        if (user.getCompany() == null) {
+            throw new RuntimeException("user does not belong to a company");
+        }
+
+        List<Job> jobs = new ArrayList<>();
+
+        for (Shop shop : user.getCompany().getShops()) {
+            jobs.addAll(jobDao.findByShop(shop));
+        }
+
+        return jobs;
+
     }
 }

@@ -21,7 +21,7 @@
       </Form>
     </Content>
 
-    <Content class="content" v-if="this.$root.logged  " >
+    <Content class="content" v-if="this.$root.logged" >
       <p>您已经登录</p>
     </Content>
   </Layout>
@@ -73,7 +73,7 @@
         var prefix="auth";
         this.axios({
           headers: {
-            'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
             'Content-type': 'application/json',
             'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
           },

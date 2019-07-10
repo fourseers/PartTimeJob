@@ -271,16 +271,18 @@
             },
             postJob()
             {
-                var prefix="https://da074679-0fbc-4e30-8c3a-e760e7f2c378.mock.pstmn.io"
+                var prefix="/warehouse"
                 //测试用的url
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "*",
-                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'post',
                     url: prefix +"/merchant/job",
-                    data: this.$qs.stringify({
+                    data:  {
                         shop_id:this.shop_id,
                         job_name:this.formValidate.job_name,
                         begin_date:this.formValidate.begin_date,
@@ -291,15 +293,10 @@
                         begin_apply_date:this.formValidate.begin_apply_date,
                         Education:this.formValidate.Education,
                         tag:this.formValidate.job_tag,
-
-
-
-
-
-                    })
+                    }
                 }).then(response => {
                     console.log(response.data);
-                    if(response.message === 'success')
+                    if(response.status === 200)
                     {
                         //
                     }

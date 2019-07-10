@@ -118,9 +118,10 @@
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
-                        'Authorization': this.$token.loadToken().access_token,
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'post',
                     url: prefix +"/merchant/shop",
@@ -137,9 +138,8 @@
                     }
                 }).then(response => {
                     console.log(response);
-                    if(response.message === 'success')
+                    if(response.status ===  200)
                     {
-                        // // this.$Message.success('Success!');
                         console.log("success");
                     }
                 })

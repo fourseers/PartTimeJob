@@ -44,14 +44,14 @@
             },
             addCompany()
             {
-                    console.log(this.formValidate);
                     var prefix="/warehouse"
                     //测试用的url
                     this.axios({
                         headers: {
-                            'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                             'Content-type': 'application/json',
-                            'Authorization': this.$token.loadToken().access_token,
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
                         },
                         method: 'post',
                         url: prefix +"/merchant/company",
@@ -60,9 +60,8 @@
                         }
                     }).then(response => {
                         console.log(response);
-                        if(response.message === 'success')
+                        if(response.status ===  200)
                         {
-
                             console.log("success");
                         }
                     })

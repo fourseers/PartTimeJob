@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-        <Table border :columns="columns7" :data="data6"></Table>
+        <Table border :columns="columns7" :data="shops"></Table>
     </div>
 </template>
 <script>
@@ -53,7 +53,7 @@
                         title: '营业领域',
                         key: 'industry',
                         render: (h, params) => {
-                            return h('ul', this.data6[params.index].industry.map(item => {
+                            return h('ul', this.shops[params.index].industry.map(item => {
                                     return h('li',{style:{listStyle:"none"}}, item)
 
                                 }
@@ -79,7 +79,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$router.push({ name: "shopdetail",params:this.data6[params.index]})
+                                            this.$router.push({ name: "shopdetail",params:this.shops[params.index]})
                                         }
                                     }
                                 }, '修改信息'),
@@ -124,7 +124,8 @@
                         industry:['饮料',"零售"],
                         brand:'一点点'
                     }
-                ]
+                ],
+                shops:[]
             }
         },
         monuted:{
@@ -133,17 +134,19 @@
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
-                        'Authorization': this.$token.loadToken().access_token,
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
                     url: prefix + "/merchant/company",
                     data: {}
                 }).then(response => {
                     console.log(response);
-                    if (response.message === 'success') {
+                    if(response.status ===  200){
 
+                        this.shops = response.data;
                         console.log("success");
                     }
                 })

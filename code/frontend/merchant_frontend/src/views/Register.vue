@@ -79,7 +79,7 @@
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30553",
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
 

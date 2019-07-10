@@ -30,6 +30,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     public void save(Company company, String bossName) {
         MerchantUser boss = merchantUserDao.findByUsername(bossName);
+        if (boss.getCompany() != null) {
+            throw new RuntimeException("user already has a company");
+        }
         company.setBoss(boss);
         companyDao.save(company);
         boss.setCompany(company);

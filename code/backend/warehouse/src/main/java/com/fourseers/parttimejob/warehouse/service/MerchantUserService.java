@@ -5,4 +5,6 @@ import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 public interface MerchantUserService {
 
     void save(MerchantUser merchantUser);
+
+    MerchantUser findByUsername(String username);
 }

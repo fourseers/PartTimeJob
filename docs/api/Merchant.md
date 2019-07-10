@@ -161,13 +161,13 @@
 
   | 参数名             | 必须 | 类型           | 描述                                                 |
   | ------------------ | ---- | -------------- | ---------------------------------------------------- |
-  | `shop_id`          | 是   | `Interger`     | 店铺ID                                               |
+  | `shop_id`          | 是   | `Integer`      | 店铺ID                                               |
   | `job_name`         | 是   | `String`       | 岗位名称                                             |
   | `begin_date`       | 是   | `String`       | 上班开始日期 格式：Wed Jul 17 2019 00:00:00 GMT+0800 |
   | `end_date`         | 是   | `String`       | 上班结束日期 格式：Wed Jul 17 2019 00:00:00 GMT+0800 |
   | `job_detail`       | 是   | `String`       | 岗位描述                                             |
-  | `need_gender`      | 是   | `Interger`     | 0表示男 1 表示女 2表示男女皆可                       |
-  | `need_amount`      | 是   | `Interger`     | 招聘数量                                             |
+  | `need_gender`      | 是   | `Integer`      | 0表示男 1 表示女 2表示男女皆可                       |
+  | `need_amount`      | 是   | `Integer`      | 招聘数量                                             |
   | `begin_apply_date` | 是   | `String`       | 招聘开始日期 格式：Wed Jul 17 2019 00:00:00 GMT+0800 |
   | `end_apply_date`   | 是   | `String`       | 招聘结束日期 格式：Wed Jul 17 2019 00:00:00 GMT+0800 |
   | `education`        | 是   | `String`       | 要求的学历                                           |
@@ -237,10 +237,10 @@
 
 - 请求参数：
 
-  | 参数名    | 必须 | 类型       | 描述   |
-  | --------- | ---- | ---------- | ------ |
-  | `shop_id` | 是   | `Interger` | 店铺ID |
-  | `job_id`  | 是   | `Interger` | 岗位ID |
+  | 参数名    | 必须 | 类型      | 描述   |
+  | --------- | ---- | --------- | ------ |
+  | `shop_id` | 是   | `Integer` | 店铺ID |
+  | `job_id`  | 是   | `Integer` | 岗位ID |
   
 - 返回结果：
 

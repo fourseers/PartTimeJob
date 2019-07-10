@@ -69,14 +69,11 @@ public class MerchantLoginControllerTest {
         merchantUserService.save(merchantUser);
 
         JSONObject successfulOAuthResponse = new JSONObject()
-                .fluentPut("status", "200")
-                .fluentPut("data", new JSONObject()
-                        .fluentPut("access_token","9c37b266-a876-476d-8a2a-055572318665")
-                        .fluentPut("refresh_token","17c8093d-16b0-422d-9511-cb38f09c2693")
-                        .fluentPut("scope","merchant")
-                        .fluentPut("token_type","bearer")
-                        .fluentPut("expires_in",43199))
-                .fluentPut("message", "success");
+                .fluentPut("access_token","9c37b266-a876-476d-8a2a-055572318665")
+                .fluentPut("refresh_token","17c8093d-16b0-422d-9511-cb38f09c2693")
+                .fluentPut("scope","merchant")
+                .fluentPut("token_type","bearer")
+                .fluentPut("expires_in",43199);
         JSONObject errorOAuthResponse = new JSONObject()
                 .fluentPut("status", "401")
                 .fluentPut("error", "Unauthorized")
@@ -149,7 +146,8 @@ public class MerchantLoginControllerTest {
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("400", response.getString("status"));
+//        assertEquals("400", response.getString("status"));
+        assertEquals(null, response.getString("data"));
     }
 
     @Test

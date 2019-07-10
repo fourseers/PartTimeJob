@@ -18,4 +18,8 @@ public class MerchantUserServiceImpl implements MerchantUserService {
     public void save(MerchantUser merchantUser) {
         merchantUserDao.save(merchantUser);
     }
+
+    public MerchantUser findByUsername(String username) {
+        return merchantUserDao.findByUsername(username);
+    }
 }

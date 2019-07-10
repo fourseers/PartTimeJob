@@ -1,5 +1,7 @@
 // pages/user/user.js
+import request from "../../api/request.js"
 const app = getApp()
+const { $Toast } = require("../../dist/base/index");
 
 Page({
 
@@ -17,7 +19,14 @@ Page({
   },
 
   //生命周期函数
-  onLoad() {
+  onShow() {
+    if (app.globalData.showSendMessage) {
+      app.globalData.showSendMessage = false;
+      this.handleRegisterSuccess();
+    }
+    this.setData({
+      isRegistered: app.globalData.isRegistered
+    })
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -46,26 +55,12 @@ Page({
     }
   },
 
-  //尝试获得用户信息，将用户信息发送给后端，判断用户是否注册
+  //尝试获得用户信息
   getUserInfo(e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
-    })
-    // 将用户信息post给后端，判断微信用户的信息是否已经注册
-    wx.request({
-      url: '',
-      method: 'POST',
-      header: {
-        'Content-Type': 'json'
-      },
-      success: function (res) {
-
-      },
-      fail: function () {
-        console.log("接口调用失败");
-      }
     })
   },
 
@@ -75,5 +70,46 @@ Page({
       url: "/pages/register/register",
     })
   },
+
+  handleRegisterSuccess() {
+    $Toast({
+      content: '注册成功',
+      type: 'success'
+    });
+  },
+
+  handleSchedule() {
+    wx.navigateTo({
+      url: "/pages/schedule/schedule",
+    })
+  },
+
+  handleInform() {
+    wx.navigateTo({
+      url: "/pages/user_inform/user_inform",
+    })
+  },
+
+  testReq() {
+    console.log(app.globalData.access_token)
+  },
+
+  handleTapGrid(e) {
+    switch (e.currentTarget.id){
+      case "个人信息":
+        this.handleInform();
+        break;
+      case "日程":
+        this.handleSchedule();
+        break;
+      default:
+        wx.showToast({
+          title: "敬请期待",
+          icon: "none",
+        });
+        this.testReq();
+        break;
+    }
+  }
 
 })

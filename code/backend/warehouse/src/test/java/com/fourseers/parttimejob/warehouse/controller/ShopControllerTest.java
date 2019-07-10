@@ -61,7 +61,7 @@ public class ShopControllerTest {
 
         Company company = new Company();
         company.setCompanyName("Apple");
-        companyService.save(company, boss.getUserId());
+        companyService.save(company, boss.getUsername());
         boss.setCompany(company);
         merchantUserService.save(boss);
 
@@ -75,7 +75,7 @@ public class ShopControllerTest {
         shopDto.setBrand("Apple");
         shopDto.setIndustry("IT");
         shopDto.setIntroduction("Make Apple great again");
-        shopService.save(shopDto, boss.getUserId());
+        shopService.save(shopDto, boss.getUsername());
 
         MerchantUser someUserWithoutCompany = new MerchantUser();
         someUserWithoutCompany.setUsername("poor user");
@@ -89,7 +89,7 @@ public class ShopControllerTest {
 
         Company anotherCompany = new Company();
         anotherCompany.setCompanyName("锤子");
-        companyService.save(anotherCompany, anotherBoss.getUserId());
+        companyService.save(anotherCompany, anotherBoss.getUsername());
         anotherBoss.setCompany(anotherCompany);
         merchantUserService.save(anotherBoss);
 
@@ -103,13 +103,13 @@ public class ShopControllerTest {
         anotherShopDto.setBrand("Chuizi");
         anotherShopDto.setIndustry("IT");
         anotherShopDto.setIntroduction("Acquire Apple Someday!");
-        shopService.save(anotherShopDto, anotherBoss.getUserId());
+        shopService.save(anotherShopDto, anotherBoss.getUsername());
     }
 
     @Test
     public void createShopSuccess() throws Exception {
 
-        int userId = 1;
+        String username = "Tim Cook";
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp 2")
@@ -123,7 +123,7 @@ public class ShopControllerTest {
             .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop/")
-                .header("x-internal-token", userId)
+                .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -132,13 +132,13 @@ public class ShopControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
 
-        List<Shop> shops = shopRepository.findAllByUserId(userId);
+        List<Shop> shops = shopRepository.findAllByUsername(username);
 
         for (Shop shop : shops) {
             assertNotNull(shop.getCompany());
             assertNotNull(shop.getCompany().getBoss());
-            assertNotNull(shop.getCompany().getBoss().getUserId());
-            if (shop.getCompany().getBoss().getUserId() == userId) {
+            assertNotNull(shop.getCompany().getBoss().getUsername());
+            if (shop.getCompany().getBoss().getUsername().equals(username)) {
                 return;
             }
         }
@@ -147,6 +147,8 @@ public class ShopControllerTest {
 
     @Test
     public void createShopIncorrectParam() throws Exception {
+
+        String username = "Tim Cook";
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp 2")
@@ -159,7 +161,7 @@ public class ShopControllerTest {
                 .fluentPut("industry", "IT");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -172,6 +174,8 @@ public class ShopControllerTest {
     @Test
     public void createShopNameAlreadyExist() throws Exception {
 
+        String username = "Tim Cook";
+
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp")
                 .fluentPut("province", "Shanghai")
@@ -184,7 +188,7 @@ public class ShopControllerTest {
                 .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -197,6 +201,8 @@ public class ShopControllerTest {
     @Test
     public void createShopNoCompany() throws Exception {
 
+        String username = "poor user";
+
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp")
                 .fluentPut("province", "Shanghai")
@@ -209,7 +215,7 @@ public class ShopControllerTest {
                 .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop/")
-                .header("x-internal-token", 2)
+                .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -222,8 +228,10 @@ public class ShopControllerTest {
     @Test
     public void getOneShopSuccess() throws Exception {
 
+        String username = "Tim Cook";
+
         MvcResult result = mockMvc.perform(get("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .param("shop_id", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -239,8 +247,10 @@ public class ShopControllerTest {
     @Test
     public void getOneShopNotExist() throws Exception {
 
+        String username = "Tim Cook";
+
         MvcResult result = mockMvc.perform(get("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .param("shop_id", "3")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -253,8 +263,10 @@ public class ShopControllerTest {
     @Test
     public void getOneShopNotBelongTo() throws Exception {
 
+        String username = "Tim Cook";
+
         MvcResult result = mockMvc.perform(get("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .param("shop_id", "2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -267,8 +279,10 @@ public class ShopControllerTest {
     @Test
     public void getAllShopsSuccess() throws Exception {
 
+        String username = "Tim Cook";
+
         MvcResult result = mockMvc.perform(get("/merchant/shop/")
-                .header("x-internal-token", 1)
+                .header("x-internal-token", username)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -284,8 +298,10 @@ public class ShopControllerTest {
     @Test
     public void getAllShopsNoCompany() throws Exception {
 
+        String username = "poor user";
+
         MvcResult result = mockMvc.perform(get("/merchant/shop/")
-                .header("x-internal-token", 2)
+                .header("x-internal-token", username)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
                 .andReturn();

@@ -21,7 +21,7 @@ public class ShopController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> createShop(@RequestBody ShopDto shop,
-                                                 @RequestHeader("x-internal-token") Integer userId) {
+                                                 @RequestHeader("x-internal-token") String username) {
 
         if (shop.getAddress() == null ||
             shop.getBrand() == null ||
@@ -35,7 +35,7 @@ public class ShopController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
         }
         try {
-            shopService.save(shop, userId);
+            shopService.save(shop, username);
         } catch (DataIntegrityViolationException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "shop name exists");
         } catch (RuntimeException ex) {
@@ -46,10 +46,10 @@ public class ShopController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<JSONObject> getShop(@RequestParam(value = "shop_id", required = false) Integer shopId,
-                                              @RequestHeader("x-internal-token") Integer userId) {
+                                              @RequestHeader("x-internal-token") String username) {
 
         if (shopId != null) {
-            ShopDto shop = shopService.findByShopIdAndUserId(shopId, userId);
+            ShopDto shop = shopService.findByShopIdAndUsername(shopId, username);
 
             if (shop == null) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "shop not exist or not belong to");
@@ -59,7 +59,7 @@ public class ShopController {
                 return ResponseBuilder.build(HttpStatus.OK, body, "success");
             }
         } else {
-            List<ShopDto> shops = shopService.findAllByUserId(userId);
+            List<ShopDto> shops = shopService.findAllByUsername(username);
 
             if (shops.size() == 0) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "no shops");

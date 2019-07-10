@@ -28,6 +28,7 @@ public class Shop {
         this.shopId = shopId;
     }
 
+    @Column(unique = true)
     @Size(max = 64)
     public String getShopName() {
         return shopName;

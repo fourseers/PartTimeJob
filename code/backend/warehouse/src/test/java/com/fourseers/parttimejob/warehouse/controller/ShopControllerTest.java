@@ -122,7 +122,7 @@ public class ShopControllerTest {
             .fluentPut("industry", "IT")
             .fluentPut("introduction", "Make Apple great again");
 
-        MvcResult result = mockMvc.perform(post("/merchant/shop/")
+        MvcResult result = mockMvc.perform(post("/merchant/shop")
                 .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -160,7 +160,7 @@ public class ShopControllerTest {
                 .fluentPut("brand", "Apple")
                 .fluentPut("industry", "IT");
 
-        MvcResult result = mockMvc.perform(post("/merchant/shop/")
+        MvcResult result = mockMvc.perform(post("/merchant/shop")
                 .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -187,7 +187,7 @@ public class ShopControllerTest {
                 .fluentPut("industry", "IT")
                 .fluentPut("introduction", "Make Apple great again");
 
-        MvcResult result = mockMvc.perform(post("/merchant/shop/")
+        MvcResult result = mockMvc.perform(post("/merchant/shop")
                 .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -214,7 +214,7 @@ public class ShopControllerTest {
                 .fluentPut("industry", "IT")
                 .fluentPut("introduction", "Make Apple great again");
 
-        MvcResult result = mockMvc.perform(post("/merchant/shop/")
+        MvcResult result = mockMvc.perform(post("/merchant/shop")
                 .header("x-internal-token", username)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -230,7 +230,7 @@ public class ShopControllerTest {
 
         String username = "Tim Cook";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop/")
+        MvcResult result = mockMvc.perform(get("/merchant/shop")
                 .header("x-internal-token", username)
                 .param("shop_id", "1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -249,7 +249,7 @@ public class ShopControllerTest {
 
         String username = "Tim Cook";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop/")
+        MvcResult result = mockMvc.perform(get("/merchant/shop")
                 .header("x-internal-token", username)
                 .param("shop_id", "3")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -265,7 +265,7 @@ public class ShopControllerTest {
 
         String username = "Tim Cook";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop/")
+        MvcResult result = mockMvc.perform(get("/merchant/shop")
                 .header("x-internal-token", username)
                 .param("shop_id", "2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -281,7 +281,7 @@ public class ShopControllerTest {
 
         String username = "Tim Cook";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop/")
+        MvcResult result = mockMvc.perform(get("/merchant/shop")
                 .header("x-internal-token", username)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -300,7 +300,7 @@ public class ShopControllerTest {
 
         String username = "poor user";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop/")
+        MvcResult result = mockMvc.perform(get("/merchant/shop")
                 .header("x-internal-token", username)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))

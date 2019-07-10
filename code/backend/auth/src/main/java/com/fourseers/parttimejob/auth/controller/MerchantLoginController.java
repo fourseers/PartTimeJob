@@ -34,8 +34,8 @@ public class MerchantLoginController {
         merchantUser.setPassword(password);
         if(merchantUserService.register(merchantUser)) {
             JSONObject response = oAuth.getToken(username, password, "password", basicAuth);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
+            return ResponseBuilder.build(HttpStatus.OK, response, "OK");
+            } else {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "User exists.");
         }
 

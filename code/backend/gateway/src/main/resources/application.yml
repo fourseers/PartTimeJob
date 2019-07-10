@@ -11,12 +11,18 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
 # registration center config
 eureka:
   client:
     service-url:
-      defaultZone: http://${EUREKA_SERVER:localhost}:8761/eureka
+      defaultZone: http://${EUREKA_SERVER:localhost}:${EUREKA_PORT:8761}/eureka
 
 # management pages config
 management:

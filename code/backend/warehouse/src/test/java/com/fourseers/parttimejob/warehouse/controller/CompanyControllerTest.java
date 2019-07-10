@@ -3,7 +3,9 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.entity.Company;
+import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
+import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,23 +33,39 @@ public class CompanyControllerTest {
     CompanyService companyService;
 
     @Autowired
+    MerchantUserService merchantUserService;
+
+    @Autowired
     MockMvc mockMvc;
 
     @Before
     public void setUp() {
+        MerchantUser boss = new MerchantUser();
+        boss.setUsername("Tim Cook");
+        boss.setPassword("some password");
         Company company = new Company();
-        company.setCompanyName("some_company");
-        company.setAdminId(1);
-        companyService.save(company);
+        company.setCompanyName("Apple");
+
+        merchantUserService.save(boss);
+        companyService.save(company, boss.getUserId());
+        boss.setCompany(company);
+        merchantUserService.save(boss);
+
+        MerchantUser anotherBoss = new MerchantUser();
+        anotherBoss.setUsername("罗永浩");
+        anotherBoss.setPassword("some password");
+        merchantUserService.save(anotherBoss);
     }
 
     @Test
     public void createCompanySuccess() throws Exception {
 
+        String bossName = "罗永浩";
+
         JSONObject body = new JSONObject();
-        body.put("companyName", "another_company");
-        MvcResult result = mockMvc.perform(post("/company/create")
-                .header("x-internal-token", 2)
+        body.put("company_name", "锤子");
+        MvcResult result = mockMvc.perform(post("/merchant/company")
+                .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -54,31 +73,57 @@ public class CompanyControllerTest {
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
+
+        MerchantUser user = merchantUserService.findByUsername(bossName);
+        assertNotNull(user.getCompany());
+        assertEquals("锤子", user.getCompany().getCompanyName());
     }
 
     @Test
-    public void createCompanyAlreadyExist() throws Exception {
+    public void createCompanyWhoAlreadyOwnedACompany() throws Exception {
+
+        String bossName = "Tim Cook";
 
         JSONObject body = new JSONObject();
-        body.put("companyName", "some_company");
-        MvcResult result = mockMvc.perform(post("/company/create")
-                .header("x-internal-token", 2)
+        body.put("company_name", "Another Apple");
+        MvcResult result = mockMvc.perform(post("/merchant/company")
+                .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("company name exist", response.getString("message"));
+        assertEquals("user already has a company", response.getString("message"));
+    }
+
+    @Test
+    public void createCompanyNameAlreadyExist() throws Exception {
+
+        String bossName = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.put("company_name", "Apple");
+        MvcResult result = mockMvc.perform(post("/merchant/company")
+                .header("x-internal-token", bossName)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("company name exists", response.getString("message"));
     }
 
     @Test
     public void createCompanyNameTooLong() throws Exception {
 
+        String bossName = "罗永浩";
+
         JSONObject body = new JSONObject();
-        body.put("companyName", "a_very_very_very_very_very_very_very_very_very_very_very_very_long_company_name");
-        MvcResult result = mockMvc.perform(post("/company/create")
-                .header("x-internal-token", 2)
+        body.put("company_name", "a_very_very_very_very_very_very_very_very_very_very_very_very_long_company_name");
+        MvcResult result = mockMvc.perform(post("/merchant/company")
+                .header("x-internal-token", bossName)
                 .content(body.toJSONString())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))

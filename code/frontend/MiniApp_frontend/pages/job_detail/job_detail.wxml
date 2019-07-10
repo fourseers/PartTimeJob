@@ -1,23 +1,4 @@
-<!--pages/job-detail/job_detail.wxml
-<i-tag
-      color="yellow"
-      checkable="{{true}}"
-      checked="{{true}}"
-      type="border"
-      class="i-tags"
-    >
-      {{education}}学历以上
-    </i-tag>
-    <i-tag
-      color="yellow"
-      checkable="{{true}}"
-      checked="{{true}}"
-      type="border"
-      class="i-tags"
-    >
-      只招{{need_gender === 1 ? "男" : "女"}}性
-    </i-tag>
--->
+<!--pages/job-detail/job_detail.wxml-->
 <i-panel i-class="title-box">
   <i-cell title="{{job_name}}" label="只招{{need_amount}}人">
     <view slot="icon">

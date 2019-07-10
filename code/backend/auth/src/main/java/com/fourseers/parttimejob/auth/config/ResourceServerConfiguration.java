@@ -23,11 +23,13 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     .and()
                 .requestMatchers().anyRequest()
                 .and()
+                // TODO reconfigure antMatchers since UserController is removed
                 .authorizeRequests()
                 .antMatchers("/user/**").authenticated();
     }

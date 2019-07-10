@@ -205,6 +205,9 @@ Page({
             else if (res.statusCode === 200) {
               app.globalData.isRegistered = true;
               app.globalData.showSendMessage = true;
+              app.globalData.access_token = res.data.data.access_token;
+              app.globalData.expires_in = res.data.data.expires_in;
+              app.globalData.refresh_token = res.data.data.refresh_token;
               wx.navigateBack({
                 
               })

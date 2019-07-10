@@ -9,7 +9,7 @@
         </i-cell>
       </i-panel>
       <view class="information">
-        <i-button wx:if="{{isRegistered}}" bind:click="handleRegister">注册</i-button>
+        <i-button wx:if="{{!isRegistered}}" bind:click="handleRegister">注册</i-button>
         <block wx:else>
           <view>
             <i-grid>

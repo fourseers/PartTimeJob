@@ -1,4 +1,5 @@
 // pages/user/user.js
+import request from "../../api/request.js"
 const app = getApp()
 const { $Toast } = require("../../dist/base/index");
 
@@ -89,6 +90,10 @@ Page({
     })
   },
 
+  testReq() {
+    console.log(app.globalData.access_token)
+  },
+
   handleTapGrid(e) {
     switch (e.currentTarget.id){
       case "个人信息":
@@ -102,6 +107,7 @@ Page({
           title: "敬请期待",
           icon: "none",
         });
+        this.testReq();
         break;
     }
   }

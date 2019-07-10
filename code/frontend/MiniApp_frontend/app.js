@@ -28,6 +28,9 @@ App({
           }
           else if (res.statusCode === 200) {
             this.globalData.isRegistered = true;
+            this.globalData.access_token = res.data.data.access_token;
+            this.globalData.expires_in = res.data.data.expires_in;
+            this.globalData.refresh_token = res.data.data.refresh_token;
           }
           else{
             this.globalData.isRegistered = false;
@@ -75,5 +78,8 @@ App({
     isRegistered: false,
     showSendMessage: false,
     host: "http://202.120.40.8:30552",
+    access_token: null,
+    refresh_token: null,
+    token_expires_in: null,
   }
 })

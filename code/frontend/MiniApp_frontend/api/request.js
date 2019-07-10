@@ -11,20 +11,25 @@
     })
   },
   */
-
 class request {
   constructor() {
     this._header = {
       "Content-Type": "application/json; charset=UTF-8",
-      "Authorization": "Basic d2VjaGF0Q2xpZW50OjEyMzQ1Ng=="
+      "Authorization": "Basic d2VjaGF0Q2xpZW50OjEyMzQ1Ng==",
     }
   }
 
-  getRequest(url, data, header = this._header) {
-    return this.requestAll(url, data, header, 'GET')
+  getRequest(url, data, token = null, header = this._header) {
+    if (token !== null){
+      header["x-access-token"] = token;
+    }
+    return this.requestAll(url, data, header, 'GET');
   }
 
-  postRequest(url, data, header = this._header) {
+  postRequest(url, data, token = null, header = this._header) {
+    if (token !== null) {
+      header["x-access-token"] = token;
+    }
     return this.requestAll(url, data, header, 'POST')
   }
 

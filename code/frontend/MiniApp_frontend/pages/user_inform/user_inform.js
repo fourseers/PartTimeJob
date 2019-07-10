@@ -1,7 +1,8 @@
 // pages/user_inform/user_inform.js
+const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js";
-import { host, user_info, register_data } from "../../api/url.js";
+import { host, user_info, register_data, modify_info } from "../../api/url.js";
 
 Page({
 
@@ -16,13 +17,18 @@ Page({
     identity_error: false,
     phoneNumber: "13812345678",
     phone_error: false,
+    phone_modified: false,
     country: "China",
     country_error: false,
+    country_modified: false,
     city: "Shanghai",
     city_error: false,
+    city_modified: false,
     education: "primary school",
+    education_modified: false,
     educationList: [],
-    isLoading: false
+    isLoading: false,
+    info_saved: null,
   },
 
   onShow(){
@@ -61,7 +67,8 @@ Page({
           phoneNumber: info.phone,
           country: info.country,
           city: info.city,
-          education: info.education
+          education: info.education,
+          info_saved: info
         })
       }
       if (res.statusCode === 400) {
@@ -125,6 +132,75 @@ Page({
         phone_error: false
       })
     }
+    //判断是否有修改，如果没有就不用post了
+    if (e.detail.detail.value !== this.data.info_saved.phone){
+      this.setData({
+        phone_modified: true
+      })
+    }
+    else{
+      this.setData({
+        phone_modified: false
+      })
+    }
+  },
+
+  //每次更新country的input组件后都重新获取country
+  getCountry(e) {
+    // TODO 添加国家的正则表达式 or 使用picker
+    // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    // if (reg.test(e.detail.detail.value) === false) {
+    if (false) {
+      this.setData({
+        country_error: true
+      })
+    }
+    else {
+      this.setData({
+        country: e.detail.detail.value,
+        country_error: false
+      })
+    }
+    //判断是否有修改，如果没有就不用post了
+    if (e.detail.detail.value !== this.data.info_saved.country) {
+      this.setData({
+        country_modified: true
+      })
+    }
+    else {
+      this.setData({
+        country_modified: false
+      })
+    }
+  },
+
+  //每次更新city的input组件后都重新获取city
+  getCity(e) {
+    // TODO 添加城市的正则表达式 or 使用picker
+    // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    // if (reg.test(e.detail.detail.value) === false) {
+    if (false) {
+      this.setData({
+        city_error: true
+      })
+    }
+    else {
+      this.setData({
+        city: e.detail.detail.value,
+        city_error: false
+      })
+    }
+    //判断是否有修改，如果没有就不用post了
+    if (e.detail.detail.value !== this.data.info_saved.city) {
+      this.setData({
+        city_modified: true
+      })
+    }
+    else {
+      this.setData({
+        city_modified: false
+      })
+    }
   },
 
   //每次更新education的input组件后都重新获取education
@@ -132,6 +208,67 @@ Page({
     this.setData({
       education: this.data.educationList[e.detail.value]
     })
+    //判断是否有修改，如果没有就不用post了
+    if (this.data.educationList[e.detail.value] !== this.data.info_saved.education){
+      this.setData({
+        education_modified: true
+      })
+    }
+    else {
+      this.setData({
+        education_modified: false
+      })
+    }
+  },
+
+  //向后端发送post请求，从而修改用户的个人信息
+  modify() {
+    var postData = {};
+    var isModified = false;
+    if (this.data.phone_modified) {
+      postData.phone = this.data.phoneNumber;
+      isModified = true;
+    }
+    if (this.data.country_modified) {
+      postData.country = this.data.country;
+      isModified = true;
+    }
+    if (this.data.city_modified) {
+      postData.city = this.data.city;
+      isModified = true;
+    }
+    if (this.data.education_modified) {
+      postData.education = this.data.education;
+      isModified = true;
+    }
+    if (!isModified){
+      $Toast({
+        content: "您没有修改个人信息！",
+        type: "error"
+      });
+    }
+    else {
+      var req = new request();
+      this.setData({
+        isLoading: true,
+      })
+      req.postRequest(host + modify_info, JSON.stringify(postDat), app.globalData.access_token).then(res => {
+        if (res.statusCode === 200) {
+          app.globalData.showModifySuccess = true;
+          wx.navigateBack({
+            
+          })
+        }
+        if (res.statusCode === 400) {
+
+        }
+      }).catch(err => {
+        // console.log(err);
+      });
+      this.setData({
+        isLoading: false
+      });
+    }
   }
 
 })

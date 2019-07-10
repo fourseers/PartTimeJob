@@ -230,9 +230,6 @@ Page({
                 content: "注册失败",
                 type: "error"
               });
-              this.setData({
-                isLoading: false
-              })
             }
             else if (res.statusCode === 200) {
               app.globalData.isRegistered = true;
@@ -249,7 +246,10 @@ Page({
             }
           }).catch(err => {
             console.log(err)
-          })
+          });
+          this.setData({
+            isLoading: false
+          });
         }
       })
     }

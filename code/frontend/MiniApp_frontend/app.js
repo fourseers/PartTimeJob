@@ -77,6 +77,7 @@ App({
     userGPS: null,
     isRegistered: false,
     showSendMessage: false,
+    showModifySuccess: false,
     host: "http://202.120.40.8:30552",
     access_token: null,
     refresh_token: null,

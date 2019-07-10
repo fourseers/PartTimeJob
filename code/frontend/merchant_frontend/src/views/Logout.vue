@@ -13,6 +13,7 @@
 
                 this.$root.logged = false;
                 this.$router.push({ name: "login"})
+                this.$Message.success('登出成功');
             }
 
         }

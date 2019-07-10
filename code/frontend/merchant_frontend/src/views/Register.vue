@@ -86,7 +86,6 @@
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
 
                     },
-                    crossDomain: true,
                     method: 'post',
                     url: prefix +"/merchant/register",
                     data: {
@@ -94,19 +93,24 @@
                         password: this.formInline.password
                     }
                 }).then(response => {
-                    console.log(response);
-                    if(response.message === 'success')
+                    console.log(response.data);
+                    if(response.data.status === 200 )
                     {
-                        this.$token.savetoken(response.data);
+
+                        this.$Message.success('注册成功');
+                        this.$token.savetoken(response.data.data);
                         console.log(this.$token.loadToken());
                     }
 
                     this.$router.push({ name: "postjob"});
+                }).catch(error=> {
+                    if(error.response){
+                        if(error.response.data.message === "User exists.")
+                        {
+                            this.$Message.error('用户名已存在');
+                        }
+                    }
                 })
-                    .catch(error => {
-                        JSON.stringify(error)
-                        console.log(error)
-                    })
             }
         }
     }

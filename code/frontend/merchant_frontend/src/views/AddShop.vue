@@ -145,9 +145,11 @@
                     if(response.status ===  200)
                     {
                         console.log("success");
+                        this.$Message.success('添加店铺成功');
                     }
                 })
                     .catch(error => {
+                        this.$Message.error('添加店铺失败')
                         JSON.stringify(error);
                         console.log(error)
                     })

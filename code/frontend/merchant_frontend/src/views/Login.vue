@@ -3,14 +3,14 @@
     <Content class="content" v-if="!this.$root.logged  " >
       <br>
       <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
-        <FormItem prop="user">
-          <Input type="text" v-model="formInline.user" placeholder="用户名">
+        <FormItem   prop="user">
+          <Input name="user"  type="text" v-model="formInline.user" placeholder="用户名">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
           </Input>
         </FormItem>
         <br>
         <FormItem prop="password">
-          <Input type="password" v-model="formInline.password" placeholder="密码">
+          <Input  name="password"  type="password" v-model="formInline.password" placeholder="密码">
             <Icon type="ios-lock-outline" slot="prepend"></Icon>
           </Input>
         </FormItem>
@@ -58,42 +58,52 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             //this.$Message.success('Success!');
-            this.login()
+            this.login(this.formInline.user,this.formInline.password)
 
           } else {
             this.$Message.error('Fail!');
           }
         })
       },
-      login(){
+      login(username,password){
         var prefix="auth";
         this.axios({
           headers: {
             'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
             'Content-type': 'application/json',
-            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
           },
           method: 'post',
           crossDomain: true,
           url: prefix+ "/merchant/login",
           data:{
-            username: this.formInline.user,
-            password: this.formInline.password
+            username:username,
+            password: password
           }
         }).then(response => {
           console.log(response);
-          if(response.status === 200)
+          if(response.data.status === 200)
           {
-            this.$token.savetoken(response.data);
+            this.$token.savetoken(response.data.data);
+            this.$Message.success('登录成功');
             console.log(this.$token.loadToken());
+            this.$root.logged =true;
+            this.$router.push({ name: "postjob"})
           }
-          this.$root.logged =true;
-          this.$router.push({ name: "postjob"})
+        }).catch(error=> {
+          if(error.response){
+            if(error.response.data.status === 400)
+            {
+              console.log(error.response);
+              this.$Message.error('用户名或者密码错误');
+            }
+          }
+
+          if(error.response.data.status === 401)
+          {
+            console.log(error.response);
+          }
         })
-                .catch(error => {
-                  JSON.stringify(error)
-                  console.log(error)
-                })
       }
     }
   }

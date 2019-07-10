@@ -14,16 +14,16 @@
 
                     <FormItem label="省份" prop="province">
                         <Select v-model="formValidate.province" placeholder="选择省份">
-                            <Option value="北京">北京</Option>
-                            <Option value="上海">上海</Option>
-                            <Option value="深圳">深圳</Option>
+                            <Option value="beijing">北京</Option>
+                            <Option value="shanghai">上海</Option>
+                            <Option value="shenzhen">深圳</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="城市" prop="city">
                         <Select v-model="formValidate.city" placeholder="选择城市">
-                            <Option value="北京">北京</Option>
-                            <Option value="上海">上海</Option>
-                            <Option value="深圳">深圳</Option>
+                            <Option value="beijing">北京</Option>
+                            <Option value="shanghai">上海</Option>
+                            <Option value="shenzhen">深圳</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="地址" prop="address">

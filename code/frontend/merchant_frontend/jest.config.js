@@ -29,8 +29,10 @@ module.exports = {
   ],
   collectCoverage:true,
    collectCoverageFrom : [
-  "**/*.{js,jsx}",
+  "**/*.{js,jsx,vue}",
+     "**/*/*.{js,jsx,vue}",
   "!**/node_modules/**",
-  "!**/vendor/**"
+  "!**/vendor/**",
+     "!**/dist/**"
   ]
 }

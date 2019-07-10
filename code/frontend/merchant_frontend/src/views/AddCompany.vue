@@ -45,6 +45,8 @@
             },
             addCompany()
             {
+
+                console.log(this.$token.loadToken().access_token)
                     var prefix="/warehouse"
                     //测试用的url
                     this.axios({
@@ -64,10 +66,13 @@
                         if(response.status ===  200)
                         {
                             console.log("success");
+                            this.$Message.success('添加公司成功');
                         }
+
                     })
                         .catch(error => {
                             //JSON.stringify(error);
+                            this.$Message.error('添加公司失败');
                             console.log(error)
                         })
             }

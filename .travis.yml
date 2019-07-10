@@ -23,7 +23,7 @@ before_install:
 # codecov settings
 
 script:
- - mvn -B cobertura:cobertura
+ - mvn -Bq cobertura:cobertura
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

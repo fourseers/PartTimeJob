@@ -2,6 +2,14 @@
 
 > * 测试环境地址：http://GATEWAY_DOMAIN:30553
 > * 接口统一前缀：`/auth`
+> * 状态码统一规定：
+>
+> | 状态码 | 描述     | 可能原因                                  |
+> | ------ | -------- | ----------------------------------------- |
+> | 200    | 成功     | /                                         |
+> | 400    | 请求无效 | 用户名或密码错误                          |
+> | 401    | 未授权   | 客户端鉴权字段（Basic Authorization）错误 |
+> | 500    | 服务器   | 服务器内部错误，请联系管理员              |
 
 [TOC]
 
@@ -40,7 +48,7 @@
 
   | 字段            | 类型     | 描述                     |
   | --------------- | -------- | ------------------------ |
-  | `status`    | `int`    | 状态码，成功200，失败400 |
+  | `status`    | `int`    | 状态码 |
   | `access_token`  | `String` | OAuth令牌                |
   | `token_type`    | `String` | Token类型，总是为Bearer   |
   | `expire_in`     | `int`    | 令牌过期时间             |
@@ -85,7 +93,7 @@
   
   | 字段            | 类型     | 描述                     |
   | --------------- | -------- | ------------------------ |
-  | `status`    | `int`    | 状态码，成功200，失败400 |
+  | `status`    | `int`    | 状态码 |
   | `access_token`  | `String` | OAuth令牌                |
   | `token_type`    | `String` | Token类型，总是为Bearer   |
   | `expire_in`     | `int`    | 令牌过期时间             |
@@ -175,12 +183,12 @@
 
 - 字段说明：
 
-  | 字段            | 类型     | 描述                     |
-  | --------------- | -------- | ------------------------ |
-  | `status`        | `int`    | 状态码，成功200，失败400 |
-  | `access_token`  | `String` | OAuth令牌                |
-  | `token_type`    | `String` | Token类型，总是为Bearer  |
-  | `expire_in`     | `int`    | 令牌过期时间             |
-  | `refresh_token` | `String` | 更新令牌                 |
-  | `message`       | `String` | 注册信息                 |
-  | `scope`         | `String` | 待定                     |
+  | 字段            | 类型     | 描述                    |
+  | --------------- | -------- | ----------------------- |
+  | `status`        | `int`    | 状态码                  |
+  | `access_token`  | `String` | OAuth令牌               |
+  | `token_type`    | `String` | Token类型，总是为Bearer |
+  | `expire_in`     | `int`    | 令牌过期时间            |
+  | `refresh_token` | `String` | 更新令牌                |
+  | `message`       | `String` | 注册信息                |
+  | `scope`         | `String` | 待定                    |

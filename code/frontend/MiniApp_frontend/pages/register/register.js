@@ -114,9 +114,17 @@ Page({
   deleteTags(e) {
     var newChosen = this.data.chosenTags;
     var toChosen = this.data.tags;
-    var switchIndex = newChosen[e.detail.name].id;
+    var switchId = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
-    toChosen[switchIndex].isChosen = false;
+    // 获取取消选取的tag在所有tags中的index
+    var index = 0;
+    for (var i in this.data.tags) {
+      if (this.data.tags[i].id === switchId) {
+        index = i;
+        break;
+      }
+    }
+    toChosen[index].isChosen = false;
     this.setData({
       chosenTags: newChosen,
       tags: toChosen
@@ -125,7 +133,8 @@ Page({
 
   //每次更新name的input组件后都重新获取name
   getName(e){
-    if(e.detail.detail.value.length <= 1){
+    var reg = /^[\u4E00-\u9FA5A-Za-z]+$/;
+    if ((e.detail.detail.value.length <= 1) || reg.test(e.detail.detail.value) === false){
       this.setData({
         name_error: true
       })

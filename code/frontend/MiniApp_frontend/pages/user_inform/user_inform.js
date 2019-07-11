@@ -31,6 +31,7 @@ Page({
     info_saved: null,
     tags: [],
     chosenTags: [],
+    tags_modified: false
   },
 
   onShow(){
@@ -47,7 +48,7 @@ Page({
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
           educationList: res.data.education,
-          technology: tags,
+          tags: tags,
         })
       }
       else if (res.statusCode === 400) {
@@ -62,6 +63,16 @@ Page({
     req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var info = res.data.data.info;
+        
+        var toChosen = this.data.tags;
+        for(var i in info.tags) {
+          var switchId = info.tags[i].id;
+          for (var j in this.data.tags) {
+            if (this.data.tags[j].id === switchId) {
+              toChosen[j].isChosen = true;
+            }
+          }
+        }
         this.setData({
           name: info.name,
           gender: info.gender,
@@ -70,7 +81,9 @@ Page({
           country: info.country,
           city: info.city,
           education: info.education,
-          info_saved: info
+          info_saved: info,
+          chosenTags: info.tags,
+          tags: toChosen,
         })
       }
       if (res.statusCode === 400) {
@@ -239,12 +252,35 @@ Page({
       newChosen.push(this.data.tags[e.detail.name]);
       this.setData({
         chosenTags: newChosen,
-        tags: toChosen
+        tags: toChosen,
+        tags_modified: true,
       })
     }
     else {
       this.handleError();
     }
+  },
+
+  //这个方法实现了：用户点击已选tag后，将tag从已选中删除
+  deleteTags(e) {
+    var newChosen = this.data.chosenTags;
+    var toChosen = this.data.tags;
+    var switchId = newChosen[e.detail.name].id;
+    newChosen.splice(e.detail.name, 1);
+    // 获取取消选取的tag在所有tags中的index
+    var index = 0;
+    for(var i in this.data.tags){
+      if (this.data.tags[i].id === switchId) {
+        index = i;
+        break;
+      }
+    }
+    toChosen[index].isChosen = false;
+    this.setData({
+      chosenTags: newChosen,
+      tags: toChosen,
+      tags_modified: true
+    })
   },
 
   //这个方法用于提示用户已选相同倾向（已废弃）
@@ -253,19 +289,6 @@ Page({
       content: "您已选择相同倾向",
       type: "error"
     });
-  },
-
-  //这个方法实现了：用户点击已选tag后，将tag从已选中删除
-  deleteTags(e) {
-    var newChosen = this.data.chosenTags;
-    var toChosen = this.data.tags;
-    var switchIndex = newChosen[e.detail.name].id;
-    newChosen.splice(e.detail.name, 1);
-    toChosen[switchIndex].isChosen = false;
-    this.setData({
-      chosenTags: newChosen,
-      tags: toChosen
-    })
   },
 
   //向后端发送post请求，从而修改用户的个人信息
@@ -288,6 +311,14 @@ Page({
       postData.education = this.data.education;
       isModified = true;
     }
+    if (this.data.tags_modified) {
+      var tags = [];
+      for (var i in this.data.chosenTags) {
+        tags.push(this.data.chosenTags[i].id);
+      }
+      postData.tags = tags;
+      isModified = true;
+    }
     if (!isModified){
       $Toast({
         content: "您没有修改个人信息！",
@@ -299,6 +330,7 @@ Page({
       this.setData({
         isLoading: true,
       })
+      console.log(postData);
       req.postRequest(host + modify_info, JSON.stringify(postData), app.globalData.access_token).then(res => {
         if (res.statusCode === 200) {
           app.globalData.showModifySuccess = true;

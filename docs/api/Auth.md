@@ -9,7 +9,15 @@
 > | status  | `Integer` | 响应状态码，成功返回200，非法请求返回400。 |
 > | message | `String`  | 响应描述信息。                             |
 > | data    | `Object`  | 自定义响应结构化数据，可为NULL。           |
-
+> 
+> * 状态码统一规定：
+>
+> | 状态码 | 描述     | 可能原因                                  |
+> | ------ | -------- | ----------------------------------------- |
+> | 200    | 成功     | /                                         |
+> | 400    | 请求无效 | 用户名或密码错误                          |
+> | 401    | 未授权   | 客户端鉴权字段（Basic Authorization）错误 |
+> | 500    | 服务器   | 服务器内部错误，请联系管理员              |
 [TOC]
 
 ## 商家注册
@@ -47,7 +55,7 @@
 
   | 字段            | 类型     | 描述                     |
   | --------------- | -------- | ------------------------ |
-  | `status`    | `int`    | 状态码，成功200，格式错误400 |
+  | `status`    | `int`    | 状态码 |
   | `access_token`  | `String` | OAuth令牌                |
   | `token_type`    | `String` | Token类型，总是为Bearer   |
   | `expire_in`     | `int`    | 令牌过期时间             |
@@ -92,7 +100,7 @@
   
   | 字段            | 类型     | 描述                     |
   | --------------- | -------- | ------------------------ |
-  | `status`    | `int`    | 状态码，成功200，格式错误400，用户名密码错误401 |
+  | `status`    | `int`    | 状态码 |
   | `access_token`  | `String` | OAuth令牌                |
   | `token_type`    | `String` | Token类型，总是为Bearer   |
   | `expire_in`     | `int`    | 令牌过期时间             |
@@ -182,12 +190,12 @@
 
 - 字段说明：
 
-  | 字段            | 类型     | 描述                     |
-  | --------------- | -------- | ------------------------ |
-  | `status`        | `int`    | 状态码，成功200，失败400 |
-  | `access_token`  | `String` | OAuth令牌                |
-  | `token_type`    | `String` | Token类型，总是为Bearer  |
-  | `expire_in`     | `int`    | 令牌过期时间             |
-  | `refresh_token` | `String` | 更新令牌                 |
-  | `message`       | `String` | 注册信息                 |
-  | `scope`         | `String` | 待定                     |
+  | 字段            | 类型     | 描述                    |
+  | --------------- | -------- | ----------------------- |
+  | `status`        | `int`    | 状态码                  |
+  | `access_token`  | `String` | OAuth令牌               |
+  | `token_type`    | `String` | Token类型，总是为Bearer |
+  | `expire_in`     | `int`    | 令牌过期时间            |
+  | `refresh_token` | `String` | 更新令牌                |
+  | `message`       | `String` | 注册信息                |
+  | `scope`         | `String` | 待定                    |

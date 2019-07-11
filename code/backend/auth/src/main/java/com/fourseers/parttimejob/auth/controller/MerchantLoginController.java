@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.auth.service.MerchantUserService;
 import com.fourseers.parttimejob.auth.util.ResponseBuilder;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import feign.FeignException;
+import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,12 +49,11 @@ public class MerchantLoginController {
         } catch (Exception e) {
             // do nothing, leave response null, ignore it
         }
-        if(response == null)
-            return ResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR,
-                    null, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-        else if(response.getInteger("status") != 200) {
-            HttpStatus httpStatus = HttpStatus.valueOf(response.getInteger("status"));
-            return ResponseBuilder.build(httpStatus, null, httpStatus.getReasonPhrase());
+        if(response == null || response.getString("access_token") == null) {
+            HttpStatus returnStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            if(response.getInteger("status") != null)
+                returnStatus = HttpStatus.valueOf(response.getInteger("status"));
+            return ResponseBuilder.build(returnStatus, null, returnStatus.getReasonPhrase());
         }
         return ResponseBuilder.build(HttpStatus.OK, response, "success");
     }

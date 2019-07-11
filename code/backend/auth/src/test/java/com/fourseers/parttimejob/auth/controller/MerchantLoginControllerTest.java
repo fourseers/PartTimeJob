@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
-import com.netflix.hystrix.exception.HystrixRuntimeException;
-import feign.FeignException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,8 +73,7 @@ public class MerchantLoginControllerTest {
                 .fluentPut("refresh_token","17c8093d-16b0-422d-9511-cb38f09c2693")
                 .fluentPut("scope","merchant")
                 .fluentPut("token_type","bearer")
-                .fluentPut("expires_in",43199)
-                .fluentPut("status", 200);
+                .fluentPut("expires_in",43199);
         JSONObject errorOAuthResponse = new JSONObject()
                 .fluentPut("status", "401")
                 .fluentPut("error", "Unauthorized")

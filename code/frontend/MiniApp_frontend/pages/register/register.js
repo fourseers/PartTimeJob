@@ -229,6 +229,10 @@ Page({
             isLoading: true,
           })
           var req = new request();
+          var tagIDs = [];
+          for (var i in this.data.chosenTags) {
+            tagIDs.push(this.data.chosenTags[i].id);
+          }
           var postData = {
             "name": this.data.name,
             "gender": app.globalData.userInfo.gender,
@@ -237,7 +241,8 @@ Page({
             "country": app.globalData.userInfo.country,
             "city": app.globalData.userInfo.city,
             "education": this.data.education,
-            "token": res.code
+            "token": res.code,
+            "tags": tagIDs
           };
           req.postRequest(host + register, JSON.stringify(postData)).then(res => {
             if (res.statusCode === 400) {

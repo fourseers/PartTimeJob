@@ -252,7 +252,7 @@ Page({
       this.setData({
         isLoading: true,
       })
-      req.postRequest(host + modify_info, JSON.stringify(postDat), app.globalData.access_token).then(res => {
+      req.postRequest(host + modify_info, JSON.stringify(postData), app.globalData.access_token).then(res => {
         if (res.statusCode === 200) {
           app.globalData.showModifySuccess = true;
           wx.navigateBack({

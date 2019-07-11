@@ -56,6 +56,7 @@
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
+            //this.$Message.success('Success!');
             this.login(this.formInline.user, this.formInline.password).then(res => {
                       console.log(res);
                       this.$token.savetoken(res.data);
@@ -101,8 +102,10 @@
               }
 
               if (error.response.data.status === 401) {
-
                 this.$Message.error('auth错误');
+              }
+              if (error.response.data.status === 500) {
+                this.$Message.error('服务器错误');
               }
             }
           });
@@ -113,5 +116,15 @@
 </script>
 
 <style scoped>
-
+  .content{
+    padding:100px;
+    background-color: #fff;
+  }
+  .ivu-btn {
+    color: #fff;
+    background-color: #82ccd2;
+    border-color: #c8d6e5;
+  }
 </style>
+
+

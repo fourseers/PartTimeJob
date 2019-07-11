@@ -1,5 +1,5 @@
 
-import testLogin from '../views/testLogin.vue'
+import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import PostJob from '../views/PostJob.vue'
 import AddShop from '../views/AddShop.vue'
@@ -21,12 +21,12 @@ const  routes =[
     {
         path: '/',
         view: 'Login',
-        component:testLogin
+        component:Login
     },
     {
         path: '/login',
         name: 'login',
-        component:testLogin
+        component:Login
     },
     {
         path: '/register',

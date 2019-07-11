@@ -82,8 +82,11 @@
             method: 'POST',
             url,
             headers: {
-              'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==' },
-            data:{
+              'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+              'Content-type': 'application/json',
+              'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
+            },
+              data:{
               username:username,
               password:password
             }
@@ -94,8 +97,8 @@
               reject(new Error('error'));
             }
           }).catch(error => {
-
             if (error.response) {
+
               console.log(error.response)
               if (error.response.data.status === 400) {
                 this.$Message.error('用户名或者密码错误');
@@ -107,6 +110,7 @@
               if (error.response.data.status === 500) {
                 this.$Message.error('服务器错误');
               }
+              reject( error);
             }
           });
         });

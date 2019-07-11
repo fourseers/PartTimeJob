@@ -57,23 +57,18 @@ describe('Login.vue', () => {
     })
 });
 
-// describe('Login.vue', () => {
-//
-//
-//     it('returns error', done => {
-//         var mock = new MockAdapter(axios);
-//
-//         // 模拟ERROR请求
-//         mock.onPost( 'http://202.120.40.8:30552/auth/merchant/login' ).networkError();
-//
-//         //模拟登录   POST
-//
-//         Login.methods.login("user_one", "user_one").then(response => {
-//
-//              expect(response).toEqual(  );
-//             done();
-//         });
-//
-//     })
-// });
-//
+
+describe('Login.vue', () => {
+    // it('returns 400', done => {
+    //     var mock = new MockAdapter(axios);
+    //
+    //     // 模拟失败请求
+    //      mock.onPost( 'http://202.120.40.8:30552/auth/merchant/login').networkError();
+    //
+    //     Login.methods.login("user_one", "user_one").then(response => {
+    //         expect(response).toEqual();
+    //         done();
+    //     });
+    //
+    // })
+})

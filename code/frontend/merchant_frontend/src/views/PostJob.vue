@@ -343,7 +343,6 @@
                         if(error.response.data.status === 400)
                         {
                             console.log(error.response);
-                            this.$Message.error('暂无店铺');
                         }
                     }
                 })

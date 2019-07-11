@@ -14,11 +14,7 @@ public class ResponseBuilder {
             response.put("data", data);
         }
 
-        if (status.value() == 400) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(response, status);
     }
 
     public static ResponseEntity<JSONObject> build(int status, JSONObject data, String message) {

@@ -4,8 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
-import com.netflix.hystrix.exception.HystrixRuntimeException;
-import feign.FeignException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

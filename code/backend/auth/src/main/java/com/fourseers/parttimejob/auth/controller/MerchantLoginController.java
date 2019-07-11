@@ -51,6 +51,10 @@ public class MerchantLoginController {
         if(response == null)
             return ResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR,
                     null, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        else if(response.getInteger("status") != 200) {
+            HttpStatus httpStatus = HttpStatus.valueOf(response.getInteger("status"));
+            return ResponseBuilder.build(httpStatus, null, httpStatus.getReasonPhrase());
+        }
         return ResponseBuilder.build(HttpStatus.OK, response, "success");
     }
 

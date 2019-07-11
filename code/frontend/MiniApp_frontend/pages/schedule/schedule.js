@@ -6,7 +6,7 @@ Page({
    * timeList是0-23小时
    * schedule是每个小时对应的状态，其中:
    *    0: 未安排，1：待添加，2：已安排，3：待删除
-   * scheduleSave用于保存一份用户的初始安排
+   * scheduleSave用于保存一份用于的初始安排
    * week是一周7天
    * scheduleClass用于存放table-cell的class
    * newAdd用于判断用户是否进行了修改（只有进行过修改才能按按钮）
@@ -59,6 +59,7 @@ Page({
 
   },
 
+  // 按下任意一个时间块后触发
   handleTap(e) {
     var newSchedule = this.data.scheduleSave;
     //console.log(this.data.scheduleSave);
@@ -85,6 +86,7 @@ Page({
     }
   },
 
+  // 按下“修改”button后触发
   handleAdd() {
     var newSchedule = this.data.schedule;
     for (var i in newSchedule) {

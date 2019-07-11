@@ -29,6 +29,8 @@ Page({
     educationList: [],
     isLoading: false,
     info_saved: null,
+    tags: [],
+    chosenTags: [],
   },
 
   onShow(){
@@ -219,6 +221,51 @@ Page({
         education_modified: false
       })
     }
+  },
+
+  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
+  chooseTags(e) {
+    var newChosen = this.data.chosenTags;
+    var hasSame = false;
+    //判断已选技术中是否有重复的
+    for (var index in newChosen) {
+      if (newChosen[index].id === e.detail.name) {
+        hasSame = true;
+      }
+    }
+    if (hasSame === false) {
+      var toChosen = this.data.tags;
+      toChosen[e.detail.name].isChosen = true;
+      newChosen.push(this.data.tags[e.detail.name]);
+      this.setData({
+        chosenTags: newChosen,
+        tags: toChosen
+      })
+    }
+    else {
+      this.handleError();
+    }
+  },
+
+  //这个方法用于提示用户已选相同倾向（已废弃）
+  handleError() {
+    $Toast({
+      content: "您已选择相同倾向",
+      type: "error"
+    });
+  },
+
+  //这个方法实现了：用户点击已选tag后，将tag从已选中删除
+  deleteTags(e) {
+    var newChosen = this.data.chosenTags;
+    var toChosen = this.data.tags;
+    var switchIndex = newChosen[e.detail.name].id;
+    newChosen.splice(e.detail.name, 1);
+    toChosen[switchIndex].isChosen = false;
+    this.setData({
+      chosenTags: newChosen,
+      tags: toChosen
+    })
   },
 
   //向后端发送post请求，从而修改用户的个人信息

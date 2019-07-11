@@ -58,30 +58,6 @@ Page({
     isLoading: false,
   },
 
-  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
-  chooseTags(e){
-    var newChosen = this.data.chosenTags;
-    var hasSame = false;
-    //判断已选技术中是否有重复的
-    for (var index in newChosen){
-      if (newChosen[index].id === e.detail.name) {
-        hasSame = true;
-      }
-    }
-    if (hasSame === false) {
-      var toChosen = this.data.tags;
-      toChosen[e.detail.name].isChosen = true;
-      newChosen.push(this.data.tags[e.detail.name]);
-      this.setData({
-        chosenTags: newChosen,
-        tags: toChosen
-      })
-    }
-    else{
-      this.handleError();
-    }
-  },
-
   /* 
    * onshow触发的时候向后台获取注册元数据
    * 元数据包括educationList和tags
@@ -108,6 +84,30 @@ Page({
       // console.log(err);
       // TODO: 添加请求失败的处理
     })
+  },
+
+  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
+  chooseTags(e) {
+    var newChosen = this.data.chosenTags;
+    var hasSame = false;
+    //判断已选技术中是否有重复的
+    for (var index in newChosen) {
+      if (newChosen[index].id === e.detail.name) {
+        hasSame = true;
+      }
+    }
+    if (hasSame === false) {
+      var toChosen = this.data.tags;
+      toChosen[e.detail.name].isChosen = true;
+      newChosen.push(this.data.tags[e.detail.name]);
+      this.setData({
+        chosenTags: newChosen,
+        tags: toChosen
+      })
+    }
+    else {
+      this.handleError();
+    }
   },
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity
 public class WechatUser {
 
-    private Integer uid;
+    private Integer userId;
     private String openid;
     private String name;
     private Boolean gender;
@@ -21,12 +21,12 @@ public class WechatUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getUid() {
-        return uid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getOpenid() {

@@ -1,7 +1,7 @@
 <template>
     <div class="chart">
         <div>
-            <div style="width: 45%;height:500px ;border:1px solid rgb(180,180,180)" id="echartss"></div>
+            <div style="width: 45%;height:500px ;border:1px solid rgb(180,180,180)" id="salary_chart"></div>
         </div>
     </div>
 </template>
@@ -11,6 +11,8 @@
     import echarts from 'echarts'
 
     export default {
+
+        name: "SalaryStat",
         data() {
             return {
                 echarts1_option:{
@@ -22,8 +24,7 @@
                         left: 'center',
                         top: 20,
                         textStyle: {
-                            color: '#ccc',
-                            fontStyle:'italic'//标题字体
+                            color: '#4b4b4b'//标题字体
                         }
                     },
                     //弹窗，响应鼠标指向，显示具体细节
@@ -64,9 +65,7 @@
                         // seriesIndex: 4, //选取数据集合中的哪个数组，如{一班}，{二班}，默认选取data中的所有数据集
                         inRange: {
                             //选定了要映射的对象，用inRange详细写要渲染的具体细节，[x，y]中x指最小值对应的量（亮度，饱和度等），y指最大值对应的量，其余的按各自value线性渲染
-                            color:"#c8d6e5",
-                            colorLightness: [0,1],
-                            colorSaturation:[0,1]
+                            // colorLightness: [0.5, 1]
                         }
                     },
 //数据
@@ -77,11 +76,19 @@
                             radius : '55%',
                             center: ['50%', '50%'],
                             data:[
-                                {value:335, name:'店铺A'},
-                                {value:310, name:'店铺B'},
-                                {value:274, name:'店铺C'},
-                                {value:235, name:'店铺D'},
-                                {value:400, name:'店铺E'}
+                                {value:335, name:'店铺A',  itemStyle: {
+                                        color: '#f3a683'
+                                    }},
+                                {value:310, name:'店铺B',itemStyle: {
+                                        color: '#ffeaa7'
+                                    }},
+                                {value:274, name:'店铺C',itemStyle: {
+                                        color: '#f8a5c2'
+                                    }},
+                                {value:235, name:'店铺D',itemStyle: {
+                                        color: '#63cdda'}},
+                                {value:400, name:'店铺E',itemStyle: {
+                                        color: '#ffb8b8'}}
                             ].sort(function (a, b) { return a.value - b.value; }),
                             roseType: 'radius',//角度和半径展现百分比，'area'只用半径展现
                             label: { //饼图图形的文本标签
@@ -98,13 +105,12 @@
                                     },
                                     smooth: 0.5, //0-1，越大越平滑弯曲
                                     length: 10,  //从块到文字的第一段长
-                                    length2: 20  //拐弯到文字的段长
+                                    length2: 20,  //拐弯到文字的段长
                                 }
                             },
                             itemStyle: { //图例样式
                                 normal: {
-                                    color: '#82ccdd',
-                                    shadowBlur: 50,//阴影模糊程度
+                                    shadowBlur: 5,//阴影模糊程度
                                     shadowColor: 'rgba(0, 0, 0, 0.2)'//阴影颜色，一般黑
                                 }
                             },
@@ -124,7 +130,7 @@
 //挂载前初始化echarts实例
         mounted: function () {
             // 基于准备好的dom，初始化echarts实例
-            let myChart = echarts.init(document.getElementById('echartss'))
+            let myChart = echarts.init(document.getElementById('salary_chart'))
             // 绘制图表，this.echarts1_option是数据
             myChart.setOption(this.echarts1_option)
         }

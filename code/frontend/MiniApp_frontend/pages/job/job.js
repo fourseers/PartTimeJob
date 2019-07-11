@@ -6,6 +6,8 @@ Page({
 
   /**
    * 页面的初始数据
+   * jobs通过向后端发送请求来获取
+   * position默认值为“附近商家”，在用户选择位置后改变
    */
   data: {
     jobs: [
@@ -32,8 +34,7 @@ Page({
         ]
       }
     ],
-    position: "附近商家",
-    scrollTop: 0
+    position: "附近商家"
   },
 
   /*
@@ -42,8 +43,8 @@ Page({
   onShow(options) {
     if (app.globalData.showSendMessage) {
       this.handleSuccess();
+      app.globalData.showSendMessage = false;
     }
-    app.globalData.showSendMessage = false;
   },
 
   // 上拉刷新
@@ -56,7 +57,7 @@ Page({
     //console.log("onBottom");
   },
 
-  //选择位置
+  // 用户选择位置
   choosePosition() {
     wx.chooseLocation({
       success: (res) => {
@@ -67,7 +68,7 @@ Page({
     })
   },
 
-  //显示toast的function
+  // 用于显示toast
   handleSuccess() {
     $Toast({
       content: '申请岗位成功',

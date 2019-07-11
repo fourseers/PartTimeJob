@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,6 +25,15 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private final static String BASIC_AUTH_TOKEN = "Authorization";
     private final static String CLIENT_TOKEN = "x-access-token";
     private final static String INTERNAL_TOKEN = "x-internal-token";
+
+    private static String UNAUTHORIZED_RESPONSE_CONTENT;
+    static {
+        JSONObject resp = new JSONObject();
+        resp.fluentPut("status", 401)
+                .fluentPut("data", null)
+                .fluentPut("message", "Forbidden, invalid access token.");
+        UNAUTHORIZED_RESPONSE_CONTENT = resp.toString();
+    }
 
 
     @Autowired
@@ -37,7 +48,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         // check if should be authenticated
-        if (exchange.getRequest().getPath().toString().startsWith("/auth"))
+        String path = exchange.getRequest().getPath().toString();
+        if (path.startsWith("/auth") || path.endsWith("register-info"))
             return chain.filter(exchange);
 
         Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -50,12 +62,17 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // check existence of client info & access token
         if (StringUtils.isBlank(clientAuthToken) || StringUtils.isBlank(accessToken)) {
-            logger.debug("[NO TOKEN OR TOKEN ILLEGAL]");
             return unauthorized(exchange);
         }
 
         //invoke auth service to check authorization
-        JSONObject response = authService.checkToken(accessToken, clientAuthToken);
+        JSONObject response;
+        try {
+            response = authService.checkToken(accessToken, clientAuthToken);
+        } catch (Exception e) {
+            return unauthorized(exchange);
+        }
+
         if (!response.containsKey("error")) {
             ServerHttpRequest.Builder builder = request.mutate();
             // unset client token
@@ -72,18 +89,16 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
      *
      */
     private Mono<Void> unauthorized(ServerWebExchange serverWebExchange) {
-        serverWebExchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        ServerHttpResponse response =  serverWebExchange.getResponse();
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         DataBuffer buffer = serverWebExchange.getResponse()
-                .bufferFactory().wrap("Forbidden, access token not found.".getBytes());
+                .bufferFactory().wrap(UNAUTHORIZED_RESPONSE_CONTENT.getBytes());
         return serverWebExchange.getResponse().writeWith(Flux.just(buffer));
     }
 
     @Override
     public int getOrder() {
         return -1;
-    }
-
-    public static class Config {
-
     }
 }

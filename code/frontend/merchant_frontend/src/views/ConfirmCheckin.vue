@@ -6,6 +6,7 @@
 </template>
 <script>
     export default {
+        name: "ConfirmCheckin",
         data () {
             return {
                 columns7: [
@@ -14,11 +15,6 @@
                         key: 'name',
                         render: (h, params) => {
                             return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'person'
-                                    }
-                                }),
                                 h('strong', params.row.name)
                             ]);
                         }
@@ -84,15 +80,19 @@
                                 }, '发放工资'),
                                 h('Button', {
                                     props: {
+                                        type:'error',
                                         size: 'small'
                                     },
                                     style: {
                                     color: '#d63031',
                                         borderColor:'#d63031',
+                                        backgroundColor:'#fff',
                                     marginRight: '5px',
                                     marginTop:'5px',
                                         marginBottom:'5px'
+
                                     },
+
                                     on: {
                                         click: () => {
 
@@ -127,9 +127,6 @@
                     title: 'User Info',
                     content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
                 })
-            },
-            remove (index) {
-                this.data6.splice(index, 1);
             }
         }
     }
@@ -143,9 +140,5 @@
         margin-right:50px;
         background-color: #fff;
     }
-    .ivu-btn-default
-    {
-        background-color:  #fff;
-        border-color: #d63031;
-    }
+
 </style>

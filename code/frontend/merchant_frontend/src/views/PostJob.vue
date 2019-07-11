@@ -136,11 +136,10 @@
         name: "PostJob",
         data () {
             const validateApplyBeforeEnd= (rule, value, callback) => {
-
                 if( this.formValidate.end_apply_date === "")
                     callback();
-                if (value < this.formValidate.end_apply_date) {
-                    callback(new Error('工作开始时间应该晚于招聘结束时间'));
+                if (value > this.formValidate.end_apply_date) {
+                    callback(new Error('招聘开始时间应该晚于招聘结束时间'));
                 } else {
                     callback();
                 }
@@ -169,7 +168,7 @@
                 if( this.formValidate.begin_apply_date === "")
                     callback();
                 if (value < this.formValidate.begin_apply_date) {
-                    callback(new Error('结束时间应该晚于开始时间'));
+                    callback(new Error('招聘开始时间应该晚于招聘结束时间'));
                 } else {
                     callback();
                 }
@@ -179,7 +178,17 @@
                 if( this.formValidate.begin_date === "")
                     callback();
                 if (value < this.formValidate.begin_date) {
-                    callback(new Error('结束时间应该晚于开始时间'));
+                    callback(new Error('工作结束时间应该晚于工作开始时间'));
+                } else {
+                    callback();
+                }
+            }
+
+            const validateWorkBefore2= (rule, value, callback) => {
+                if( this.formValidate.end_date === "")
+                    callback();
+                if (value > this.formValidate.end_date) {
+                    callback(new Error('工作结束时间应该晚于工作开始时间'));
                 } else {
                     callback();
                 }
@@ -261,17 +270,18 @@
                     ],
                     begin_apply_date: [
                         { required: true, type: 'date', message: '请选择招聘开始时间', trigger: 'change' },
-                        {validator:validateApplyBeforeEnd, trigger: 'change'},
+                        { validator:validateApplyBeforeEnd, trigger: 'change'},
 
                     ],
                     end_apply_date: [
                         { required: true, type: 'date', message: '请选择招聘结束时间', trigger: 'change' },
-                        {validator:validateApplyBefore, trigger: 'change'},
-                        { validator:validateApplyBeforeWork2, trigger: 'change'}
+                        { validator:validateApplyBefore, trigger: 'change'},
+                        { validator:validateApplyBeforeWork2, trigger: 'blur'}
                     ],
                     begin_date: [
                         { required: true, type: 'date', message: '请选择工作开始时间', trigger: 'change' },
-                        { validator:validateApplyBeforeWork, trigger: 'change'}
+                        { validator:validateApplyBeforeWork, trigger: 'blur'},
+                        { validator:validateWorkBefore2,trigger: 'change'},
                     ],
                     end_date: [
                         { required: true, type: 'date', message: '请选择工作结束时间', trigger: 'change' },

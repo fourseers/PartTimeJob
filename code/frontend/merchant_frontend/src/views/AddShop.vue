@@ -149,9 +149,17 @@
                     }
                 })
                     .catch(error => {
-                        this.$Message.error('添加店铺失败')
-                        JSON.stringify(error);
-                        console.log(error)
+
+                        if (error.response) {
+                            if (error.response.data.status === 400  && error.response.data.message === "user not belong to any company") {
+                                this.$Message.error('请添加公司');
+                            }
+                            else{
+                                this.$Message.error('添加店铺失败')
+                            }
+                            JSON.stringify(error);
+                            console.log(error)
+                        }
                     })
             }
         }

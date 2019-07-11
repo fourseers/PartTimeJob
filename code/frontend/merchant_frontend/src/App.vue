@@ -28,7 +28,7 @@
 
 <script>
 
-    import Login from './views/Login.vue'
+    import testLogin from './views/testLogin.vue'
     import Register from './views/Register.vue'
     import PostJob from './views/PostJob.vue'
     import AddShop from './views/AddShop.vue'
@@ -48,7 +48,7 @@
     export default {
         name: 'app',
         components: {
-            'Login':Login,
+            'testLogin':testLogin,
             'Register':Register,
             Toolbar,
             PostJob,

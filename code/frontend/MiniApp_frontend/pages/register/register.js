@@ -13,14 +13,18 @@ Page({
   */
 
   /*
-    technology是所有职业倾向的数组，可以通过后端获得
-    chosenTechnology是用户选择的所有职业倾向
+    tags是所有职业倾向的数组，可以通过后端获得
+    chosenTags是用户选择的所有职业倾向
     name是用户姓名
     identity是用户身份证号
     phoneNumber是用户手机号码
+    ()_error用于显示用户是否输入异常值
+    educationList是所有备选学历
+    education是用于已选学历
+    isLoading用于决定用户请求是否正在发送，如正在发送就在按钮处显示loading动画
   */
   data: {
-    technology: [
+    tags: [
       {
         id: 0,
         name: "厨师",
@@ -42,8 +46,8 @@ Page({
         isChosen: false
       }
     ],
+    chosenTags: [],
     educationList: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
-    chosenTechnology: [],
     name: '',
     name_error: false,
     identity: '',
@@ -55,8 +59,8 @@ Page({
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
-  chooseTechnology(e){
-    var newChosen = this.data.chosenTechnology;
+  chooseTags(e){
+    var newChosen = this.data.chosenTags;
     var hasSame = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen){
@@ -65,12 +69,12 @@ Page({
       }
     }
     if (hasSame === false) {
-      var toChosen = this.data.technology;
+      var toChosen = this.data.tags;
       toChosen[e.detail.name].isChosen = true;
-      newChosen.push(this.data.technology[e.detail.name]);
+      newChosen.push(this.data.tags[e.detail.name]);
       this.setData({
-        chosenTechnology: newChosen,
-        technology: toChosen
+        chosenTags: newChosen,
+        tags: toChosen
       })
     }
     else{
@@ -78,7 +82,10 @@ Page({
     }
   },
 
-  //onshow触发的时候向后台获取注册元数据
+  /* 
+   * onshow触发的时候向后台获取注册元数据
+   * 元数据包括educationList和tags
+   */
   onShow(){
     var req = new request();
     req.getRequest(host + register_data, null).then(res => {
@@ -91,7 +98,7 @@ Page({
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
           educationList: res.data.education,
-          technology: tags,
+          tags: tags,
         })
       }
       else if (res.statusCode === 400){
@@ -104,15 +111,15 @@ Page({
   },
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
-  deleteTechnology(e) {
-    var newChosen = this.data.chosenTechnology;
-    var toChosen = this.data.technology;
+  deleteTags(e) {
+    var newChosen = this.data.chosenTags;
+    var toChosen = this.data.tags;
     var switchIndex = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
     toChosen[switchIndex].isChosen = false;
     this.setData({
-      chosenTechnology: newChosen,
-      technology: toChosen
+      chosenTags: newChosen,
+      tags: toChosen
     })
   },
 

@@ -20,6 +20,7 @@ Page({
 
   //生命周期函数
   onShow() {
+    //判断是否从注册页面或用户信息修改页面返回。若是，显示相应的toast
     if (app.globalData.showSendMessage) {
       app.globalData.showSendMessage = false;
       this.handleRegisterSuccess();
@@ -28,9 +29,11 @@ Page({
       app.globalData.showModifySuccess = false;
       this.handleModifySuccess();
     }
+    //从globalData获取是否已注册的信息，从而决定要不要显示注册button
     this.setData({
       isRegistered: app.globalData.isRegistered
     })
+    //得到用户信息
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -75,6 +78,7 @@ Page({
     })
   },
 
+  //显示注册成功的toast
   handleRegisterSuccess() {
     $Toast({
       content: '注册成功',
@@ -82,6 +86,7 @@ Page({
     });
   },
 
+  //显示用户信息修改成功的toast
   handleModifySuccess() {
     $Toast({
       content: "修改信息成功",
@@ -89,22 +94,27 @@ Page({
     })
   },
 
+  //跳转到schedule页面
   handleSchedule() {
     wx.navigateTo({
       url: "/pages/schedule/schedule",
     })
   },
 
+  //跳转到用户信息修改页面（user_inform页面）
   handleInform() {
     wx.navigateTo({
       url: "/pages/user_inform/user_inform",
     })
   },
 
+  /*
   testReq() {
     console.log(app.globalData.access_token)
   },
+  */
 
+  // 实现用户tap不同的grid后跳转到对应页面
   handleTapGrid(e) {
     switch (e.currentTarget.id){
       case "个人信息":

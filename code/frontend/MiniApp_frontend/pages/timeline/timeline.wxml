@@ -10,8 +10,21 @@
     <view class="row">
       <view class="head-cell">{{division[divide]}}</view>
       <block wx:for="{{week}}" wx:for-index="date" wx:key="date">
-        <view class="cell unselected">{{arrangement[date][divide]}}</view>
+        <view class="{{cell_classes[arrangement[date][divide]].class}}" bind:tap="handleTap" id="{{divide * 7 + date}}">{{arrangement[date][divide]}}</view>
       </block>
     </view>
   </block>
 </view>
+<i-cell>
+  <view class="tags">
+    <view class="row">
+      <view class="tag unarranged unselected">可安排</view>
+      <view class="tag arranged selected">不可安排</view>
+      <view class="tag unarranged selected">待添加</view>
+      <view class="tag arranged to-delete">待删除</view>
+    </view>
+  </view>
+</i-cell>
+<i-button bind:click="handleModify" type="primary">
+  修改安排
+</i-button>

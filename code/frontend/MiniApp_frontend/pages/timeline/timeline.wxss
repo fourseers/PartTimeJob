@@ -28,16 +28,48 @@
   width: 12%;
   height: 188rpx;
   justify-content: center;
-  background: #f8f8f9;
-  color: #657180;
   align-items: center;
   display: flex;
+}
+
+.tag {
+  width: 25%;
+  height: 64rpx;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.unarranged {
+  background: #f8f8f9;
+  color: #657180;
+}
+
+.arranged {
+  background: #19be6b;
+  color: #e9eaec;
 }
 
 .unselected {
   border-style: solid;
   border-color: #e9eaec;
-  border-width: 1rpx;
+  border-width: 2rpx;
   border-radius: 20rpx;
-  margin-left: 2rpx;
+  margin-left: 1rpx;
+}
+
+.selected {
+  border-style: solid;
+  border-color: #19be6b;
+  border-width: 2rpx;
+  border-radius: 20rpx;
+  margin-left: 1rpx;
+}
+
+.to-delete {
+  border-style: solid;
+  border-color: #ed3f14;
+  border-width: 2rpx;
+  border-radius: 20rpx;
+  margin-left: 1rpx;
 }

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/timeline/timeline",
     "pages/index/index",
+    "pages/timeline/timeline",
     "pages/job_detail/job_detail",
     "pages/register/register",
     "pages/logs/logs",

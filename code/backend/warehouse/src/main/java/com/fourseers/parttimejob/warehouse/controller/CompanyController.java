@@ -18,6 +18,19 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getCompany(@RequestHeader("x-internal-token") String username) {
+        Company company = companyService.findByUsername(username);
+
+        if (company == null) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "user not belong to any company");
+        }
+
+        JSONObject body = new JSONObject();
+        body.put("company_name", company.getCompanyName());
+        return ResponseBuilder.build(HttpStatus.OK, body, "success");
+    }
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<JSONObject> createCompany(@RequestBody JSONObject body,
                                                     @RequestHeader("x-internal-token") String bossName) {

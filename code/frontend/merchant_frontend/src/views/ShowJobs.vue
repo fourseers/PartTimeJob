@@ -1,11 +1,12 @@
 <template>
     <div class="content">
         <div class="selector">
-            <Select v-model="shops" placeholder="选择店铺">
+            <label> 显示单个店铺全部岗位</label>
+            <Select v-model="shop_chosen" placeholder="选择店铺">
                 <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
             </Select>
-
         </div>
+
         <Table border :columns="columns7" :data="jobs"></Table>
 
     </div>
@@ -54,7 +55,7 @@
                         key: 'begin_apply_date',
                         render: (h, params) => {
                             var dateee = new Date(params.row.begin_apply_date).toJSON();
-                            return  h('div',new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
                         }
                     },
                     {
@@ -62,7 +63,7 @@
                         key: 'end_apply_date',
                         render: (h, params) => {
                             var dateee = new Date(params.row.end_apply_date).toJSON();
-                            return  h('div',new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
                         }
                     },
                     {
@@ -70,7 +71,7 @@
                         key: 'begin_date',
                         render: (h, params) => {
                             var dateee = new Date(params.row.begin_date).toJSON();
-                            return  h('div',new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
                         }
                     },
                     {
@@ -78,7 +79,7 @@
                         key: 'end_date',
                         render: (h, params) => {
                             var dateee = new Date(params.row.end_date).toJSON();
-                            return  h('div',new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, ''))
+                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
                         }
                     },
                     {
@@ -121,9 +122,43 @@
                     }
                 ],
                 jobs:[],
-                shops:[]
+                shop_chosen:""
             }
         },
+        watch:
+            {
+                shop_chosen:{
+                    handler(val, oldVal){
+                        console.log(val);
+                        console.log(oldVal)
+
+                        var prefix = "/arrangement"
+                        //测试用的url
+                        this.axios({
+                            headers: {
+                                'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                                'Content-type': 'application/json',
+                                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                                'x-access-token': this.$token.loadToken().access_token,
+                            },
+                            method: 'get',
+                            params:{
+                                shop_id:val
+                            },
+                            url: prefix + "/merchant/job"
+                        }).then(response => {
+                            console.log(response.data.data.jobs);
+                            if (response.data.status === 200) {
+                                this.jobs = response.data.data.jobs
+                            }
+                        })
+                            .catch(error => {
+                                JSON.stringify(error);
+                                console.log(error)
+                            })
+                    }
+                }
+            },
         created:function(){
             {
                 if(!this.$root.logged)
@@ -155,7 +190,7 @@
             }
             {
                 var prefix2 = "/warehouse"
-                //测试用的url
+                //get shops
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",

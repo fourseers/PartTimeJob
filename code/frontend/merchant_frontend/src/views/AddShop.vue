@@ -16,64 +16,61 @@
                     </Upload>
                 </Col>
                 <Col span="12">
-                <FormItem label="名称" prop="shop_name">
-                    <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
-                </FormItem>
-                <FormItem label="省份" prop="province">
-                    <Select v-model="formValidate.province" placeholder="选择省份">
-                        <Option value="beijing">北京</Option>
-                        <Option value="shanghai">上海</Option>
-                        <Option value="shenzhen">深圳</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="城市" prop="city">
-                    <Select v-model="formValidate.city" placeholder="选择城市">
-                        <Option value="beijing">北京</Option>
-                        <Option value="shanghai">上海</Option>
-                        <Option value="shenzhen">深圳</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="地址" prop="address">
-                    <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
-                </FormItem>
-                <FormItem label="品牌" prop="brand">
-                    <Input v-model="formValidate.brand" placeholder="品牌"></Input>
-                </FormItem>
+                    <FormItem label="名称" prop="shop_name">
+                        <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
+                    </FormItem>
+                    <FormItem label="地址" prop="address">
+                        <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
+                    </FormItem>
+                    <FormItem label="品牌" prop="brand">
+                        <Input v-model="formValidate.brand" placeholder="品牌"></Input>
+                    </FormItem>
 
+                    <FormItem class="ivu-form-item ivu-form-item-required" label="省市地区" prop="province_city">
+                    <el-cascader
+                            size="small"
+                            :options="options"
+                            v-model="formValidate.province_city"
+                             >
+                    </el-cascader>
+                    </FormItem>
+                    <FormItem label="营业领域" prop="industry">
+                        <CheckboxGroup v-model="formValidate.industry">
+                            <Checkbox label="餐饮"></Checkbox>
+                            <Checkbox label="衣服"></Checkbox>
+                            <Checkbox label="教育"></Checkbox>
+                            <Checkbox label="休闲"></Checkbox>
+                        </CheckboxGroup>
+                    </FormItem>
+                    <FormItem label="店铺介绍" prop="shop_intro">
+                        <Input v-model="formValidate.shop_intro" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
+                    </FormItem>
 
-                <FormItem label="营业领域" prop="industry">
-                    <CheckboxGroup v-model="formValidate.industry">
-                        <Checkbox label="餐饮"></Checkbox>
-                        <Checkbox label="衣服"></Checkbox>
-                        <Checkbox label="教育"></Checkbox>
-                        <Checkbox label="休闲"></Checkbox>
-                    </CheckboxGroup>
-                </FormItem>
-                <FormItem label="店铺介绍" prop="shop_intro">
-                    <Input v-model="formValidate.shop_intro" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
-                </FormItem>
-
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-                    <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
-                </FormItem>
+                    <FormItem>
+                        <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
+                        <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+                    </FormItem>
                 </Col>
             </Form>
+
         </Content>
 
     </Layout>
 </template>
 <script>
+
+    import { provinceAndCityData } from 'element-china-area-data'
     export default {
         name: "AddShop",
         data () {
             return {
+
+                options: provinceAndCityData,
                 longitude:0.2,
                 latitude: 0.2,
                 formValidate: {
                     shop_name: '',
-                    province:'',
-                    city: '',
+                    province_city:[],
                     address:'',
                     industry:[],
                     shop_intro: '',
@@ -83,11 +80,10 @@
                     shop_name: [
                         { required: true, message: '店铺名字不能为空', trigger: 'blur' }
                     ],
-                    province: [
-                        { required: true, message: '请选择省份', trigger: 'change' }
-                    ],
-                    city: [
-                        { required: true, message: '请选择城市', trigger: 'change' }
+                    province_city: [
+
+                        { required: true, type: 'array', min: 2, message: '请选择城市', trigger: 'change' },
+                        { type: 'array', max: 2, message: '请选择城市', trigger: 'change' }
                     ],
                     address: [
                         { required: true, message: '请填写品牌', trigger: 'change' }
@@ -135,6 +131,9 @@
 
         },
         methods: {
+            handleChange (value) {
+                console.log(value)
+            },
             handleSubmit (name) {
                 if(!this.$root.logged) {
                     this.$Message.warning('请登录');
@@ -171,8 +170,8 @@
                     url: prefix +"/merchant/shop",
                     data:  {
                         shop_name:this.formValidate.shop_name,
-                        province: this.formValidate.province,
-                        city:this.formValidate.city,
+                        province: this.formValidate.province_city[0],
+                        city:this.formValidate.province_city[1],
                         address:this.formValidate.address,
                         longitude:this.longitude,
                         latitude:this.latitude,
@@ -227,5 +226,27 @@
         color: #fff;
         background-color: #82ccd2;
         border-color: #c8d6e5;
+    }
+    .el-cascader {
+        display: inline-block;
+        position: relative;
+        font-size: 14px;
+        line-height: 40px;
+    }
+    .el-cascader__label {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        padding: 0 25px 0 15px;
+        color: #606266;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        box-sizing: border-box;
+        cursor: pointer;
+        text-align: left;
+        font-size: inherit;
     }
 </style>

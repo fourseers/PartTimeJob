@@ -9,12 +9,17 @@ import axios from 'axios'
 import qs from 'qs'
 
 import 'iview/dist/styles/iview.css';
-
+import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data';
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
 axios.defaults.baseURL = "http://202.120.40.8:30552";
 //部署服务器
+
+import Element from 'element-ui'
+
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(Element)
 
 Vue.prototype.$qs = qs;
 Vue.prototype.axios = axios;

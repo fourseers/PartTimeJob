@@ -2,7 +2,7 @@
     <Layout >
 
         <Content class="content">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+            <Form class="form" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <FormItem label="名称" prop="name">
                     <Input v-model="formValidate.company_name" placeholder="公司名称"></Input>
                 </FormItem>
@@ -123,10 +123,15 @@
         padding:100px;
         background-color: #fff;
     }
-    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;
         border-color: #c8d6e5;
+    }
+
+    .form
+    {
+        margin-left:200px;
+        width:400px;
     }
 </style>

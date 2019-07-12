@@ -84,7 +84,6 @@
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
-
                     },
                     method: 'post',
                     url: prefix +"/merchant/register",

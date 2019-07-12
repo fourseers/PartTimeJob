@@ -1,8 +1,7 @@
 <template>
     <div class="content">
         <div class="selector">
-            <label> 显示单个店铺全部岗位</label>
-            <Select v-model="shop_chosen" placeholder="选择店铺">
+            <Select v-model="shop_chosen" placeholder="显示单个店铺全部岗位">
                 <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
             </Select>
         </div>
@@ -226,7 +225,7 @@
 <style scoped>
 
     .content{
-        margin-top:100px;
+        margin-top:20px;
         margin-left: 100px;
         margin-right:50px;
         background-color: #fff;

@@ -2,6 +2,7 @@
 
     <Layout >
         <Content class="content">
+            <Col span="18">
             <Form class="form" ref="formValidate" :model="formValidate" :rules="ruleValidate"   >
                 <Row>
                     <FormItem label="名称" prop="job_name">
@@ -31,7 +32,7 @@
                 <Row>
                     <FormItem class="ivu-form-item ivu-form-item-required" label="工作时间">
                         <Row>
-                            <Col span="11">
+                            <Col span="8">
                                 <FormItem prop="begin_date">
                                     <Date-picker
                                             type="date"
@@ -42,7 +43,7 @@
                                     </Date-picker>
                                 </FormItem>
                             </Col>
-                            <Col span="11">
+                            <Col span="8">
                                 <FormItem prop="end_date">
                                     <Date-picker
                                             type="date"
@@ -59,7 +60,7 @@
                 <Row>
                     <FormItem class="ivu-form-item ivu-form-item-required"  label="招聘时间">
                         <Row>
-                            <Col span="11">
+                            <Col span="8">
                                 <FormItem prop="begin_apply_date">
                                     <Date-picker
                                             type="date"
@@ -70,7 +71,7 @@
                                     </Date-picker>
                                 </FormItem>
                             </Col>
-                            <Col span="11">
+                            <Col span="8">
                                 <FormItem prop="end_apply_date">
                                     <Date-picker
                                             type="date"
@@ -126,6 +127,8 @@
 
                 </Row>
             </Form>
+
+            </Col>
         </Content>
     </Layout>
 </template>
@@ -444,7 +447,8 @@
 
 <style scoped>
     .content{
-        padding:100px;
+        padding-top:20px;
+        padding-left:200px;
         background-color: #fff;
     }
 

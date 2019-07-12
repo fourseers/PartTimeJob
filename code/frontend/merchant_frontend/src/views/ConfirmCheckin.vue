@@ -1,8 +1,8 @@
 <template>
-    <div class="content">
+    <Content class="content">
         <Table border :columns="columns7" :data="data6"></Table>
 
-    </div>
+    </Content>
 </template>
 <script>
     export default {
@@ -141,7 +141,7 @@
 
 <style scoped>
     .content{
-        margin-top:100px;
+        margin-top:20px;
         margin-left: 100px;
         margin-right:50px;
         background-color: #fff;

@@ -1,20 +1,24 @@
 <template>
 
     <Layout >
+
         <Content class="content">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+                <Col span="4">
+                    <Upload
+                            multiple
+                            type="drag"
+                            action="//jsonplaceholder.typicode.com/posts/">
+                        <div style="padding-left:20px;  height: 70px;">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>点击或者拖拽上传图片</p>
+                        </div>
+                    </Upload>
+                </Col>
+                <Col span="12">
                 <FormItem label="名称" prop="shop_name">
                     <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
                 </FormItem>
-                <Upload
-                        multiple
-                        type="drag"
-                        action="//jsonplaceholder.typicode.com/posts/">
-                    <div style="padding: 2px 0; width:100px; height: 70px;">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>点击或者拖拽上传图片</p>
-                    </div>
-                </Upload>
                 <FormItem label="省份" prop="province">
                     <Select v-model="formValidate.province" placeholder="选择省份">
                         <Option value="beijing">北京</Option>
@@ -36,6 +40,7 @@
                     <Input v-model="formValidate.brand" placeholder="品牌"></Input>
                 </FormItem>
 
+
                 <FormItem label="营业领域" prop="industry">
                     <CheckboxGroup v-model="formValidate.industry">
                         <Checkbox label="餐饮"></Checkbox>
@@ -47,12 +52,15 @@
                 <FormItem label="店铺介绍" prop="shop_intro">
                     <Input v-model="formValidate.shop_intro" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
                 </FormItem>
+
                 <FormItem>
                     <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
                     <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
                 </FormItem>
+                </Col>
             </Form>
         </Content>
+
     </Layout>
 </template>
 <script>
@@ -99,7 +107,32 @@
             }
         },
         created:function(){
-            if(!this.$root.logged)this.$Message.warning('请登录');
+            if(!this.$root.logged)
+            {this.$Message.warning('请登录');}
+            else {
+                //get industry
+                var prefix="/warehouse"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/shop",
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        console.log("success");
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
+
         },
         methods: {
             handleSubmit (name) {
@@ -127,7 +160,6 @@
                 console.log(this.latitude);
                 console.log(this.formValidate.industry[0]);
                 var prefix="/warehouse"
-                //测试用的url
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
@@ -187,7 +219,7 @@
 <style scoped>
 
     .content{
-        padding:100px;
+        padding-left:100px;
         background-color: #fff;
     }
     .

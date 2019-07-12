@@ -19,4 +19,8 @@ public class CompanyDaoImpl implements CompanyDao {
     public Company findByCompanyName(String companyName) {
         return companyRepository.findByCompanyName(companyName);
     }
+
+    public Company findByUsername(String username) {
+        return companyRepository.findByManager(username);
+    }
 }

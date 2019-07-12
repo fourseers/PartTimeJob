@@ -42,4 +42,8 @@ public class CompanyServiceImpl implements CompanyService {
     public Company findByCompanyName(String companyName) {
         return companyDao.findByCompanyName(companyName);
     }
+
+    public Company findByUsername(String username) {
+        return companyDao.findByUsername(username);
+    }
 }

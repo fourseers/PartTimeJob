@@ -7,4 +7,6 @@ public interface CompanyDao {
     void save(Company company);
 
     Company findByCompanyName(String companyName);
+
+    Company findByUsername(String username);
 }

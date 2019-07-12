@@ -9,4 +9,6 @@ public interface CompanyService {
     void save(Company company, String bossName);
 
     Company findByCompanyName(String companyName);
+
+    Company findByUsername(String username);
 }

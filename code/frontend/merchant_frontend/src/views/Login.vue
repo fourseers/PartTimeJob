@@ -98,7 +98,6 @@
             }
           }).catch(error => {
             if (error.response) {
-
               console.log(error.response)
               if (error.response.data.status === 400) {
                 this.$Message.error('用户名或者密码错误');

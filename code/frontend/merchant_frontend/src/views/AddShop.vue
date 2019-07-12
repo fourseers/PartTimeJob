@@ -154,6 +154,10 @@
                             if (error.response.data.status === 400  && error.response.data.message === "user not belong to any company") {
                                 this.$Message.error('请添加公司');
                             }
+                            else if( error.response.data.message === "shop name exist")
+                            {
+                                this.$Message.error('店铺名已存在');
+                            }
                             else{
                                 this.$Message.error('添加店铺失败')
                             }

@@ -109,6 +109,13 @@
                         {
                             this.$Message.error('用户名已存在');
                         }
+
+                        if (error.response.data.status === 401) {
+                            this.$Message.error('auth错误');
+                        }
+                        if (error.response.data.status === 500) {
+                            this.$Message.error('服务器错误');
+                        }
                     }
                 })
             }

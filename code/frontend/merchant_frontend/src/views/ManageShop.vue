@@ -158,8 +158,6 @@
                             }
                         }
                     })
-
-
             },
         methods: {
             show (index) {

@@ -13,14 +13,18 @@ Page({
   */
 
   /*
-    technology是所有职业倾向的数组，可以通过后端获得
-    chosenTechnology是用户选择的所有职业倾向
+    tags是所有职业倾向的数组，可以通过后端获得
+    chosenTags是用户选择的所有职业倾向
     name是用户姓名
     identity是用户身份证号
     phoneNumber是用户手机号码
+    ()_error用于显示用户是否输入异常值
+    educationList是所有备选学历
+    education是用于已选学历
+    isLoading用于决定用户请求是否正在发送，如正在发送就在按钮处显示loading动画
   */
   data: {
-    technology: [
+    tags: [
       {
         id: 0,
         name: "厨师",
@@ -42,8 +46,8 @@ Page({
         isChosen: false
       }
     ],
+    chosenTags: [],
     educationList: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
-    chosenTechnology: [],
     name: '',
     name_error: false,
     identity: '',
@@ -54,31 +58,10 @@ Page({
     isLoading: false,
   },
 
-  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
-  chooseTechnology(e){
-    var newChosen = this.data.chosenTechnology;
-    var hasSame = false;
-    //判断已选技术中是否有重复的
-    for (var index in newChosen){
-      if (newChosen[index].id === e.detail.name) {
-        hasSame = true;
-      }
-    }
-    if (hasSame === false) {
-      var toChosen = this.data.technology;
-      toChosen[e.detail.name].isChosen = true;
-      newChosen.push(this.data.technology[e.detail.name]);
-      this.setData({
-        chosenTechnology: newChosen,
-        technology: toChosen
-      })
-    }
-    else{
-      this.handleError();
-    }
-  },
-
-  //onshow触发的时候向后台获取注册元数据
+  /* 
+   * onshow触发的时候向后台获取注册元数据
+   * 元数据包括educationList和tags
+   */
   onShow(){
     var req = new request();
     req.getRequest(host + register_data, null).then(res => {
@@ -91,7 +74,7 @@ Page({
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
           educationList: res.data.education,
-          technology: tags,
+          tags: tags,
         })
       }
       else if (res.statusCode === 400){
@@ -103,22 +86,55 @@ Page({
     })
   },
 
+  //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
+  chooseTags(e) {
+    var newChosen = this.data.chosenTags;
+    var hasSame = false;
+    //判断已选技术中是否有重复的
+    for (var index in newChosen) {
+      if (newChosen[index].id === e.detail.name) {
+        hasSame = true;
+      }
+    }
+    if (hasSame === false) {
+      var toChosen = this.data.tags;
+      toChosen[e.detail.name].isChosen = true;
+      newChosen.push(this.data.tags[e.detail.name]);
+      this.setData({
+        chosenTags: newChosen,
+        tags: toChosen
+      })
+    }
+    else {
+      this.handleError();
+    }
+  },
+
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
-  deleteTechnology(e) {
-    var newChosen = this.data.chosenTechnology;
-    var toChosen = this.data.technology;
-    var switchIndex = newChosen[e.detail.name].id;
+  deleteTags(e) {
+    var newChosen = this.data.chosenTags;
+    var toChosen = this.data.tags;
+    var switchId = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
-    toChosen[switchIndex].isChosen = false;
+    // 获取取消选取的tag在所有tags中的index
+    var index = 0;
+    for (var i in this.data.tags) {
+      if (this.data.tags[i].id === switchId) {
+        index = i;
+        break;
+      }
+    }
+    toChosen[index].isChosen = false;
     this.setData({
-      chosenTechnology: newChosen,
-      technology: toChosen
+      chosenTags: newChosen,
+      tags: toChosen
     })
   },
 
   //每次更新name的input组件后都重新获取name
   getName(e){
-    if(e.detail.detail.value.length <= 1){
+    var reg = /^[\u4E00-\u9FA5A-Za-z]+$/;
+    if ((e.detail.detail.value.length <= 1) || reg.test(e.detail.detail.value) === false){
       this.setData({
         name_error: true
       })
@@ -213,6 +229,10 @@ Page({
             isLoading: true,
           })
           var req = new request();
+          var tagIDs = [];
+          for (var i in this.data.chosenTags) {
+            tagIDs.push(this.data.chosenTags[i].id);
+          }
           var postData = {
             "name": this.data.name,
             "gender": app.globalData.userInfo.gender,
@@ -221,7 +241,8 @@ Page({
             "country": app.globalData.userInfo.country,
             "city": app.globalData.userInfo.city,
             "education": this.data.education,
-            "token": res.code
+            "token": res.code,
+            "tags": tagIDs
           };
           req.postRequest(host + register, JSON.stringify(postData)).then(res => {
             if (res.statusCode === 400) {

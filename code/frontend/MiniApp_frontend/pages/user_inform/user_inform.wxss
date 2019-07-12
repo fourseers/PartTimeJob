@@ -9,3 +9,32 @@
   background-color: pink; 
   border-color: pink; 
 }
+
+.technology {
+  display: flex;
+  align-content: center;
+}
+
+.i-tag{
+  display:inline-block;
+  height:18px;
+  line-height:11px;
+  padding:0 4px;
+  border-radius:2px;
+  background:#fff;
+  font-size:14px;
+  vertical-align:middle;
+  border:1rpx solid #dddee1
+}
+
+.i-tags{
+  margin:20rpx;
+}
+
+.chosen-tags{
+  margin: 5rpx;
+}
+
+.tips{
+  margin-left: 100rpx;
+}

@@ -5,8 +5,24 @@ Page({
 
   /**
    * 页面的初始数据
-   * 除visible外的所有变量都通过向后端发送请求来获得
+   * job_name是岗位名称
+   * job_detail是岗位详细描述
+   * begin_[year, month, date]是岗位工作开始时间
+   * end_[year, month, date]是岗位工作结束时间
+   * need_amount是岗位需要的人数
+   * begin_apply_[year, month, date]是岗位开始接受应聘的时间
+   * end_apply_[year, month, date]是岗位结束接受应聘的时间
+   * salary是岗位的薪水
+   * create_time是岗位发布的时间
+   * tags是岗位匹配的职业倾向
+   * shop_name是岗位所属的店铺名称
+   * brand是店铺的品牌名
+   * industry是店铺所属的行业
+   * address是店铺的地址
+   * company_name是店铺所属公司的名称
+   * shop_id是店铺的id，用于跳转到店铺的详细介绍页面 *TODO
    * visible用于决定是否显示对话框
+   * longitude， latitude， markers用于小地图的显示
    */
   data: {
     job_name: "fourseers",
@@ -78,6 +94,11 @@ Page({
     //console.log(options);
   },
 
+  /* 
+   * TODO
+   * onShow的时候向后端请求岗位的详细信息
+   * onShow的时候向后端请求店铺的位置信息
+   */
   onShow() {
     wx.getLocation({
       type: "gcj02",

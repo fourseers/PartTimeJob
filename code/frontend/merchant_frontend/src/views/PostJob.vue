@@ -9,7 +9,7 @@
                     </FormItem>
                 </Row>
                 <Row>
-                    <FormItem label="店铺" prop="shop">
+                    <FormItem class="ivu-form-item ivu-form-item-required" label="店铺" prop="shops">
                         <Select v-model="formValidate.shop" placeholder="选择店铺">
                             <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
                         </Select>
@@ -17,19 +17,19 @@
 
                 </Row>
                 <Row>
-                    <FormItem label="招聘数量" prop="need_amount">
+                    <FormItem class="ivu-form-item ivu-form-item-required" label="招聘数量" prop="need_amount">
                         <Input   v-model="formValidate.need_amount" placeholder="招聘数量" number></Input>
                     </FormItem>
 
                 </Row>
                 <Row>
-                    <FormItem label="日薪" prop="salary">
+                    <FormItem class="ivu-form-item ivu-form-item-required" label="日薪" prop="salary">
                         <Input   v-model="formValidate.salary" placeholder="日薪" number></Input>
                     </FormItem>
 
                 </Row>
                 <Row>
-                    <FormItem label="工作时间">
+                    <FormItem class="ivu-form-item ivu-form-item-required" label="工作时间">
                         <Row>
                             <Col span="11">
                                 <FormItem prop="begin_date">
@@ -57,7 +57,7 @@
 
                 </Row>
                 <Row>
-                    <FormItem label="招聘时间">
+                    <FormItem class="ivu-form-item ivu-form-item-required"  label="招聘时间">
                         <Row>
                             <Col span="11">
                                 <FormItem prop="begin_apply_date">
@@ -224,7 +224,7 @@
                     {
                         callback(new Error('请填入正数'));
                     }
-                    else if(value.toFixed(2) !== value)
+                    else if(value.toFixed(2) != value)
                     {
                         callback(new Error('请填入两位小数'));
                     }
@@ -254,14 +254,12 @@
                         { required: true, message: '请填写岗位名称', trigger: 'blur' }
                     ],
                     shop: [
-                        { required: true, message: '请选择店铺', trigger: 'change' }
+                        { required: true, message: '请选择店铺', trigger: 'change'  }
                     ],
                     need_amount: [
-                        { required: true, message: '请填写招聘人数', trigger: 'change' },
                         { validator: validateAmount, trigger: 'blur' }
                     ],
                     salary:[
-                        { required: true, message: '请填写日薪', trigger: 'change' },
                         { validator: validateSalary, trigger: 'blur' }
                     ],
                     gender: [
@@ -359,6 +357,7 @@
         },
         methods: {
             handleSubmit (name) {
+                console.log(this.formValidate)
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         //this.$Message.success('Success!');

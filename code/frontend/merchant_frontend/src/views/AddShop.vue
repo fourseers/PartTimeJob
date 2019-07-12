@@ -146,6 +146,7 @@
                     {
                         console.log("success");
                         this.$Message.success('添加店铺成功');
+                        this.handleReset('formValidate')
                     }
                 })
                     .catch(error => {
@@ -154,7 +155,7 @@
                             if (error.response.data.status === 400  && error.response.data.message === "user not belong to any company") {
                                 this.$Message.error('请添加公司');
                             }
-                            else if( error.response.data.message === "shop name exist")
+                            else if(error.response.data.status === 400  &&  error.response.data.message === "shop name exists")
                             {
                                 this.$Message.error('店铺名已存在');
                             }

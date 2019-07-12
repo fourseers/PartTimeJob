@@ -108,24 +108,6 @@
                         }
                     }
                 ],
-                data6: [
-                    {
-                        shop_name:'豆汁汁',
-                        province:'北京',
-                        city: '北京',
-                        address:'大裤衩楼底下',
-                        industry:["饮料","零售"],
-                        brand:'老豆汁'
-                    },
-                    {
-                        shop_name: '一点点',
-                        province:'上海',
-                        city: '上海',
-                        address:'东川路800号',
-                        industry:['饮料',"零售"],
-                        brand:'一点点'
-                    }
-                ],
                 shops:[]
             }
         },

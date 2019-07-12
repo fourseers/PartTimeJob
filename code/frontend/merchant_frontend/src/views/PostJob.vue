@@ -407,10 +407,18 @@
                     console.log(response.data);
                     if(response.status === 200)
                     {
-                        //
+                        this.$Message.success('发布岗位成功');
+                        this.handleReset('formValidate')
                     }
                 })
                     .catch(error => {
+
+
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+                                this.$Message.error("发布岗位失败")
+                            }
+                        }
                         JSON.stringify(error);
                         console.log(error)
                     })

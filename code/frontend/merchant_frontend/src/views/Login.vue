@@ -66,7 +66,25 @@
                       this.$router.push({ name: "postjob"})
                     },
                     error => {
-                      console.log(error);
+
+                      console.log(error.response);
+                      if (error.response) {
+                        if (error.response.data.status === 400) {
+                          this.$Message.error('用户名或者密码错误');
+                        }
+
+                        if (error.response.data.status === 401) {
+                          this.$Message.error('auth错误');
+                        }
+                        if (error.response.data.status === 500) {
+                          this.$Message.error('服务器错误');
+                        }
+                      }
+                      else
+                      {
+                        this.$Message.error('登录失败');
+                      }
+
                       // 执行失败的回调函数
                     });
 
@@ -86,7 +104,7 @@
               'Content-type': 'application/json',
               'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
             },
-              data:{
+            data:{
               username:username,
               password:password
             }
@@ -94,23 +112,10 @@
             if (status === 200) {
               resolve(data);
             } else {
-              reject(new Error('error'));
+              reject( data);
             }
           }).catch(error => {
-            if (error.response) {
-              console.log(error.response)
-              if (error.response.data.status === 400) {
-                this.$Message.error('用户名或者密码错误');
-              }
-
-              if (error.response.data.status === 401) {
-                this.$Message.error('auth错误');
-              }
-              if (error.response.data.status === 500) {
-                this.$Message.error('服务器错误');
-              }
               reject( error);
-            }
           });
         });
       }

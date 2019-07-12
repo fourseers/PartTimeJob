@@ -8,8 +8,8 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from com.fourseers.parttimejob.auth.repository -->
     </parent>
-    <groupId>com.fourseers</groupId>
-    <artifactId>parttimejob</artifactId>
+    <groupId>com.fourseers.parttimejob</groupId>
+    <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>parttimejob</name>
     <packaging>pom</packaging>
@@ -120,6 +120,13 @@
                 <artifactId>jedis</artifactId>
                 <version>2.9.0</version>
             </dependency>
+
+            <!-- common library -->
+            <dependency>
+                <groupId>com.fourseers.parttimejob</groupId>
+                <artifactId>common</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -158,6 +165,7 @@
         <module>eureka-server</module>
         <module>gateway</module>
         <module>warehouse</module>
+        <module>common</module>
         <module>common</module>
     </modules>
 

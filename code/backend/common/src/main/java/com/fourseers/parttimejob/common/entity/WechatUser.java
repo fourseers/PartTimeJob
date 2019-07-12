@@ -1,6 +1,4 @@
-package com.fourseers.parttimejob.warehouse.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
 import java.util.Set;

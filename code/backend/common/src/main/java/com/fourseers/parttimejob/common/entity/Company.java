@@ -1,8 +1,7 @@
-package com.fourseers.parttimejob.warehouse.entity;
+package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity

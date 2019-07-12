@@ -3,12 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.fourseers</groupId>
-        <artifactId>parttimejob</artifactId>
+        <groupId>com.fourseers.parttimejob</groupId>
+        <artifactId>parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath /> <!-- lookup parent from com.fourseers.parttimejob.auth.repository -->
     </parent>
-    <groupId>com.parttimejob</groupId>
     <artifactId>eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eureka-server</name>

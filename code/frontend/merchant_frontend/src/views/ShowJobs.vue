@@ -1,11 +1,11 @@
 <template>
     <div class="content">
-         <div class="selector">
-        <Select v-model="shops" placeholder="选择店铺">
-            <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
-        </Select>
+        <div class="selector">
+            <Select v-model="shops" placeholder="选择店铺">
+                <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
+            </Select>
 
-         </div>
+        </div>
         <Table border :columns="columns7" :data="jobs"></Table>
 
     </div>
@@ -126,28 +126,31 @@
         },
         created:function(){
             {
-                var prefix="/arrangement"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'get',
-                    url: prefix +"/merchant/job"
-                }).then(response => {
-                    console.log(response.data.data.jobs);
-                    if(response.data.status ===  200)
-                    {
-                        this.jobs = response.data.data.jobs
-                    }
-                })
-                    .catch(error => {
-                        JSON.stringify(error);
-                        console.log(error)
+                if(!this.$root.logged)
+                {this.$Message.warning('请登录');}
+                else {
+                    var prefix = "/arrangement"
+                    //测试用的url
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
+                        },
+                        method: 'get',
+                        url: prefix + "/merchant/job"
+                    }).then(response => {
+                        console.log(response.data.data.jobs);
+                        if (response.data.status === 200) {
+                            this.jobs = response.data.data.jobs
+                        }
                     })
+                        .catch(error => {
+                            JSON.stringify(error);
+                            console.log(error)
+                        })
+                }
 
             }
             {
@@ -205,5 +208,7 @@
     }
     .selector{
         margin :20px;
+        width:200px;
+
     }
 </style>

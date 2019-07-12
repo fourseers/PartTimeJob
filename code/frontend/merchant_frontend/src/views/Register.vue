@@ -96,13 +96,12 @@
                     console.log(response.data);
                     if(response.data.status === 200 )
                     {
-
                         this.$Message.success('注册成功');
                         this.$token.savetoken(response.data.data);
                         console.log(this.$token.loadToken());
+                        this.$root.logged = true;
+                        this.$router.push({ name: "postjob"});
                     }
-
-                    this.$router.push({ name: "postjob"});
                 }).catch(error=> {
                     if(error.response){
                         if(error.response.data.message === "User exists.")

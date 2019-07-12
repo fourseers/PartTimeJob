@@ -98,8 +98,16 @@
                 }
             }
         },
+        created:function(){
+            if(!this.$root.logged)this.$Message.warning('请登录');
+        },
         methods: {
             handleSubmit (name) {
+                if(!this.$root.logged) {
+                    this.$Message.warning('请登录');
+                    return;
+                }
+
                 this.$refs[name].validate((valid) => {
                     if (valid) {
 
@@ -159,9 +167,14 @@
                             {
                                 this.$Message.error('店铺名已存在');
                             }
+                            else if(error.response.data.status === 401 && error.response.data.message ==="Forbidden, invalid access token." )
+                            {
+                                this.$Message.warning('请登录');
+                            }
                             else{
                                 this.$Message.error('添加店铺失败')
                             }
+
                             JSON.stringify(error);
                             console.log(error)
                         }

@@ -34,35 +34,40 @@
         },
         created:function()
         {
-            var prefix = "/warehouse"
-            //测试用的url
-            this.axios({
-                headers: {
-                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                    'Content-type': 'application/json',
-                    'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                    'x-access-token': this.$token.loadToken().access_token,
-                },
-                method: 'get',
-                url: prefix + "/merchant/company"
-            }).then(response => {
-                console.log(response);
-                if(response.data.status ===  200){
-                    this.formValidate.company_name = response.data.data.company_name;
-                    this. former_company_name = response.data.data.company_name;
-                    console.log("success");
-                }
-            })
-                .catch(error => {
-                    if(error.response){
-                        if(error.response.data.status === 400)
-                        {
-                            console.log(error.response);
-                            this.$Message.error('暂无公司');
-                        }
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else {
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/company"
+                }).then(response => {
+                    console.log(response);
+                    if (response.data.status === 200) {
+                        this.formValidate.company_name = response.data.data.company_name;
+                        this.former_company_name = response.data.data.company_name;
+                        console.log("success");
                     }
                 })
+                    .catch(error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+                                console.log(error.response);
+                                this.$Message.error('暂无公司');
+                            }
+                        }
+                    })
+            }
         },
+
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {

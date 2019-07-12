@@ -8,7 +8,11 @@
 
 <script>
     export default {
-        name: "CheckinStat"
+        name: "CheckinStat",
+
+        created:function(){
+            if(!this.$root.logged)this.$Message.warning('请登录');
+        },
     }
 </script>
 

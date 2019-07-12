@@ -93,6 +93,16 @@
                 }
             }
         },
+        created:function()
+        {
+
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else{
+                //GET detail
+            }
+        },
         mounted:{
         },
         methods: {

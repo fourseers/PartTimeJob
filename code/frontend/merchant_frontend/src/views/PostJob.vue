@@ -2,14 +2,14 @@
 
     <Layout >
         <Content class="content">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate"   >
+            <Form class="form" ref="formValidate" :model="formValidate" :rules="ruleValidate"   >
                 <Row>
                     <FormItem label="名称" prop="job_name">
                         <Input v-model="formValidate.job_name" placeholder="岗位名称"></Input>
                     </FormItem>
                 </Row>
                 <Row>
-                    <FormItem label="店铺" prop="shops">
+                    <FormItem label="店铺" prop="shop">
                         <Select v-model="formValidate.shop" placeholder="选择店铺">
                             <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
                         </Select>
@@ -224,7 +224,7 @@
                     {
                         callback(new Error('请填入正数'));
                     }
-                    else if(value.toFixed(2) != value)
+                    else if(value.toFixed(2) !== value)
                     {
                         callback(new Error('请填入两位小数'));
                     }
@@ -257,9 +257,11 @@
                         { required: true, message: '请选择店铺', trigger: 'change' }
                     ],
                     need_amount: [
+                        { required: true, message: '请填写招聘人数', trigger: 'change' },
                         { validator: validateAmount, trigger: 'blur' }
                     ],
                     salary:[
+                        { required: true, message: '请填写日薪', trigger: 'change' },
                         { validator: validateSalary, trigger: 'blur' }
                     ],
                     gender: [
@@ -296,7 +298,8 @@
         watch:{
             formValidate: {
                 handler(val, oldVal){
-                    console.log(val.end_apply_date.toUTCString(), oldVal.end_apply_date.toUTCString());//但是这两个值打印出来却都是一样的
+                    console.log(val.end_apply_date.toUTCString(), oldVal.end_apply_date.toUTCString());
+                    // to be done
 
                 },
                 deep:true
@@ -318,34 +321,41 @@
             }
         },
         created: function()  {
-            var prefix = "/warehouse"
-            //测试用的url
-            this.axios({
-                headers: {
-                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                    'Content-type': 'application/json',
-                    'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                    'x-access-token': this.$token.loadToken().access_token,
-                },
-                method: 'get',
-                url: prefix + "/merchant/shop"
-            }).then(response => {
-                console.log(response);
-                console.log(response.data.data.shops);
-                if(response.data.status ===  200){
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else{
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/shop"
+                }).then(response => {
+                    console.log(response);
+                    console.log(response.data.data.shops);
+                    if (response.data.status === 200) {
 
-                    this.shops = response.data.data.shops;
-                    console.log(   this.shops );
-                }
-            })
-                .catch(error => {
-                    if(error.response){
-                        if(error.response.data.status === 400)
-                        {
-                            console.log(error.response);
-                        }
+                        this.shops = response.data.data.shops;
+                        console.log(this.shops);
                     }
                 })
+                    .catch(error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+                                console.log(error.response);
+                            } else if (error.response.data.status === 401 && error.response.data.message === "Forbidden, invalid access token.") {
+                                this.$Message.warning('请登录');
+                            }
+                        }
+                    })
+            }
+
         },
         methods: {
             handleSubmit (name) {
@@ -412,11 +422,14 @@
                     }
                 })
                     .catch(error => {
-
-
                         if (error.response) {
                             if (error.response.data.status === 400) {
                                 this.$Message.error("发布岗位失败")
+                            }
+
+                            else if(error.response.data.status === 401 && error.response.data.message ==="Forbidden, invalid access token." )
+                            {
+                                this.$Message.success('请登录');
                             }
                         }
                         JSON.stringify(error);
@@ -441,4 +454,6 @@
         background-color: #82ccd2;
         border-color: #c8d6e5;
     }
+
+
 </style>

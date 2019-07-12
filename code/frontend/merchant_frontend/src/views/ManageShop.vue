@@ -112,6 +112,11 @@
             }
         },
         created: function() {
+
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else {
                 var prefix = "/warehouse"
                 //测试用的url
                 this.axios({
@@ -125,22 +130,22 @@
                     url: prefix + "/merchant/shop"
                 }).then(response => {
                     console.log(response);
-                    if(response.data.status ===  200){
+                    if (response.data.status === 200) {
 
                         this.shops = response.data.data.shops;
                         console.log("success");
                     }
                 })
                     .catch(error => {
-                        if(error.response){
-                            if(error.response.data.status === 400)
-                            {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
                                 console.log(error.response);
                                 this.$Message.error('暂无店铺');
                             }
                         }
                     })
-            },
+            }
+        },
         methods: {
             show (index) {
                 this.$Modal.info({

@@ -1,6 +1,6 @@
 <template>
     <div class="content">
-    <Table border :columns="columns7" :data="data6"></Table>
+        <Table border :columns="columns7" :data="data6"></Table>
 
     </div>
 </template>
@@ -69,7 +69,7 @@
                                     },
                                     style: {
                                         color: '#fff',
-                                         marginRight: '5px',
+                                        marginRight: '5px',
                                         marginTop:'5px'
                                     },
                                     on: {
@@ -84,11 +84,11 @@
                                         size: 'small'
                                     },
                                     style: {
-                                    color: '#d63031',
+                                        color: '#d63031',
                                         borderColor:'#d63031',
                                         backgroundColor:'#fff',
-                                    marginRight: '5px',
-                                    marginTop:'5px',
+                                        marginRight: '5px',
+                                        marginTop:'5px',
                                         marginBottom:'5px'
 
                                     },
@@ -119,6 +119,12 @@
                         checkout_time:"2020-2-2"
                     }
                 ]
+            }
+        },
+        created:function() {
+            if (!this.$root.logged) {
+                this.$Message.warning('请登录');
+            } else {
             }
         },
         methods: {

@@ -1,0 +1,43 @@
+/* pages/timeline/timeline.wxss */
+
+.head-tab {
+  background-color: #fdcb6e;
+}
+
+.table {
+  margin-top: 42px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.head-cell {
+  width: 12.5%;
+  height: 192rpx;
+  justify-content: center;
+  background: #bbbec4;
+  color: #dddee1;
+  align-items: center;
+  display: flex;
+}
+
+.cell {
+  width: 12%;
+  height: 188rpx;
+  justify-content: center;
+  background: #f8f8f9;
+  color: #657180;
+  align-items: center;
+  display: flex;
+}
+
+.unselected {
+  border-style: solid;
+  border-color: #e9eaec;
+  border-width: 1rpx;
+  border-radius: 20rpx;
+  margin-left: 2rpx;
+}

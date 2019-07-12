@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
 import com.fourseers.parttimejob.warehouse.entity.Company;
+import com.fourseers.parttimejob.warehouse.entity.Industry;
 import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.entity.Shop;
 import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
+import com.fourseers.parttimejob.warehouse.service.IndustryService;
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import org.junit.Before;
@@ -46,6 +48,9 @@ public class ShopControllerTest {
     private MerchantUserService merchantUserService;
 
     @Autowired
+    private IndustryService industryService;
+
+    @Autowired
     private ShopRepository shopRepository;
 
     @Autowired
@@ -53,6 +58,11 @@ public class ShopControllerTest {
 
     @Before
     public void setUp() {
+
+        Industry industry = new Industry();
+        industry.setIndustryName("IT");
+        industryService.save(industry);
+
         MerchantUser boss = new MerchantUser();
         boss.setUsername("Tim Cook");
         boss.setPassword("some password");
@@ -72,7 +82,7 @@ public class ShopControllerTest {
         shopDto.setLongitude(new Integer(120).floatValue());
         shopDto.setLatitude(new Integer(30).floatValue());
         shopDto.setBrand("Apple");
-        shopDto.setIndustry("IT");
+        shopDto.setIndustry(1);
         shopDto.setIntroduction("Make Apple great again");
         shopService.save(shopDto, boss.getUsername());
 
@@ -100,7 +110,7 @@ public class ShopControllerTest {
         anotherShopDto.setLongitude(new Integer(110).floatValue());
         anotherShopDto.setLatitude(new Integer(30).floatValue());
         anotherShopDto.setBrand("Chuizi");
-        anotherShopDto.setIndustry("IT");
+        anotherShopDto.setIndustry(1);
         anotherShopDto.setIntroduction("Acquire Apple Someday!");
         shopService.save(anotherShopDto, anotherBoss.getUsername());
     }
@@ -118,7 +128,7 @@ public class ShopControllerTest {
             .fluentPut("longitude", 120)
             .fluentPut("latitude", 30)
             .fluentPut("brand", "Apple")
-            .fluentPut("industry", "IT")
+            .fluentPut("industry", 1)
             .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop")
@@ -157,7 +167,33 @@ public class ShopControllerTest {
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
-                .fluentPut("industry", "IT");
+                .fluentPut("industry", 1);
+
+        MvcResult result = mockMvc.perform(post("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
+    }
+
+    @Test
+    public void createShopIncorrectIndustry() throws Exception {
+
+        String username = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("shop_name", "Apple iamp 2")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", -1);
 
         MvcResult result = mockMvc.perform(post("/merchant/shop")
                 .header("x-internal-token", username)
@@ -183,7 +219,7 @@ public class ShopControllerTest {
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
-                .fluentPut("industry", "IT")
+                .fluentPut("industry", 1)
                 .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop")
@@ -210,7 +246,7 @@ public class ShopControllerTest {
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
-                .fluentPut("industry", "IT")
+                .fluentPut("industry", 1)
                 .fluentPut("introduction", "Make Apple great again");
 
         MvcResult result = mockMvc.perform(post("/merchant/shop")

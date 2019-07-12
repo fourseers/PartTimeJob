@@ -1,0 +1,16 @@
+/* pages/job/job.wxss */
+.cell-container{
+  margin-top: 100rpx;
+  width: 100%;
+}
+
+.i-tags{
+  margin:2rpx;
+}
+
+.top-bar{
+  background: #f9f9f9;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}

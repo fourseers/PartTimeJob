@@ -1,0 +1,20 @@
+/* pages/job-detail/job_detail.wxss */
+.title-box{
+  margin-bottom: 20rpx;
+}
+
+.detail-box{
+  margin-bottom: 20rpx;
+}
+
+.date-box{
+  margin-bottom: 20rpx;
+}
+
+.i-tags{
+  margin:20rpx;
+}
+
+.job-map{
+  width: 100%;
+}

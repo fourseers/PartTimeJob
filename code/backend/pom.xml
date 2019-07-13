@@ -11,7 +11,7 @@
     <groupId>com.fourseers.parttimejob</groupId>
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>parttimejob</name>
+    <name>parent</name>
     <packaging>pom</packaging>
     <description>PartTimeJob project</description>
 
@@ -165,7 +165,6 @@
         <module>eureka-server</module>
         <module>gateway</module>
         <module>warehouse</module>
-        <module>common</module>
         <module>common</module>
     </modules>
 

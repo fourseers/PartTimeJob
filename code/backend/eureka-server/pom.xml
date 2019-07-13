@@ -6,7 +6,7 @@
         <groupId>com.fourseers.parttimejob</groupId>
         <artifactId>parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath /> <!-- lookup parent from com.fourseers.parttimejob.auth.repository -->
+        <relativePath>../pom.xml</relativePath><!-- lookup parent from com.fourseers.parttimejob.auth.repository -->
     </parent>
     <artifactId>eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>

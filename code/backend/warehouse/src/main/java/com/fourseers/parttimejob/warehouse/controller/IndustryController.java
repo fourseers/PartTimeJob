@@ -4,10 +4,7 @@ import com.fourseers.parttimejob.warehouse.entity.Industry;
 import com.fourseers.parttimejob.warehouse.service.IndustryService;
 import com.fourseers.parttimejob.warehouse.util.Response;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +25,11 @@ public class IndustryController {
 
     @ApiOperation(value = "Get all industries")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success")
+            @ApiResponse(code = 200, message = "success")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
     })
     @RequestMapping(value = "", method = GET, produces = "application/json")
     public ResponseEntity<Response<List<Industry>>> getAllIndustries(@ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {

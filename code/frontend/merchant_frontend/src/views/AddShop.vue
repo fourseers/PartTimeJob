@@ -1,7 +1,6 @@
 <template>
 
     <Layout >
-
         <Content class="content">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                 <Col span="4">
@@ -154,7 +153,6 @@
             },
             addShop()
             {
-                console.log(this.formValidate.industry);
                 var prefix="/warehouse"
                 this.axios({
                     headers: {

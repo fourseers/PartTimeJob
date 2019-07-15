@@ -67,10 +67,9 @@
                 latitude: 0.2,
                 formValidate: {
                     shop_name: this.$route.params.shop_name,
-                    province: this.$route.params.province,
-                    city: this.$route.params.city,
+                    province_city:[this.$route.params.province,this.$route.params.city],
                     address: this.$route.params.address,
-                    industry: this.$route.params.industry,
+                    industry: [this.$route.params.industry],
                     shop_intro: this.$route.params.shop_intro,
                     brand:this.$route.params.brand
                 },
@@ -79,7 +78,6 @@
                         { required: true, message: '店铺名字不能为空', trigger: 'blur' }
                     ],
                     province_city: [
-
                         { required: true, type: 'array', min: 2, message: '请选择城市', trigger: 'change' },
                         { type: 'array', max: 2, message: '请选择城市', trigger: 'change' }
                     ],
@@ -104,6 +102,8 @@
             if(!this.$root.logged)
             {this.$Message.warning('请登录');}
             else {
+
+                console.log(this.$route.params );
                 //get industry
                 var prefix="/warehouse"
                 this.axios({
@@ -129,6 +129,9 @@
             }
 
         },
+        computed:
+            {
+            },
         methods: {
             handleChange (value) {
                 console.log(value)
@@ -165,8 +168,7 @@
                     url: prefix +"/merchant/shop",
                     data:  {
                         shop_name:this.formValidate.shop_name,
-                        province: this.formValidate.province_city[0],
-                        city:this.formValidate.province_city[1],
+                        province_city: this.formValidate.province_city,
                         address:this.formValidate.address,
                         longitude:this.longitude,
                         latitude:this.latitude,

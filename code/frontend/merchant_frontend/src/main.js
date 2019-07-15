@@ -7,7 +7,6 @@ import token from './util/token.js'
 import iView from 'iview'
 import axios from 'axios'
 import qs from 'qs'
-
 import 'iview/dist/styles/iview.css';
 import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data';
 import echarts from 'echarts'
@@ -35,6 +34,12 @@ Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(Vuex);
 
+import AMap from 'vue-amap'
+Vue.use(AMap)
+AMap.initAMapApiLoader({
+  key: '54c30f89c2a3166f4d0dd9eeab9b5196',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+})
 new Vue({
   router,
   render: h => h(App),

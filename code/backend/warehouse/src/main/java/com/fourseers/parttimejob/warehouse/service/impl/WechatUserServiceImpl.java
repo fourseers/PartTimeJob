@@ -2,13 +2,12 @@ package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.entity.Tag;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
 import com.fourseers.parttimejob.warehouse.dao.WechatUserDao;
 import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
-import com.fourseers.parttimejob.warehouse.entity.Tag;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
-import com.netflix.discovery.converters.Auto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

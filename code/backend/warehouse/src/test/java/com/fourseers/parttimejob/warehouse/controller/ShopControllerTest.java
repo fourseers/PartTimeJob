@@ -2,10 +2,10 @@ package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.entity.Company;
+import com.fourseers.parttimejob.common.entity.MerchantUser;
+import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
-import com.fourseers.parttimejob.warehouse.entity.Company;
-import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
-import com.fourseers.parttimejob.warehouse.entity.Shop;
 import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
@@ -25,7 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static junit.framework.TestCase.fail;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

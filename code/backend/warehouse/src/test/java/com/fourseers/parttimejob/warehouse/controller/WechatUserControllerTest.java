@@ -3,8 +3,8 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.entity.Tag;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.fourseers.parttimejob.common.entity.Tag;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.service.TagService;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
 import org.junit.After;
@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**

@@ -67,6 +67,13 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- common dependencies -->
+        <dependency>
+            <groupId>com.fourseers.parttimejob</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

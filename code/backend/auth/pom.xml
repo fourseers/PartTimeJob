@@ -93,6 +93,13 @@
 			<artifactId>spring-security-oauth2</artifactId>
 			<version>2.3.6.RELEASE</version>
 		</dependency>
+
+		<!-- project common dependencies -->
+		<dependency>
+			<groupId>com.fourseers.parttimejob</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

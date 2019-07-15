@@ -10,6 +10,8 @@ public interface ShopService {
 
     void save(ShopDto shopDto, String username);
 
+    void update(ShopDto shopDto, String username);
+
     ShopDto findByShopIdAndUserId(int shopId, int userId);
 
     ShopDto findByShopIdAndUsername(int shopId, String username);

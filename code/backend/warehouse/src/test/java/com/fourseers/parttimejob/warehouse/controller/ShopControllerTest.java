@@ -493,7 +493,7 @@ public class ShopControllerTest {
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("user not belong to any company", response.getString("message"));
+        assertEquals("shop not exist or not belong to", response.getString("message"));
 
     }
 

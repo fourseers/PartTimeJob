@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.arrangement.service;
 
-import com.fourseers.parttimejob.common.entity.Job;
+import com.fourseers.parttimejob.arrangement.entity.Job;
 
 import java.util.List;
 

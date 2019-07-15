@@ -2,11 +2,11 @@ package com.fourseers.parttimejob.arrangement.service.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
+import com.fourseers.parttimejob.arrangement.entity.Company;
+import com.fourseers.parttimejob.arrangement.entity.Job;
+import com.fourseers.parttimejob.arrangement.entity.MerchantUser;
+import com.fourseers.parttimejob.arrangement.entity.Shop;
 import com.fourseers.parttimejob.arrangement.service.JobService;
-import com.fourseers.parttimejob.common.entity.Company;
-import com.fourseers.parttimejob.common.entity.Job;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
-import com.fourseers.parttimejob.common.entity.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

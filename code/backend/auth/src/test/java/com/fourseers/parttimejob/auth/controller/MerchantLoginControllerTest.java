@@ -2,8 +2,8 @@ package com.fourseers.parttimejob.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

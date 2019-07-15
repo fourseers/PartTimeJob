@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.common.entity.Company;
+import com.fourseers.parttimejob.warehouse.entity.Company;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

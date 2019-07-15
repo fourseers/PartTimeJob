@@ -2,8 +2,8 @@ package com.fourseers.parttimejob.auth.service.impl;
 
 
 import com.fourseers.parttimejob.auth.dao.MerchantUserDao;
+import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

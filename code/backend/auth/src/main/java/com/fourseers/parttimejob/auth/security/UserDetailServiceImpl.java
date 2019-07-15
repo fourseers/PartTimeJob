@@ -1,9 +1,9 @@
 package com.fourseers.parttimejob.auth.security;
 
+import com.fourseers.parttimejob.auth.entity.MerchantUser;
+import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
-import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

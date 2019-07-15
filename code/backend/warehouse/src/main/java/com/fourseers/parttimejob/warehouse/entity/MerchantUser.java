@@ -1,7 +1,8 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.warehouse.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+
 
 @Entity
 public class MerchantUser {

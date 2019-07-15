@@ -1,8 +1,9 @@
 package com.fourseers.parttimejob.warehouse.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
+import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.netflix.config.WatchedUpdateListener;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,7 +1,6 @@
 package com.fourseers.parttimejob.warehouse.repository;
 
-
-import com.fourseers.parttimejob.common.entity.Company;
+import com.fourseers.parttimejob.warehouse.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

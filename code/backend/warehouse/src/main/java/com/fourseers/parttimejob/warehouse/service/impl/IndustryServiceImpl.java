@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.fourseers.parttimejob.warehouse.dao.IndustryDao;
-import com.fourseers.parttimejob.common.entity.Industry;
+import com.fourseers.parttimejob.warehouse.entity.Industry;
 import com.fourseers.parttimejob.warehouse.service.IndustryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

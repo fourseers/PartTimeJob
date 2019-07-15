@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.auth.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -14,7 +14,7 @@ public class Shop {
     private Float longitude;
     private Float latitude;
     private String brand;
-    private Industry industry;
+    private String industry;
     private String introduction;
     private Company company;
 
@@ -90,12 +90,12 @@ public class Shop {
         this.brand = brand;
     }
 
-    @ManyToOne
-    public Industry getIndustry() {
+    @Size(max = 20)
+    public String getIndustry() {
         return industry;
     }
 
-    public void setIndustry(Industry industry) {
+    public void setIndustry(String industry) {
         this.industry = industry;
     }
 

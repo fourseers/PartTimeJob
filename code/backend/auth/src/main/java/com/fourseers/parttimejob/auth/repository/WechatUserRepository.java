@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.auth.repository;
 
-import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.auth.entity.WechatUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

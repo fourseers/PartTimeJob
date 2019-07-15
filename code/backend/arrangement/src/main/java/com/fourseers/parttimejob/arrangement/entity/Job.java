@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.arrangement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

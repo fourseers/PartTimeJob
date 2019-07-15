@@ -1,21 +1,15 @@
 package com.fourseers.parttimejob.warehouse.config;
 
-import com.fourseers.parttimejob.common.entity.Industry;
-import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.entity.Industry;
+import com.fourseers.parttimejob.warehouse.entity.Shop;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ComponentScan(basePackages="com.fourseers.parttimejob")
-@EnableJpaRepositories(basePackages="com.fourseers.parttimejob")
-@EntityScan(basePackages="com.fourseers.parttimejob")
 public class AppConfig {
 
     @Bean

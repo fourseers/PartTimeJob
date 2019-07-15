@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.auth.service;
 
-import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.auth.entity.WechatUser;
 import org.springframework.stereotype.Service;
 
 @Service

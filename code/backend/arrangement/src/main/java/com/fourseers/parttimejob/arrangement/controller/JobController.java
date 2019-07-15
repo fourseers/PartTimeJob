@@ -1,10 +1,10 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.arrangement.entity.Job;
+import com.fourseers.parttimejob.arrangement.entity.Tag;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.util.ResponseBuilder;
-import com.fourseers.parttimejob.common.entity.Job;
-import com.fourseers.parttimejob.common.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

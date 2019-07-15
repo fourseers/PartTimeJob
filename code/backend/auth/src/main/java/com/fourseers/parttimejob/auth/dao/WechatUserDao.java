@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.auth.dao;
 
-import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.auth.entity.WechatUser;
 
 public interface WechatUserDao {
 

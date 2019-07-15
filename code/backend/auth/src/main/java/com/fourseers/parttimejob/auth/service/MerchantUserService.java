@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.auth.service;
 
-import com.fourseers.parttimejob.common.entity.MerchantUser;
+import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import org.springframework.stereotype.Service;
 
 @Service

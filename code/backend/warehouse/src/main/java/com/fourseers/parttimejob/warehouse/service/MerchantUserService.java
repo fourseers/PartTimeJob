@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.service;
 
-import com.fourseers.parttimejob.common.entity.MerchantUser;
+import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 
 public interface MerchantUserService {
 

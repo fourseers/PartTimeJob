@@ -1,9 +1,9 @@
 package com.fourseers.parttimejob.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.auth.entity.MerchantUser;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
 import com.fourseers.parttimejob.auth.util.ResponseBuilder;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;

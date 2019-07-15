@@ -35,11 +35,8 @@
                     </el-cascader>
                     </FormItem>
                     <FormItem label="营业领域" prop="industry">
-                        <CheckboxGroup v-model="formValidate.industry">
-                            <Checkbox label="餐饮"></Checkbox>
-                            <Checkbox label="衣服"></Checkbox>
-                            <Checkbox label="教育"></Checkbox>
-                            <Checkbox label="休闲"></Checkbox>
+                        <CheckboxGroup v-model="formValidate.industry" v-for="item in industry">
+                            <Checkbox :label="item.industry_id"  >{{item.industry_name}}</Checkbox>
                         </CheckboxGroup>
                     </FormItem>
                     <FormItem label="店铺介绍" prop="shop_intro">
@@ -64,7 +61,7 @@
         name: "AddShop",
         data () {
             return {
-
+        industry:[],
                 options: provinceAndCityData,
                 longitude:0.2,
                 latitude: 0.2,
@@ -116,9 +113,10 @@
                         'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
-                    url: prefix +"/merchant/shop",
+                    url: prefix +"/merchant/industry",
                 }).then(response => {
-                    console.log(response);
+                    this.industry = response.data.data;
+                    console.log( this.industry);
                     if(response.status ===  200)
                     {
                         console.log("success");
@@ -127,6 +125,8 @@
                     .catch(error => {
                         console.log(error)
                     })
+
+
             }
 
         },
@@ -154,10 +154,7 @@
             },
             addShop()
             {
-                console.log(this.formValidate);
-                console.log(this.longitude);
-                console.log(this.latitude);
-                console.log(this.formValidate.industry[0]);
+                console.log(this.formValidate.industry);
                 var prefix="/warehouse"
                 this.axios({
                     headers: {

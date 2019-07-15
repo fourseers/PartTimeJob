@@ -44,6 +44,12 @@
                                                 placement="bottom-end">
                                         </Date-picker>
                                     </FormItem>
+                                    <FormItem prop="begin_time">
+                                        <TimePicker format="HH:mm" placeholder="Select time"
+
+                                                    v-model="formValidate.begin_time"
+                                        ></TimePicker>
+                                    </FormItem>
                                 </Col>
                                 <Col span="8">
                                     <FormItem prop="end_date">
@@ -55,7 +61,14 @@
                                                 :options="endTimeOptions"
                                                 @on-change="endTimeChange"
                                                 placement="bottom-end">
-                                        </Date-picker>  </FormItem>
+                                        </Date-picker>
+                                    </FormItem>
+
+                                    <FormItem prop="end_time">
+                                        <TimePicker format="HH:mm" placeholder="Select time"
+                                                    v-model="formValidate.end_time"
+                                        ></TimePicker>
+                                    </FormItem>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -77,6 +90,12 @@
                                                 placement="bottom-end">
                                         </Date-picker>
                                     </FormItem>
+
+                                    <FormItem prop="begin_apply_time">
+                                        <TimePicker format="HH:mm" placeholder="Select time"
+                                                    v-model="formValidate.begin_apply_time"
+                                        ></TimePicker>
+                                    </FormItem>
                                 </Col>
                                 <Col span="8">
                                     <FormItem prop="end_apply_date">
@@ -89,7 +108,14 @@
                                                 :options="endTimeOptions2"
                                                 @on-change="endTimeChange2"
                                                 placement="bottom-end">
-                                        </Date-picker>  </FormItem>
+                                        </Date-picker>
+                                    </FormItem>
+
+                                    <FormItem prop="end_apply_time">
+                                        <TimePicker format="HH:mm" placeholder="Select time"
+                                                    v-model="formValidate.end_apply_time"
+                                        ></TimePicker>
+                                    </FormItem>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -159,50 +185,11 @@
                 }
             }
 
-            const validateApplyBeforeWork = (rule, value, callback) => {
-                if (this.formValidate.end_apply_date === "")
-                    callback();
-                if (value < this.formValidate.end_apply_date) {
-                    callback(new Error('工作开始时间应该晚于招聘结束时间'));
-                } else {
-                    callback();
-                }
-            }
-
-            const validateApplyBeforeWork2 = (rule, value, callback) => {
-                if (this.formValidate.begin_date === "")
-                    callback();
-                if (value > this.formValidate.begin_date) {
-                    callback(new Error('工作开始时间应该晚于招聘结束时间'));
-                } else {
-                    callback();
-                }
-            }
             const validateApplyBefore = (rule, value, callback) => {
                 if (this.formValidate.begin_apply_date === "")
                     callback();
                 if (value < this.formValidate.begin_apply_date) {
                     callback(new Error('招聘开始时间应该晚于招聘结束时间'));
-                } else {
-                    callback();
-                }
-            }
-
-            const validateWorkBefore = (rule, value, callback) => {
-                if (this.formValidate.begin_date === "")
-                    callback();
-                if (value < this.formValidate.begin_date) {
-                    callback(new Error('工作结束时间应该晚于工作开始时间'));
-                } else {
-                    callback();
-                }
-            }
-
-            const validateWorkBefore2 = (rule, value, callback) => {
-                if (this.formValidate.end_date === "")
-                    callback();
-                if (date_false == true) {
-                    callback(new Error('工作结束时间应该晚于工作开始时间'));
                 } else {
                     callback();
                 }
@@ -246,11 +233,14 @@
             return {
                 startTimeOptions: {}, //开始日期设置
                 endTimeOptions: {}, //结束日期设置
-
                 startTimeOptions2: {}, //开始日期设置
                 endTimeOptions2: {},
                 shops: [],
                 formValidate: {
+                    begin_time:"00:00",
+                    end_time:"23:59",
+                    begin_apply_time:"00:00",
+                    end_apply_time:"23:59",
                     job_name: '',
                     shop: '',
                     gender: ['男', '女'],
@@ -306,7 +296,6 @@
                 }
             }
         },
-        watch: {},
         computed: {
             gender_need: function () {
                 if (this.formValidate.gender.length === 1) {
@@ -317,7 +306,24 @@
                 } else if (this.formValidate.gender.length === 2)
                     return 2;
                 return 2;
+            },
+            begin_date:function()
+            {
+               return this.get_added_utcstring(this.formValidate.begin_date,this.formValidate.begin_time);
+            },
+            end_date:function()
+            {
+                return this.get_added_utcstring(this.formValidate.end_date,this.formValidate.end_time);
+            },
+            begin_apply_date:function()
+            {
+                return this.get_added_utcstring(this.formValidate.begin_apply_date,this.formValidate.begin_apply_time);
+            },
+            end_apply_date:function()
+            {
+                return this.get_added_utcstring(this.formValidate.end_apply_date,this.formValidate.end_apply_time);
             }
+
         },
         created: function () {
             if (!this.$root.logged) {
@@ -335,7 +341,6 @@
                     method: 'get',
                     url: prefix + "/merchant/shop"
                 }).then(response => {
-                    console.log(response);
                     console.log(response.data.data.shops);
                     if (response.data.status === 200) {
 
@@ -356,13 +361,37 @@
 
         },
         methods: {
+            get_added_utcstring(date,time)
+            {
+                var t=new Date;
+                var t_s=date.getTime();
+                var seconds = this.convert_to_seconds(time);
+                t.setTime(t_s + 1000 * seconds);
+                return t.toUTCString();
+            },
+            convert_to_seconds(str)
+            {
+                var a = str.split(':'); // split it at the colons
+
+                // minutes are worth 60 seconds. Hours are worth 60 minutes.
+                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60;
+
+                return seconds;
+            },
+            generate_date(date,seconds)
+            {
+                return new Date(date+seconds*1000);
+            },
             handleSubmit(name) {
-                console.log(this.formValidate)
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        //this.$Message.success('Success!');
-                        this.postJob()
-
+                        if(this.begin_date > this.end_apply_date)
+                        {
+                            this.postJob()
+                        }
+                        else {
+                            this.$Message.error("工作开始时间不能比招聘结束时间早");
+                        }
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -384,8 +413,6 @@
                 this.count.splice(index, 1);
             },
             postJob() {
-                console.log(this.formValidate.shop)
-                console.log(this.formValidate.job_tag)
                 var prefix = "/arrangement"
                 //测试用的url
                 this.axios({
@@ -400,13 +427,13 @@
                     data: {
                         shop_id: this.formValidate.shop,
                         job_name: this.formValidate.job_name,
-                        begin_date: this.formValidate.begin_date.toUTCString(),
-                        end_date: this.formValidate.end_date.toUTCString(),
+                        begin_date: this.begin_date,
+                        end_date: this.end_date,
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
-                        begin_apply_date: this.formValidate.begin_apply_date.toUTCString(),
-                        end_apply_date: this.formValidate.end_apply_date.toUTCString(),
+                        begin_apply_date: this.begin_apply_date,
+                        end_apply_date: this.end_apply_date,
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
                         salary: this.formValidate.salary

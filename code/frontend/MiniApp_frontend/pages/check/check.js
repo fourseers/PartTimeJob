@@ -68,7 +68,9 @@ Page({
   },
 
   handleCheck() {
-    //console.log("test");
+    wx.navigateTo({
+      url: "/pages/check_inform/check_inform",
+    })
   },
 
 })

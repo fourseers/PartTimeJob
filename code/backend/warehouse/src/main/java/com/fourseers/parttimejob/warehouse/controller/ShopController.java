@@ -1,10 +1,10 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
-import com.fourseers.parttimejob.warehouse.util.Response;
-import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
+import com.fourseers.parttimejob.common.util.Response;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -88,14 +88,14 @@ public class ShopController {
                                                        @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
 
         if (shop.getAddress() == null ||
-            shop.getBrand() == null ||
-            shop.getCity() == null ||
-            shop.getIndustry() == null ||
-            shop.getIntroduction() == null ||
-            shop.getLatitude() == null ||
-            shop.getLongitude() == null ||
-            shop.getProvince() == null ||
-            shop.getShopName() == null) {
+                shop.getBrand() == null ||
+                shop.getCity() == null ||
+                shop.getIndustry() == null ||
+                shop.getIntroduction() == null ||
+                shop.getLatitude() == null ||
+                shop.getLongitude() == null ||
+                shop.getProvince() == null ||
+                shop.getShopName() == null) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
         }
         try {

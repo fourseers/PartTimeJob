@@ -1,10 +1,10 @@
 package com.fourseers.parttimejob.warehouse.service.impl;
 
+import com.fourseers.parttimejob.common.entity.MerchantUser;
+import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
-import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
-import com.fourseers.parttimejob.warehouse.entity.Shop;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

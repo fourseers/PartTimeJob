@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dto;
 
-import com.fourseers.parttimejob.warehouse.entity.Tag;
+import com.fourseers.parttimejob.common.entity.Tag;
 
 import javax.validation.constraints.NotNull;
 import java.util.Set;

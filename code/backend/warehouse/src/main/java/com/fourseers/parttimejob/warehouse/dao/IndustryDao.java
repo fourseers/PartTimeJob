@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dao;
 
-import com.fourseers.parttimejob.warehouse.entity.Industry;
+import com.fourseers.parttimejob.common.entity.Industry;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.service;
 
-import com.fourseers.parttimejob.warehouse.entity.Tag;
+import com.fourseers.parttimejob.common.entity.Tag;
 
 import java.util.List;
 

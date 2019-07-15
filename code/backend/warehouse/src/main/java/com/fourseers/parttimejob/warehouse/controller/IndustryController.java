@@ -1,9 +1,9 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
-import com.fourseers.parttimejob.warehouse.entity.Industry;
+import com.fourseers.parttimejob.common.entity.Industry;
 import com.fourseers.parttimejob.warehouse.service.IndustryService;
-import com.fourseers.parttimejob.warehouse.util.Response;
-import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
+import com.fourseers.parttimejob.common.util.Response;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

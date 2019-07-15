@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.warehouse.dao.impl;
 
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.WechatUserDao;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.repository.WechatUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

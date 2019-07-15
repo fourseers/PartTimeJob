@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dao;
 
-import com.fourseers.parttimejob.warehouse.entity.Company;
+import com.fourseers.parttimejob.common.entity.Company;
 
 public interface CompanyDao {
 

@@ -1,9 +1,9 @@
 package com.fourseers.parttimejob.arrangement.dao.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
-import com.fourseers.parttimejob.arrangement.entity.Job;
-import com.fourseers.parttimejob.arrangement.entity.Shop;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
+import com.fourseers.parttimejob.common.entity.Job;
+import com.fourseers.parttimejob.common.entity.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

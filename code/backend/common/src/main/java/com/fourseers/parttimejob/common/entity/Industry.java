@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.warehouse.entity;
+package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -2,10 +2,10 @@ package com.fourseers.parttimejob.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
 import com.fourseers.parttimejob.auth.util.Pair;
 import com.fourseers.parttimejob.auth.util.ResponseBuilder;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

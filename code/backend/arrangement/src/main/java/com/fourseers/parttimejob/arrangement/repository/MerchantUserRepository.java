@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.arrangement.repository;
 
-import com.fourseers.parttimejob.arrangement.entity.MerchantUser;
+import com.fourseers.parttimejob.common.entity.MerchantUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MerchantUserRepository extends JpaRepository<MerchantUser, Integer> {

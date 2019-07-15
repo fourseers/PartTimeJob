@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
-import com.fourseers.parttimejob.warehouse.entity.Industry;
+import com.fourseers.parttimejob.common.entity.Industry;
 import com.fourseers.parttimejob.warehouse.service.IndustryService;
 import com.fourseers.parttimejob.warehouse.util.Response;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;

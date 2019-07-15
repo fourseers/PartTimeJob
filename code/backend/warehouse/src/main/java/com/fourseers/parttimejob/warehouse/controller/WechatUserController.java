@@ -1,8 +1,7 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.entity.Industry;
+import com.fourseers.parttimejob.common.entity.Industry;
 import com.fourseers.parttimejob.warehouse.service.IndustryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

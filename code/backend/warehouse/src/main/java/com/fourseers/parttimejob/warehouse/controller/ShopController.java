@@ -3,6 +3,7 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
+import com.fourseers.parttimejob.warehouse.util.Response;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ShopController {
     private ShopService shopService;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> createShop(@RequestBody ShopDto shop,
+    public ResponseEntity<Response<JSONObject>> createShop(@RequestBody ShopDto shop,
                                                  @RequestHeader("x-internal-token") String username) {
 
         if (shop.getAddress() == null ||
@@ -47,7 +48,7 @@ public class ShopController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<JSONObject> getShop(@RequestParam(value = "shop_id", required = false) Integer shopId,
+    public ResponseEntity<Response<JSONObject>> getShop(@RequestParam(value = "shop_id", required = false) Integer shopId,
                                               @RequestHeader("x-internal-token") String username) {
 
         if (shopId != null) {
@@ -82,9 +83,9 @@ public class ShopController {
             @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
                     required = true, dataType = "string", paramType = "header")
     })
-    @RequestMapping(value = "", method = RequestMethod.PUT)
-    public ResponseEntity<JSONObject> updateShop(@RequestBody ShopDto shop,
-                                                 @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
+    @RequestMapping(value = "", method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<Response<Object>> updateShop(@RequestBody ShopDto shop,
+                                                       @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
 
         if (shop.getAddress() == null ||
             shop.getBrand() == null ||

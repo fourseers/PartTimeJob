@@ -3,6 +3,7 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.warehouse.entity.Company;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
+import com.fourseers.parttimejob.warehouse.util.Response;
 import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<JSONObject> getCompany(@RequestHeader("x-internal-token") String username) {
+    public ResponseEntity<Response<JSONObject>> getCompany(@RequestHeader("x-internal-token") String username) {
         Company company = companyService.findByUsername(username);
 
         if (company == null) {
@@ -32,7 +33,7 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> createCompany(@RequestBody JSONObject body,
+    public ResponseEntity<Response<JSONObject>> createCompany(@RequestBody JSONObject body,
                                                     @RequestHeader("x-internal-token") String bossName) {
         Company company = new Company();
         company.setCompanyName(body.getString("company_name"));

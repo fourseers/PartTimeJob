@@ -33,13 +33,8 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(Vuex);
-
 import AMap from 'vue-amap'
 Vue.use(AMap)
-AMap.initAMapApiLoader({
-  key: '54c30f89c2a3166f4d0dd9eeab9b5196',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
-})
 new Vue({
   router,
   render: h => h(App),

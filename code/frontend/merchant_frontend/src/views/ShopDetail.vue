@@ -39,8 +39,8 @@
                             <Checkbox :label="item.industry_id"  >{{item.industry_name}}</Checkbox>
                         </CheckboxGroup>
                     </FormItem>
-                    <FormItem label="店铺介绍" prop="shop_intro">
-                        <Input v-model="formValidate.shop_intro" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
+                    <FormItem label="店铺介绍" prop="introduction">
+                        <Input v-model="formValidate.introduction" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="这里写店铺介绍"></Input>
                     </FormItem>
 
                     <FormItem>
@@ -71,7 +71,8 @@
                     address: this.$route.params.address,
                     industry: [this.$route.params.industry],
                     shop_intro: this.$route.params.shop_intro,
-                    brand:this.$route.params.brand
+                    brand:this.$route.params.brand,
+                    introduction:this.$route.params.introduction
                 },
                 ruleValidate: {
                     shop_name: [
@@ -91,7 +92,7 @@
                         { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },
                         { type: 'array', max: 1, message: '最多选择一个营业领域', trigger: 'change' }
                     ],
-                    shop_intro:[
+                    introduction:[
                         { required: true, message: '请填写店铺介绍', trigger: 'change' }
                     ]
 
@@ -145,7 +146,7 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
 
-                        this.addShop()
+                        this.updateShop()
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -164,17 +165,19 @@
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
                     },
-                    method: 'post',
+                    method: 'put',
                     url: prefix +"/merchant/shop",
                     data:  {
+                        shop_id:this.$route.params.shop_id,
                         shop_name:this.formValidate.shop_name,
-                        province_city: this.formValidate.province_city,
+                        province: this.formValidate.province_city[0],
+                        city:this.formValidate.province_city[1],
                         address:this.formValidate.address,
                         longitude:this.longitude,
                         latitude:this.latitude,
                         brand:this.formValidate.brand,
                         industry:this.formValidate.industry[0],
-                        introduction:this.formValidate.shop_intro
+                        introduction:this.formValidate.introduction
                     }
                 }).then(response => {
                     console.log(response);
@@ -186,11 +189,15 @@
                     }
                 })
                     .catch(error => {
-
                         if (error.response) {
                             if(error.response.data.status === 401 && error.response.data.message ==="Forbidden, invalid access token." )
                             {
                                 this.$Message.warning('请登录');
+                                this.$root.logged= false;
+                            }
+                            else if (error.response.data.status === 400 && error.response.data.message ==="shop name exists")
+                            {
+                                this.$Message.error('店铺名已存在')
                             }
                             else{
                                 this.$Message.error('修改店铺失败')

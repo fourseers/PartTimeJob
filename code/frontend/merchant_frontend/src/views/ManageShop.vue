@@ -95,27 +95,7 @@
                                             this.$router.push({ name: "shopdetail",params:this.shops[params.index]})
                                         }
                                     }
-                                }, '修改信息'),
-                                h('Button', {
-                                    props: {
-                                        type:'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        color: '#d63031',
-                                        borderColor:'#d63031',
-                                        backgroundColor:'#fff',
-                                        marginRight: '5px',
-                                        marginTop:'5px',
-                                        marginBottom:'5px'
-                                    },
-
-                                    on: {
-                                        click: () => {
-                                            //删除店铺
-                                        }
-                                    }
-                                }, '删除店铺')
+                                }, '修改信息')
                             ]);
                         }
                     }

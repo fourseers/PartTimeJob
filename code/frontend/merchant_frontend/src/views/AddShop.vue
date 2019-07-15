@@ -3,35 +3,57 @@
     <Layout >
         <Content class="content">
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <Col span="4">
-                    <Upload
-                            multiple
-                            type="drag"
-                            action="//jsonplaceholder.typicode.com/posts/">
-                        <div style="padding-left:20px;  height: 70px;">
-                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                            <p>点击或者拖拽上传图片</p>
+                <Col span="10">
+                    <div>
+                        <div class="amap-page-container">
+                            <el-amap vid="amapDemo" :zoom="zoom" :center="center" class="amap-demo" :plugin="plugin">
+                                <el-amap-info-window  :position="mywindow.position" :content="mywindow.content" :visible="mywindow.visible" :events="mywindow.events"></el-amap-info-window>
+                                <el-amap-marker :position="marker.position" :events="marker.events" :visible="marker.visible" :draggable="marker.draggable"></el-amap-marker>
+                                <el-amap-circle :center="circle.center" :radius="circle.radius" :fillOpacity="circle.fillOpacity" :events="circle.events" :strokeColor="circle.strokeColor" :strokeStyle="circle.strokeStyle" :fillColor="circle.fillColor"></el-amap-circle>
+
+                            </el-amap>
                         </div>
-                    </Upload>
+                    </div>
+                    <div>
+                        <Upload
+                                multiple
+                                type="drag"
+                                action="//jsonplaceholder.typicode.com/posts/">
+                            <div style="padding-left:20px;  height: 70px;">
+                                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                                <p>点击或者拖拽上传图片</p>
+                            </div>
+                        </Upload>
+                    </div>
                 </Col>
                 <Col span="12">
                     <FormItem label="名称" prop="shop_name">
                         <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
                     </FormItem>
                     <FormItem label="地址" prop="address">
-                        <Input v-model="formValidate.address" placeholder="店铺地址"></Input>
+                        <AutoComplete
+                                v-model="formValidate.address"
+                                :data="addressCandidate"
+                                placeholder="店铺地址"
+                                @on-select="locate"
+                                style="width:200px">
+                            <Option v-for="option in addressCandidate" :value="option.name" :key="option.name">
+                                <span class="demo-auto-complete-title">{{ option.name }}</span>
+                            </Option>
+
+                        </AutoComplete>
                     </FormItem>
                     <FormItem label="品牌" prop="brand">
                         <Input v-model="formValidate.brand" placeholder="品牌"></Input>
                     </FormItem>
 
                     <FormItem class="ivu-form-item ivu-form-item-required" label="省市地区" prop="province_city">
-                    <el-cascader
-                            size="small"
-                            :options="options"
-                            v-model="formValidate.province_city"
-                             >
-                    </el-cascader>
+                        <el-cascader
+                                size="small"
+                                :options="options"
+                                v-model="formValidate.province_city"
+                        >
+                        </el-cascader>
                     </FormItem>
                     <FormItem label="营业领域" prop="industry">
                         <CheckboxGroup v-model="formValidate.industry" v-for="item in industry">
@@ -55,17 +77,25 @@
 </template>
 <script>
 
-    import { provinceAndCityData } from 'element-china-area-data'
+    import AMap from 'vue-amap';
+
+    var _ = require('lodash');
+    AMap.initAMapApiLoader({
+        key: '54c30f89c2a3166f4d0dd9eeab9b5196',
+        plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+    })
+    import { provinceAndCityData } from 'element-china-area-data';
     export default {
         name: "AddShop",
         data () {
             return {
-        industry:[],
+                addressCandidate:[],
+                industry:[],
                 options: provinceAndCityData,
                 longitude:0.2,
                 latitude: 0.2,
                 formValidate: {
-                    shop_name: '',
+                    shop_name: "",
                     province_city:[],
                     address:'',
                     industry:[],
@@ -95,6 +125,53 @@
                         { required: true, message: '请填写店铺介绍', trigger: 'change' }
                     ]
 
+                },
+
+                zoom: 15,
+                center: [121.5273285,30.21515044],
+                circle: {
+                    clickable: true,
+                    center: [121.5273285, 30.21515044],
+                    radius: 200,
+                    fillOpacity: 0.3,
+                    strokeStyle: 'dashed',
+                    fillColor: '#FFFF00',
+                    strokeColor: '#00BFFF'
+                },
+                marker: {
+                    position: [121.5273285, 30.21515044],
+                    events: {
+                        click: () => {
+                            if (this.mywindow.visible === true) {
+                                this.mywindow.visible = false
+                            } else {
+                                this.mywindow.visible = true
+                            }
+                        },
+                        dragend: (e) => {
+                            this.markers[0].position = [e.lnglat.lng, e.lnglat.lat]
+                        }
+                    },
+                    visible: true,
+                    draggable: false
+                },
+                mywindow: {
+                    position: [121.5273285, 30.21515044],
+                    content: "<text>" +" </text> ",
+                    visible: true,
+                    events: {
+                        close () {
+                            this.mywindow.visible = false
+                        }
+                    }
+                },
+                plugin: {
+                    pName: 'Scale',
+                    events: {
+                        init (instance) {
+                            console.log(instance)
+                        }
+                    }
                 }
             }
         },
@@ -125,11 +202,73 @@
                         console.log(error)
                     })
 
-
             }
+            this.debouncedGetLocation = _.debounce(this.findAddress, 500)
+        },
+        watch: {
+            'formValidate.address':
+                {
+                    handler(newVal, oldVal) {
+                        if (newVal !== oldVal) {
+                            this.debouncedGetLocation()
+                        }
+                    }
+                },
+            'formValidate.shop_name':
+                {
+                    handler(newVal, oldVal) {
 
+                        this. mywindow.content="<text>"+ newVal+" </text> ";
+                    }
+                }
+        },
+        computed:{
         },
         methods: {
+            locate(val)
+            {
+                for(var i = 0 ;i < this. addressCandidate.length;i++)
+                {
+                    if(this.addressCandidate[i].name === val)
+                    {
+                        console.log(this.addressCandidate[i])
+                        this.latitude = this.addressCandidate[i].location.split(",")[0];
+                        this.longitude=  this.addressCandidate[i].location.split(",")[1];
+                        var location = [this.latitude ,this.longitude];
+                        this.center=location;
+                        this.circle.center=location;
+                        this.marker.position=location;
+                        this.mywindow.position=location;
+                    }
+                }
+            }
+            ,
+            addCandidate(pois){
+                var res=[]
+                for(var i = 0;i < pois.length;i++)
+                {
+                    var ob = {name:pois[i].name,location:pois[i].location}
+                    res.push(ob);
+                }
+                return res;
+            },
+            findAddress()
+            {
+                this.axios({
+                    method: 'get',
+                    url: "https://restapi.amap.com/v3/place/text",
+                    params:  {
+                        key:"aadbbb26ac7ee34f4e15ef71c5d90dc2",
+                        city:this.formValidate.province_city[1]==="市辖区"?this.formValidate.province_city[0]:this.formValidate.province_city[1],
+                        keywords:this.formValidate.address,
+                        offset:5
+                    }
+                }).then(response => {
+                    this.addressCandidate=[];
+                    this.addressCandidate = this.addCandidate(response.data.pois);
+                })
+                    .catch(error => {})
+            },
             handleChange (value) {
                 console.log(value)
             },
@@ -243,5 +382,8 @@
         cursor: pointer;
         text-align: left;
         font-size: inherit;
+    }
+    .amap-page-container {
+        height: 400px;
     }
 </style>

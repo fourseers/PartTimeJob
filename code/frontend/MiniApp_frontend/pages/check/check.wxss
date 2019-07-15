@@ -1,0 +1,5 @@
+/* pages/check/check.wxss */
+
+.check-button {
+  border-radius: 20rpx;
+}

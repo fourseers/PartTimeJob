@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/user/user",
     "pages/index/index",
     "pages/timeline/timeline",
     "pages/job_detail/job_detail",
@@ -10,7 +9,8 @@
     "pages/schedule/schedule",
     "pages/user_inform/user_inform",
     "pages/check/check",
-    "pages/check_inform/check_inform"
+    "pages/check_inform/check_inform",
+    "pages/user/user"
   ],
   "window": {
     "backgroundTextStyle": "light",

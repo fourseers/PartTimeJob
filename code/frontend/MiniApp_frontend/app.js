@@ -4,6 +4,7 @@ import { login } from "./api/url.js"
 
 App({
   onLaunch: function () {
+
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -71,6 +72,13 @@ App({
         }
       }
     })
+
+    // 显示欢迎页面2秒后跳转到"我"页面
+    setTimeout(function () {
+      wx.reLaunch({
+        url: "/pages/user/user",
+      })
+    }, 2000)
   },
   globalData: {
     userInfo: null,

@@ -2,9 +2,10 @@ package com.fourseers.parttimejob.arrangement.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.service.JobService;
-import com.fourseers.parttimejob.arrangement.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Tag;
+import com.fourseers.parttimejob.common.util.Response;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class JobController {
     private JobService jobService;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> addJob(@RequestBody JSONObject body,
-                                             @RequestHeader("x-internal-token") String username) {
+    public ResponseEntity<Response<JSONObject>> addJob(@RequestBody JSONObject body,
+                                                       @RequestHeader("x-internal-token") String username) {
 
         int shopId;
         Job job = new Job();
@@ -80,7 +81,7 @@ public class JobController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<JSONObject> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
+    public ResponseEntity<Response<JSONObject>> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
                                              @RequestParam(value = "shop_id", required = false) Integer shopId,
                                              @RequestHeader("x-internal-token") String username) {
         JSONObject body = new JSONObject();

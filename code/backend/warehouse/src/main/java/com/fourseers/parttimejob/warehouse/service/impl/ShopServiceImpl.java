@@ -51,6 +51,20 @@ public class ShopServiceImpl implements ShopService {
         shopDao.save(shop);
     }
 
+    public void update(ShopDto shopDto, String username) {
+
+        MerchantUser merchantUser = merchantUserDao.findByUsername(username);
+        Shop previousShop = shopDao.findByShopIdAndUsername(shopDto.getShopId(), username);
+
+        if (previousShop == null) {
+            throw new RuntimeException("shop not exist or not belong to");
+        }
+
+        Shop shop = modelMapper.map(shopDto, Shop.class);
+        shop.setCompany(merchantUser.getCompany());
+        shopDao.save(shop);
+    }
+
     public ShopDto findByShopIdAndUserId(int shopId, int userId) {
         Shop shop = shopDao.findByShopIdAndUserId(shopId, userId);
 

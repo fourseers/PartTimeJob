@@ -2,8 +2,9 @@ package com.fourseers.parttimejob.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.service.MerchantUserService;
-import com.fourseers.parttimejob.auth.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.entity.MerchantUser;
+import com.fourseers.parttimejob.common.util.Response;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class MerchantLoginController {
     private MerchantUserService merchantUserService;
 
     // NOT controller
-    private ResponseEntity<JSONObject> getOAuthResponse(String username, String password, String basicAuth) {
+    private ResponseEntity<Response<JSONObject>> getOAuthResponse(String username, String password, String basicAuth) {
         JSONObject response = null;
         try {
             response = oAuth.getToken(username, password, "password", basicAuth);
@@ -63,7 +64,7 @@ public class MerchantLoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JSONObject> register(
+    public ResponseEntity<Response<JSONObject>> register(
             @RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         String username = body.getString("username");
         String password = body.getString("password");
@@ -82,7 +83,7 @@ public class MerchantLoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JSONObject> login(
+    public ResponseEntity<Response<JSONObject>> login(
             @RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         String username = body.getString("username");
         String password = body.getString("password");

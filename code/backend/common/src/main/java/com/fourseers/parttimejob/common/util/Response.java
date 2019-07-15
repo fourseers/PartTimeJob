@@ -1,4 +1,4 @@
-package com.fourseers.parttimejob.warehouse.util;
+package com.fourseers.parttimejob.common.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

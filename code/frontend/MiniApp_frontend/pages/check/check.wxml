@@ -24,6 +24,6 @@
     </i-cell>
   </i-cell-group>
 </i-panel>
-<button class="check-button" bind:click="handleCheck">
-  <text>打卡</text>
-</button>
+<i-button class="check-button" bind:click="handleCheck" type="success">
+  <text>立即去打卡</text>
+</i-button>

@@ -68,7 +68,7 @@ Page({
   },
 
   handleCheck() {
-
+    //console.log("test");
   },
 
 })

@@ -1,5 +1,8 @@
 /* pages/check/check.wxss */
 
 .check-button {
-  border-radius: 20rpx;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background: #2d8cf0;
 }

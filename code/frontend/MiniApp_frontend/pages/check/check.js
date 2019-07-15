@@ -11,13 +11,15 @@ Page({
     },
     checks: [
       {
-        title: "搬砖工上班",
-        checkTime: "9:00",
+        title: "搬砖工上班打卡",
+        checkBeginTime: "8:30",
+        checkEndTime: "9:00",
         canCheck: true,
       },
       {
-        title: "搬砖工下班",
-        checkTime: "21:00",
+        title: "搬砖工下班打卡",
+        checkBeginTime: "20:30",
+        checkEndTime: "21:00",
         canCheck: false,
       },
     ],
@@ -63,6 +65,10 @@ Page({
 
   afterCalendarRender(e) {
     //console.log('afterCalendarRender', e);
-  }
+  },
+
+  handleCheck() {
+
+  },
 
 })

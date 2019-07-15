@@ -14,14 +14,16 @@
       wx:key="{{index}}"
       url="/pages/job_detail/job_detail?id={{item.id}}" 
       title="{{item.title}}" 
-      label="打卡时间:{{item.checkTime}}"
     >
       <view slot="icon">
         <i-avatar size="small">砖</i-avatar>
       </view>
       <view slot="footer">
-        <i-button i-class="check-button" disabled="{{!item.canCheck}}" inline >打卡</i-button>
+        {{item.checkBeginTime}}~{{item.checkEndTime}}
       </view>
     </i-cell>
   </i-cell-group>
 </i-panel>
+<button class="check-button" bind:click="handleCheck">
+  <text>打卡</text>
+</button>

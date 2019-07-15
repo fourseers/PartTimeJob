@@ -4,10 +4,12 @@
     </div>
 </template>
 <script>
+    import { CodeToText } from 'element-china-area-data'
     export default {
         name: "ManageShop",
         data () {
             return {
+                industry:[],
                 columns7: [
                     {
                         title: '店铺名称',
@@ -35,12 +37,18 @@
                     },
                     {
                         title: '省份',
-                        key: 'province'
+                        key: 'province',
+                        render: (h, params) => {
+                            return h('div',CodeToText[ params.row.province])
+                        }
                     },
 
                     {
                         title: '城市',
-                        key: 'city'
+                        key: 'city',
+                        render: (h, params) => {
+                            return h('div',CodeToText[ params.row.city])
+                        }
                     },
                     {
                         title: '地址',
@@ -53,13 +61,17 @@
                     {
                         title: '营业领域',
                         key: 'industry',
-                        render: (h, params) => {
-                            return h('ul', this.shops[params.index].industry.map(item => {
-                                    return h('li',{style:{listStyle:"none"}}, item)
-
-                                }
-                            ))
+                        render: (h, params) => { 
+                            return h('div', this.industry[params.row.industry-1].industry_name)
                         }
+
+                        // render: (h, params) => {
+                        //     return h('ul', this.shops[params.index].industry.map(item => {
+                        //             return h('li',{style:{listStyle:"none"}}, item)
+                        //
+                        //         }
+                        //     ))
+                        // }
                     },
                     {
                         title: '操作',
@@ -143,6 +155,29 @@
                                 this.$Message.error('暂无店铺');
                             }
                         }
+                    })
+
+
+                //get industry
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/industry",
+                }).then(response => {
+                    this.industry = response.data.data;
+                    console.log( this.industry);
+                    if(response.status ===  200)
+                    {
+                        console.log("success");
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
                     })
             }
         },

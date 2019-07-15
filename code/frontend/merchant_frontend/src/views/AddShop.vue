@@ -30,13 +30,13 @@
                     <FormItem label="名称" prop="shop_name">
                         <Input v-model="formValidate.shop_name" placeholder="店铺名称"></Input>
                     </FormItem>
-                    <FormItem label="地址" prop="address">
+                    <FormItem label="地址" prop="address"  >
                         <AutoComplete
                                 v-model="formValidate.address"
                                 :data="addressCandidate"
                                 placeholder="店铺地址"
                                 @on-select="locate"
-                                style="width:200px">
+                        >
                             <Option v-for="option in addressCandidate" :value="option.name" :key="option.name">
                                 <span class="demo-auto-complete-title">{{ option.name }}</span>
                             </Option>

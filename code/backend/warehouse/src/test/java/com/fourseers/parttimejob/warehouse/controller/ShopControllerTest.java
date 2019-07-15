@@ -28,8 +28,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -345,4 +344,214 @@ public class ShopControllerTest {
         assertEquals("no shops", response.getString("message"));
     }
 
+    @Test
+    public void updateShopSuccess() throws Exception {
+        String username = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("shop_name", "Apple iamp new name")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+
+        List<Shop> shops = shopRepository.findAllByUsername(username);
+
+        for (Shop shop : shops) {
+            if (shop.getShopId() == 1) {
+                assertEquals("Apple iamp new name", shop.getShopName());
+                return;
+            }
+        }
+        fail();
+    }
+
+    @Test
+    public void updateShopIncorrectParam() throws Exception {
+        String username = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
+
+    }
+
+    @Test
+    public void updateShopIncorrectIndustry() throws Exception {
+        String username = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("shop_name", "Apple iamp new name")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", -1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
+
+    }
+
+    @Test
+    public void updateShopNameAlreadyExist() throws Exception {
+        String username = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("shop_name", "Chuizi somewhere")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop name exists", response.getString("message"));
+
+    }
+
+    @Test
+    public void updateShopNoCompany() throws Exception {
+        String username = "poor user";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("shop_name", "Apple iamp new name")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop not exist or not belong to", response.getString("message"));
+
+    }
+
+    @Test
+    public void updateShopNotBelongTo() throws Exception {
+        String username = "Luo Yonghao";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 1)
+                .fluentPut("shop_name", "Apple iamp new name")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop not exist or not belong to", response.getString("message"));
+
+    }
+
+    @Test
+    public void updateShopNotExist() throws Exception {
+        String username = "Luo Yonghao";
+
+        JSONObject body = new JSONObject();
+        body
+                .fluentPut("shop_id", 666)
+                .fluentPut("shop_name", "Apple iamp new name")
+                .fluentPut("province", "Shanghai")
+                .fluentPut("city", "Shanghai")
+                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("longitude", 120)
+                .fluentPut("latitude", 30)
+                .fluentPut("brand", "Apple")
+                .fluentPut("industry", 1)
+                .fluentPut("introduction", "Make Apple great again");
+
+        MvcResult result = mockMvc.perform(put("/merchant/shop")
+                .header("x-internal-token", username)
+                .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("shop not exist or not belong to", response.getString("message"));
+
+    }
 }

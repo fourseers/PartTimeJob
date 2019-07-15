@@ -1,29 +1,23 @@
 package com.fourseers.parttimejob.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Tag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @NotBlank
-    @Column(unique = true)
     private String name;
+    private List<Job> jobList;
 
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.REFRESH)
-    @JsonBackReference
-    private Set<WechatUser> users;
 
     // TODO elasticsearch tag vector for similarity
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -32,6 +26,8 @@ public class Tag {
         this.id = id;
     }
 
+    @NotBlank
+    @Column(unique = true)
     public String getName() {
         return name;
     }
@@ -40,11 +36,13 @@ public class Tag {
         this.name = name;
     }
 
-    public Set<WechatUser> getUsers() {
-        return users;
+    @ManyToMany(mappedBy = "tagList")
+    @JsonIgnore
+    public List<Job> getJobList() {
+        return jobList;
     }
 
-    public void setUsers(Set<WechatUser> users) {
-        this.users = users;
+    public void setJobList(List<Job> jobList) {
+        this.jobList = jobList;
     }
 }

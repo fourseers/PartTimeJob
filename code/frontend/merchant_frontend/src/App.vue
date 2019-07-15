@@ -45,6 +45,8 @@
     import ShowJobs from './views/ShowJobs.vue'
     import ShopDetail from './views/ShopDetail.vue'
     import Logout from './views/Logout.vue'
+
+
     export default {
         name: 'app',
         components: {

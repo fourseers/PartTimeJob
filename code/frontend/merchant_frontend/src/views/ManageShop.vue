@@ -61,7 +61,7 @@
                     {
                         title: '营业领域',
                         key: 'industry',
-                        render: (h, params) => { 
+                        render: (h, params) => {
                             return h('div', this.industry[params.row.industry-1].industry_name)
                         }
 

@@ -14,11 +14,7 @@ public class ResponseBuilder {
             response.put("data", data);
         }
 
-        if (status.value() == 400) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(response, status);
     }
 
     public static ResponseEntity<JSONObject> build(int status, JSONObject data, String message) {
@@ -34,5 +30,12 @@ public class ResponseBuilder {
 
     public static ResponseEntity<JSONObject> build(HttpStatus status) {
         return build(status, null, status.getReasonPhrase());
+    }
+
+    public static <T> ResponseEntity<Response<T>> build(HttpStatus status, T data, String message) {
+
+        Response<T> response = new Response<>(data, status.value(), message);
+
+        return new ResponseEntity<>(response, status);
     }
 }

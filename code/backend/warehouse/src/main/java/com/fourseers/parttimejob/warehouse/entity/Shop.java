@@ -14,7 +14,7 @@ public class Shop {
     private Float longitude;
     private Float latitude;
     private String brand;
-    private String industry;
+    private Industry industry;
     private String introduction;
     private Company company;
 
@@ -90,12 +90,12 @@ public class Shop {
         this.brand = brand;
     }
 
-    @Size(max = 20)
-    public String getIndustry() {
+    @ManyToOne
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 

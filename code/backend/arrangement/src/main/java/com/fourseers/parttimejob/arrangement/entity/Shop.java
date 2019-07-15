@@ -1,10 +1,7 @@
 package com.fourseers.parttimejob.arrangement.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 public class Shop {
@@ -17,10 +14,9 @@ public class Shop {
     private Float longitude;
     private Float latitude;
     private String brand;
-    private String industry;
+    private Industry industry;
     private String introduction;
     private Company company;
-    private List<Job> jobList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,12 +90,12 @@ public class Shop {
         this.brand = brand;
     }
 
-    @Size(max = 20)
-    public String getIndustry() {
+    @ManyToOne
+    public Industry getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Industry industry) {
         this.industry = industry;
     }
 
@@ -113,22 +109,11 @@ public class Shop {
     }
 
     @ManyToOne
-    @JsonIgnore
     public Company getCompany() {
         return company;
     }
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    @OneToMany(mappedBy = "shop")
-    @JsonIgnore
-    public List<Job> getJobList() {
-        return jobList;
-    }
-
-    public void setJobList(List<Job> jobList) {
-        this.jobList = jobList;
     }
 }

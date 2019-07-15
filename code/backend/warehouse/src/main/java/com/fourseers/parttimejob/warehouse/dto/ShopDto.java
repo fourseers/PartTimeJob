@@ -10,7 +10,7 @@ public class ShopDto {
     private Float longitude;
     private Float latitude;
     private String brand;
-    private String industry;
+    private Integer industry;
     private String introduction;
 
     public Integer getShopId() {
@@ -77,11 +77,11 @@ public class ShopDto {
         this.brand = brand;
     }
 
-    public String getIndustry() {
+    public Integer getIndustry() {
         return industry;
     }
 
-    public void setIndustry(String industry) {
+    public void setIndustry(Integer industry) {
         this.industry = industry;
     }
 

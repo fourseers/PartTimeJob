@@ -97,7 +97,7 @@ Page({
   //跳转到schedule页面
   handleSchedule() {
     wx.navigateTo({
-      url: "/pages/schedule/schedule",
+      url: "pages/timeline/timeline",
     })
   },
 

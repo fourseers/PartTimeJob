@@ -10,8 +10,8 @@ Page({
   data: {
     longitude: 0.0,
     latitude: 0.0,
-    desLongitude: 0.0,
-    desLatitude: 0.0,
+    des_longitude: 0.0,
+    des_latitude: 0.0,
     markers: [],
     circles: []
   },
@@ -23,8 +23,8 @@ Page({
         this.setData({
           longitude: res.longitude,
           latitude: res.latitude,
-          desLongitude: res.longitude + 0.005,
-          desLatitude: res.latitude + 0.005,
+          des_longitude: res.longitude + 0.005,
+          des_latitude: res.latitude + 0.005,
           markers: [{
             id: 0,
             latitude: res.latitude,
@@ -50,8 +50,8 @@ Page({
 
   handleTransport(e) {
     this.setData({
-      longitude: this.data.desLongitude,
-      latitude: this.data.desLatitude
+      longitude: this.data.des_longitude,
+      latitude: this.data.des_latitude
     })
   },
 

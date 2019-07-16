@@ -15,7 +15,7 @@ Page({
     name_error: false,
     identity: "310110123456781000",
     identity_error: false,
-    phoneNumber: "13812345678",
+    phone_number: "13812345678",
     phone_error: false,
     phone_modified: false,
     country: "China",
@@ -26,11 +26,11 @@ Page({
     city_modified: false,
     education: "primary school",
     education_modified: false,
-    educationList: [],
+    education_list: [],
     isLoading: false,
     info_saved: null,
     tags: [],
-    chosenTags: [],
+    chosen_tags: [],
     tags_modified: false
   },
 
@@ -47,7 +47,7 @@ Page({
         }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
-          educationList: res.data.education,
+          education_list: res.data.education,
           tags: tags,
         })
       }
@@ -77,12 +77,12 @@ Page({
           name: info.name,
           gender: info.gender,
           identity: info.identity,
-          phoneNumber: info.phone,
+          phone_number: info.phone,
           country: info.country,
           city: info.city,
           education: info.education,
           info_saved: info,
-          chosenTags: info.tags,
+          chosen_tags: info.tags,
           tags: toChosen,
         })
       }
@@ -133,7 +133,7 @@ Page({
     }
   },
 
-  //每次更新phoneNumber的input组件后都重新获取phoneNumber
+  //每次更新phone_number的input组件后都重新获取phone_number
   getPhoneNumber(e) {
     var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
     if (reg.test(e.detail.detail.value) === false) {
@@ -143,7 +143,7 @@ Page({
     }
     else {
       this.setData({
-        phoneNumber: e.detail.detail.value,
+        phone_number: e.detail.detail.value,
         phone_error: false
       })
     }
@@ -221,10 +221,10 @@ Page({
   //每次更新education的input组件后都重新获取education
   getEducation(e) {
     this.setData({
-      education: this.data.educationList[e.detail.value]
+      education: this.data.education_list[e.detail.value]
     })
     //判断是否有修改，如果没有就不用post了
-    if (this.data.educationList[e.detail.value] !== this.data.info_saved.education){
+    if (this.data.education_list[e.detail.value] !== this.data.info_saved.education){
       this.setData({
         education_modified: true
       })
@@ -238,7 +238,7 @@ Page({
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
   chooseTags(e) {
-    var newChosen = this.data.chosenTags;
+    var newChosen = this.data.chosen_tags;
     var hasSame = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen) {
@@ -251,7 +251,7 @@ Page({
       toChosen[e.detail.name].isChosen = true;
       newChosen.push(this.data.tags[e.detail.name]);
       this.setData({
-        chosenTags: newChosen,
+        chosen_tags: newChosen,
         tags: toChosen,
         tags_modified: true,
       })
@@ -263,7 +263,7 @@ Page({
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
   deleteTags(e) {
-    var newChosen = this.data.chosenTags;
+    var newChosen = this.data.chosen_tags;
     var toChosen = this.data.tags;
     var switchId = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
@@ -277,7 +277,7 @@ Page({
     }
     toChosen[index].isChosen = false;
     this.setData({
-      chosenTags: newChosen,
+      chosen_tags: newChosen,
       tags: toChosen,
       tags_modified: true
     })
@@ -296,7 +296,7 @@ Page({
     var postData = {};
     var isModified = false;
     if (this.data.phone_modified) {
-      postData.phone = this.data.phoneNumber;
+      postData.phone = this.data.phone_number;
       isModified = true;
     }
     if (this.data.country_modified) {
@@ -313,8 +313,8 @@ Page({
     }
     if (this.data.tags_modified) {
       var tags = [];
-      for (var i in this.data.chosenTags) {
-        tags.push(this.data.chosenTags[i].id);
+      for (var i in this.data.chosen_tags) {
+        tags.push(this.data.chosen_tags[i].id);
       }
       postData.tags = tags;
       isModified = true;

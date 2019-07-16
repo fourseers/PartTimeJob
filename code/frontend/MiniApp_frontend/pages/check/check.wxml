@@ -1,6 +1,6 @@
 <!--pages/check/check.wxml-->
 <calendar
-  calendarConfig="{{calendarConfig}}"
+  calendarConfig="{{calendar_config}}"
   bind:afterTapDay="afterTapDay"
   bind:whenChangeMonth="whenChangeMonth"
   bind:onTapDay="onTapDay"

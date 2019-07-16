@@ -7,14 +7,14 @@ const { $Message } = require('../../dist/base/index');
 Page({
 
   /**
-   * isRegistered用于判断用户是否注册；如果没有注册，将显示“注册”button
+   * is_registered用于判断用户是否注册；如果没有注册，将显示“注册”button
    * userInfo存储用户信息，从globalData复制
    * hasUserInfo判断用户是否登录；如果没有登陆，就显示“获取用户头像”button
    * canIUse调用接口，判断设备是否支持登录
    * cells存储在“我”页面中所有可跳转到的页面信息
    */
   data: {
-    isRegistered: false,
+    is_registered: false,
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse("button.open-type.getUserInfo"),
@@ -39,9 +39,9 @@ Page({
 
   // 首次加载uesr页面的时候向用户显示登陆成功message
   onLoad() {
-    if (app.globalData.isRegistered) {
+    if (app.globalData.is_registered) {
       this.setData({
-        isRegistered: app.globalData.isRegistered
+        is_registered: app.globalData.is_registered
       });
       $Message({
         content: '登陆成功',
@@ -68,9 +68,9 @@ Page({
       this.handleModifySuccess();
     }
     //从globalData获取是否已注册的信息，从而决定要不要显示注册button
-    if(app.globalData.isRegistered){
+    if(app.globalData.is_registered){
       this.setData({
-        isRegistered: app.globalData.isRegistered
+        is_registered: app.globalData.is_registered
       });
     }
     //得到用户信息

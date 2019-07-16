@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    calendarConfig: {
+    calendar_config: {
       disablePastDay: true,
       defaultDay: '2019-7-15',
     },

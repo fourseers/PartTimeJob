@@ -14,12 +14,12 @@ Page({
 
   /*
     tags是所有职业倾向的数组，可以通过后端获得
-    chosenTags是用户选择的所有职业倾向
+    chosen_tags是用户选择的所有职业倾向
     name是用户姓名
     identity是用户身份证号
-    phoneNumber是用户手机号码
+    phone_number是用户手机号码
     ()_error用于显示用户是否输入异常值
-    educationList是所有备选学历
+    education_list是所有备选学历
     education是用于已选学历
     isLoading用于决定用户请求是否正在发送，如正在发送就在按钮处显示loading动画
   */
@@ -46,13 +46,13 @@ Page({
         isChosen: false
       }
     ],
-    chosenTags: [],
-    educationList: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
+    chosen_tags: [],
+    education_list: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
     name: '',
     name_error: false,
     identity: '',
     identity_error: false,
-    phoneNumber: '',
+    phone_number: '',
     phone_error: false,
     education: '',
     isLoading: false,
@@ -60,7 +60,7 @@ Page({
 
   /* 
    * onshow触发的时候向后台获取注册元数据
-   * 元数据包括educationList和tags
+   * 元数据包括education_list和tags
    */
   onShow(){
     var req = new request();
@@ -73,7 +73,7 @@ Page({
         }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
-          educationList: res.data.education,
+          education_list: res.data.education,
           tags: tags,
         })
       }
@@ -88,20 +88,20 @@ Page({
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
   chooseTags(e) {
-    var newChosen = this.data.chosenTags;
-    var hasSame = false;
+    var newChosen = this.data.chosen_tags;
+    var has_same = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen) {
       if (newChosen[index].id === e.detail.name) {
-        hasSame = true;
+        has_same = true;
       }
     }
-    if (hasSame === false) {
+    if (has_same === false) {
       var toChosen = this.data.tags;
       toChosen[e.detail.name].isChosen = true;
       newChosen.push(this.data.tags[e.detail.name]);
       this.setData({
-        chosenTags: newChosen,
+        chosen_tags: newChosen,
         tags: toChosen
       })
     }
@@ -112,7 +112,7 @@ Page({
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
   deleteTags(e) {
-    var newChosen = this.data.chosenTags;
+    var newChosen = this.data.chosen_tags;
     var toChosen = this.data.tags;
     var switchId = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
@@ -126,7 +126,7 @@ Page({
     }
     toChosen[index].isChosen = false;
     this.setData({
-      chosenTags: newChosen,
+      chosen_tags: newChosen,
       tags: toChosen
     })
   },
@@ -163,7 +163,7 @@ Page({
     }
   },
 
-  //每次更新phoneNumber的input组件后都重新获取phoneNumber
+  //每次更新phone_number的input组件后都重新获取phone_number
   getPhoneNumber(e){
     var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
     if(reg.test(e.detail.detail.value) === false){
@@ -173,7 +173,7 @@ Page({
     }
     else {
       this.setData({
-        phoneNumber: e.detail.detail.value,
+        phone_number: e.detail.detail.value,
         phone_error: false
       })
     }
@@ -182,7 +182,7 @@ Page({
   //每次更新education的input组件后都重新获取education
   getEducation(e){
     this.setData({
-      education: this.data.educationList[e.detail.value]
+      education: this.data.education_list[e.detail.value]
     })
   },
 
@@ -210,7 +210,7 @@ Page({
         type: "error"
       });
     }
-    else if (this.data.phone_error || this.data.phoneNumber === ""){
+    else if (this.data.phone_error || this.data.phone_number === ""){
       $Toast({
         content: "请输入正确的手机号",
         type: "error"
@@ -230,14 +230,14 @@ Page({
           })
           var req = new request();
           var tagIDs = [];
-          for (var i in this.data.chosenTags) {
-            tagIDs.push(this.data.chosenTags[i].id);
+          for (var i in this.data.chosen_tags) {
+            tagIDs.push(this.data.chosen_tags[i].id);
           }
           var postData = {
             "name": this.data.name,
             "gender": app.globalData.userInfo.gender,
             "identity": this.data.identity,
-            "phone": this.data.phoneNumber,
+            "phone": this.data.phone_number,
             "country": app.globalData.userInfo.country,
             "city": app.globalData.userInfo.city,
             "education": this.data.education,
@@ -246,14 +246,14 @@ Page({
           };
           req.postRequest(host + register, JSON.stringify(postData)).then(res => {
             if (res.statusCode === 400) {
-              app.globalData.isRegistered = false;
+              app.globalData.is_registered = false;
               $Toast({
                 content: "注册失败",
                 type: "error"
               });
             }
             else if (res.statusCode === 200) {
-              app.globalData.isRegistered = true;
+              app.globalData.is_registered = true;
               app.globalData.showSendMessage = true;
               app.globalData.access_token = res.data.data.access_token;
               app.globalData.expires_in = res.data.data.expires_in;
@@ -263,7 +263,7 @@ Page({
               })
             }
             else {
-              app.globalData.isRegistered = false;
+              app.globalData.is_registered = false;
             }
           }).catch(err => {
             console.log(err)

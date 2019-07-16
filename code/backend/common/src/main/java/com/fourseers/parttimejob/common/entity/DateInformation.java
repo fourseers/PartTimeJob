@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -13,10 +14,12 @@ public class DateInformation {
     private Long id;
 
     @NotNull
-    private Timestamp checkinTime;
+    @Basic
+    private Time checkinTime;
 
     @NotNull
-    private Timestamp checkoutTime;
+    @Basic
+    private Time checkoutTime;
 
     @NotNull
     private Date workDate;
@@ -32,19 +35,19 @@ public class DateInformation {
         this.id = id;
     }
 
-    public Timestamp getCheckinTime() {
+    public Time getCheckinTime() {
         return checkinTime;
     }
 
-    public void setCheckinTime(Timestamp checkinTime) {
+    public void setCheckinTime(Time checkinTime) {
         this.checkinTime = checkinTime;
     }
 
-    public Timestamp getCheckoutTime() {
+    public Time getCheckoutTime() {
         return checkoutTime;
     }
 
-    public void setCheckoutTime(Timestamp checkoutTime) {
+    public void setCheckoutTime(Time checkoutTime) {
         this.checkoutTime = checkoutTime;
     }
 

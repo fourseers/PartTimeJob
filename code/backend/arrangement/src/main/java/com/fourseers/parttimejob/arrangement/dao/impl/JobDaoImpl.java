@@ -40,8 +40,7 @@ public class JobDaoImpl implements JobDao {
 
     @Override
     public Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(
-                pageCount, pageSize, Sort.by("dis").ascending());
+        PageRequest pageRequest = PageRequest.of(pageCount, pageSize);
         return jobRepository.findByGeoLocation(longitude, latitude, pageRequest);
     }
 }

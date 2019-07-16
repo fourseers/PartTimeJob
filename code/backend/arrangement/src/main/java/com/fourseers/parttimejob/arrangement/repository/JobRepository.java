@@ -18,8 +18,9 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     List<Job> findByShop(Shop shop);
 
-    @Query(value = "SELECT j, abs(s.longitude - ?1) + abs(s.latitude - ?2) as dis " +
-            "FROM Job j INNER JOIN FETCH j.shop as s",
-    countQuery = "FROM Job j")
+    @Query(nativeQuery = true,
+            value = "SELECT *, abs(shop.longitude - ?1) + abs(shop.latitude - ?2) as dis " +
+            "FROM job INNER JOIN shop on job.shop_shop_id = shop.shop_id ORDER BY dis ASC",
+    countQuery = "SELECT COUNT(*) FROM job INNER JOIN shop ON job.shop_shop_id = shop.shop_id")
     Page<Job> findByGeoLocation(float longitude, float latitude, PageRequest pageRequest);
 }

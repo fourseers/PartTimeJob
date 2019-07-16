@@ -18,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -141,7 +143,8 @@ public class ShopControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
 
-        List<Shop> shops = shopRepository.findAllByUsername(username);
+        Pageable pageable = PageRequest.of(0, 10000);
+        List<Shop> shops = shopRepository.findPageByUsername(username, pageable).getContent();
 
         for (Shop shop : shops) {
             assertNotNull(shop.getCompany());
@@ -274,8 +277,7 @@ public class ShopControllerTest {
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertNotNull(response.getJSONObject("data"));
-        assertNotNull(response.getJSONObject("data").getJSONObject("shop"));
-        assertEquals("Apple iamp", response.getJSONObject("data").getJSONObject("shop").getString("shop_name"));
+        assertEquals("Apple iamp", response.getJSONObject("data").getString("shop_name"));
         assertEquals("success", response.getString("message"));
     }
 
@@ -312,37 +314,116 @@ public class ShopControllerTest {
     }
 
     @Test
-    public void getAllShopsSuccess() throws Exception {
+    public void getShopsSuccess() throws Exception {
 
         String username = "Tim Cook";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop")
+        MvcResult result = mockMvc.perform(get("/merchant/shops")
                 .header("x-internal-token", username)
+                .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertNotNull(response.getJSONObject("data"));
-        assertNotNull(response.getJSONObject("data").getJSONArray("shops"));
-        assertEquals(1, response.getJSONObject("data").getJSONArray("shops").size());
-        assertEquals(1, response.getJSONObject("data").getJSONArray("shops").getJSONObject(0).getIntValue("shop_id"));
+        assertEquals(1, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals(1, response.getJSONObject("data").getJSONArray("content").getJSONObject(0).getIntValue("shop_id"));
         assertEquals("success", response.getString("message"));
     }
 
     @Test
-    public void getAllShopsNoCompany() throws Exception {
+    public void getShopsLastPage() throws Exception {
+        String bossname = "Bill Gates";
+        MerchantUser boss = new MerchantUser();
+        boss.setUsername(bossname);
+        boss.setPassword("some password");
+        merchantUserService.save(boss);
+
+        Company company = new Company();
+        company.setCompanyName("MS");
+        companyService.save(company, boss.getUsername());
+        boss.setCompany(company);
+        merchantUserService.save(boss);
+
+        for (int i = 0; i < 95; i++) {
+            ShopDto shopDto = new ShopDto();
+            shopDto.setShopName("MS " + i);
+            shopDto.setProvince("Shanghai");
+            shopDto.setCity("Shanghai");
+            shopDto.setAddress("Somewhere in Shanghai");
+            shopDto.setLongitude(new Integer(120).floatValue());
+            shopDto.setLatitude(new Integer(30).floatValue());
+            shopDto.setBrand("MS");
+            shopDto.setIndustry(1);
+            shopDto.setIntroduction("Make MS great again");
+            shopService.save(shopDto, boss.getUsername());
+        }
+
+        MvcResult result = mockMvc.perform(get("/merchant/shops")
+                .header("x-internal-token", bossname)
+                .param("page_count", "9")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONObject("data"));
+        assertEquals(5, response.getJSONObject("data").getJSONArray("content").size());
+        for (int i = 0; i < 5; i++) {
+            assertEquals("MS " + Integer.toString(i + 90), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getString("shop_name"));
+        }
+        assertEquals("success", response.getString("message"));
+
+    }
+
+
+    @Test
+    public void getShopsNoCompany() throws Exception {
 
         String username = "poor user";
 
-        MvcResult result = mockMvc.perform(get("/merchant/shop")
+        MvcResult result = mockMvc.perform(get("/merchant/shops")
                 .header("x-internal-token", username)
+                .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("no shops", response.getString("message"));
+    }
+
+    @Test
+    public void getShopsOffsetOverflow() throws Exception {
+
+        String username = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(get("/merchant/shops")
+                .header("x-internal-token", username)
+                .param("page_count", "666")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("no shops", response.getString("message"));
+    }
+
+    @Test
+    public void getShopsOffsetNegative() throws Exception {
+
+        String username = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(get("/merchant/shops")
+                .header("x-internal-token", username)
+                .param("page_count", "-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
     }
 
     @Test
@@ -372,7 +453,8 @@ public class ShopControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
 
-        List<Shop> shops = shopRepository.findAllByUsername(username);
+        Pageable pageable = PageRequest.of(0, 10000);
+        List<Shop> shops = shopRepository.findPageByUsername(username, pageable).getContent();
 
         for (Shop shop : shops) {
             if (shop.getShopId() == 1) {

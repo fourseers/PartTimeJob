@@ -53,32 +53,28 @@
                         title: '招聘开始时间',
                         key: 'begin_apply_date',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.begin_apply_date).toJSON();
-                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
+                            return  h('div',new Date(params.row.begin_apply_date).toLocaleString())
                         }
                     },
                     {
                         title: '招聘结束时间',
                         key: 'end_apply_date',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.end_apply_date).toJSON();
-                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
+                            return  h('div',new Date(params.row.end_apply_date).toLocaleString())
                         }
                     },
                     {
                         title: '工作开始时间',
                         key: 'begin_date',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.begin_date).toJSON();
-                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
+                            return  h('div',new Date(params.row.begin_date).toLocaleString())
                         }
                     },
                     {
                         title: '工作结束时间',
                         key: 'end_date',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.end_date).toJSON();
-                            return  h('div',new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0,16))
+                            return  h('div',new Date(params.row.end_date).toLocaleString())
                         }
                     },
                     {

@@ -8,9 +8,9 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>arragement</artifactId>
+    <artifactId>arrangement</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>arragement</name>
+    <name>arrangement</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <docker.image.prefix>parttimejob</docker.image.prefix>
@@ -49,6 +49,14 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
         <dependency>

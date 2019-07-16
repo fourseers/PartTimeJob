@@ -174,7 +174,16 @@
 
         name: "PostJob",
         data() {
+            const NameValidator = (rule, value, callback) =>
+            {
+                var regex =  /^[A-Za-z0-9\u4e00-\u9fa5]+$/
+                if (regex.test(value) != true) {
+                    callback(new Error('岗位名称不能为汉字英文和数字以外的字符'));
+                }else {
+                    callback();
+                }
 
+            }
             const validateApplyBeforeEnd = (rule, value, callback) => {
                 if (this.formValidate.end_apply_date === "")
                     callback();
@@ -257,7 +266,10 @@
                 count: ["标签1", "标签2"],
                 ruleValidate: {
                     job_name: [
-                        {required: true, message: '请填写岗位名称', trigger: 'blur'}
+                        {required: true, message: '请填写岗位名称', trigger: 'blur'},
+                        {
+                            validator: NameValidator,trigger:"change"
+                        }
                     ],
                     shop: [
                         {required: true, message: '请选择店铺', trigger: 'change'}

@@ -1,5 +1,8 @@
 <template>
+
+    <Content class="content">
     <Button class="ivu-btn" @click="logout()" >登出</Button>
+    </Content>
 </template>
 
 <script>
@@ -22,4 +25,8 @@
 
 <style scoped>
 
+    .content{
+        padding:100px;
+        background-color: #fff;
+    }
 </style>

@@ -88,6 +88,16 @@
     export default {
         name: "AddShop",
         data () {
+            const NameValidator = (rule, value, callback) =>
+            {
+                var regex =  /^[A-Za-z0-9\u4e00-\u9fa5]+$/
+                if (regex.test(value) != true) {
+                    callback(new Error('店铺名称不能为汉字英文和数字以外的字符'));
+                }else {
+                    callback();
+                }
+
+            };
             return {
                 addressCandidate:[],
                 industry:[],
@@ -104,7 +114,8 @@
                 },
                 ruleValidate: {
                     shop_name: [
-                        { required: true, message: '店铺名字不能为空', trigger: 'blur' }
+                        { required: true, message: '店铺名字不能为空', trigger: 'blur' },
+                        { validator: NameValidator,trigger:"change"}
                     ],
                     province_city: [
 
@@ -352,6 +363,7 @@
 <style scoped>
 
     .content{
+        padding-top:20px;
         padding-left:100px;
         background-color: #fff;
     }

@@ -20,7 +20,7 @@
             </template>
             <MenuItem name="4" to="/infoconfig">
                 <Icon type="ios-paper" />
-                商户信息修改
+                查看商户信息
             </MenuItem>
             <MenuItem name="5" to="/addcompany">
                 <Icon type="ios-paper" />

@@ -1,6 +1,14 @@
 <template>
     <div class="content">
-        <Table border :columns="columns7" :data="bill"></Table>
+        <Table border :columns="columns7" :data="bill">
+            <div slot="header" class="table-height">月末账单</div>
+            <div slot="footer" class="table-height">
+                本月需支付总金额：{{}}
+
+                <Button class="ivu-btn" @click="handleSubmit('formInline')" >确认支付</Button>
+            </div>
+
+        </Table>
 
     </div>
 </template>
@@ -92,6 +100,11 @@
     .selector{
         margin :20px;
         width:200px;
-
+    }
+    .ivu-btn {
+        padding-left:20px;
+        color: #fff;
+        background-color: #82ccd2;
+        border-color: #c8d6e5;
     }
 </style>

@@ -3,7 +3,7 @@
     <Layout >
         <Content class="content">
             <Form class="form" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="名称" prop="name">
+                <FormItem label="名称" prop="company_name">
                     <Input v-model="formValidate.company_name" placeholder="公司名称"></Input>
                 </FormItem>
                 <FormItem>
@@ -18,13 +18,27 @@
     export default {
         name: "AddCompany",
         data () {
+            const NameValidator = (rule, value, callback) =>
+            {
+                var regex =  /^[A-Za-z0-9\u4e00-\u9fa5]+$/
+                if (regex.test(value) != true) {
+                    callback(new Error('公司名字不能为汉字英文和数字以外的字符'));
+                }else {
+                    callback();
+                }
+
+            }
+
+
             return {
                 formValidate: {
                     company_name: ''
                 },
                 ruleValidate: {
                     company_name: [
-                        { required: true, message: '公司名字不能为空', trigger: 'blur' }
+                        { required: true, message: '公司名字不能为空', trigger: 'blur' },
+                        {validator:NameValidator, trigger: 'change'}
+
                     ]
 
                 }
@@ -75,7 +89,15 @@
                     })
                         .catch(error => {
                             //JSON.stringify(error);
-                            this.$Message.error('添加公司失败');
+                            if(error.response.data.message === "user already has a company")
+                            {
+                                this.$Message.error('公司已存在');
+                            }
+                            else
+                            {
+                                this.$Message.error('添加公司失败');
+                            }
+
                             console.log(error)
                         })
             }

@@ -2,15 +2,7 @@
     <Layout >
 
         <Content class="content">
-            <Form class="form" ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="名称" prop="name">
-                    <Input v-model="formValidate.company_name" placeholder="公司名称"></Input>
-                </FormItem>
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-                    <Button @click="handleReset()" style="margin-left: 8px">初始</Button>
-                </FormItem>
-            </Form>
+            <p>公司名称:{{formValidate.company_name }}</p>
         </Content>
     </Layout>
 </template>
@@ -24,12 +16,6 @@
                 formValidate: {
                     company_name: ''
                 },
-                ruleValidate: {
-                    company_name: [
-                        { required: true, message: '公司名字不能为空', trigger: 'blur' }
-                    ]
-
-                }
             }
         },
         created:function()
@@ -53,7 +39,6 @@
                     console.log(response);
                     if (response.data.status === 200) {
                         this.formValidate.company_name = response.data.data.company_name;
-                        this.former_company_name = response.data.data.company_name;
                         console.log("success");
                     }
                 })
@@ -69,18 +54,6 @@
         },
 
         methods: {
-            handleSubmit (name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.ChangeCompany();
-                    } else {
-                        this.$Message.error('Fail!');
-                    }
-                })
-            },
-            handleReset (name) {
-                this.formValidate.company_name = this.former_company_name;
-            },
             ChangeCompany()
             {
                 console.log(this.$token.loadToken().access_token)
@@ -129,9 +102,4 @@
         border-color: #c8d6e5;
     }
 
-    .form
-    {
-        margin-left:200px;
-        width:400px;
-    }
 </style>

@@ -2,6 +2,7 @@
 import request from "../../api/request.js"
 const app = getApp()
 const { $Toast } = require("../../dist/base/index");
+const { $Message } = require('../../dist/base/index');
 
 Page({
 
@@ -36,6 +37,25 @@ Page({
     ]
   },
 
+  // 首次加载uesr页面的时候向用户显示登陆成功message
+  onLoad() {
+    if (app.globalData.isRegistered) {
+      this.setData({
+        isRegistered: app.globalData.isRegistered
+      });
+      $Message({
+        content: '登陆成功',
+        type: 'success'
+      });
+    }
+    else {
+      $Message({
+        content: "您还没有注册",
+        type: "warning",
+      });
+    }
+  },
+
   //生命周期函数
   onShow() {
     //判断是否从注册页面或用户信息修改页面返回。若是，显示相应的toast
@@ -48,9 +68,11 @@ Page({
       this.handleModifySuccess();
     }
     //从globalData获取是否已注册的信息，从而决定要不要显示注册button
-    this.setData({
-      isRegistered: app.globalData.isRegistered
-    })
+    if(app.globalData.isRegistered){
+      this.setData({
+        isRegistered: app.globalData.isRegistered
+      });
+    }
     //得到用户信息
     if (app.globalData.userInfo) {
       this.setData({

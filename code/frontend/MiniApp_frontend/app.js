@@ -22,10 +22,12 @@ App({
         req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
           if (res.statusCode === 400) {
             this.globalData.isRegistered = false;
+            /*
             wx.showToast({
-              title: res.data.message,
+              title: "res.data.message",
               icon: "none"
             })
+            */
           }
           else if (res.statusCode === 200) {
             this.globalData.isRegistered = true;
@@ -41,7 +43,8 @@ App({
           this.globalData.isRegistered = false;
         })
       }
-    })
+    });
+
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -71,7 +74,7 @@ App({
           });
         }
       }
-    })
+    });
 
     // 显示欢迎页面2秒后跳转到"我"页面
     setTimeout(function () {

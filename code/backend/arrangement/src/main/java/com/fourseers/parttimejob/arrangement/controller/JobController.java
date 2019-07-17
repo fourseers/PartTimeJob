@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -83,9 +84,18 @@ public class JobController {
         return ResponseBuilder.build(HttpStatus.OK, null, "success");
     }
 
-    @RequestMapping(value = "/job", method = RequestMethod.GET)
-    public ResponseEntity<Response<Job>> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
-                                             @RequestHeader("x-internal-token") String username) {
+    @ApiOperation(value = "Get one job info")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / job not exist or not belong to"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/job", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<Job>> getJob(@RequestParam(value = "job_id") Integer jobId,
+                                                @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
         try {
             Job job = jobService.findByJobIdAndUsername(jobId, username);
             return ResponseBuilder.build(HttpStatus.OK, job, "success");
@@ -94,11 +104,26 @@ public class JobController {
         }
     }
 
-    @RequestMapping(value = "/jobs", method = RequestMethod.GET)
-    public ResponseEntity<Response<Page<Job>>> getJobs(@RequestParam(value = "shop_id", required = false) Integer shopId,
-                                                       @RequestParam(value = "page_count") Integer pageCount,
-                                                       @RequestHeader("x-internal-token") String username) {
-        JSONObject body = new JSONObject();
+    @ApiOperation(value = "Get one page of job info")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "job not exist / user does not belong to a company / shop not exist or not belong to / user does not belong to a company"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/jobs", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<Page<Job>>> getJobs(
+            @ApiParam(value = "This param is not mandatory. " +
+            "If it is present, server will return jobs from the specified shop, " +
+            "otherwise jobs from all shops belong to the company will be present.")
+            @RequestParam(value = "shop_id", required = false) Integer shopId,
+            @ApiParam(value = "This param tells the server which page to query, " +
+            "starting from 0, with each page having 10 items.")
+            @RequestParam(value = "page_count") Integer pageCount,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
         Page<Job> jobs;
         try {
             if (shopId == null) {

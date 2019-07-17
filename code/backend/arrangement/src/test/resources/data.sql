@@ -21,3 +21,10 @@ insert into job_tag_list (job_list_job_id, tag_list_id) values (1, 1);
 insert into merchant_user (username, password) values ('poor user', 'poor password');
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
 ('somewhere in Shanghai', 'Apple', 'Shanghai', 1, 'Make Apple great again', 30, 120, 'Shanghai', 'Apple iamp III', 1);
+insert into merchant_user (username, password) values ('Bill Gates', 'some password');
+insert into company (company_name, boss_user_id) values ('MS', 3);
+update merchant_user set company_company_id = 3 where username = 'Bill Gates';
+insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
+('somewhere in Shanghai', 'MS', 'Shanghai', 1, 'MS 大法好', 30, 120, 'Shanghai', 'MS-1', 3);
+insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
+('somewhere in Shanghai', 'MS', 'Shanghai', 1, 'MS 大法好', 30, 120, 'Shanghai', 'MS-2', 3);

@@ -288,7 +288,7 @@
                         {required: true, type: 'array', min: 1, message: '请选择岗位要求的性别', trigger: 'change'}
                     ],
                     education: [
-                        {required: true, type: 'array', max: 1, message: '最多选择一个学历', trigger: 'change'}
+                        {required: true, type: 'array', max: 1, message: '最少选择一个学历', trigger: 'change'}
                     ],
                     begin_apply_date: [
                         {required: true, type: 'date', message: '请选择招聘开始时间', trigger: 'change'},
@@ -516,7 +516,7 @@
             },
             endTimeChange: function (e) { //设置工作结束时间
                 this.endtime = e;
-                let endTime = this.endtime ? new Date(this.endtime).valueOf() - 1 * 24 * 60 * 60 * 1000 : '';
+                let endTime = this.endtime ? new Date(this.endtime).valueOf() -  24 * 60 * 60 * 1000 : '';
                 this.startTimeOptions = {
                     disabledDate(date) {
                         return date && date.valueOf() > endTime;
@@ -536,7 +536,7 @@
             },
             endTimeChange2: function (e) { //设置招聘结束时间
                 this.endtime = e;
-                let endTime = this.endtime ? new Date(this.endtime).valueOf() - 1 * 24 * 60 * 60 * 1000 : '';
+                let endTime = this.endtime ? new Date(this.endtime).valueOf() -  24 * 60 * 60 * 1000 : '';
                 this.startTimeOptions2 = {
                     disabledDate(date) {
                         return date && date.valueOf() > endTime;

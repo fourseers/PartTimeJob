@@ -4,6 +4,7 @@
     <Content class="content">
         <Select v-model="formValidate.shop" placeholder="选择店铺"  style="width:200px;  margin:10px">
             <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id"> {{ item.shop_name }}</Option>
+            <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changePage"></Page>
         </Select>
 
         <Table border :columns="columns7" :data="data6"></Table>
@@ -25,6 +26,9 @@
         name: "CheckinStat",
         data () {
             return {
+                total_elements_shop:10,
+                pagenum2:1,
+
                 shops:[],
                 formValidate: {
                     shop:""
@@ -129,26 +133,26 @@
                     },
                     series: [
                         {
-                            name: 'Forest',
+                            name: '迟到率',
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 32, 30]
+                            data: [2, 35, 50]
                         },
                         {
-                            name: 'Steppe',
+                            name: '早退率',
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 32, 30]
+                            data: [2, 32, 31]
                         },
 
                         {
-                            name: 'Desert',
+                            name: '出勤率',
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 32, 30]
+                            data: [2, 92, 70]
                         },
 
                         {
@@ -178,7 +182,10 @@
 
                 //get shops
                 getShops().then(res => {
+                        console.log(res.data.content)
                         this.shops = res.data.content
+                        this.total_elements_shop = res.data.total_elements
+                        //   this.total_pages= res.total_pages
                     },
                     error => {
                         if (error.response) {
@@ -193,9 +200,38 @@
 
                     }
                 )
+
             }
 
         },
+        methods:{
+
+            mockTableData1 (pagenum) {
+                //get shops
+                getShops(pagenum).then(res => {
+                        console.log( res.data)
+                        this.shops  = res.data.content
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+
+                )
+            },changePage (index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index-1);
+            },
+        }
     }
 </script>
 

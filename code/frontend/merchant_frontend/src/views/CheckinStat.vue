@@ -118,9 +118,16 @@
                         }
                     },
                     xAxis:  {
+                        show: true,  // 是否显示
                         type: 'category',
-                        boundaryGap: false,
-                        data: ["员工1","员工2","员工3"]
+                        data: ["员工1","员工2","员工3","员工4"],
+
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLabel: {
+                            interval:0
+                        }
                     },
                     yAxis: {
                         type: 'value',
@@ -137,14 +144,44 @@
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 35, 50]
+                            data: [2, 35, 50,22],
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示
+
+                                        formatter: '{b}\n{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
+
                         },
                         {
                             name: '早退率',
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 32, 31]
+                            data: [2, 32, 31,22],
+
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示,
+
+                                        formatter: '{b}\n{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
                         },
 
                         {
@@ -152,7 +189,22 @@
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 92, 70]
+                            data: [2, 92, 70,22],
+
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示,
+
+                                        formatter: '{b}\n{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
                         },
 
                         {
@@ -160,7 +212,21 @@
                             type: 'bar',
                             barGap: 0,
                             label: this.labelOption,
-                            data: [2, 32, 30]
+                            data: [2, 32, 30,21],
+
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示 ,
+                                        formatter: '{b}\n{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
                         },
                     ]
 

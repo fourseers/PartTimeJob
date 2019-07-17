@@ -1,4 +1,6 @@
 // pages/check_inform/check_inform.js
+const app = getApp();
+
 Page({
 
   /**
@@ -56,7 +58,7 @@ Page({
   },
 
   handleCheck(e) {
-    console.log(e);
+    //console.log(e);
   }
 
 })

@@ -59,6 +59,7 @@ Page({
 
   handleCheck(e) {
     //console.log(e);
+    app.login();
   }
 
 })

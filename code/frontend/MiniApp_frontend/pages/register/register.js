@@ -48,13 +48,19 @@ Page({
     ],
     chosen_tags: [],
     education_list: ["本科以上", "本科毕业", "大专毕业", "高中毕业", "高中以下"],
-    name: '',
+    gender: true,
+    name: "",
     name_error: false,
-    identity: '',
+    identity: "",
     identity_error: false,
-    phone_number: '',
+    phone_number: "",
     phone_error: false,
-    education: '',
+    country: "",
+    country_error: false,
+    city: "",
+    city_error: false,
+    education: "",
+    education_list: [],
     isLoading: false,
   },
 
@@ -63,6 +69,7 @@ Page({
    * 元数据包括education_list和tags
    */
   onShow(){
+    console.log(app.globalData.userInfo);
     var req = new request();
     req.getRequest(host + register_data, null).then(res => {
       if(res.statusCode === 200){
@@ -75,6 +82,9 @@ Page({
         this.setData({
           education_list: res.data.education,
           tags: tags,
+          city: app.globalData.userInfo.city,
+          country: app.globalData.userInfo.country,
+          gender: app.globalData.userInfo.gender
         })
       }
       else if (res.statusCode === 400){
@@ -130,6 +140,13 @@ Page({
       tags: toChosen
     })
   },
+  
+  //用于性别switch的切换
+  changeGender(e) {
+    this.setData({
+      gender: !this.data.gender
+    })
+  },
 
   //每次更新name的input组件后都重新获取name
   getName(e){
@@ -175,6 +192,42 @@ Page({
       this.setData({
         phone_number: e.detail.detail.value,
         phone_error: false
+      })
+    }
+  },
+
+  //每次更新country的input组件后都重新获取country
+  getCountry(e) {
+    // TODO 添加国家的正则表达式 or 使用picker
+    // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    // if (reg.test(e.detail.detail.value) === false) {
+    if (false) {
+      this.setData({
+        country_error: true
+      })
+    }
+    else {
+      this.setData({
+        country: e.detail.detail.value,
+        country_error: false
+      })
+    }
+  },
+
+  //每次更新city的input组件后都重新获取city
+  getCity(e) {
+    // TODO 添加城市的正则表达式 or 使用picker
+    // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    // if (reg.test(e.detail.detail.value) === false) {
+    if (false) {
+      this.setData({
+        city_error: true
+      })
+    }
+    else {
+      this.setData({
+        city: e.detail.detail.value,
+        city_error: false
       })
     }
   },
@@ -235,11 +288,11 @@ Page({
           }
           var postData = {
             "name": this.data.name,
-            "gender": app.globalData.userInfo.gender,
+            "gender": this.data.gender,
             "identity": this.data.identity,
             "phone": this.data.phone_number,
-            "country": app.globalData.userInfo.country,
-            "city": app.globalData.userInfo.city,
+            "country": this.data.country,
+            "city": this.data.city,
             "education": this.data.education,
             "token": res.code,
             "tags": tagIDs

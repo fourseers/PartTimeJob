@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 import token from './token.js'
-export function getShops() {
+export function getShops(pagenum) {
     var prefix = "/warehouse"
 //测试用的url
     return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ export function getShops() {
             },
             method: 'get',
             params:
-                {"page_count": 0},
+                {"page_count": pagenum?pagenum:0},
             url: prefix + "/merchant/shops"
         }).then( ({ status, data }) => {
             if (status === 200) {

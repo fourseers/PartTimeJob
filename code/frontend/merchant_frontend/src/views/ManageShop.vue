@@ -1,14 +1,17 @@
 <template>
     <div class="content">
         <Table border :columns="columns7" :data="shops"></Table>
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import { CodeToText } from 'element-china-area-data'
 
-
     import {getShops} from '../util/getShops.js'
-
     import {getIndustry} from '../util/getIndustry.js'
     export default {
         name: "ManageShop",
@@ -105,7 +108,10 @@
                         }
                     }
                 ],
-                shops:[]
+                shops:this.mockTableData1(0),
+                pagenum:1,
+                total_elements: 10,
+                total_pages:2,
             }
         },
         created: function() {
@@ -116,6 +122,8 @@
                 //get shops
                 getShops().then(res => {
                         this.shops = res.data.content
+                        this.total_elements=res.data.total_elements
+                        this.total_pages= res.total_pages
                     },
                     error => {
                         if (error.response) {
@@ -132,7 +140,7 @@
                 )
                 //get industry
                 getIndustry().then(res => {
-                    console.log(  res.data)
+                        console.log(res.data)
                         this.industry = res.data
                     },
                     error => {
@@ -142,11 +150,30 @@
         },
 
         methods: {
-            show (index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-                })
+            mockTableData1 (pagenum) {
+                //get shops
+                getShops(pagenum).then(res => {
+                    console.log( res.data)
+                        this.shops  = res.data.content
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+
+                )
+            },changePage (index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index-1);
             }
         }
     }

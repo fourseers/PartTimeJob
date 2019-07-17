@@ -3,21 +3,21 @@
         <div class="head">
             <Row >
                 <Col span="4">
-                <Select v-model="shop_chosen" placeholder="显示单个店铺全部岗位">
-                    <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
+                    <Select v-model="shop_chosen" placeholder="显示单个店铺全部岗位">
+                        <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
 
-                    <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changeselectPage"></Page>
-                </Select>
+                        <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changeselectPage"></Page>
+                    </Select>
                 </Col>
 
                 <Col span="4">
-                <Button class="ivu-btn" @click="showAll" >显示全部岗位</Button>
+                    <Button class="ivu-btn" @click="showAll" >显示全部岗位</Button>
                 </Col>
             </Row>
 
         </div>
         <Row>
-        <Table border :columns="columns7" :data="jobs"></Table>
+            <Table border :columns="columns7" :data="jobs"></Table>
         </Row>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
@@ -72,29 +72,39 @@
                         title: '招聘开始时间',
                         key: 'begin_apply_date',
                         render: (h, params) => {
-                            return  h('div',new Date(params.row.begin_apply_date).toLocaleString())
-                        }
+                            return  h('div',[
+                                h('div',new Date(params.row.begin_apply_date).toLocaleDateString()),
+                                h('div',new Date(params.row.begin_apply_date).toTimeString().substr(0,5))
+                            ])}
                     },
                     {
                         title: '招聘结束时间',
                         key: 'end_apply_date',
                         render: (h, params) => {
-                            return  h('div',new Date(params.row.end_apply_date).toLocaleString())
-                        }
+                            return  h('div',[
+                                h('div',new Date(params.row.end_apply_date).toLocaleDateString()),
+                                h('div',new Date(params.row.end_apply_date).toTimeString().substr(0,5))
+                            ])}
                     },
                     {
                         title: '工作开始时间',
                         key: 'begin_date',
                         render: (h, params) => {
-                            return  h('div',new Date(params.row.begin_date).toLocaleString())
-                        }
+                            return  h('div',[
+                                h('div',new Date(params.row.begin_date).toLocaleDateString()),
+                                h('div',new Date(params.row.begin_date).toTimeString().substr(0,5))
+                            ])}
+
                     },
                     {
                         title: '工作结束时间',
                         key: 'end_date',
                         render: (h, params) => {
-                            return  h('div',new Date(params.row.end_date).toLocaleString())
-                        }
+                            return  h('div',[
+                                h('div',new Date(params.row.end_date).toLocaleDateString()),
+                                h('div',new Date(params.row.end_date).toTimeString().substr(0,5))
+                            ])}
+
                     },
                     {
                         title: '岗位介绍',

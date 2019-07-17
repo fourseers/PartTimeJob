@@ -1,8 +1,7 @@
 package com.fourseers.parttimejob.warehouse.service;
 
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ShopService {
 
@@ -16,7 +15,7 @@ public interface ShopService {
 
     ShopDto findByShopIdAndUsername(int shopId, String username);
 
-    List<ShopDto> findAllByUserId(int userId);
+    Page<ShopDto> findPageByUserId(int userId, int pageCount, int pageSize);
 
-    List<ShopDto> findAllByUsername(String username);
+    Page<ShopDto> findPageByUsername(String username, int pageCount, int pageSize);
 }

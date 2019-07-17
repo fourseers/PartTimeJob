@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.warehouse.dao.impl;
 
 import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
+import com.fourseers.parttimejob.warehouse.projection.MerchantUserInfoProjection;
 import com.fourseers.parttimejob.warehouse.repository.MerchantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,9 @@ public class MerchantUserDaoImpl implements MerchantUserDao {
 
     public MerchantUser findByUsername(String username) {
         return merchantUserRepository.findByUsername(username);
+    }
+
+    public MerchantUserInfoProjection findBriefByUserId(Integer userId) {
+        return merchantUserRepository.findBriefByUserId(userId);
     }
 }

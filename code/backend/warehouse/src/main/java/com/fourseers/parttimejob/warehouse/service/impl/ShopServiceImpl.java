@@ -5,6 +5,7 @@ import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -94,5 +96,9 @@ public class ShopServiceImpl implements ShopService {
         Page<Shop> shops = shopDao.findPageByUsername(username, pageCount, pageSize);
 
         return shops.map(shop -> modelMapper.map(shop, ShopDto.class));
+    }
+
+    public List<ShopBriefProjection> findShopBriefByUsername(String username) {
+        return shopDao.findShopBriefByUsername(username);
     }
 }

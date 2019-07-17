@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/merchant")
@@ -102,6 +105,27 @@ public class ShopController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "no shops");
         } else {
             return ResponseBuilder.build(HttpStatus.OK, shops, "success");
+        }
+    }
+
+    @ApiOperation(value = "Get brief info about all shops")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "no shops"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/shops/brief", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<List<ShopBriefProjection>>> getShopsBrief(
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        List<ShopBriefProjection> shopBriefProjectionList = shopService.findShopBriefByUsername(username);
+        if (shopBriefProjectionList.isEmpty()) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "no shops");
+        } else {
+            return ResponseBuilder.build(HttpStatus.OK, shopBriefProjectionList, "success");
         }
     }
 

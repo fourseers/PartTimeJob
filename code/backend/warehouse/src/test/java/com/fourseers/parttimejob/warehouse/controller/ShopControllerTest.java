@@ -427,6 +427,37 @@ public class ShopControllerTest {
     }
 
     @Test
+    public void getShopsBriefSuccess() throws Exception {
+        String username = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(get("/merchant/shops/brief")
+                .header("x-internal-token", username)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONArray("data"));
+        assertEquals(1, response.getJSONArray("data").size());
+        assertEquals(1, response.getJSONArray("data").getJSONObject(0).getIntValue("shop_id"));
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void getShopsBriefNoCompany() throws Exception {
+        String username = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/shops/brief")
+                .header("x-internal-token", username)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("no shops", response.getString("message"));
+    }
+
+    @Test
     public void updateShopSuccess() throws Exception {
         String username = "Tim Cook";
 

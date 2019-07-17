@@ -8,9 +8,9 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>arragement</artifactId>
+    <artifactId>arrangement</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>arragement</name>
+    <name>arrangement</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <docker.image.prefix>parttimejob</docker.image.prefix>

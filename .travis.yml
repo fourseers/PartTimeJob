@@ -19,7 +19,25 @@ services:
   - mongodb
   - redis-server
 
-before_install:
-    - cd code/backend
-    - chmod +x mvnw
-
+jobs:
+  include:
+    - stage: test-common-lib
+      - name: "common libraries"
+        before_install: cd code/backend/common
+    - stage: test-microservices
+      - name: "auth"
+        before_install: cd code/backend/auth
+      - name: "arrangement"
+        before_install: cd code/backend/arrangement
+      - name: "billing"
+        before_install: cd code/backend/billing
+      - name: "warehouse"
+        before_install: cd code/backend/warehouse
+      - name: "gateway"
+        before_install: cd code/backend/gateway
+      
+stages:
+  - test-common-lib
+  - test-microservices
+  # no deployment yet
+    

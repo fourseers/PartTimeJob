@@ -126,7 +126,16 @@
                 }
             }
         },
+        created:function()
+        {
 
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else{
+                //get stat
+            }
+        },
 //挂载前初始化echarts实例
         mounted: function () {
             // 基于准备好的dom，初始化echarts实例

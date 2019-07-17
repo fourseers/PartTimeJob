@@ -1,6 +1,6 @@
 <template>
     <div>
-            <Row >
+        <Row >
             <Select v-model="post_chosen" style="width:200px;  margin:10px">
                 <OptionGroup label="店铺1">
                     <Option v-for="item in postList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -9,26 +9,26 @@
                     <Option v-for="item in postList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </OptionGroup>
             </Select>
-                </Row>
-            <Row>
+        </Row>
+        <Row>
             <div >
                 <Carousel v-model="value1"   class="content">
                     <li style="list-style:none" v-for="item in CVList">
                         <CarouselItem >
                             <ul id="v-for-object" class="cv">
                                 <li v-for="(value, name) in item">
-                                   <p  class="cv-item">
-                                    {{ name }}: {{ value }}
-                                   </p>
+                                    <p  class="cv-item">
+                                        {{ name }}: {{ value }}
+                                    </p>
                                     <br>
                                 </li>
                             </ul>
                             <div class="buttons">
                                 <Col span="12">
-                            <Button type="success"  @click="hire(item)">雇佣</Button>
+                                    <Button type="success"  @click="hire(item)">雇佣</Button>
                                 </Col>
                                 <Col span="12">
-                            <Button class="reject" @click="reject(item)">拒绝</Button>
+                                    <Button class="reject" @click="reject(item)">拒绝</Button>
                                 </Col>
                             </div>
                         </CarouselItem>
@@ -37,7 +37,7 @@
 
                 </Carousel>
             </div>
-            </Row>
+        </Row>
     </div>
 </template>
 
@@ -83,11 +83,11 @@
                     education:'bachlor',
                     gender:'male'
                 }, {
-                        name:'clara',
-                        age:23,
-                        education:'bachlor',
-                        gender:'female'
-                    },
+                    name:'clara',
+                    age:23,
+                    education:'bachlor',
+                    gender:'female'
+                },
                 ],
                 CVList2:[{
                     name:'da vinci',
@@ -114,6 +114,16 @@
                 CVList:[],
                 post_chosen: '',
                 value1: 0
+            }
+        },
+        created:function()
+        {
+
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else{
+                //GET CV
             }
         },
         watch : {
@@ -179,6 +189,6 @@
         padding-top:50px;
     }
     .cv-item{
-       float:left;
+        float:left;
     }
 </style>

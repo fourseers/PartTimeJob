@@ -2,9 +2,9 @@
     <div id="app">
 
         <Layout>
-            <Header style="background-color: #fff" >
+            <Header style="background-color:  #82ccd2"  >
                     <div style="text-align:center">
-                        <h1>灵活用工平台</h1>
+                        <h1  >灵活用工平台</h1>
                     </div>
 
             </Header>
@@ -45,6 +45,8 @@
     import ShowJobs from './views/ShowJobs.vue'
     import ShopDetail from './views/ShopDetail.vue'
     import Logout from './views/Logout.vue'
+
+
     export default {
         name: 'app',
         components: {
@@ -75,7 +77,6 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
-        color: black;
     }
 
     element.style {
@@ -83,5 +84,9 @@
         min-width: 200px;
         max-width: 200px;
         flex: 0 0 200px;
+    }
+    .ivu-layout-header
+    {
+        color:#57606f;
     }
 </style>

@@ -13,6 +13,7 @@
                         <FormItem class="ivu-form-item ivu-form-item-required" label="店铺" prop="shops">
                             <Select v-model="formValidate.shop" placeholder="选择店铺">
                                 <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
+                                <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changePage"></Page>
                             </Select>
                         </FormItem>
 
@@ -241,6 +242,8 @@
                 }, 1000)
             };
             return {
+
+                total_elements_shop:0,
                 startTimeOptions: {}, //开始日期设置
                 endTimeOptions: {}, //结束日期设置
                 startTimeOptions2: {}, //开始日期设置
@@ -347,7 +350,8 @@
                 getShops().then(res => {
                         console.log(res.data.content)
                         this.shops = res.data.content
-
+                        this.total_elements_shop=res.data.total_elements
+                     //   this.total_pages= res.total_pages
                     },
                     error => {
                         if (error.response) {
@@ -367,6 +371,31 @@
 
         },
         methods: {
+            mockTableData1 (pagenum) {
+                //get shops
+                getShops(pagenum).then(res => {
+                        console.log( res.data)
+                        this.shops  = res.data.content
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+
+                )
+            },changePage (index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index-1);
+            },
             get_added_utcstring(date,time)
             {
                 var t=new Date;

@@ -1,13 +1,24 @@
 <template>
     <div class="content">
-        <div class="selector">
-            <Select v-model="shop_chosen" placeholder="显示单个店铺全部岗位">
-                <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
-            </Select>
+        <div class="head">
+            <Row >
+                <Col span="4">
+                <Select v-model="shop_chosen" placeholder="显示单个店铺全部岗位">
+                    <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id">{{ item.shop_name }}</Option>
+
+                    <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changeselectPage"></Page>
+                </Select>
+                </Col>
+
+                <Col span="4">
+                <Button class="ivu-btn" @click="showAll" >显示全部岗位</Button>
+                </Col>
+            </Row>
+
         </div>
-
+        <Row>
         <Table border :columns="columns7" :data="jobs"></Table>
-
+        </Row>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
                 <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
@@ -18,6 +29,7 @@
 
 <script>
 
+    import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {
         name: "ShowJobs",
@@ -127,143 +139,142 @@
                 shop_chosen:"",
                 shops:[],
                 pagenum:1,
+                pagenum2:1,
                 total_elements: 10,
                 total_pages:2,
+                total_elements_shop:0,
             }
         },
         watch:
             {
                 shop_chosen:{
                     handler(val, oldVal){
-                        console.log(val);
-                        console.log(oldVal)
+                        // console.log(val);
+                        // console.log(oldVal)
 
-                        var prefix = "/arrangement"
-                        //测试用的url
-                        this.axios({
-                            headers: {
-                                'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                                'Content-type': 'application/json',
-                                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                                'x-access-token': this.$token.loadToken().access_token,
-                            },
-                            method: 'get',
-                            params:{
-                                shop_id:val
-                            },
-                            url: prefix + "/merchant/job"
-                        }).then(response => {
-                            console.log(response.data.data.jobs);
-                            if (response.data.status === 200) {
-                                this.jobs = response.data.data.jobs
-                            }
-                        })
-                            .catch(error => {
-                                if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                                    this.$Message.error('暂无岗位');
-                                    this.shop_chosen = oldVal;
+                        if (typeof(val) == "undefined"){
+                            //翻页按钮
+                        }
+                        else {
+                            //get jobs by shop
+                            getJobsByShop(0,val).then(res => {
+                                    console.log(res)
+                                    this.jobs = res.data.content
+                                    this.total_elements=res.data.total_elements
+                                    this.total_pages= res.total_pages
+                                },
+                                error => {
+                                    if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                        this.$Message.error('暂无岗位');
+                                        console.log(error)
+                                    }
                                     console.log(error)
                                 }
-                            })
+                            )
+
+
+                        }
                     }
                 }
             },
-        created:function(){
-            {
-                if(!this.$root.logged)
-                {this.$Message.warning('请登录');}
-                else {
-                    var prefix = "/arrangement"
-                    //测试用的url
-                    this.axios({
-                        headers: {
-                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                            'Content-type': 'application/json',
-                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                            'x-access-token': this.$token.loadToken().access_token,
-                        },
-                        method: 'get',
-                        params:
-                            {
-                                "page_count":0
-                            },
-                        url: prefix + "/merchant/jobs"
-                    }).then(response => {
-                        console.log(response.data.data.total_elements);
-                        if (response.data.status === 200) {
-                            this.jobs = response.data.data.content
-                            this.total_elements=response.data.data.total_elements
-                            this.total_pages= response.data.data.total_pages
-                        }
-                    })
-                        .catch(error => {
-                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                                this.$Message.error('暂无岗位');
-                                console.log(error)
-                            }
-                            console.log(error)
-                        })
-                }
-
-            }
-
-            //get shops
-            getShops().then(res => {
-                    console.log(res.data.content)
-                    this.shops = res.data.content
-                },
-                error => {
-                    if (error.response) {
-                        if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                            console.log(error.response);
-                            this.$Message.error('暂无店铺');
-                        } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                            console.log(error.response);
-                            this.$Message.error('参数错误');
-                        }
-                    }
-
-                }
-            )
-
-        },
-        methods: {
-            mockTableData1 (pagenum) {
-                var prefix = "/arrangement"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
+        created:function()
+        {
+            if(!this.$root.logged)
+            {this.$Message.warning('请登录');}
+            else {
+                //get jobs
+                getJobs(0).then(res => {
+                        console.log(res)
+                        this.jobs = res.data.content
+                        this.total_elements=res.data.total_elements
+                        this.total_pages= res.total_pages
                     },
-                    method: 'get',
-                    params:
-                        {
-                            "page_count":pagenum
-                        },
-                    url: prefix + "/merchant/jobs"
-                }).then(response => {
-                    console.log(response.data.data.total_elements);
-                    if (response.data.status === 200) {
-                        this.jobs = response.data.data.content
-                        this.total_elements=response.data.data.total_elements
-                        this.total_pages= response.data.data.total_pages
-                    }
-                })
-                    .catch(error => {
+                    error => {
                         if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
                             this.$Message.error('暂无岗位');
                             console.log(error)
                         }
                         console.log(error)
-                    })
-            
-            },changePage (index) {
-                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+                    }
+                )
 
-                this.mockTableData1(index-1);
+
+                //get shops
+                getShops().then(res => {
+                        console.log(res)
+                        this.shops = res.data.content
+
+                        this.total_elements_shop=res.data.total_elements
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+                ) }
+
+        },
+        methods: {
+            mockTableData1 (pagenum,shop_id) {
+                var prefix = "/arrangement"
+
+                //get jobs
+                getJobs(pagenum).then(res => {
+                        console.log(res)
+                        this.jobs = res.data.content
+                    },
+                    error => {
+                        if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                            this.$Message.error('暂无岗位');
+                            console.log(error)
+                        }
+                        console.log(error)
+                    }
+                )
+            },
+            mockTableData2 (pagenum) {
+                //get shops
+                getShops(pagenum).then(res => {
+                        console.log(res.data)
+                        this.shops = res.data.content
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+                )
+            }
+            ,
+            changePage (index) {
+                if(this.shop_chosen === "")
+                {this.mockTableData1(index-1);}
+                else
+                {this.mockTableData1(index-1,this.shop_chosen);}
+
+            },
+            changeselectPage(index)
+            {
+                this.mockTableData2(index-1);
+            },
+            showAll()
+            {
+                this.shop_chosen = ""
+                this.mockTableData1(0);
             }
         }
     }
@@ -287,9 +298,13 @@
         background-color: #fff;
         box-sizing: border-box;
     }
-    .selector{
+    .head{
         margin :20px;
-        width:200px;
+    }
 
+    .ivu-btn {
+        color: #fff;
+        background-color: #82ccd2;
+        border-color: #c8d6e5;
     }
 </style>

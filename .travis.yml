@@ -23,18 +23,30 @@ jobs:
   include:
     - stage: test-common-lib
       name: "common libraries"
-      before_install: cd code/backend/common
+      before_install:
+        - cd code/backend/common
+        - chmod +x mvnw
     - stage: test-microservices
       name: "auth"
-      before_install: cd code/backend/auth
+      before_install:
+        - cd code/backend/auth
+        - chmod +x mvnw
       name: "arrangement"
-      before_install: cd code/backend/arrangement
+      before_install:
+        - cd code/backend/arrangement
+        - chmod +x mvnw
       name: "billing"
-      before_install: cd code/backend/billing
+      before_install:
+        - cd code/backend/billing
+        - chmod +x mvnw
       name: "warehouse"
-      before_install: cd code/backend/warehouse
+      before_install:
+        - cd code/backend/warehouse
+        - chmod +x mvnw
       name: "gateway"
-      before_install: cd code/backend/gateway
+      before_install:
+        - cd code/backend/gateway
+        - chmod +x mvnw
       
 stages:
   - test-common-lib

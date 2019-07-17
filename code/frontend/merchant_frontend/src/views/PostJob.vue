@@ -347,6 +347,7 @@
                 getShops().then(res => {
                         console.log(res.data.content)
                         this.shops = res.data.content
+
                     },
                     error => {
                         if (error.response) {
@@ -404,6 +405,10 @@
             },
             handleReset(name) {
                 this.$refs[name].resetFields();
+                this.startTimeOptions= {}, //开始日期设置
+                this.endTimeOptions={}, //结束日期设置
+                this.startTimeOptions2={}, //开始日期设置
+                this.endTimeOptions2={}
             },
             handleAdd() {
                 if (this.count.length) {
@@ -514,6 +519,9 @@
                 {
                     this.formValidate.begin_date=""
                     this.formValidate.end_date=""
+
+                    this.startTimeOptions= {}, //开始日期设置
+                    this.endTimeOptions={}, //结束日期设置
                     this.$message.warning("工作开始时间不能比招聘结束时间早")
                 }
 

@@ -8,6 +8,11 @@
 
         <Table border :columns="columns7" :data="jobs"></Table>
 
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -118,9 +123,12 @@
                         }
                     }
                 ],
-                jobs:[],
+                jobs:this.mockTableData1(0),
                 shop_chosen:"",
-                shops:[]
+                shops:[],
+                pagenum:1,
+                total_elements: 10,
+                total_pages:2,
             }
         },
         watch:
@@ -175,11 +183,17 @@
                             'x-access-token': this.$token.loadToken().access_token,
                         },
                         method: 'get',
-                        url: prefix + "/merchant/job"
+                        params:
+                            {
+                                "page_count":0
+                            },
+                        url: prefix + "/merchant/jobs"
                     }).then(response => {
-                        console.log(response.data.data.jobs);
+                        console.log(response.data.data.total_elements);
                         if (response.data.status === 200) {
-                            this.jobs = response.data.data.jobs
+                            this.jobs = response.data.data.content
+                            this.total_elements=response.data.data.total_elements
+                            this.total_pages= response.data.data.total_pages
                         }
                     })
                         .catch(error => {
@@ -212,6 +226,45 @@
                 }
             )
 
+        },
+        methods: {
+            mockTableData1 (pagenum) {
+                var prefix = "/arrangement"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    params:
+                        {
+                            "page_count":pagenum
+                        },
+                    url: prefix + "/merchant/jobs"
+                }).then(response => {
+                    console.log(response.data.data.total_elements);
+                    if (response.data.status === 200) {
+                        this.jobs = response.data.data.content
+                        this.total_elements=response.data.data.total_elements
+                        this.total_pages= response.data.data.total_pages
+                    }
+                })
+                    .catch(error => {
+                        if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                            this.$Message.error('暂无岗位');
+                            console.log(error)
+                        }
+                        console.log(error)
+                    })
+            
+            },changePage (index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index-1);
+            }
         }
     }
 </script>

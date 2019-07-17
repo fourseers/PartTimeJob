@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.warehouse.dao.impl;
 
 import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
+import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,5 +38,9 @@ public class ShopDaoImpl implements ShopDao {
     public Page<Shop> findPageByUsername(String username, int pageCount, int pageSize) {
         Pageable pageable = PageRequest.of(pageCount, pageSize);
         return shopRepository.findPageByUsername(username, pageable);
+    }
+
+    public List<ShopBriefProjection> findShopBriefByUsername(String username) {
+        return shopRepository.findShopBriefByUsername(username);
     }
 }

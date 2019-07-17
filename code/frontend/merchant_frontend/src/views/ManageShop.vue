@@ -5,6 +5,11 @@
 </template>
 <script>
     import { CodeToText } from 'element-china-area-data'
+
+
+    import {getShops} from '../util/getShops.js'
+
+    import {getIndustry} from '../util/getIndustry.js'
     export default {
         name: "ManageShop",
         data () {
@@ -105,62 +110,37 @@
         },
         created: function() {
 
-            if(!this.$root.logged) {
+            if (!this.$root.logged) {
                 this.$Message.warning('请登录');
-            }
-            else {
-                var prefix = "/warehouse"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
+            } else {
+                //get shops
+                getShops().then(res => {
+                        this.shops = res.data.content
                     },
-                    method: 'get',
-                    url: prefix + "/merchant/shop"
-                }).then(response => {
-                    console.log(response);
-                    if (response.data.status === 200) {
-
-                        this.shops = response.data.data.shops;
-                        console.log("success");
-                    }
-                })
-                    .catch(error => {
+                    error => {
                         if (error.response) {
-                            if (error.response.data.status === 400) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
                                 console.log(error.response);
                                 this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
                             }
                         }
-                    })
 
-
-                //get industry
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'get',
-                    url: prefix +"/merchant/industry",
-                }).then(response => {
-                    this.industry = response.data.data;
-                    console.log( this.industry);
-                    if(response.status ===  200)
-                    {
-                        console.log("success");
                     }
-                })
-                    .catch(error => {
+                )
+                //get industry
+                getIndustry().then(res => {
+                    console.log(  res.data)
+                        this.industry = res.data
+                    },
+                    error => {
                         console.log(error)
                     })
             }
         },
+
         methods: {
             show (index) {
                 this.$Modal.info({

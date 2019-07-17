@@ -77,6 +77,7 @@
 </template>
 <script>
 
+    import {getIndustry} from '../util/getIndustry.js'
     import AMap from 'vue-amap';
 
     var _ = require('lodash');
@@ -191,28 +192,13 @@
             {this.$Message.warning('请登录');}
             else {
                 //get industry
-                var prefix="/warehouse"
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
+                getIndustry().then(res => {
+                        console.log(  res.data)
+                        this.industry = res.data
                     },
-                    method: 'get',
-                    url: prefix +"/merchant/industry",
-                }).then(response => {
-                    this.industry = response.data.data;
-                    console.log( this.industry);
-                    if(response.status ===  200)
-                    {
-                        console.log("success");
-                    }
-                })
-                    .catch(error => {
+                    error => {
                         console.log(error)
                     })
-
             }
             this.debouncedGetLocation = _.debounce(this.findAddress, 500)
         },

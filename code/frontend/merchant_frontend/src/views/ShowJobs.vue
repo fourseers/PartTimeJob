@@ -12,6 +12,8 @@
 </template>
 
 <script>
+
+    import {getShops} from '../util/getShops.js'
     export default {
         name: "ShowJobs",
         data () {
@@ -117,7 +119,8 @@
                     }
                 ],
                 jobs:[],
-                shop_chosen:""
+                shop_chosen:"",
+                shops:[]
             }
         },
         watch:
@@ -148,8 +151,11 @@
                             }
                         })
                             .catch(error => {
-                                JSON.stringify(error);
-                                console.log(error)
+                                if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                    this.$Message.error('暂无岗位');
+                                    this.shop_chosen = oldVal;
+                                    console.log(error)
+                                }
                             })
                     }
                 }
@@ -177,42 +183,34 @@
                         }
                     })
                         .catch(error => {
-                            JSON.stringify(error);
+                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                this.$Message.error('暂无岗位');
+                                console.log(error)
+                            }
                             console.log(error)
                         })
                 }
 
             }
-            {
-                var prefix2 = "/warehouse"
-                //get shops
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'get',
-                    url: prefix2 + "/merchant/shop"
-                }).then(response => {
-                    console.log(response);
-                    console.log(response.data.data.shops);
-                    if(response.data.status ===  200){
 
-                        this.shops = response.data.data.shops;
-                        console.log(   this.shops );
-                    }
-                })
-                    .catch(error => {
-                        if(error.response){
-                            if(error.response.data.status === 400)
-                            {
-                                console.log(error.response);
-                            }
+            //get shops
+            getShops().then(res => {
+                    console.log(res.data.content)
+                    this.shops = res.data.content
+                },
+                error => {
+                    if (error.response) {
+                        if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                            console.log(error.response);
+                            this.$Message.error('暂无店铺');
+                        } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                            console.log(error.response);
+                            this.$Message.error('参数错误');
                         }
-                    })
-            }
+                    }
+
+                }
+            )
 
         }
     }

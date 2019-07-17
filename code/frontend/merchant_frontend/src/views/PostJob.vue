@@ -170,6 +170,7 @@
 </template>
 <script>
 
+    import {getShops} from '../util/getShops.js'
     export default {
 
         name: "PostJob",
@@ -341,34 +342,26 @@
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
             } else {
-                var prefix = "/warehouse"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'get',
-                    url: prefix + "/merchant/shop"
-                }).then(response => {
-                    console.log(response.data.data.shops);
-                    if (response.data.status === 200) {
 
-                        this.shops = response.data.data.shops;
-                        console.log(this.shops);
-                    }
-                })
-                    .catch(error => {
+                //get shops
+                getShops().then(res => {
+                        console.log(res.data.content)
+                        this.shops = res.data.content
+                    },
+                    error => {
                         if (error.response) {
-                            if (error.response.data.status === 400) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
                                 console.log(error.response);
-                            } else if (error.response.data.status === 401 && error.response.data.message === "Forbidden, invalid access token.") {
-                                this.$Message.warning('请登录');
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
                             }
                         }
-                    })
+
+                    }
+                )
+
             }
 
         },

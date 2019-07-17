@@ -19,6 +19,11 @@
                             ]);
                         }
                     },
+
+                    {
+                        title: '店铺名',
+                        key: 'shop_name'
+                    },
                     {
                         title: '工作开始时间',
                         key: 'begin_time'
@@ -106,6 +111,7 @@
                 data6: [
                     {
                         name: 'John Brown',
+                        shop_name:"shop1",
                         begin_time:"2020-2-2",
                         checkin_time:"2026-2-2",
                         end_time:"2020-2-3",
@@ -113,6 +119,7 @@
                     },
                     {
                         name: 'John Brown',
+                        shop_name:"shop2",
                         begin_time:"2020-2-2",
                         checkin_time:"2026-2-2",
                         end_time:"2020-2-3",

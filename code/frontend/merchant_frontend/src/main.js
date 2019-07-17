@@ -6,9 +6,9 @@ import routes from './router/path.js'
 import token from './util/token.js'
 import iView from 'iview'
 import axios from 'axios'
+
 import qs from 'qs'
 import 'iview/dist/styles/iview.css';
-import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data';
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 

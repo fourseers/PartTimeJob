@@ -3,11 +3,11 @@ language: java
 jdk:
   - openjdk8
 
-# safelist
-branches:
-    only:
-        - master
-        - develop
+# # safelist
+# branches:
+#     only:
+#         - master
+#         - develop
 
 # speed up building with maven cache
 cache:

@@ -25,28 +25,28 @@ jobs:
       name: "common libraries"
       before_install:
         - cd code/backend/common
-        - chmod +x mvnw
+      script: mvn test -B
     - stage: test-microservices
       name: "auth"
       before_install:
         - cd code/backend/auth
-        - chmod +x mvnw
+      script: mvn test -B
       name: "arrangement"
       before_install:
         - cd code/backend/arrangement
-        - chmod +x mvnw
+      script: mvn test -B
       name: "billing"
       before_install:
         - cd code/backend/billing
-        - chmod +x mvnw
+      script: mvn test -B
       name: "warehouse"
       before_install:
         - cd code/backend/warehouse
-        - chmod +x mvnw
+      script: mvn test -B
       name: "gateway"
       before_install:
         - cd code/backend/gateway
-        - chmod +x mvnw
+      script: mvn test -B
       
 stages:
   - test-common-lib

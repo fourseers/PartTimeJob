@@ -4,6 +4,7 @@ import { login } from "./api/url.js"
 
 App({
   onLaunch: function () {
+
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -20,27 +21,30 @@ App({
         }
         req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
           if (res.statusCode === 400) {
-            this.globalData.isRegistered = false;
+            this.globalData.is_registered = false;
+            /*
             wx.showToast({
-              title: res.data.message,
+              title: "res.data.message",
               icon: "none"
             })
+            */
           }
           else if (res.statusCode === 200) {
-            this.globalData.isRegistered = true;
+            this.globalData.is_registered = true;
             this.globalData.access_token = res.data.data.access_token;
             this.globalData.expires_in = res.data.data.expires_in;
             this.globalData.refresh_token = res.data.data.refresh_token;
           }
           else{
-            this.globalData.isRegistered = false;
+            this.globalData.is_registered = false;
           }
         }).catch(err => {
           //console.log(err)
-          this.globalData.isRegistered = false;
+          this.globalData.is_registered = false;
         })
       }
-    })
+    });
+
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -70,12 +74,19 @@ App({
           });
         }
       }
-    })
+    });
+
+    // 显示欢迎页面2秒后跳转到"我"页面
+    setTimeout(function () {
+      wx.reLaunch({
+        url: "/pages/user/user",
+      })
+    }, 2000)
   },
   globalData: {
     userInfo: null,
     userGPS: null,
-    isRegistered: false,
+    is_registered: false,
     showSendMessage: false,
     showModifySuccess: false,
     host: "http://202.120.40.8:30552",

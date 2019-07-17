@@ -1,0 +1,8 @@
+<!--pages/check_inform/check_inform.wxml-->
+<map class="check-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}" circles="{{circles}}"></map>
+<view class="tag-container">
+  <view class="tag" bind:tap="handleTransport">可打卡区域</view>
+</view>
+<i-button class="check-button" bind:click="handleCheck" type="success">
+  <text>立即去打卡</text>
+</i-button>

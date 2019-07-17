@@ -7,11 +7,10 @@ import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
@@ -63,7 +62,7 @@ public class JobServiceImpl implements JobService {
         throw new RuntimeException("job not exist or not belong to");
     }
 
-    public List<Job> findByShopIdAndUsername(int shopId, String username) {
+    public Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
@@ -71,8 +70,8 @@ public class JobServiceImpl implements JobService {
         }
         for (Shop shop : user.getCompany().getShops()) {
             if (shop.getShopId() == shopId) {
-                List<Job> jobs = jobDao.findByShop(shop);
-                if (jobs.size() == 0) {
+                Page<Job> jobs = jobDao.findPageByShop(shop, pageCount, pageSize);
+                if (jobs.isEmpty()) {
                     throw new RuntimeException("job not exist");
                 }
                 return jobs;
@@ -82,24 +81,14 @@ public class JobServiceImpl implements JobService {
         throw new RuntimeException("shop not exist or not belong to");
     }
 
-    public List<Job> findByUsername(String username) {
+    public Page<Job> findPageByUsername(String username, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
             throw new RuntimeException("user does not belong to a company");
         }
 
-        List<Job> jobs = new ArrayList<>();
-
-        for (Shop shop : user.getCompany().getShops()) {
-            jobs.addAll(jobDao.findByShop(shop));
-        }
-
-        if (jobs.size() == 0) {
-            throw new RuntimeException("job not exist");
-        }
-
-        return jobs;
+        return jobDao.findPageByCompany(user.getCompany(), pageCount, pageSize);
 
     }
 

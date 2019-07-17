@@ -3,8 +3,8 @@ package com.fourseers.parttimejob.arrangement.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.arrangement.service.JobService;
+import com.fourseers.parttimejob.common.entity.Job;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.sql.Timestamp;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -306,27 +308,29 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsSuccess() throws Exception {
+    public void getOnePageJobsSuccess() throws Exception {
         String managerName = "葛越";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
-                .header("x-internal-token", managerName))
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
+                .header("x-internal-token", managerName)
+                .param("page_count", "0"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
         assertNotNull(response.getJSONObject("data"));
-        assertNotNull(response.getJSONObject("data").getJSONArray("jobs"));
-        assertEquals(1, response.getJSONObject("data").getJSONArray("jobs").size());
+        assertNotNull(response.getJSONObject("data").getJSONArray("content"));
+        assertEquals(1, response.getJSONObject("data").getJSONArray("content").size());
     }
 
     @Test
-    public void getAllJobsNoExist() throws Exception {
+    public void getOnePageJobsNoExist() throws Exception {
         String managerName = "罗永浩";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
-                .header("x-internal-token", managerName))
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
+                .header("x-internal-token", managerName)
+                .param("page_count", "0"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -335,11 +339,12 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsNoCompany() throws Exception {
+    public void getOnePageJobsNoCompany() throws Exception {
         String managerName = "poor user";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
-                .header("x-internal-token", managerName))
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
+                .header("x-internal-token", managerName)
+                .param("page_count", "0"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -348,29 +353,31 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsInOneShopSuccess() throws Exception {
+    public void getOnePageJobsInOneShopSuccess() throws Exception {
         String managerName = "葛越";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
                 .header("x-internal-token", managerName)
-                .param("shop_id", "2"))
+                .param("shop_id", "2")
+                .param("page_count", "0"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
         assertNotNull(response.getJSONObject("data"));
-        assertNotNull(response.getJSONObject("data").getJSONArray("jobs"));
-        assertEquals(1, response.getJSONObject("data").getJSONArray("jobs").size());
-        assertEquals("seller", response.getJSONObject("data").getJSONArray("jobs").getJSONObject(0).getString("job_name"));
+        assertNotNull(response.getJSONObject("data").getJSONArray("content"));
+        assertEquals(1, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals("seller", response.getJSONObject("data").getJSONArray("content").getJSONObject(0).getString("job_name"));
     }
 
     @Test
-    public void getAllJobsInOneShopNoExist() throws Exception {
+    public void getOnePageJobsInOneShopNoExist() throws Exception {
         String managerName = "葛越";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
                 .header("x-internal-token", managerName)
+                .param("page_count", "0")
                 .param("shop_id", "4"))
                 .andExpect(status().is(400))
                 .andReturn();
@@ -380,12 +387,13 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsInOneShopNoCompany() throws Exception {
+    public void getOnePageJobsInOneShopNoCompany() throws Exception {
         String managerName = "poor user";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
                 .header("x-internal-token", managerName)
-                .param("shop_id", "1"))
+                .param("shop_id", "1")
+                .param("page_count", "0"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -394,12 +402,13 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsInOneShopNotBelongTo() throws Exception {
+    public void getOnePageJobsInOneShopNotBelongTo() throws Exception {
         String managerName = "罗永浩";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
                 .header("x-internal-token", managerName)
-                .param("shop_id", "1"))
+                .param("shop_id", "1")
+                .param("page_count", "0"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -408,12 +417,13 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getAllJobsInOneShopNotExist() throws Exception {
+    public void getOnePageJobsInOneShopNotExist() throws Exception {
         String managerName = "葛越";
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
                 .header("x-internal-token", managerName)
-                .param("shop_id", "666"))
+                .param("shop_id", "666")
+                .param("page_count", "0"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -434,9 +444,9 @@ public class JobControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
         assertNotNull(response.getJSONObject("data"));
-        assertNotNull(response.getJSONObject("data").getJSONObject("job"));
-        assertNotNull(response.getJSONObject("data").getJSONObject("job").getString("job_name"));
-        assertEquals("seller", response.getJSONObject("data").getJSONObject("job").getString("job_name"));
+        assertNotNull(response.getJSONObject("data"));
+        assertNotNull(response.getJSONObject("data").getString("job_name"));
+        assertEquals("seller", response.getJSONObject("data").getString("job_name"));
     }
 
     @Test
@@ -482,17 +492,80 @@ public class JobControllerTest {
     }
 
     @Test
-    public void getJobBothShopIdAndJobId() throws Exception {
-        String managerName = "葛越";
+    public void getOnePageJobsWithManyPages() throws Exception {
+        String bossname = "Bill Gates";
+        for (int j = 0; j < 49; j++) {
+            for (int i = 5; i < 7; i++) {
+                Job job = new Job();
+                job.setJobName("seller");
+                job.setBeginDate(new Timestamp(1563235200000L));
+                job.setEndDate(new Timestamp(1563235300000L));
+                job.setNeedGender(2);
+                job.setNeedAmount(10);
+                job.setBeginApplyDate(new Timestamp(1563235000000L));
+                job.setEndApplyDate(new Timestamp(1563235100000L));
+                job.setEducation("大学本科以上");
+                job.setTagList(null);
+                job.setSalary(100d);
+                job.setJobDetail("sell");
+                jobService.save(job, i, bossname);
+            }
+        }
 
-        MvcResult result = mockMvc.perform(get("/merchant/job")
-                .header("x-internal-token", managerName)
-                .param("job_id", "1")
-                .param("shop_id", "1"))
-                .andExpect(status().is(400))
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
+                .header("x-internal-token", bossname)
+                .param("page_count", "9")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("incorrect param", response.getString("message"));
+        assertNotNull(response.getJSONObject("data"));
+        assertEquals(8, response.getJSONObject("data").getJSONArray("content").size());
+        for (int i = 0; i < 8; i++) {
+            assertEquals(new Integer(9 - i), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
+        }
+        assertEquals("success", response.getString("message"));
+
     }
+
+    @Test
+    public void getOnePageJobsInOneShopWithManyPages() throws Exception {
+        String bossname = "Bill Gates";
+        for (int j = 0; j < 49; j++) {
+            for (int i = 5; i < 7; i++) {
+                Job job = new Job();
+                job.setJobName("seller");
+                job.setBeginDate(new Timestamp(1563235200000L));
+                job.setEndDate(new Timestamp(1563235300000L));
+                job.setNeedGender(2);
+                job.setNeedAmount(10);
+                job.setBeginApplyDate(new Timestamp(1563235000000L));
+                job.setEndApplyDate(new Timestamp(1563235100000L));
+                job.setEducation("大学本科以上");
+                job.setTagList(null);
+                job.setSalary(100d);
+                job.setJobDetail("sell");
+                jobService.save(job, i, bossname);
+            }
+        }
+
+        MvcResult result = mockMvc.perform(get("/merchant/jobs")
+                .header("x-internal-token", bossname)
+                .param("page_count", "4")
+                .param("shop_id", "5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONObject("data"));
+        assertEquals(9, response.getJSONObject("data").getJSONArray("content").size());
+        for (int i = 0; i < 8; i++) {
+            assertEquals(new Integer(18 - i * 2), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
+        }
+        assertEquals("success", response.getString("message"));
+
+    }
+
 }

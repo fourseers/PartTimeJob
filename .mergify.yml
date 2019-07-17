@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: Master automatic merge
     conditions:
-      - status-success=continuous-integration/jenkins/branch
+      - status-success=continuous-integration/travis-ci/pr
       - "#approved-reviews-by>=3"
       - base=master
     actions:
@@ -9,7 +9,7 @@ pull_request_rules:
         method: merge
   - name: Develop automatic merge
     conditions:
-      - status-success=continuous-integration/jenkins/branch
+      - status-success=continuous-integration/travis-ci/pr
       - "#approved-reviews-by>=1"
       - base=develop
     actions:

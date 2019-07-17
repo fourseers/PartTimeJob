@@ -1,9 +1,16 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/timeline/timeline",
+    "pages/job_detail/job_detail",
+    "pages/register/register",
     "pages/logs/logs",
-    "pages/user/user",
-    "pages/register/register"
+    "pages/job/job",
+    "pages/schedule/schedule",
+    "pages/user_inform/user_inform",
+    "pages/check/check",
+    "pages/check_inform/check_inform",
+    "pages/user/user"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -14,10 +21,16 @@
   "tabBar": {
     "list": [
       {
-        "text": "关于",
-        "pagePath": "pages/index/index",
-        "iconPath": "assets/icons/about.png",
-        "selectedIconPath": "assets/icons/about-selected.png"
+        "text": "打卡",
+        "pagePath": "pages/check/check",
+        "iconPath": "assets/icons/check.png",
+        "selectedIconPath": "assets/icons/check-selected.png"
+      },
+      {
+        "text": "应聘",
+        "pagePath": "pages/job/job",
+        "iconPath": "assets/icons/job.png",
+        "selectedIconPath": "assets/icons/job-selected.png"
       },
       {
         "text": "我",

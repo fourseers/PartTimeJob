@@ -1,31 +1,36 @@
-<!--index.wxml
-<view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{hasUserInfo ? app.globalData.userInfo : "你好}}</text>
-  </view>
-</view>-->
+<!--index.wxml-->
 <view class="container">
   <view class="introduction">
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
       <i-panel class="cell-panel-demo">
-        <i-cell title="" is-link value="{{userInfo.nickName}}">
+        <i-cell title="" value="{{userInfo.nickName}}">
           <i-avatar size="large" src="{{userInfo.avatarUrl}}"></i-avatar>
         </i-cell>
       </i-panel>
       <view class="information">
-        <i-button wx:if="{{!isRegistered}}" bind:click="handleRegister">注册</i-button>
+        <i-button wx:if="{{!is_registered}}" bind:click="handleRegister">注册</i-button>
         <block wx:else>
-          <view>这里显示其他信息</view>
+          <i-panel title=" ">
+            <i-cell-group>
+              <block wx:for="{{cells}}" wx:key="index">
+                <i-cell title="{{item.title}}" is-link url="{{item.url}}">
+                  <view slot="icon">
+                    <block wx:if="{{item.type}}">
+                      <i-icon size="32" type="{{item.type}}"></i-icon>
+                    </block>
+                    <block wx:else>
+                      <i-avatar src="{{item.src}}" shape="square"></i-avatar>
+                    </block>
+                  </view>
+                </i-cell>
+              </block>
+            </i-cell-group>
+          </i-panel>
         </block>
       </view>
     </block>
   </view>
 </view>
+<i-toast id="toast" />
+<i-message id="message" />

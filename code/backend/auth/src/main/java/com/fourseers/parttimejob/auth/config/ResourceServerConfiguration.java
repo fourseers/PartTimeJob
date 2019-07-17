@@ -1,34 +1,38 @@
 package com.fourseers.parttimejob.auth.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
 @Configuration
+@EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-//    @Override
-//    public void configure(HttpSecurity http) throws Exception {
-//        http
-//                // Since we want the protected resources to be accessible in the UI as well we need
-//                // session creation to be allowed (it's disabled by default in 2.0.6)
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                .and()
-//                .requestMatchers().anyRequest()
-//                .and()
-//                .anonymous()
-//                .and()
-//                .authorizeRequests()
-////              .antMatchers("/product/**").access("#oauth2.hasScope('select') and hasRole('ROLE_USER')")
-//                .antMatchers("/user/**").authenticated();//必须认证过后才可以访问
-//    }
+    @Value("${app.test_resource_id:TESTID}")
+    private String TEST_RESOURCE_ID;
 
+    @Override
+    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        resources.resourceId(TEST_RESOURCE_ID);
+    }
 
-//    @Override
-//    public void configure(HttpSecurity http) throws Exception {
-//        http.requestMatchers().anyRequest()
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/api/**").authenticated();
-//    }
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .and()
+                .requestMatchers().anyRequest()
+                .and()
+                // TODO reconfigure antMatchers since UserController is removed
+                .authorizeRequests()
+                .antMatchers("/user/**").authenticated();
+    }
+
 
 }

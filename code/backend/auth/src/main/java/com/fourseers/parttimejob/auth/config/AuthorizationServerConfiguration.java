@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -21,16 +22,16 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-    private static String TEST_RESOURCE_ID = "TESTID";
+    @Value("${app.test_resource_id:TESTID}")
+    private String TEST_RESOURCE_ID;
 
     @Autowired
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    @Qualifier("userDetailsServiceBean")
+    @Qualifier("userDetailsService")
     private UserDetailsService userDetailsService;
-
 
     // use redis to store token
     @Autowired
@@ -54,28 +55,29 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         // https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
-        String finalSecret = passwordEncoder.encode("123456");
+        String wechatClientSecret = passwordEncoder.encode("123456");
+        String webClientSecret = passwordEncoder.encode("123456");
         clients.inMemory()
-                .withClient("client_1")
-                .resourceIds(TEST_RESOURCE_ID)
-                .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("select")
-                .authorities("oauth2")
-                .secret(finalSecret)
-                .and().withClient("client_2")
+                .withClient("wechatClient")
+                .secret(wechatClientSecret)
+                //.resourceIds(TEST_RESOURCE_ID)
+                .authorizedGrantTypes("password", "refresh_token")
+                .scopes("user")
+                .and().withClient("webClient")
                 .resourceIds(TEST_RESOURCE_ID)
                 .authorizedGrantTypes("password", "refresh_token")
-                .scopes("server")
                 .authorities("oauth2")
-                .secret(finalSecret);
+                .scopes("merchant")
+                .secret(webClientSecret);
         // clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(getRedisTokenStore())
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .authenticationManager(authenticationManager)
-                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+                .userDetailsService(userDetailsService);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,15 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/merchant/job")
+@RequestMapping(value = "/merchant")
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    private final static int PAGE_SIZE = 10;
+
+    @RequestMapping(value = "/job", method = RequestMethod.POST)
     public ResponseEntity<Response<JSONObject>> addJob(@RequestBody JSONObject body,
                                                        @RequestHeader("x-internal-token") String username) {
 
@@ -80,39 +83,35 @@ public class JobController {
         return ResponseBuilder.build(HttpStatus.OK, null, "success");
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<Response<JSONObject>> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
-                                             @RequestParam(value = "shop_id", required = false) Integer shopId,
+    @RequestMapping(value = "/job", method = RequestMethod.GET)
+    public ResponseEntity<Response<Job>> getJob(@RequestParam(value = "job_id", required = false) Integer jobId,
                                              @RequestHeader("x-internal-token") String username) {
-        JSONObject body = new JSONObject();
-        if (shopId == null && jobId == null) {
-            try {
-                List<Job> jobs = jobService.findByUsername(username);
-                body.put("jobs", jobs);
-            } catch (RuntimeException ex) {
-                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
-            }
-
-        } else if (shopId != null && jobId == null) {
-            try {
-                List<Job> jobs = jobService.findByShopIdAndUsername(shopId, username);
-                body.put("jobs", jobs);
-            } catch (RuntimeException ex) {
-                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
-            }
-
-        } else if (jobId != null && shopId == null) {
-            try {
-                Job job = jobService.findByJobIdAndUsername(jobId, username);
-
-                body.put("job", job);
-            } catch (RuntimeException ex) {
-                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
-            }
-
-        } else {
-            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
+        try {
+            Job job = jobService.findByJobIdAndUsername(jobId, username);
+            return ResponseBuilder.build(HttpStatus.OK, job, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }
-        return ResponseBuilder.build(HttpStatus.OK, body, "success");
+    }
+
+    @RequestMapping(value = "/jobs", method = RequestMethod.GET)
+    public ResponseEntity<Response<Page<Job>>> getJobs(@RequestParam(value = "shop_id", required = false) Integer shopId,
+                                                       @RequestParam(value = "page_count") Integer pageCount,
+                                                       @RequestHeader("x-internal-token") String username) {
+        JSONObject body = new JSONObject();
+        Page<Job> jobs;
+        try {
+            if (shopId == null) {
+                jobs = jobService.findPageByUsername(username, pageCount, PAGE_SIZE);
+            } else {
+                jobs = jobService.findPageByShopIdAndUsername(shopId, username, pageCount, PAGE_SIZE);
+            }
+            if (jobs.isEmpty()) {
+                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
+            }
+            return ResponseBuilder.build(HttpStatus.OK, jobs, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
     }
 }

@@ -14,12 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import java.math.BigDecimal;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/user")
@@ -56,7 +51,7 @@ public class WechatUserJobController {
         WechatUser user = wechatUserService.getUserByOpenid(
                 UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
         if(user == null)
-            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
         if(longitude == null && latitude == null) {
             return ResponseBuilder.build(OK, jobService.findJobs(user, pageCount));
         }

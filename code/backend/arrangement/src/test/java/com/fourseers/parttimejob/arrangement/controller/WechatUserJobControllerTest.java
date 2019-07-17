@@ -54,6 +54,7 @@ public class WechatUserJobControllerTest {
     private MockMvc mockMvc;
 
     private String userHeader;
+    private String invalidUserHeader;
 
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
@@ -61,6 +62,7 @@ public class WechatUserJobControllerTest {
     @Before
     public void before() throws Exception {
         userHeader = WECHAT_USER_PREFIX + "fakeOpenid";
+        invalidUserHeader = WECHAT_USER_PREFIX + "wrongOpenid";
     }
 
     @After
@@ -117,7 +119,6 @@ public class WechatUserJobControllerTest {
             float cur = Math.abs(shop.getLatitude() - latitude) +
                     Math.abs(shop.getLongitude() - longitude);
             assertTrue(cur >= prev);
-            prev = cur;
         }
     }
 
@@ -140,6 +141,24 @@ public class WechatUserJobControllerTest {
                 .header("x-internal-token", userHeader)
                 .param("longitude", "40")
                 .param("latitude", "2000"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetJobListInvalidUserToken() throws Exception {
+        mockMvc.perform(get("/user/jobs")
+                .header("x-internal-token", "INVALID_FORMAT_VALUE")
+                .param("longitude", "10")
+                .param("latitude", "10"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetJobListWrongUserToken() throws Exception {
+        mockMvc.perform(get("/user/jobs")
+                .header("x-internal-token", invalidUserHeader)
+                .param("longitude", "10")
+                .param("latitude", "10"))
                 .andExpect(status().is4xxClientError());
     }
 

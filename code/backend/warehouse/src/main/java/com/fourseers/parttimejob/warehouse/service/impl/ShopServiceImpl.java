@@ -8,11 +8,10 @@ import com.fourseers.parttimejob.warehouse.dto.ShopDto;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
@@ -85,31 +84,15 @@ public class ShopServiceImpl implements ShopService {
         return modelMapper.map(shop, ShopDto.class);
     }
 
-    public List<ShopDto> findAllByUserId(int userId) {
-        List<Shop> shops = shopDao.findAllByUserId(userId);
-        if (shops == null) {
-            return null;
-        }
+    public Page<ShopDto> findPageByUserId(int userId, int pageCount, int pageSize) {
+        Page<Shop> shops = shopDao.findPageByUserId(userId, pageCount, pageSize);
 
-        List<ShopDto> result = new ArrayList<>();
-        for (Shop shop : shops) {
-            result.add(modelMapper.map(shop, ShopDto.class));
-        }
-
-        return result;
+        return shops.map(shop -> modelMapper.map(shop, ShopDto.class));
     }
 
-    public List<ShopDto> findAllByUsername(String username) {
-        List<Shop> shops = shopDao.findAllByUsername(username);
-        if (shops == null) {
-            return null;
-        }
+    public Page<ShopDto> findPageByUsername(String username, int pageCount, int pageSize) {
+        Page<Shop> shops = shopDao.findPageByUsername(username, pageCount, pageSize);
 
-        List<ShopDto> result = new ArrayList<>();
-        for (Shop shop : shops) {
-            result.add(modelMapper.map(shop, ShopDto.class));
-        }
-
-        return result;
+        return shops.map(shop -> modelMapper.map(shop, ShopDto.class));
     }
 }

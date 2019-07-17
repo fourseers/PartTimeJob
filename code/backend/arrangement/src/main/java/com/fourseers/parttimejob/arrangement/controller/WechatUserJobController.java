@@ -14,6 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
+
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -56,9 +60,10 @@ public class WechatUserJobController {
         if(longitude == null && latitude == null) {
             return ResponseBuilder.build(OK, jobService.findJobs(user, pageCount));
         }
-        else if(longitude == null || latitude == null) {
+        else if(longitude == null || latitude == null)
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
-        }
+        else if(Math.abs(longitude) > 180 || Math.abs(latitude) > 90)
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
         else
             return ResponseBuilder.build(OK,
                     jobService.findJobsByGeoLocation(user, longitude, latitude, pageCount));

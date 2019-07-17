@@ -3,11 +3,10 @@ package com.fourseers.parttimejob.arrangement.service.impl;
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.service.JobService;
-import com.fourseers.parttimejob.common.entity.Company;
-import com.fourseers.parttimejob.common.entity.Job;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
-import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     MerchantUserDao merchantUserDao;
+
+    @Value("${app.pagination.pageSize}")
+    private int PAGE_SIZE;
 
     public void save(Job job, int shopId, String username) {
 
@@ -88,5 +90,15 @@ public class JobServiceImpl implements JobService {
 
         return jobDao.findPageByCompany(user.getCompany(), pageCount, pageSize);
 
+    }
+
+    @Override
+    public Page<Job> findJobs(WechatUser user, int pageCount) {
+        return jobDao.findJobs(user, pageCount, PAGE_SIZE);
+    }
+
+    @Override
+    public Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount) {
+        return jobDao.findJobsByGeoLocation(user, longitude, latitude, pageCount, PAGE_SIZE);
     }
 }

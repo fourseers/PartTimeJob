@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping(value = "/merchant")
@@ -35,7 +36,7 @@ public class JobController {
 
         int shopId;
         Job job = new Job();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
         try {
             shopId = body.getIntValue("shop_id");
             job.setJobName(body.getString("job_name"));

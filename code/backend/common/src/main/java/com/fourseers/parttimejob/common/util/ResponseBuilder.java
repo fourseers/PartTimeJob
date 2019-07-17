@@ -27,4 +27,15 @@ public class ResponseBuilder {
 
         return new ResponseEntity<>(response, status);
     }
+
+    public static <T> ResponseEntity<Response<T>> build(HttpStatus status, T data) {
+        return build(status, data, status.getReasonPhrase());
+    }
+
+    public static <T> ResponseEntity<Response<T>> buildEmpty(HttpStatus status) {
+
+        Response<T> response = new Response<>(null, status.value(), status.getReasonPhrase());
+
+        return new ResponseEntity<>(response, status);
+    }
 }

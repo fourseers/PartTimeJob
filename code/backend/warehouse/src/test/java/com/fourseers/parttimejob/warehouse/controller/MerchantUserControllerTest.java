@@ -73,7 +73,6 @@ public class MerchantUserControllerTest {
 
     @Test
     public void getUserNotExist() throws Exception {
-        String username = "Tim Cook";
         String admin = "God";
 
         MvcResult result = mockMvc.perform(get("/admin/merchant-user")
@@ -85,5 +84,76 @@ public class MerchantUserControllerTest {
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("user not exist", response.getString("message"));
+    }
+
+    @Test
+    public void getOnePageUsersSuccess() throws Exception {
+        String admin = "God";
+
+        MerchantUser merchantUser1 = new MerchantUser();
+        merchantUser1.setUsername("Tim Cook");
+        merchantUser1.setPassword("some password");
+        merchantUserService.save(merchantUser1);
+
+        MerchantUser merchantUser2 = new MerchantUser();
+        merchantUser2.setUsername("罗永浩");
+        merchantUser2.setPassword("some password");
+        merchantUserService.save(merchantUser2);
+
+        MvcResult result = mockMvc.perform(get("/admin/merchant-users")
+                .header("x-internal-token", admin)
+                .param("page_count", "0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONObject("data").getJSONArray("content"));
+        assertEquals(2, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void getUsersFromLastPageSuccess() throws Exception {
+        String admin = "God";
+
+        for (int i = 0; i < 95; i++) {
+            MerchantUser merchantUser = new MerchantUser();
+            merchantUser.setUsername("孙悟空 " + i);
+            merchantUser.setPassword("some password");
+            merchantUserService.save(merchantUser);
+        }
+
+        MvcResult result = mockMvc.perform(get("/admin/merchant-users")
+                .header("x-internal-token", admin)
+                .param("page_count", "9")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONObject("data").getJSONArray("content"));
+        assertEquals(5, response.getJSONObject("data").getJSONArray("content").size());
+        for (int i = 0; i < 5; i++) {
+            assertEquals("孙悟空 9" + i, response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getString("username"));
+        }
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void getOnePageUsersNotExist() throws Exception {
+        String admin = "God";
+
+        MvcResult result = mockMvc.perform(get("/admin/merchant-users")
+                .header("x-internal-token", admin)
+                .param("page_count", "0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(response.getJSONObject("data").getJSONArray("content"));
+        assertEquals(0, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals("success", response.getString("message"));
     }
 }

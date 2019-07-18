@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.warehouse.projection.MerchantUserInfoProjection
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,9 @@ public class MerchantUserController {
     @Autowired
     private MerchantUserService merchantUserService;
 
-    @ApiOperation(value = "Get one  merchant user")
+    private final static int PAGE_SIZE = 10;
+
+    @ApiOperation(value = "Get one merchant user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
             @ApiResponse(code = 400, message = "user not exist"),
@@ -36,5 +39,23 @@ public class MerchantUserController {
         } else {
             return ResponseBuilder.build(HttpStatus.OK, user, "success");
         }
+    }
+
+    @ApiOperation(value = "Get merchant users by page")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/merchant-users", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<Page<MerchantUserInfoProjection>>> getUsers(
+            @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
+            @RequestParam(value = "page_count") Integer pageCount,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+        Page<MerchantUserInfoProjection> users = merchantUserService.findPageBrief(pageCount, PAGE_SIZE);
+
+        return ResponseBuilder.build(HttpStatus.OK, users, "success");
     }
 }

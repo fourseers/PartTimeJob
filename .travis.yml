@@ -67,3 +67,4 @@ stages:
 - test-common-lib
 - test-microservices
 - deploy
+before_install:

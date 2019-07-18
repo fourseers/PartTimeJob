@@ -9,18 +9,21 @@ import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.util.UserDecoder;
 import io.swagger.annotations.*;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/user")
+@Validated
 @ApiImplicitParams(
         @ApiImplicitParam(name = "x-internal-token",
                 value = "Internal authorization token",
@@ -44,10 +47,10 @@ public class WechatUserJobController {
     })
     @GetMapping("/jobs")
     public ResponseEntity<Response<Page<Job>>> getJobList(
-            @RequestParam(required = false) Float longitude,
-            @RequestParam(required = false) Float latitude,
+            @RequestParam(required = false) @Range(min=-180, max=180)  Float longitude,
+            @RequestParam(required = false) @Range(min=-90, max=90) Float latitude,
             @RequestHeader(defaultValue = "0") int pageCount,
-            @RequestHeader("x-internal-token") String token
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
@@ -59,9 +62,8 @@ public class WechatUserJobController {
             return ResponseBuilder.build(OK, jobService.findJobs(user, pageCount));
         }
         else if(longitude == null || latitude == null)
-            return ResponseBuilder.buildEmpty(BAD_REQUEST);
-        else if(Math.abs(longitude) > 180 || Math.abs(latitude) > 90)
-            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+            return ResponseBuilder.build(BAD_REQUEST, null,
+                    "Longitude and latitude should both appear.");
         else
             return ResponseBuilder.build(OK,
                     jobService.findJobsByGeoLocation(user, longitude, latitude, pageCount));
@@ -74,8 +76,8 @@ public class WechatUserJobController {
     })
     @GetMapping("/job")
     public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
-            @RequestParam @Positive int jobId,
-            @RequestHeader("x-internal-token") String token
+            @RequestParam @Min(1) int jobId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
@@ -84,11 +86,6 @@ public class WechatUserJobController {
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
 
-        try {
-            return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseBuilder.buildEmpty(INTERNAL_SERVER_ERROR);
-        }
+        return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
     }
 }

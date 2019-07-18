@@ -20,7 +20,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     Job findByJobId(int jobId);
 
-    //@Query("FROM Job j INNER JOIN FETCH j.shop WHERE j.jobId = ?1")
+    // query is too much, so why not just leave it here
     JobDetailedInfoProjection findJobByJobId(int jobId);
 
     List<Job> findByShop(Shop shop);

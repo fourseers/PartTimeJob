@@ -12,6 +12,7 @@ services:
 - mysql
 - mongodb
 - redis-server
+
 env:
   global:
   - secure: K/VLfHKc+Z7Bwcv5Xaro7Nc6CVWe8uqr8XUNhtQlNpAQdtamgZWhkhLD/qXFT26CYjycql1M7Fu8QXVQ8c4sTvxA5Cgkr0AgxN6Fv0PlDvWwwMd3nr16GM9usp59jcCXQaU6mrrzUElwVFakQodfBbSvM3oum33lB4FBnGw1ZLO1H0yXzldcV7soVnqA0jxLVih1QGgUF3AbeBKsFZndP8PAdHjr2w5ewjaG1X93ejyCVOrfLkLIsLVe9sPkcT9yrLEZ2mD1QDinFaazc8cyvNVIfRBm5JXXVjii6SNvUeBmFfoAek/wLljyKDJ+TjCXfs9J6qaxCwvSeeb6f/nDwnZD0SjgfR25TjL0emg9xcG+rOM8d2+dqhmofdhYw8BcFLRdKvZeW6Jedl40xki64JKrQCDg+UMFegKqBESHX55AP0aAImLlNgbk7vyjua7Lo8c9JrabXmgDAjq/2icdX3Amyy0juk7ztuCx4ta5H8oeY9e02H3LjtdwPz/5rFXGWTToTTbL10zn1UzYLzNLDAPkbuB/mMkTLVLd65Jel/a4HZmptzjYZ8iq7ki5djHmQOezzuv9y+ejtOf30R1NMQixn1PxIex1k2RYOoLbRyH39ZV6o5/Aep3adddUgBmog7M6OiV0lTa0v7njEduLBD5XvFtD34nAW32pHwIFqrs=
@@ -60,7 +61,8 @@ jobs:
       -in travis_secrets.tar.enc -out travis_secrets.tar -d
     - tar xvf travis_secrets.tar
     script:
-    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
+    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull
+      && ./deploy.py"
 stages:
 - test-common-lib
 - test-microservices

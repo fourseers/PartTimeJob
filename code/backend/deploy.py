@@ -5,21 +5,17 @@ import os
 import sys
 
 parser = argparse.ArgumentParser(description='Deploy the microservices')
-parser.add_argument('--local-ip', help='local ip address')
-parser.add_argument('--eureka-port', help='eureka-server port')
-parser.add_argument('--gateway-port', help='gateway port')
-parser.add_argument('--appid', help='wechat appid')
-parser.add_argument('--secret', help='wechat app secret')
+parser.add_argument('--local-ip', required=True, help='local ip address')
+parser.add_argument('--eureka-port', required=True, help='eureka-server port')
+parser.add_argument('--gateway-port', required=True, help='gateway port')
+parser.add_argument('--appid', required=True, help='wechat appid')
+parser.add_argument('--secret', required=True, help='wechat app secret')
 
 def execute(cmd):
     print(cmd)
     os.system(cmd)
 
 args = parser.parse_args()
-
-if args.local_ip is None or args.eureka_port is None or args.gateway_port is None or args.appid is None or args.secret is None:
-    print("Incorrect arguments")
-    sys.exit(0)
 
 execute("docker rm -f eureka mongo redis mysql-inner auth gateway warehouse arrangement")
 execute("docker run --rm -d --net=host --name redis redis")

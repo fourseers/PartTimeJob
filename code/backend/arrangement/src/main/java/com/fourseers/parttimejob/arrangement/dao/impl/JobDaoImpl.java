@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dao.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.Job;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +36,11 @@ public class JobDaoImpl implements JobDao {
     public Page<Job> findPageByCompany(Company company, int pageCount, int pageSize) {
         Pageable pageable = PageRequest.of(pageCount, pageSize);
         return jobRepository.findPageByCompany(company, pageable);
+    }
+
+    @Override
+    public JobDetailedInfoProjection getJobDetail(int jobId) {
+        return jobRepository.findJobByJobId(jobId);
     }
 
     @Override

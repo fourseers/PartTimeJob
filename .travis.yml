@@ -1,70 +1,71 @@
 language: java
-
 jdk:
-  - openjdk8
-
-# safelist
+- openjdk8
 branches:
-    only:
-        - master
-        - develop
-
-# speed up building with maven cache
+  only:
+  - master
+  - develop
 cache:
-    directories:
-        - $HOME/.m2
-
+  directories:
+  - "$HOME/.m2"
 services:
-  - mysql
-  - mongodb
-  - redis-server
+- mysql
+- mongodb
+- redis-server
+
+env:
+  global:
+  - secure: K/VLfHKc+Z7Bwcv5Xaro7Nc6CVWe8uqr8XUNhtQlNpAQdtamgZWhkhLD/qXFT26CYjycql1M7Fu8QXVQ8c4sTvxA5Cgkr0AgxN6Fv0PlDvWwwMd3nr16GM9usp59jcCXQaU6mrrzUElwVFakQodfBbSvM3oum33lB4FBnGw1ZLO1H0yXzldcV7soVnqA0jxLVih1QGgUF3AbeBKsFZndP8PAdHjr2w5ewjaG1X93ejyCVOrfLkLIsLVe9sPkcT9yrLEZ2mD1QDinFaazc8cyvNVIfRBm5JXXVjii6SNvUeBmFfoAek/wLljyKDJ+TjCXfs9J6qaxCwvSeeb6f/nDwnZD0SjgfR25TjL0emg9xcG+rOM8d2+dqhmofdhYw8BcFLRdKvZeW6Jedl40xki64JKrQCDg+UMFegKqBESHX55AP0aAImLlNgbk7vyjua7Lo8c9JrabXmgDAjq/2icdX3Amyy0juk7ztuCx4ta5H8oeY9e02H3LjtdwPz/5rFXGWTToTTbL10zn1UzYLzNLDAPkbuB/mMkTLVLd65Jel/a4HZmptzjYZ8iq7ki5djHmQOezzuv9y+ejtOf30R1NMQixn1PxIex1k2RYOoLbRyH39ZV6o5/Aep3adddUgBmog7M6OiV0lTa0v7njEduLBD5XvFtD34nAW32pHwIFqrs=
+  - secure: tSmGXDi2R9DElJMHmayozaywlJt/2pbeJU2acdjq77xz033mc2CjDLiNa8lLjFdH3oiqZ+o5g25ehurETUfAZzvv/5ujskrGsscCMw0ROrmPe0KRZYCmzaCRBCZQz4sDjzIaVkUdAH8TSt9O7BqQfkmnUJ5u5leBuEUv77vt6KqIx3zlzDn1R6i/C8UT7Tx3yNC8FaN6yf2ilzFwA/9zlAUVw4FMxxECCoLfNnhqU7snYuAM90/ilnsdecrvB/e2qrQ7EbmVfew4TUFmmvL0lpb+cgVhTnDQuMcl4nRfyhiislIAo1LkB9FJWIIAQdmh13tR2YTEn1l1d8mBbd0+onrIQpV4GAN8+DJCrnrQnLa0VWmBrj3iVOLX5vsU1Y7Dl3KcK6dUUxoEYmOvNTUw16xmxZEY6eCUDZZN3c9/Eb9p3VUsqjjIESfQEieQyGKMnPnFggnSuJImI7z6+lTqTYZLxove+mlNmppsTs5y/tyBSRlgxruSxffFAa7s+VPdne7Wkj2jihTP+yghL27v2VaHSsN/Tbjw6HlrSAqhW3rvSQpp/83z6GZfO86g/xdtM5ZapIkSlAHP0LtvETSjhPR6jUS/B3iWUBt04a0CxfbdaCHm8kWkbC3WNQLeqp7XyLeni5KVJ/WjyzbeUBQuYh1jjeq/cEmvZHLEeSA/1Uw=
 
 jobs:
   include:
-    - name: "arrangement"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../arrangement
-        - chmod +x ./mvnw
-    - name: "billing"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../billing
-        - chmod +x ./mvnw
-    - name: "warehouse"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../warehouse
-        - chmod +x ./mvnw
-    - name: "common lib"
-      before_install:
-        - cd code/backend/common
-        - chmod +x ./mvnw
-    - name: "auth"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../auth
-        - chmod +x ./mvnw
-    - name: "gateway"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../gateway
-        - chmod +x ./mvnw
-    # - stage: deploy
-    #   before_script:
-    #     - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in travis_id.enc -out ~/.ssh/travis_id_rsa -d
-    #     - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in deploy_conf.enc -out ~/.ssh/rr_deploy_config -d
-    #     - chmod 600 ~/.ssh/travis_id-rsa ~/.ssh/rr_deploy_config
-
-    #   script: ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
-
+  - name: arrangement
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../arrangement
+    - chmod +x ./mvnw
+  - name: billing
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../billing
+    - chmod +x ./mvnw
+  - name: warehouse
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../warehouse
+    - chmod +x ./mvnw
+  - name: common lib
+    before_install:
+    - cd code/backend/common
+    - chmod +x ./mvnw
+  - name: auth
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../auth
+    - chmod +x ./mvnw
+  - name: gateway
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../gateway
+    - chmod +x ./mvnw
+  - stage: deploy
+    name: deploy
+    if: branch = develop
+    install: echo "Entering"
+    script: echo "Ready for deployment"
+    before_deploy:
+    -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in deploy_conf.enc -out ~/.ssh/rr_deploy_conf -d
+    -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in travis_id.enc -out ~/.ssh/travis_id_rsa -d
+    deploy:
+      - ssh rr_deploy -F ~/.ssh/rr_deploy_conf -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
       
 stages:
-  - test-common-lib
-  - test-microservices
-  # no deployment yet
+- test-common-lib
+- test-microservices
+- deploy

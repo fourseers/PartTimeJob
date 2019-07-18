@@ -17,7 +17,7 @@ insert into shop (address, brand, city, industry_industry_id, introduction, lati
 ('somewhere in Chendu', '锤子', 'Chendu', 1, 'Aquire Apple in someday!', 30, 100, 'Sichuan', '锤科总部', 2);
 insert into tag (name) values ('IT');
 insert into tag (name) values ('互联网');
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, description, job_name, need_amount, need_gender, salary, shop_shop_id) values
 ('2019-07-14 16:00:00', '2019-07-16 16:00:00', '大学本科以上', '2019-07-15 16:00:00', '2019-07-17 16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
 insert into job_tag_list (job_list_job_id, tag_list_id) values (1, 1);
 insert into merchant_user (username, password) values ('poor user', 'poor password');

@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 public class Job {
 
+
     private Integer jobId;
     private String jobName;
     private Timestamp beginDate;
@@ -26,7 +27,6 @@ public class Job {
     private List<Tag> tagList;
     private Double salary;
     private Shop shop;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getJobId() {
@@ -64,7 +64,8 @@ public class Job {
         this.endDate = endDate;
     }
 
-    @NotBlank
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     public String getJobDetail() {
         return jobDetail;
     }

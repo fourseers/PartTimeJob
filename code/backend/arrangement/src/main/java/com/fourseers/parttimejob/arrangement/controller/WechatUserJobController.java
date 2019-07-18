@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
 import com.fourseers.parttimejob.common.entity.Job;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Positive;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -62,5 +65,30 @@ public class WechatUserJobController {
         else
             return ResponseBuilder.build(OK,
                     jobService.findJobsByGeoLocation(user, longitude, latitude, pageCount));
+    }
+
+    @ApiOperation(value = "Get detailed information for one job.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "Invalid job id")
+    })
+    @GetMapping("/job")
+    public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
+            @RequestParam @Positive int jobId,
+            @RequestHeader("x-internal-token") String token
+    ) {
+        if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if(user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+
+        try {
+            return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBuilder.buildEmpty(INTERNAL_SERVER_ERROR);
+        }
     }
 }

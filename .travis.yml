@@ -21,7 +21,9 @@ env:
 
 jobs:
   include:
-  - name: arrangement
+  - stage: test
+    if: type = pull_request
+    name: arrangement
     before_install:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
@@ -56,6 +58,7 @@ jobs:
     - cd ../gateway
     - chmod +x ./mvn
   - stage: deploy
+    if: branch = develop AND type != pull_request
     name: deploy
     language: generic
     before_script:

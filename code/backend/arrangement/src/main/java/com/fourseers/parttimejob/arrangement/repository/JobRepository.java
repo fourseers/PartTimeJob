@@ -1,13 +1,12 @@
 package com.fourseers.parttimejob.arrangement.repository;
 
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +20,9 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     Job findByJobId(int jobId);
 
+    // query is too much, so why not just leave it here
+    JobDetailedInfoProjection findJobByJobId(int jobId);
+
     List<Job> findByShop(Shop shop);
 
     @Query(nativeQuery = true,
@@ -32,4 +34,5 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     @Query("select job from Shop shop inner join Job job on shop = job.shop where shop.company = ?1 order by job.jobId desc")
     Page<Job> findPageByCompany(Company company, Pageable pageable);
+
 }

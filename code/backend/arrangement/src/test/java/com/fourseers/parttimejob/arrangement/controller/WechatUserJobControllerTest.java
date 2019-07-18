@@ -132,6 +132,7 @@ public class WechatUserJobControllerTest {
 
     @Test
     public void testGetJobListInvalidGeoLocation() throws Exception {
+
         mockMvc.perform(get("/user/jobs")
                 .header("x-internal-token", userHeader)
                 .param("longitude", "1000")
@@ -161,5 +162,60 @@ public class WechatUserJobControllerTest {
                 .param("latitude", "10"))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    public void testGetJobSuccess() throws Exception {
+        MvcResult result = mockMvc.perform(get("/user/job")
+                .param("jobId", "1")
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        JSONObject data = response.getJSONObject("data");
+        assertNotNull(data);
+        JSONObject shop = data.getJSONObject("shop");
+        assertNotNull(shop);
+        assertNotNull(shop.getFloat("longitude"));
+        assertNotNull(shop.getFloat("latitude"));
+        assertNotNull(shop.getString("address"));
+        assertNotNull(data.getString("job_detail"));
+        assertNotNull(data.getString("begin_apply_date"));
+        assertNotNull(data.getString("end_apply_date"));
+    }
+
+
+    @Test
+    public void testGetJobInvalidJobId() throws Exception {
+        mockMvc.perform(get("/user/job")
+                .param("jobId", "-1")
+                .header("x-internal-token", userHeader))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetJobNoJobId() throws Exception {
+        mockMvc.perform(get("/user/job")
+                .header("x-internal-token", userHeader))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetJobNoAuthToken() throws Exception {
+        mockMvc.perform(get("/user/job")
+                .param("jobId", "1"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetJobInvalidAuthToken() throws Exception {
+        mockMvc.perform(get("/user/job")
+                .param("jobId", "1")
+                .header("x-internal-token", invalidUserHeader))
+                .andExpect(status().isForbidden());
+    }
+
+
+
 
 } 

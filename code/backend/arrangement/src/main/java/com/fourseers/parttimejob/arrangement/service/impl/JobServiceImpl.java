@@ -2,11 +2,11 @@ package com.fourseers.parttimejob.arrangement.service.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +90,11 @@ public class JobServiceImpl implements JobService {
 
         return jobDao.findPageByCompany(user.getCompany(), pageCount, pageSize);
 
+    }
+
+    @Override
+    public JobDetailedInfoProjection getJobDetail(int jobId) {
+        return jobDao.getJobDetail(jobId);
     }
 
     @Override

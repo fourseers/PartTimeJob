@@ -3,6 +3,11 @@ package com.fourseers.parttimejob.arrangement.dao;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.common.entity.WechatUser;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import org.springframework.data.domain.Page;
 
 public interface JobDao {
@@ -10,6 +15,9 @@ public interface JobDao {
 
     Job findByJobId(int jobId);
 
+    Page<Job> findJobs(WechatUser user, int pageCount, int pageSize);
+
+    Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount, int pageSize);
     Page<Job> findPageByShop(Shop shop, int pageCount, int pageSize);
 
     Page<Job> findPageByCompany(Company company, int pageCount, int pageSize);

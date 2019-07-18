@@ -11,39 +11,7 @@ App({
     wx.setStorageSync('logs', logs)
 
     // 登录
-    wx.login({
-      success: res => {
-        var req = new request();
-        //console.log(res);
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        var postData = {
-          "token": res.code
-        }
-        req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
-          if (res.statusCode === 400) {
-            this.globalData.is_registered = false;
-            /*
-            wx.showToast({
-              title: "res.data.message",
-              icon: "none"
-            })
-            */
-          }
-          else if (res.statusCode === 200) {
-            this.globalData.is_registered = true;
-            this.globalData.access_token = res.data.data.access_token;
-            this.globalData.expires_in = res.data.data.expires_in;
-            this.globalData.refresh_token = res.data.data.refresh_token;
-          }
-          else{
-            this.globalData.is_registered = false;
-          }
-        }).catch(err => {
-          //console.log(err)
-          this.globalData.is_registered = false;
-        })
-      }
-    });
+    this.login();
 
     // 获取用户信息
     wx.getSetting({
@@ -93,5 +61,36 @@ App({
     access_token: null,
     refresh_token: null,
     token_expires_in: null,
+  },
+
+  // use app.login() from other .js file to refresh the token
+  login() {
+    wx.login({
+      success: res => {
+        var req = new request();
+        //console.log(res);
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        var postData = {
+          "token": res.code
+        }
+        req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
+          if (res.statusCode === 400) {
+            this.globalData.is_registered = false;
+          }
+          else if (res.statusCode === 200) {
+            this.globalData.is_registered = true;
+            this.globalData.access_token = res.data.data.access_token;
+            this.globalData.expires_in = res.data.data.expires_in;
+            this.globalData.refresh_token = res.data.data.refresh_token;
+          }
+          else {
+            this.globalData.is_registered = false;
+          }
+        }).catch(err => {
+          //console.log(err)
+          this.globalData.is_registered = false;
+        })
+      }
+    });
   }
 })

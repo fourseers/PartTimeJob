@@ -68,9 +68,9 @@ public class JobControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
 
-        Job job = jobService.findByJobIdAndUsername(2, managerName);
+        Job job = jobService.findByJobIdAndUsername(6, managerName);
         assertNotNull(job);
-        assertEquals(new Integer(2), job.getJobId());
+        assertEquals(new Integer(6), job.getJobId());
         assertEquals(new Integer(1), job.getShop().getShopId());
         assertEquals(2, job.getTagList().size());
     }
@@ -321,7 +321,7 @@ public class JobControllerTest {
         assertEquals("success", response.getString("message"));
         assertNotNull(response.getJSONObject("data"));
         assertNotNull(response.getJSONObject("data").getJSONArray("content"));
-        assertEquals(1, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals(5, response.getJSONObject("data").getJSONArray("content").size());
     }
 
     @Test
@@ -483,7 +483,7 @@ public class JobControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/job")
                 .header("x-internal-token", managerName)
-                .param("job_id", "4"))
+                .param("job_id", "666"))
                 .andExpect(status().is(400))
                 .andReturn();
 
@@ -523,7 +523,7 @@ public class JobControllerTest {
         assertNotNull(response.getJSONObject("data"));
         assertEquals(8, response.getJSONObject("data").getJSONArray("content").size());
         for (int i = 0; i < 8; i++) {
-            assertEquals(new Integer(9 - i), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
+            assertEquals(new Integer(13 - i), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
         }
         assertEquals("success", response.getString("message"));
 
@@ -562,7 +562,7 @@ public class JobControllerTest {
         assertNotNull(response.getJSONObject("data"));
         assertEquals(9, response.getJSONObject("data").getJSONArray("content").size());
         for (int i = 0; i < 8; i++) {
-            assertEquals(new Integer(18 - i * 2), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
+            assertEquals(new Integer(22 - i * 2), response.getJSONObject("data").getJSONArray("content").getJSONObject(i).getInteger("job_id"));
         }
         assertEquals("success", response.getString("message"));
 

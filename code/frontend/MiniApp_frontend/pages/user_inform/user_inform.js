@@ -95,44 +95,6 @@ Page({
     });
   },
 
-  //用于性别switch的切换
-  changeGender(e) {
-    this.setData({
-      gender: !this.data.gender
-    })
-  },
-
-  //每次更新name的input组件后都重新获取name
-  getName(e) {
-    if (e.detail.detail.value.length <= 1) {
-      this.setData({
-        name_error: true
-      })
-    }
-    else {
-      this.setData({
-        name: e.detail.detail.value,
-        name_error: false
-      })
-    }
-  },
-
-  //每次更新identity的input组件后都重新获取identity
-  getIdentity(e) {
-    var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-    if (reg.test(e.detail.detail.value) === false) {
-      this.setData({
-        identity_error: true
-      })
-    }
-    else {
-      this.setData({
-        identity: e.detail.detail.value,
-        identity_error: false
-      })
-    }
-  },
-
   //每次更新phone_number的input组件后都重新获取phone_number
   getPhoneNumber(e) {
     var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;

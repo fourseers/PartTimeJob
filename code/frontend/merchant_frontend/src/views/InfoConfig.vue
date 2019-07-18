@@ -2,15 +2,7 @@
     <Layout >
 
         <Content class="content">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                <FormItem label="名称" prop="name">
-                    <Input v-model="formValidate.company_name" placeholder="公司名称"></Input>
-                </FormItem>
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-                    <Button @click="handleReset()" style="margin-left: 8px">初始</Button>
-                </FormItem>
-            </Form>
+            <p>公司名称:{{formValidate.company_name }}</p>
         </Content>
     </Layout>
 </template>
@@ -24,27 +16,44 @@
                 formValidate: {
                     company_name: ''
                 },
-                ruleValidate: {
-                    company_name: [
-                        { required: true, message: '公司名字不能为空', trigger: 'blur' }
-                    ]
-
-                }
             }
         },
-        methods: {
-            handleSubmit (name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.ChangeCompany();
-                    } else {
-                        this.$Message.error('Fail!');
+        created:function()
+        {
+            if(!this.$root.logged) {
+                this.$Message.warning('请登录');
+            }
+            else {
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/company"
+                }).then(response => {
+                    console.log(response);
+                    if (response.data.status === 200) {
+                        this.formValidate.company_name = response.data.data.company_name;
+                        console.log("success");
                     }
                 })
-            },
-            handleReset (name) {
-                this.formValidate.company_name = this.former_company_name;
-            },
+                    .catch(error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+                                console.log(error.response);
+                                this.$Message.error('暂无公司');
+                            }
+                        }
+                    })
+            }
+        },
+
+        methods: {
             ChangeCompany()
             {
                 console.log(this.$token.loadToken().access_token)
@@ -87,10 +96,10 @@
         padding:100px;
         background-color: #fff;
     }
-    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;
         border-color: #c8d6e5;
     }
+
 </style>

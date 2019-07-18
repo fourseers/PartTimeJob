@@ -1,8 +1,8 @@
 <template>
-    <div class="content">
-    <Table border :columns="columns7" :data="data6"></Table>
+    <Content class="content">
+        <Table border :columns="columns7" :data="data6"></Table>
 
-    </div>
+    </Content>
 </template>
 <script>
     export default {
@@ -11,7 +11,7 @@
             return {
                 columns7: [
                     {
-                        title: 'Name',
+                        title: '员工名字',
                         key: 'name',
                         render: (h, params) => {
                             return h('div', [
@@ -19,24 +19,29 @@
                             ]);
                         }
                     },
+
                     {
-                        title: 'begin_time',
+                        title: '店铺名',
+                        key: 'shop_name'
+                    },
+                    {
+                        title: '工作开始时间',
                         key: 'begin_time'
                     },
                     {
-                        title: 'checkin_time',
+                        title: '签到时间',
                         key: 'checkin_time'
                     },
                     {
-                        title: 'end_time',
+                        title: '工作结束时间',
                         key: 'end_time'
                     },
                     {
-                        title: 'checkout_time',
+                        title: '签离时间',
                         key: 'checkout_time'
                     },
                     {
-                        title: 'Rate',
+                        title: '打分',
                         key: 'action',
                         width: 190,
                         align: 'center',
@@ -56,7 +61,7 @@
                         }
                     },
                     {
-                        title: 'Action',
+                        title: '操作',
                         key: 'action',
                         width: 150,
                         align: 'center',
@@ -69,7 +74,7 @@
                                     },
                                     style: {
                                         color: '#fff',
-                                         marginRight: '5px',
+                                        marginRight: '5px',
                                         marginTop:'5px'
                                     },
                                     on: {
@@ -84,11 +89,11 @@
                                         size: 'small'
                                     },
                                     style: {
-                                    color: '#d63031',
+                                        color: '#d63031',
                                         borderColor:'#d63031',
                                         backgroundColor:'#fff',
-                                    marginRight: '5px',
-                                    marginTop:'5px',
+                                        marginRight: '5px',
+                                        marginTop:'5px',
                                         marginBottom:'5px'
 
                                     },
@@ -106,6 +111,7 @@
                 data6: [
                     {
                         name: 'John Brown',
+                        shop_name:"shop1",
                         begin_time:"2020-2-2",
                         checkin_time:"2026-2-2",
                         end_time:"2020-2-3",
@@ -113,12 +119,19 @@
                     },
                     {
                         name: 'John Brown',
+                        shop_name:"shop2",
                         begin_time:"2020-2-2",
                         checkin_time:"2026-2-2",
                         end_time:"2020-2-3",
                         checkout_time:"2020-2-2"
                     }
                 ]
+            }
+        },
+        created:function() {
+            if (!this.$root.logged) {
+                this.$Message.warning('请登录');
+            } else {
             }
         },
         methods: {
@@ -135,7 +148,7 @@
 
 <style scoped>
     .content{
-        margin-top:100px;
+        margin-top:20px;
         margin-left: 100px;
         margin-right:50px;
         background-color: #fff;

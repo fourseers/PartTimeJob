@@ -4,5 +4,5 @@
   <view class="tag" bind:tap="handleTransport">可打卡区域</view>
 </view>
 <i-button class="check-button" bind:click="handleCheck" type="success">
-  <text>立即去打卡</text>
+  <text>打卡</text>
 </i-button>

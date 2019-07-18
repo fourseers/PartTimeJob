@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dao;
 
-import com.fourseers.parttimejob.warehouse.entity.Tag;
+import com.fourseers.parttimejob.common.entity.Tag;
 import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.Positive;

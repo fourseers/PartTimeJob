@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.warehouse.dao.impl;
 
+import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
-import com.fourseers.parttimejob.warehouse.entity.Tag;
 import com.fourseers.parttimejob.warehouse.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

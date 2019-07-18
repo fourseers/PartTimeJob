@@ -1,5 +1,8 @@
 language: java
 
+jdk:
+  - openjdk8
+
 # safelist
 branches:
     only:
@@ -16,7 +19,34 @@ services:
   - mongodb
   - redis-server
 
-before_install:
-    - cd code/backend
-    - chmod +x mvnw
-
+jobs:
+  include:
+    - name: "arrangement"
+      before_install:
+        - cd code/backend/arrangement
+        - chmod +x ./mvnw
+    - name: "billing"
+      before_install:
+        - cd code/backend/billing
+        - chmod +x ./mvnw
+    - name: "warehouse"
+      before_install:
+        - cd code/backend/warehouse
+        - chmod +x ./mvnw
+    - name: "common lib"
+      before_install:
+        - cd code/backend/common
+        - chmod +x ./mvnw
+    - name: "auth"
+      before_install:
+        - cd code/backend/auth
+        - chmod +x ./mvnw
+    - name: "gateway"
+      before_install:
+        - cd code/backend/gateway
+        - chmod +x ./mvnw
+      
+stages:
+  - test-common-lib
+  - test-microservices
+  # no deployment yet

@@ -2,20 +2,58 @@
 import request from "../../api/request.js"
 const app = getApp()
 const { $Toast } = require("../../dist/base/index");
+const { $Message } = require('../../dist/base/index');
 
 Page({
 
   /**
-   * isRegistered用于判断用户是否注册；如果没有注册，将显示“注册”button
+   * is_registered用于判断用户是否注册；如果没有注册，将显示“注册”button
    * userInfo存储用户信息，从globalData复制
    * hasUserInfo判断用户是否登录；如果没有登陆，就显示“获取用户头像”button
    * canIUse调用接口，判断设备是否支持登录
+   * cells存储在“我”页面中所有可跳转到的页面信息
    */
   data: {
-    isRegistered: false,
+    is_registered: false,
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse("button.open-type.getUserInfo")
+    canIUse: wx.canIUse("button.open-type.getUserInfo"),
+    cells: [
+      {
+        title: "个人信息",
+        url: "/pages/user_inform/user_inform",
+        type: "businesscard",
+      },
+      {
+        title: "日程管理",
+        url: "/pages/timeline/timeline",
+        type: "activity",
+      },
+      {
+        title: "关于",
+        url: "/pages/index/index",
+        src: "/assets/icons/about.png"
+      }
+    ]
+  },
+
+  // 首次加载uesr页面的时候向用户显示登陆成功message
+  onLoad() {
+    if (app.globalData.is_registered) {
+      this.setData({
+        is_registered: app.globalData.is_registered
+      });
+      $Message({
+        content: '登陆成功',
+        type: 'success'
+      });
+    }
+    else {
+      $Message({
+        content: "您还没有注册",
+        type: "warning",
+      });
+    }
   },
 
   //生命周期函数
@@ -30,9 +68,11 @@ Page({
       this.handleModifySuccess();
     }
     //从globalData获取是否已注册的信息，从而决定要不要显示注册button
-    this.setData({
-      isRegistered: app.globalData.isRegistered
-    })
+    if(app.globalData.is_registered){
+      this.setData({
+        is_registered: app.globalData.is_registered
+      });
+    }
     //得到用户信息
     if (app.globalData.userInfo) {
       this.setData({
@@ -93,44 +133,5 @@ Page({
       type: "success"
     })
   },
-
-  //跳转到schedule页面
-  handleSchedule() {
-    wx.navigateTo({
-      url: "/pages/schedule/schedule",
-    })
-  },
-
-  //跳转到用户信息修改页面（user_inform页面）
-  handleInform() {
-    wx.navigateTo({
-      url: "/pages/user_inform/user_inform",
-    })
-  },
-
-  /*
-  testReq() {
-    console.log(app.globalData.access_token)
-  },
-  */
-
-  // 实现用户tap不同的grid后跳转到对应页面
-  handleTapGrid(e) {
-    switch (e.currentTarget.id){
-      case "个人信息":
-        this.handleInform();
-        break;
-      case "日程":
-        this.handleSchedule();
-        break;
-      default:
-        wx.showToast({
-          title: "敬请期待",
-          icon: "none",
-        });
-        this.testReq();
-        break;
-    }
-  }
 
 })

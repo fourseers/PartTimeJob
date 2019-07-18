@@ -4,43 +4,15 @@ import { login } from "./api/url.js"
 
 App({
   onLaunch: function () {
+
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
     // 登录
-    wx.login({
-      success: res => {
-        var req = new request();
-        //console.log(res);
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        var postData = {
-          "token": res.code
-        }
-        req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
-          if (res.statusCode === 400) {
-            this.globalData.isRegistered = false;
-            wx.showToast({
-              title: res.data.message,
-              icon: "none"
-            })
-          }
-          else if (res.statusCode === 200) {
-            this.globalData.isRegistered = true;
-            this.globalData.access_token = res.data.data.access_token;
-            this.globalData.expires_in = res.data.data.expires_in;
-            this.globalData.refresh_token = res.data.data.refresh_token;
-          }
-          else{
-            this.globalData.isRegistered = false;
-          }
-        }).catch(err => {
-          //console.log(err)
-          this.globalData.isRegistered = false;
-        })
-      }
-    })
+    this.login();
+
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -70,17 +42,55 @@ App({
           });
         }
       }
-    })
+    });
+
+    // 显示欢迎页面2秒后跳转到"我"页面
+    setTimeout(function () {
+      wx.reLaunch({
+        url: "/pages/user/user",
+      })
+    }, 2000)
   },
   globalData: {
     userInfo: null,
     userGPS: null,
-    isRegistered: false,
+    is_registered: false,
     showSendMessage: false,
     showModifySuccess: false,
     host: "http://202.120.40.8:30552",
     access_token: null,
     refresh_token: null,
     token_expires_in: null,
+  },
+
+  // use app.login() from other .js file to refresh the token
+  login() {
+    wx.login({
+      success: res => {
+        var req = new request();
+        //console.log(res);
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        var postData = {
+          "token": res.code
+        }
+        req.postRequest(this.globalData.host + login, JSON.stringify(postData)).then(res => {
+          if (res.statusCode === 400) {
+            this.globalData.is_registered = false;
+          }
+          else if (res.statusCode === 200) {
+            this.globalData.is_registered = true;
+            this.globalData.access_token = res.data.data.access_token;
+            this.globalData.expires_in = res.data.data.expires_in;
+            this.globalData.refresh_token = res.data.data.refresh_token;
+          }
+          else {
+            this.globalData.is_registered = false;
+          }
+        }).catch(err => {
+          //console.log(err)
+          this.globalData.is_registered = false;
+        })
+      }
+    });
   }
 })

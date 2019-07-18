@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.warehouse.dao.impl;
 
+import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
-import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.repository.MerchantUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

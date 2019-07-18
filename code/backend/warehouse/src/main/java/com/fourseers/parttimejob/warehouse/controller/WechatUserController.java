@@ -1,10 +1,10 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
-import com.fourseers.parttimejob.warehouse.util.ResponseBuilder;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class WechatUserController {
     private WechatUserService wechatUserService;
 
     @GetMapping("/info")
-    public ResponseEntity<JSONObject> getUserInfo(@RequestHeader("x-internal-token") String internalToken) {
+    public ResponseEntity<Response<JSONObject>> getUserInfo(@RequestHeader("x-internal-token") String internalToken) {
         WechatUser user = wechatUserService.findByInternalToken(internalToken);
         if(user == null)
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST);
@@ -28,7 +28,7 @@ public class WechatUserController {
     }
 
     @PostMapping("/info")
-    public ResponseEntity<JSONObject> updateUserInfo(
+    public ResponseEntity<Response<JSONObject>> updateUserInfo(
             @RequestBody(required = true) JSONObject userInfo,
             @RequestHeader("x-internal-token") String internalToken) {
         WechatUser user = wechatUserService.findByInternalToken(internalToken);

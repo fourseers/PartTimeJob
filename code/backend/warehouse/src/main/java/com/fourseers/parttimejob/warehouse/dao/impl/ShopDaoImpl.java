@@ -1,9 +1,13 @@
 package com.fourseers.parttimejob.warehouse.dao.impl;
 
+import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
-import com.fourseers.parttimejob.warehouse.entity.Shop;
+import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,11 +30,17 @@ public class ShopDaoImpl implements ShopDao {
         return shopRepository.findByShopIdAndUsername(shopId, username);
     }
 
-    public List<Shop> findAllByUserId(int userId) {
-        return shopRepository.findAllByUserId(userId);
+    public Page<Shop> findPageByUserId(int userId, int pageCount, int pageSize) {
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        return shopRepository.findPageByUserId(userId, pageable);
     }
 
-    public List<Shop> findAllByUsername(String username) {
-        return shopRepository.findAllByUsername(username);
+    public Page<Shop> findPageByUsername(String username, int pageCount, int pageSize) {
+        Pageable pageable = PageRequest.of(pageCount, pageSize);
+        return shopRepository.findPageByUsername(username, pageable);
+    }
+
+    public List<ShopBriefProjection> findShopBriefByUsername(String username) {
+        return shopRepository.findShopBriefByUsername(username);
     }
 }

@@ -13,9 +13,9 @@ public interface MerchantUserRepository extends JpaRepository<MerchantUser, Inte
 
     MerchantUser findByUsername(String username);
 
-    @Query("select user.userId as userId, user.username as username, user.banned as banned, company.companyId as companyId, company.companyName as companyName from MerchantUser user left join user.company as company where user.userId = ?1")
+    @Query("select user.userId as userId, user.username as username, company.companyId as companyId, company.companyName as companyName from MerchantUser user left join user.company as company where user.userId = ?1")
     MerchantUserInfoProjection findBriefByUserId(Integer userId);
 
-    @Query("select user.userId as userId, user.username as username, user.banned as banned, company.companyId as companyId, company.companyName as companyName from MerchantUser user left join user.company as company order by user.userId")
+    @Query("select user.userId as userId, user.username as username, company.companyId as companyId, company.companyName as companyName from MerchantUser user left join user.company as company order by user.userId")
     Page<MerchantUserInfoProjection> findAllOrderByUserId(Pageable pageable);
 }

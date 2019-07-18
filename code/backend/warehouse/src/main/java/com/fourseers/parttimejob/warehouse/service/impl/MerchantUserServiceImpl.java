@@ -32,14 +32,4 @@ public class MerchantUserServiceImpl implements MerchantUserService {
     public Page<MerchantUserInfoProjection> findPageBrief(Integer pageCount, int pageSize) {
         return merchantUserDao.findPageBrief(pageCount, pageSize);
     }
-
-    public void ban(Integer userId, boolean banned) {
-        MerchantUser user = merchantUserDao.findByUserId(userId);
-
-        if (user == null) {
-            throw new RuntimeException("user not exist");
-        }
-        user.setBanned(banned);
-        merchantUserDao.save(user);
-    }
 }

@@ -11,7 +11,6 @@ public class MerchantUser {
     private String username;
     private String password;
     private Company company;
-    private Boolean banned = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,13 +47,5 @@ public class MerchantUser {
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    public Boolean getBanned() {
-        return banned;
-    }
-
-    public void setBanned(Boolean banned) {
-        this.banned = banned;
     }
 }

@@ -53,7 +53,7 @@ jobs:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
     - cd ../gateway
-    - chmod +x ./mvnw
+    - chmod +x ./mvn
   - stage: deploy
     name: deploy
     # if: branch = develop

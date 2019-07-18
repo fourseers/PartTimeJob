@@ -13,6 +13,4 @@ public interface MerchantUserService {
     MerchantUserInfoProjection findBriefByUserId(Integer userId);
 
     Page<MerchantUserInfoProjection> findPageBrief(Integer pageCount, int pageSize);
-
-    void ban(Integer userId, boolean banned);
 }

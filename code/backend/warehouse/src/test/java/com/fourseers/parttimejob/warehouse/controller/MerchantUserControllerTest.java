@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.MerchantUser;
-import com.fourseers.parttimejob.warehouse.projection.MerchantUserInfoProjection;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -157,72 +155,5 @@ public class MerchantUserControllerTest {
         assertNotNull(response.getJSONObject("data").getJSONArray("content"));
         assertEquals(0, response.getJSONObject("data").getJSONArray("content").size());
         assertEquals("success", response.getString("message"));
-    }
-
-    @Test
-    public void banUserSuccess() throws Exception {
-        String admin = "God";
-
-        MerchantUser merchantUser = new MerchantUser();
-        merchantUser.setUsername("Evil");
-        merchantUser.setPassword("some password");
-        merchantUserService.save(merchantUser);
-
-        Integer userId = merchantUser.getUserId();
-
-        MvcResult result = mockMvc.perform(put("/admin/merchant-user/ban")
-                .header("x-internal-token", admin)
-                .param("user_id", String.valueOf(userId))
-                .param("ban", "true")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("success", response.getString("message"));
-        MerchantUserInfoProjection updatedMerchantUser = merchantUserService.findBriefByUserId(userId);
-        assertEquals(true, updatedMerchantUser.getBanned());
-    }
-
-    @Test
-    public void unbanUserSuccess() throws Exception {
-        String admin = "God";
-
-        MerchantUser merchantUser = new MerchantUser();
-        merchantUser.setUsername("Not evil");
-        merchantUser.setPassword("some password");
-        merchantUser.setBanned(true);
-        merchantUserService.save(merchantUser);
-
-        Integer userId = merchantUser.getUserId();
-
-        MvcResult result = mockMvc.perform(put("/admin/merchant-user/ban")
-                .header("x-internal-token", admin)
-                .param("user_id", String.valueOf(userId))
-                .param("ban", "false")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("success", response.getString("message"));
-        MerchantUserInfoProjection updatedMerchantUser = merchantUserService.findBriefByUserId(userId);
-        assertEquals(false, updatedMerchantUser.getBanned());
-    }
-
-    @Test
-    public void banUserNotExist() throws Exception {
-        String admin = "God";
-
-        MvcResult result = mockMvc.perform(put("/admin/merchant-user/ban")
-                .header("x-internal-token", admin)
-                .param("user_id", "666")
-                .param("ban", "true")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400))
-                .andReturn();
-
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("user not exist", response.getString("message"));
     }
 }

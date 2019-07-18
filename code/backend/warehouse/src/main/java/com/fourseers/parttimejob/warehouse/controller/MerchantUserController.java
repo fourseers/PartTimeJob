@@ -58,26 +58,4 @@ public class MerchantUserController {
 
         return ResponseBuilder.build(HttpStatus.OK, users, "success");
     }
-
-    @ApiOperation(value = "Ban one merchant user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "user not exist"),
-    })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
-                    required = true, dataType = "string", paramType = "header")
-    })
-    @RequestMapping(value = "/merchant-user/ban", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Response<Void>> banUser(@RequestParam(value = "user_id") Integer userId,
-                                                                        @ApiParam(value = "true: ban user, false: unban user") @RequestParam(value = "ban") Boolean ban,
-                                                                        @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
-
-        try {
-            merchantUserService.ban(userId, ban);
-            return ResponseBuilder.build(HttpStatus.OK, null, "success");
-        } catch (RuntimeException ex) {
-            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
-        }
-    }
 }

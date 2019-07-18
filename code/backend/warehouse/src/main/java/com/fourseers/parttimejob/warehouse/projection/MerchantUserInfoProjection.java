@@ -6,6 +6,8 @@ public interface MerchantUserInfoProjection {
 
     String getUsername();
 
+    Boolean getBanned();
+
     Integer getCompanyId();
 
     String getCompanyName();

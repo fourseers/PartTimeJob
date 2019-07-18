@@ -54,18 +54,17 @@ jobs:
     - mvn clean install -DskipTests=true -B -V
     - cd ../gateway
     - chmod +x ./mvnw
-  - stage: deploy
-    name: deploy
-    if: branch = develop
-    install: echo "Entering"
-    script: echo "Ready for deployment"
-    before_deploy:
-    -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in deploy_conf.enc -out ~/.ssh/rr_deploy_conf -d
-    -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in travis_id.enc -out ~/.ssh/travis_id_rsa -d
-    deploy:
-      - ssh rr_deploy -F ~/.ssh/rr_deploy_conf -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
+#   - stage: deploy
+#     name: deploy
+#     if: branch = develop
+#     install: echo "Entering"
+#     script: echo "Ready for deployment"
+#     before_deploy:
+#     -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in deploy_conf.enc -out ~/.ssh/rr_deploy_conf -d
+#     -  openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in travis_id.enc -out ~/.ssh/travis_id_rsa -d
+#     deploy:
+#       - ssh rr_deploy -F ~/.ssh/rr_deploy_conf -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
       
 stages:
 - test-common-lib
 - test-microservices
-- deploy

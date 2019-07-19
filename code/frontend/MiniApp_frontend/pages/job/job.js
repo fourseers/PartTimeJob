@@ -80,6 +80,7 @@ Page({
   // 上拉刷新
   onPullDownRefresh() {
     //console.log("onRefresh");
+    this.getUserJob();
   },
 
   // 触底加载更多

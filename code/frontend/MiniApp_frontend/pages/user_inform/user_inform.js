@@ -42,13 +42,13 @@ Page({
       if (res.statusCode === 200) {
         // console.log(res);
         // 给后端返回的tags的列表中的每个json都添加isChosen字段
-        var tags = res.data.tags;
+        var tags = res.data.data.tags;
         for (var index in tags) {
           tags[index].isChosen = false;
         }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
-          education_list: res.data.education,
+          education_list: res.data.data.education,
           tags: tags,
         })
         this.getUserInfo();

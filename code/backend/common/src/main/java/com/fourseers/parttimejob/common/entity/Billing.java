@@ -1,21 +1,17 @@
 package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "BILLING")
 public class Billing {
 
     private Integer billId;
     private WechatUser employee;
-    private Company company;
+    private Shop shop;
+    private Job job;
     private Date workDate;
-    private Double payment;
+    private Boolean paid;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,29 +31,38 @@ public class Billing {
         this.workDate = workDate;
     }
 
-    public Double getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Double payment) {
-        this.payment = payment;
-    }
-
     @ManyToOne(cascade = CascadeType.ALL)
-    public Company getCompany() {
-        return company;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setShop(Shop shop) {
+        this.shop = shop;
     }
 
     @OneToOne
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    @ManyToOne
     public WechatUser getEmployee() {
         return employee;
     }
 
     public void setEmployee(WechatUser employee) {
         this.employee = employee;
+    }
+
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
     }
 }

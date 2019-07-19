@@ -41,18 +41,42 @@
                             return h('i-switch',{
                                 props: {
                                     size: 'large',
-                                    value: !params.row.isbanned
+                                    value: !params.row.banned
                                 },
                                 style: {
-                                    color: params.row.isbanned?"#68B2FE":'#d63031',
-                                    borderColor: params.row.isbanned?'#d63031':"#68B2FE",
-                                    backgroundColor: (params.row.isbanned)?'#d63031':"#68B2FE",
+                                    color: params.row.banned?"#68B2FE":'#d63031',
+                                    borderColor: params.row.banned?'#d63031':"#68B2FE",
+                                    backgroundColor: (params.row.banned)?'#d63031':"#68B2FE",
                                 },
                                 on: {
                                     'on-change': (value) =>
                                     {
-                                        console.log(value);
-                                        params.row.isbanned = !value;
+                                        params.row.banned = !value;
+                                        this.banUser(params.row.user_id, params.row.banned).then(res => {
+                                                if(res.status===200 &&  params.row.banned)
+                                                {
+                                                    this.$Message.success('禁用成功');
+                                                }
+                                                else if(res.status===200 &&  !params.row.banned)
+                                                {
+                                                    this.$Message.success('解禁成功');
+                                                }
+
+                                            },
+                                            error => {
+                                                console.log(error.response);
+                                                if (error.response) {
+                                                    params.row.banned = !value;
+
+                                                    if (error.response.data.status === 400  &&  params.row.banned) {
+                                                        this.$Message.error('禁用失败');
+                                                    }
+                                                    else if(error.response.data.status === 400  &&!params.row.banned)
+                                                    {
+                                                        this.$Message.success('解禁失败');
+                                                    }
+                                                }}
+                                        )
                                     }
                                 }
                             }, [
@@ -90,7 +114,8 @@
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
                     url: prefix +"/admin/merchant-user",
@@ -108,10 +133,11 @@
                         this.total_pages=response.data.data.total_elements
                     }
                 }).catch(error=> {
+
                 })
             },
             mockTableData1 (pagenum) {
-                //get shops
+
                 var prefix="warehouse";
                 //测试用的url
                 this.axios({
@@ -142,7 +168,36 @@
                 // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
 
                 this.mockTableData1(index-1);
+            },
+            banUser(userid,banned)
+            {
+                var prefix="warehouse";
+                return new Promise((resolve, reject) => {
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
+                        },
+                        method:'put',
+                        url: prefix +"/admin/merchant-user/ban",
+                        params:{
+                            user_id:userid,
+                            ban:banned
+                        }
+                    }).then(({ status, data }) => {
+                        if (status === 200) {
+                            resolve(data);
+                        } else {
+                            reject( data);
+                        }
+                    }).catch(error => {
+                        reject( error);
+                    });
+                });
             }
+
         }
 
     }

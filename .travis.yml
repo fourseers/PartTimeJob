@@ -11,8 +11,13 @@ branches:
 
 # speed up building with maven cache
 cache:
-    directories:
-        - $HOME/.m2
+  directories:
+  - "$HOME/.m2"
+
+services:
+- mysql
+- mongodb
+- redis-server
 
 services:
   - mysql
@@ -21,50 +26,53 @@ services:
 
 jobs:
   include:
-    - name: "arrangement"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../arrangement
-        - chmod +x ./mvnw
-    - name: "billing"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../billing
-        - chmod +x ./mvnw
-    - name: "warehouse"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../warehouse
-        - chmod +x ./mvnw
-    - name: "common lib"
-      before_install:
-        - cd code/backend/common
-        - chmod +x ./mvnw
-    - name: "auth"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../auth
-        - chmod +x ./mvnw
-    - name: "gateway"
-      before_install:
-        - cd code/backend/common
-        - mvn clean install -DskipTests=true -B -V
-        - cd ../gateway
-        - chmod +x ./mvnw
-    # - stage: deploy
-    #   before_script:
-    #     - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in travis_id.enc -out ~/.ssh/travis_id_rsa -d
-    #     - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv -in deploy_conf.enc -out ~/.ssh/rr_deploy_config -d
-    #     - chmod 600 ~/.ssh/travis_id-rsa ~/.ssh/rr_deploy_config
+  - stage: test
+    if: type = pull_request
+    name: arrangement
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../arrangement
+    - chmod +x ./mvnw
+  - name: billing
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../billing
+    - chmod +x ./mvnw
+  - name: warehouse
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../warehouse
+    - chmod +x ./mvnw
+  - name: common lib
+    before_install:
+    - cd code/backend/common
+    - chmod +x ./mvnw
+  - name: auth
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../auth
+    - chmod +x ./mvnw
+  - name: gateway
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../gateway
+    - chmod +x ./mvnw
+  - stage: deploy
+    if: branch = develop AND type != pull_request
+    name: deploy
+    language: generic
+    before_script:
+    - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv
+      -in travis_secrets.tar.enc -out travis_secrets.tar -d
+    - tar xvf travis_secrets.tar
+    script:
+    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_APPSECRET"
 
-    #   script: ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py"
-
-      
 stages:
-  - test-common-lib
-  - test-microservices
-  # no deployment yet
+- test
+- deploy

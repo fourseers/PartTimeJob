@@ -40,6 +40,7 @@ Page({
     // 向后台获取注册元数据, 包括文化水平list、tags list
     req.getRequest(host + register_data, null).then(res => {
       if (res.statusCode === 200) {
+        // console.log(res);
         // 给后端返回的tags的列表中的每个json都添加isChosen字段
         var tags = res.data.tags;
         for (var index in tags) {

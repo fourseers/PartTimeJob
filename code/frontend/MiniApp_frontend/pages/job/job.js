@@ -1,6 +1,8 @@
 // pages/job/job.js
 const { $Toast } = require('../../dist/base/index');
 const app = getApp();
+import request from "../../api/request.js"
+import { host, job_list } from "../../api/url.js"
 
 Page({
 
@@ -45,6 +47,34 @@ Page({
       this.handleSuccess();
       app.globalData.showSendMessage = false;
     }
+    this.getUserJob();
+  },
+
+  getUserJob() {
+    var req = new request();
+    req.getRequest(host + job_list, null, app.globalData.access_token).then(res => {
+      if(res.statusCode === 401){
+        //console.log("user should login!");
+      }
+      if(res.statusCode === 200){
+        var job_list = res.data.data.content;
+        var new_jobs = [];
+        for (var i in job_list){
+          var new_job = {};
+          new_job.id = job_list[i].job_id;
+          new_job.name = job_list[i].job_name;
+          new_job.detail = job_list[i].job_detail;
+          new_job.tags = job_list[i].tag_list;
+          new_jobs[i] = new_job
+        }
+        
+        this.setData({
+          jobs: new_jobs
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
   },
 
   // 上拉刷新

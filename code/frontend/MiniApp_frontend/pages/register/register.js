@@ -276,11 +276,11 @@ Page({
       });
     }
     else{
+      this.setData({
+        isLoading: true,
+      })
       wx.login({
         success: res => {
-          this.setData({
-            isLoading: true,
-          })
           var req = new request();
           var tagIDs = [];
           for (var i in this.data.chosen_tags) {
@@ -321,11 +321,11 @@ Page({
           }).catch(err => {
             console.log(err)
           });
-          this.setData({
-            isLoading: false
-          });
         }
       })
+      this.setData({
+        isLoading: false
+      });
     }
   }
 

@@ -1,5 +1,8 @@
 // pages/job-detail/job_detail.js
 const app = getApp();
+import request from "../../api/request.js"
+import { host, job_detail } from "../../api/url.js"
+var job_id = 0;
 
 Page({
 
@@ -67,10 +70,7 @@ Page({
       }
     ],
     shop_name: "软件学院",
-    brand: "前端",
-    industry: "板砖",
     address: "上海市闵行区上海交通大学",
-    company_name: "脚痛大学",
     //shop_id不用显示，但是可以用于跳转页面
     shop_id: 0,
     //用于对话框的变量
@@ -92,14 +92,56 @@ Page({
   onLoad: (options) => {
     //用options 中的job_id向后台请求更详细的信息
     //console.log(options);
+    job_id = options.id;
   },
 
   /* 
-   * TODO
    * onShow的时候向后端请求岗位的详细信息
    * onShow的时候向后端请求店铺的位置信息
    */
   onShow() {
+    var req = new request();
+    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
+      var info = res.data.data;
+      if (res.statusCode === 200) {
+        var begin_date = new Date(info.begin_date);
+        var end_date = new Date(info.end_date);
+        var begin_apply_date = new Date(info.begin_apply_date);
+        var end_apply_date = new Date(info.end_apply_date);
+        this.setData({
+          job_name: info.job_name,
+          job_detail: info.job_detail,
+          begin_year: begin_date.getFullYear(),
+          begin_month: begin_date.getMonth(),
+          begin_date: begin_date.getDate(),
+          end_year: end_date.getFullYear(),
+          end_month: end_date.getMonth(),
+          end_date: end_date.getDate(),
+          need_amount: 4,
+          begin_apply_year: begin_apply_date.getFullYear(),
+          begin_apply_month: begin_apply_date.getMonth(),
+          begin_apply_date: begin_apply_date.getDate(),
+          end_apply_year: end_apply_date.getFullYear(),
+          end_apply_month: end_apply_date.getMonth(),
+          end_apply_date: end_apply_date.getDate(),
+          salary: info.salary,
+          tags: info.tag_list,
+          shop_name: info.shop.shop_name,
+          address: info.shop.address,
+          longitude: info.shop.longitude,
+          latitude: info.shop.latitude,
+          markers: [{
+            id: 1,
+            latitude: info.shop.latitude,
+            longitude: info.shop.longitude,
+            name: info.shop.shop_name
+          }]
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+    /*
     wx.getLocation({
       type: "gcj02",
       success: res => {
@@ -115,6 +157,7 @@ Page({
         })
       }
     });
+    */
   },
 
   // 按立即报名按钮后弹出对话框

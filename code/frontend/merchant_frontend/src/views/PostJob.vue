@@ -242,7 +242,7 @@
                 }, 1000)
             };
             return {
-
+                pagenum2:1,
                 total_elements_shop:0,
                 startTimeOptions: {}, //开始日期设置
                 endTimeOptions: {}, //结束日期设置
@@ -255,7 +255,7 @@
                     begin_apply_time:"00:00",
                     end_apply_time:"23:59",
                     job_name: '',
-                    shop: '',
+                    shop: 0,
                     gender: ['男', '女'],
                     education: [],
                     begin_date: '',
@@ -345,28 +345,8 @@
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
             } else {
-
-                //get shops
-                getShops().then(res => {
-                        console.log(res.data.content)
-                        this.shops = res.data.content
-                        this.total_elements_shop=res.data.total_elements
-                     //   this.total_pages= res.total_pages
-                    },
-                    error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                                console.log(error.response);
-                                this.$Message.error('暂无店铺');
-                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                                console.log(error.response);
-                                this.$Message.error('参数错误');
-                            }
-                        }
-
-                    }
-                )
-
+                    //获取第一页表格
+                this.mockTableData1 (0);
             }
 
         },
@@ -375,7 +355,8 @@
                 //get shops
                 getShops(pagenum).then(res => {
                         console.log( res.data)
-                        this.shops  = res.data.content
+                        this.shops = res.data.content
+                        this.total_elements_shop=res.data.total_elements
                     },
                     error => {
                         if (error.response) {
@@ -404,6 +385,14 @@
                 t.setTime(t_s + 1000 * seconds);
                 return t.toUTCString();
             },
+            get_added_time(date,time)
+            {
+                var t=new Date;
+                var t_s=date.getTime();
+                var seconds = this.convert_to_seconds(time);
+                t.setTime(t_s + 1000 * seconds);
+                return t;
+            },
             convert_to_seconds(str)
             {
                 var a = str.split(':'); // split it at the colons
@@ -420,11 +409,20 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        if(this.begin_date > this.end_apply_date)
+                        if( !this.formValidate.shop)
+                        {
+                            console.log( this.formValidate.shop)
+                            this.$Message.error("请选择店铺");
+                            return;
+                        }
+                        if(this.get_added_time(this.formValidate.begin_date,this.formValidate.begin_time)
+                            > this.get_added_time(this.formValidate.end_apply_date,this.formValidate.end_apply_time) )
                         {
                             this.postJob()
                         }
                         else {
+                            console.log(this.get_added_time(this.formValidate.begin_date,this.formValidate.begin_time)
+                                > this.get_added_time(this.formValidate.end_apply_date,this.formValidate.end_apply_time) )
                             this.$Message.error("工作开始时间不能比招聘结束时间早");
                         }
                     } else {

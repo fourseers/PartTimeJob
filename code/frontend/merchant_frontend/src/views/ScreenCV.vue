@@ -1,15 +1,12 @@
 <template>
-    <div>
-        <Row >
-            <Select v-model="post_chosen" style="width:200px;  margin:10px">
-                <OptionGroup label="店铺1">
-                    <Option v-for="item in postList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </OptionGroup>
-                <OptionGroup label="店铺2">
-                    <Option v-for="item in postList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </OptionGroup>
-            </Select>
-        </Row>
+    <div class="content">
+        <div class="head">
+            <Row >
+                <Col span="4">
+                    <Cascader :data="data" v-model="value1"></Cascader>
+                </Col>
+            </Row>
+        </div>
         <Row>
             <div >
                 <Carousel v-model="value1"   class="content">
@@ -42,30 +39,21 @@
 </template>
 
 <script>
+
+    import {getShops} from '../util/getShops.js'
     export default {
 
         name: "ScreeenCV",
         data () {
             return {
-                postList1: [
-                    {
-                        value: 'post 1',
-                        label: 'post 1'
-                    },
-                    {
-                        value:  'post 2',
-                        label: 'post 2'
-                    },
-                    {
-                        value:'post 3',
-                        label:'post 3'
-                    }
-                ],
-                postList2: [
-                    {
-                        value: 'post 4',
-                        label: 'post 4'
-                    }
+                options:{},
+                total_elements_shop:10,
+                pagenum2:1,
+                formValidate:{
+                    shop:""
+                },
+                shops: [],
+                data: [
                 ],
                 CVList1:[{
                     name:'elizabeth',
@@ -123,6 +111,26 @@
                 this.$Message.warning('请登录');
             }
             else{
+                //get shops
+                getShops().then(res => {
+                        console.log(res)
+                        this.shops = res.data.content
+                           this.data.push( this.shops)
+                        this.total_elements_shop=res.data.total_elements
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+                )
                 //GET CV
             }
         },
@@ -149,6 +157,33 @@
                 {
 
                 }
+                ,changePage (index) {
+                    // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                    this.mockTableData1(index-1);
+                },
+
+                mockTableData1 (pagenum) {
+                    //get shops
+                    getShops(pagenum).then(res => {
+                            console.log( res.data)
+                            this.shops  = res.data.content
+                        },
+                        error => {
+                            if (error.response) {
+                                if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                    console.log(error.response);
+                                    this.$Message.error('暂无店铺');
+                                } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                    console.log(error.response);
+                                    this.$Message.error('参数错误');
+                                }
+                            }
+
+                        }
+
+                    )
+                },
 
             }
 
@@ -157,9 +192,10 @@
 
 <style scoped>
     .content{
-        margin:10px 50px 50px;
+        margin-top:20px;
+        margin-left: 100px;
+        margin-right:50px;
         background-color: #fff;
-        height:500px;
     }
     ul li{
         list-style:none;
@@ -190,5 +226,8 @@
     }
     .cv-item{
         float:left;
+    }
+    .head{
+        margin :20px;
     }
 </style>

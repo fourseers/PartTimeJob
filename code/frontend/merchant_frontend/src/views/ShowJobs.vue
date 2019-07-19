@@ -65,7 +65,7 @@
 
                     },
                     {
-                        title: '日薪',
+                        title: '薪水',
                         key: 'salary'
                     },
                     {
@@ -219,42 +219,10 @@
             {this.$Message.warning('请登录');}
             else {
                 //get jobs
-                getJobs(0).then(res => {
-                        console.log(res)
-                        this.jobs = res.data.content
-                        this.total_elements=res.data.total_elements
-                        this.total_pages= res.total_pages
-                    },
-                    error => {
-                        if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                            this.$Message.error('暂无岗位');
-                            console.log(error)
-                        }
-                        console.log(error)
-                    }
-                )
-
-
+                this.mockTableData1(0)
                 //get shops
-                getShops().then(res => {
-                        console.log(res)
-                        this.shops = res.data.content
-
-                        this.total_elements_shop=res.data.total_elements
-                    },
-                    error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                                console.log(error.response);
-                                this.$Message.error('暂无店铺');
-                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                                console.log(error.response);
-                                this.$Message.error('参数错误');
-                            }
-                        }
-
-                    }
-                ) }
+                this.mockTableData2(0)
+                 }
 
         },
         methods: {
@@ -286,13 +254,15 @@
                     });
                 });
             },
-            mockTableData1 (pagenum,shop_id) {
+            mockTableData1 (pagenum) {
                 var prefix = "/arrangement"
 
                 //get jobs
                 getJobs(pagenum).then(res => {
                         console.log(res)
                         this.jobs = res.data.content
+                        this.total_pages= res.total_pages
+                        this.total_elements = res.data.total_elements
                     },
                     error => {
                         if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
@@ -308,6 +278,7 @@
                 getShops(pagenum).then(res => {
                         console.log(res.data)
                         this.shops = res.data.content
+                        this.total_elements_shop=res.data.total_elements
                     },
                     error => {
                         if (error.response) {

@@ -118,26 +118,10 @@
 
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
-            } else {
-                //get shops
-                getShops().then(res => {
-                        this.shops = res.data.content
-                        this.total_elements=res.data.total_elements
-                        this.total_pages= res.total_pages
-                    },
-                    error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                                console.log(error.response);
-                                this.$Message.error('暂无店铺');
-                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                                console.log(error.response);
-                                this.$Message.error('参数错误');
-                            }
-                        }
+            } else { 
 
-                    }
-                )
+                //获取第一页表格
+                this.mockTableData1 (0);
                 //get industry
                 getIndustry().then(res => {
                         console.log(res.data)

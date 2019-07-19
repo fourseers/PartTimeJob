@@ -185,7 +185,7 @@
                     {
                         console.log("success");
                         this.$Message.success('修改店铺成功');
-                        this.$router.push({ name: "'manageshop"})
+                        this.$router.push({ name: "manageshop"})
                     }
                 })
                     .catch(error => {

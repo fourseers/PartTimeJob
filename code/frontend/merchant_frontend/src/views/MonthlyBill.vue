@@ -53,7 +53,7 @@
                         }
                     },
                     {
-                        title: '日薪',
+                        title: '薪水',
                         key: 'salary'
                     },
                     {
@@ -71,7 +71,7 @@
                 this.$Message.warning('请登录');
             } else
             {
-
+//获取第一页账单
 
             }
 

@@ -5,12 +5,10 @@ import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.warehouse.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -28,7 +26,7 @@ public class InfoController {
 
     private class Info {
         private List<String> education;
-        private Page<Tag> tags;
+        private List<Tag> tags;
 
         public List<String> getEducation() {
             return education;
@@ -38,11 +36,11 @@ public class InfoController {
             this.education = education;
         }
 
-        public Page<Tag> getTags() {
+        public List<Tag> getTags() {
             return tags;
         }
 
-        void setTags(Page<Tag> tags) {
+        void setTags(List<Tag> tags) {
             this.tags = tags;
         }
     }
@@ -51,11 +49,10 @@ public class InfoController {
     private TagService tagService;
 
     @GetMapping("/register-info")
-    public ResponseEntity<Response<Info>> getUserRegisterInfo(
-            @RequestParam(value = "page_count") Integer pageCount) {
+    public ResponseEntity<Response<Info>> getUserRegisterInfo() {
         Info info = new Info();
         info.setEducation(Arrays.asList(education_list));
-        info.setTags(tagService.get(pageCount, PAGE_SIZE));
+        info.setTags(tagService.findAll());
         return ResponseBuilder.build(HttpStatus.OK, info, "success");
     }
 }

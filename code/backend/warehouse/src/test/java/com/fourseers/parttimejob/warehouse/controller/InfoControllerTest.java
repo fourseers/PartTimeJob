@@ -60,14 +60,13 @@ public class InfoControllerTest {
             tagService.addOne(tag);
         }
 
-        MvcResult result = mockMvc.perform(get("/user/register-info")
-                .param("page_count", "0"))
+        MvcResult result = mockMvc.perform(get("/user/register-info"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject resp = JSON.parseObject(result.getResponse().getContentAsString());
         assertNotNull(resp.getJSONObject("data"));
         JSONArray respEducation = resp.getJSONObject("data").getJSONArray("education");
-        JSONArray respTags = resp.getJSONObject("data").getJSONObject("tags").getJSONArray("content");
+        JSONArray respTags = resp.getJSONObject("data").getJSONArray("tags");
         assertEquals(respEducation.size(), 5);
         assertEquals(respTags.size(), 4);
     }

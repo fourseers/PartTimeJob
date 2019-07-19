@@ -4,8 +4,9 @@ import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
 import com.fourseers.parttimejob.warehouse.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -20,7 +21,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<Tag> get(int pageCount, int pageSize) {
-        return tagDao.get(pageCount, pageSize);
+    public List<Tag> findAll() {
+        return tagDao.findAll();
     }
 }

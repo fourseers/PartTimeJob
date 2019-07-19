@@ -38,6 +38,7 @@ public class WechatLoginController {
     OAuth oauth;
 
     private Pair<String, WechatUser> getWechatUser(JSONObject reqObject) {
+        System.out.println("\n\n\n\n" + reqObject + "\n\n\n\n");
         String token = (String) reqObject.get("token");
         JSONObject respObject = JSON.parseObject(wechat.auth(APP_ID, APP_SECRET, token, "authorization_code"));
         String sessionKey;

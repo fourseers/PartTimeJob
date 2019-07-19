@@ -80,6 +80,7 @@
             <scope>test</scope>
         </dependency>
 
+
         <!-- common dependencies -->
         <dependency>
             <groupId>com.fourseers.parttimejob</groupId>

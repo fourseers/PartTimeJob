@@ -10,7 +10,6 @@ import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.util.UserDecoder;
 import io.swagger.annotations.*;
-import org.bouncycastle.crypto.paddings.TBCPadding;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.constraints.Min;
 
@@ -81,6 +79,22 @@ public class WechatUserJobController {
     public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
             @RequestParam @Min(1) int jobId,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
+    ) {
+        if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if(user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+
+        return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
+    }
+
+    @ApiOperation(value = "User apply for job with a set of cv.")
+    @PostMapping("apply")
+    public ResponseEntity<Response<Void>> applyJob(
+            @RequestBody JSONObject params,
+            @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);

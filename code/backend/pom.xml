@@ -96,7 +96,17 @@
                 <artifactId>spring-security-test</artifactId>
                 <scope>test</scope>
             </dependency>
-
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>cz.jirutka.spring</groupId>
+                <artifactId>embedmongo-spring</artifactId>
+                <version>RELEASE</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>

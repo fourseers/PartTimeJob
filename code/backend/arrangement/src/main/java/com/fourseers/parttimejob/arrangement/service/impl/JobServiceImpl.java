@@ -126,10 +126,10 @@ public class JobServiceImpl implements JobService {
         if(job.getNeedGender() != 2 && (job.getNeedGender() == 1) != user.getGender()) {
             throw new RuntimeException("Sorry, this job requires a different gender.");
         }
-        if(user.getCity() != null && shop.getCity() != null) {
-            if(!user.getCity().equals(shop.getCity()))
-                throw new RuntimeException("User and shop are from different cities.");
-        }
+//        if(user.getCity() != null && shop.getCity() != null) {
+//            if(!user.getCity().equals(shop.getCity()))
+//                throw new RuntimeException("User and shop are from different cities.");
+//        }
         Etc.Education actualEdu = Etc.Education.fromName(cv.getEducation());
         Etc.Education requiredEdu = Etc.Education.fromName(job.getEducation());
         if(actualEdu == null || requiredEdu == null) {
@@ -146,6 +146,19 @@ public class JobServiceImpl implements JobService {
         application.setStatus(null);
         applicationDao.addOne(application);
         return true;
+    }
+
+    @Override
+    public JobDetailedInfoProjection getJobDetail(int jobId) {
+        return jobDao.getJobDetail(jobId);
+    }
+
+    @Override
+    public void setJobHiringState(Integer jobId, String username, Boolean stop) {
+        Job job = findByJobIdAndUsername(jobId, username);
+
+        job.setManualStop(stop);
+        jobDao.save(job);
     }
 
     @Override

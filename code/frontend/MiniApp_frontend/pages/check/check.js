@@ -15,12 +15,14 @@ Page({
         checkBeginTime: "8:30",
         checkEndTime: "9:00",
         canCheck: true,
+        id: 0,
       },
       {
         title: "搬砖工下班打卡",
         checkBeginTime: "20:30",
         checkEndTime: "21:00",
         canCheck: false,
+        id: 1,
       },
     ],
   },
@@ -65,12 +67,6 @@ Page({
 
   afterCalendarRender(e) {
     //console.log('afterCalendarRender', e);
-  },
-
-  handleCheck() {
-    wx.navigateTo({
-      url: "/pages/check_inform/check_inform",
-    })
   },
 
 })

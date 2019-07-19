@@ -16,6 +16,10 @@ Page({
     circles: []
   },
 
+  onLoad(options){
+    console.log(options);
+  },
+
   onShow() {
     wx.getLocation({
       type: "gcj02",

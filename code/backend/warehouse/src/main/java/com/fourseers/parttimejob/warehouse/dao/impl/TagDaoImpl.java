@@ -4,8 +4,6 @@ import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
 import com.fourseers.parttimejob.warehouse.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Positive;
@@ -35,13 +33,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getAll() {
+    public List<Tag> findAll() {
         return tagRepository.findAll();
-    }
-
-    @Override
-    public Page<Tag> get(int pageCount, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageCount, pageSize);
-        return tagRepository.findAll(pageRequest);
     }
 }

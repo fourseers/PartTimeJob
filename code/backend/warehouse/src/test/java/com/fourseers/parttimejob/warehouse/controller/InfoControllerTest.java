@@ -17,11 +17,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,25 +54,19 @@ public class InfoControllerTest {
     @Test
     public void testGetInfoList() throws Exception {
 
-        List<Tag> tagEntites = new ArrayList<>();
         for(String tagName: tags) {
             Tag tag = new Tag();
             tag.setName(tagName);
             tagService.addOne(tag);
-            tagEntites.add(tag);
         }
-        JSONObject expectedResp = new JSONObject();
-        expectedResp.put("education",
-                new JSONArray().fluentAddAll(educationList));
-        expectedResp.put("tags",
-                new JSONArray().fluentAddAll(tagEntites));
 
         MvcResult result = mockMvc.perform(get("/user/register-info"))
                 .andExpect(status().isOk())
                 .andReturn();
         JSONObject resp = JSON.parseObject(result.getResponse().getContentAsString());
-        JSONArray respEducation = expectedResp.getJSONArray("education");
-        JSONArray respTags = expectedResp.getJSONArray("tags");
+        assertNotNull(resp.getJSONObject("data"));
+        JSONArray respEducation = resp.getJSONObject("data").getJSONArray("education");
+        JSONArray respTags = resp.getJSONObject("data").getJSONArray("tags");
         assertEquals(respEducation.size(), 5);
         assertEquals(respTags.size(), 4);
     }

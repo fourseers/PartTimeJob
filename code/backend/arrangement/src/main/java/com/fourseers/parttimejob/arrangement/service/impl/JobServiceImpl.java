@@ -98,6 +98,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public void setJobHiringState(Integer jobId, String username, Boolean stop) {
+        Job job = findByJobIdAndUsername(jobId, username);
+
+        job.setManualStop(stop);
+        jobDao.save(job);
+    }
+
+    @Override
     public Page<Job> findJobs(WechatUser user, int pageCount) {
         return jobDao.findJobs(user, pageCount, PAGE_SIZE);
     }

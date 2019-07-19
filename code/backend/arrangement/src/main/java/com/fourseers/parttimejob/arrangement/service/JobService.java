@@ -19,4 +19,6 @@ public interface JobService {
     Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
 
     JobDetailedInfoProjection getJobDetail(int jobId);
+
+    void setJobHiringState(Integer jobId, String username, Boolean stop);
 }

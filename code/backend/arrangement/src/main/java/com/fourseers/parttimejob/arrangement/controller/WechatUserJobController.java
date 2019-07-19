@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
@@ -24,11 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/user")
 @Validated
-@ApiImplicitParams(
-        @ApiImplicitParam(name = "x-internal-token",
-                value = "Internal authorization token",
-                required = true, dataType = "String", paramType = "header" )
-)
 public class WechatUserJobController {
 
     @Value("${app.wechat_user_prefix}")
@@ -88,4 +84,36 @@ public class WechatUserJobController {
 
         return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
     }
+
+    @ApiOperation(value = "User apply for job with a set of cv.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Application success"),
+            @ApiResponse(code = 400, message = "Invalid application. Consult message field for further info.")
+    })
+    @PostMapping("apply")
+    public ResponseEntity<Response<Void>> applyJob(
+            @ApiParam("Param in json, contains jobId and cvId") @RequestBody JSONObject params,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
+    ) {
+        if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if(user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+        Integer jobId = params.getInteger("jobId");
+        String cvId = params.getString("cvId");
+        if(jobId == null || cvId == null) {
+            return ResponseBuilder.build(BAD_REQUEST, null, "Missing params.");
+        }
+        try {
+            jobService.apply(user, jobId, cvId);
+            return ResponseBuilder.buildEmpty(OK);
+        } catch (RuntimeException e) {
+            return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+        } catch (Exception e) {
+            return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+        }
+    }
+
 }

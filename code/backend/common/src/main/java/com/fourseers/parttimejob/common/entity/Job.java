@@ -20,6 +20,7 @@ public class Job {
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
+    private Integer appliedAmount = 0;
     private Timestamp beginApplyDate;
     private Timestamp endApplyDate;
     private String education;
@@ -150,6 +151,15 @@ public class Job {
 
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    public Integer getAppliedAmount() {
+        return appliedAmount;
+    }
+
+    public void setAppliedAmount(Integer appliedAmount) {
+        this.appliedAmount = appliedAmount;
     }
 
     public Boolean getManualStop() {

@@ -4,6 +4,7 @@ import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.warehouse.service.TagService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,11 @@ public class InfoController {
     @Autowired
     private TagService tagService;
 
-    @GetMapping("/register-info")
+    @ApiOperation(value = "Get register info, including education and tag")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success")
+    })
+    @GetMapping(value = "/register-info", produces = "application/json")
     public ResponseEntity<Response<Info>> getUserRegisterInfo() {
         Info info = new Info();
         info.setEducation(Arrays.asList(education_list));

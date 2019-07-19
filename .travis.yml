@@ -11,15 +11,73 @@ branches:
 
 # speed up building with maven cache
 cache:
-    directories:
-        - $HOME/.m2
+  directories:
+  - "$HOME/.m2"
+
+services:
+- mysql
+- mongodb
+- redis-server
 
 services:
   - mysql
   - mongodb
   - redis-server
 
-before_install:
-    - cd code/backend
-    - chmod +x mvnw
+env:
+  global:
+  - secure: VCIrrfhJKk0nTvbKcQsHJ5a9HYRKTGD1EhNjyUmqZ1fB1Mg8ylo5r597bIbXAAdEXUjaQS79YeBz/O77Y5xcF0uW65cGl5rv7Xs0ItIjZFlk1h2f03mT9J/KfHPu9ChZmkMC22o0DCCM1eD7ZULEudC3qKj2e0y/lE7m37ezOcpv7Qr3CJ5uVboaqvZo4HvCSUJnaOS3oKD2jw4iHf/svELPd0VxRMrqLI5g1/+mv1O+1+YL6CDKxlTTlBmSoX9f4YIgl9Wc44awDaxM/Uq1taD2m9wtcSHC3W/Zs+IJxxYukPbMhALxhwfjSIr11YDtGWEj5M2eXTIZZxTceZkgqidyfl3AzGXVZxqPvqSHrAf+P1er6HnUHU9AJFGuMJ1SLrZ4aTOxhIgjDtnSIRsKca9iyvr9B4AjSuxbNvokC+NrMJTrZZW3UOjGluF+Syh51CbVzspaI4YhMqz+W+mQN5YhUxCOc4B+0nrJW6CIBmUj7pKybFHmcBZrl4gkKa0alo5e0nwH/YqwXPI6Xtz1szXalg2z1FhguIEaFrFIKKFgdvIv5Q4iYjANs1OF6Qg13Z/2rdRKRedxhlYdU9KaZ3aAEe9ssdb+E9qFmjztmASj4f96o8j7YS+MpVV/zcDP43xufXrbF4G29XbhCAAvvNh8VH+Ok+1O51btH1C4KFQ=
+  - secure: oSaim54eEgaNuC402mP4WWKi3oKTtUz6tsyb1F1BdAn4ooSimodqt8ZLaOceBc4BHJq19fp4RFejQayyDpTZCvmVJAPrJ3gnqJha82G0B7nOyl6uPPxMUn26mikhBQ+2rk2TckMKEqAXl8GS+Ke6M+yqtz08/jyMWxEaGdGAKKUmxwAZ8il8HjmgmPtdrLdnVI7Y8bkX/qrRL0h3qJMFH+gRD9L3M451304aLm1rLSTrzPyvipPbyEGZUH+nVs93XUaFbhAhDGpUS7mOsMD7r5OxD+uaOO8zUig/TS9AzjmLnUuw4RTgjxo7PdgGAYg0skHGozE08EUxnZf78xI18jedWSa7Y3V0kuFXjvFPDgL+qPlMJ+YszD8go/GoTv6RXyaygxhPX59ZFW2m4kYtN0skCNMnAQKiWRrgF/3V8dklotvSX0iU3dWfrI77xzCFfr06UstvW3tefKgAJUAEZNuokZTaGyUlTVNV+WE85QdqRKJ9bZrVhB/mwztXtkbWniI17JqZFg/O2C+T+P2wD+K881xURgjEBnADC+jBTAuz2bC3KZYJ+1b4O73OCKlxx0wu/BV0AeFnrBBPNj44Nzw8oJOVDpXmvwF0buKWy/fF+o8ZMPJ/2vvyBa/s8gtxR5qWYbfEl5oynmW2X+psDesSETdhsTz+jJau3r/qqx0=
 
+jobs:
+  include:
+  - stage: test
+    if: type = pull_request
+    name: arrangement
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../arrangement
+    - chmod +x ./mvnw
+  - name: billing
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../billing
+    - chmod +x ./mvnw
+  - name: warehouse
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../warehouse
+    - chmod +x ./mvnw
+  - name: common lib
+    before_install:
+    - cd code/backend/common
+    - chmod +x ./mvnw
+  - name: auth
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../auth
+    - chmod +x ./mvnw
+  - name: gateway
+    before_install:
+    - cd code/backend/common
+    - mvn clean install -DskipTests=true -B -V
+    - cd ../gateway
+    - chmod +x ./mvnw
+  - stage: deploy
+    if: branch = develop AND type != pull_request
+    name: deploy
+    language: generic
+    before_script:
+    - openssl aes-256-cbc -K $encrypted_95436d440959_key -iv $encrypted_95436d440959_iv
+      -in travis_secrets.tar.enc -out travis_secrets.tar -d
+    - tar xvf travis_secrets.tar
+    script:
+    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_APPSECRET"
+
+stages:
+- test
+- deploy

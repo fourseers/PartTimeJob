@@ -6,7 +6,6 @@ import routes from './router/path.js'
 import token from './util/token.js'
 import iView from 'iview'
 import axios from 'axios'
-
 import qs from 'qs'
 import 'iview/dist/styles/iview.css';
 import echarts from 'echarts'
@@ -33,6 +32,7 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 Vue.use(iView);
 Vue.use(Vuex);
+
 import AMap from 'vue-amap'
 Vue.use(AMap)
 new Vue({
@@ -43,6 +43,7 @@ new Vue({
   data: function () {
     return {
       logged: false,
+      admin:false
     }}
   ,
   created:function(){

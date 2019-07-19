@@ -27,6 +27,7 @@ public class Job {
     private List<Tag> tagList;
     private Double salary;
     private Shop shop;
+    private Boolean manualStop = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +66,8 @@ public class Job {
         this.endDate = endDate;
     }
 
-    @NotBlank
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     public String getJobDetail() {
         return jobDetail;
     }
@@ -159,5 +161,11 @@ public class Job {
 
     public void setAppliedAmount(Integer appliedAmount) {
         this.appliedAmount = appliedAmount;
+    public Boolean getManualStop() {
+        return manualStop;
+    }
+
+    public void setManualStop(Boolean manualStop) {
+        this.manualStop = manualStop;
     }
 }

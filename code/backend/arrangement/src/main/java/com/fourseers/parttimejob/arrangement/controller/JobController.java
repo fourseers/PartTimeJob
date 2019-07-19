@@ -105,6 +105,7 @@ public class JobController {
         }
     }
 
+
     @ApiOperation(value = "Get one page of job info")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
@@ -136,6 +137,27 @@ public class JobController {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "job not exist");
             }
             return ResponseBuilder.build(HttpStatus.OK, jobs, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Manually stop job hiring")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / job not exist or not belong to"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/job/stop", method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<Response<Void>> stopJob(@RequestParam(value = "job_id") Integer jobId,
+                                                @ApiParam(value = "false: restart job hiring, true: stop job hiring") @RequestParam(value = "stop") Boolean stop,
+                                                @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+        try {
+            jobService.setJobHiringState(jobId, username, stop);
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }

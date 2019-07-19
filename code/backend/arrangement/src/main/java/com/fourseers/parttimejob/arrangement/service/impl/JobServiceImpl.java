@@ -5,6 +5,7 @@ import com.fourseers.parttimejob.arrangement.dao.CVDao;
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.repository.CVRepository;
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
 import com.sun.org.apache.regexp.internal.RE;

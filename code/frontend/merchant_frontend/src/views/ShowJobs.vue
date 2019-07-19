@@ -133,6 +133,7 @@
                                     {
                                         params.row.manual_stop= !value;
                                         this.stopHire(params.row.job_id, params.row.manual_stop).then(res => {
+                                            console.log(res)
                                                 if(res.status===200 &&  params.row.manual_stop)
                                                 {
                                                     this.$Message.success('停止招聘成功');
@@ -170,7 +171,7 @@
                         }
                     }
                 ],
-                jobs:this.mockTableData1(0),
+                jobs:[],
                 shop_chosen:"",
                 shops:[],
                 pagenum:1,

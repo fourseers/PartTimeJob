@@ -108,7 +108,7 @@
                         }
                     }
                 ],
-                shops:this.mockTableData1(0),
+                shops:[],
                 pagenum:1,
                 total_elements: 10,
                 total_pages:2,

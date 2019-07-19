@@ -3,7 +3,11 @@
         <div class="head">
             <Row >
                 <Col span="4">
-                    <Cascader :data="data" v-model="value1"></Cascader>
+                    <div v-on:scroll="scrollFunction">
+                    <Cascader :data="data" v-model="value1"  :load-data="loadData"  id="myCascader" >
+
+                    </Cascader>
+                    </div>
                 </Col>
             </Row>
         </div>
@@ -41,14 +45,17 @@
 <script>
 
     import {getShops} from '../util/getShops.js'
+
+    import {getJobs, getJobsByShop} from '../util/getJobs.js'
     export default {
 
         name: "ScreeenCV",
         data () {
             return {
+                Cascader:{},
                 options:{},
                 total_elements_shop:10,
-                pagenum2:1,
+                total_elements_job:10,
                 formValidate:{
                     shop:""
                 },
@@ -113,10 +120,20 @@
             else{
                 //get shops
                 getShops().then(res => {
-                        console.log(res)
                         this.shops = res.data.content
-                           this.data.push( this.shops)
                         this.total_elements_shop=res.data.total_elements
+                        for(var i=0;i<this.shops.length;i++) {
+                            var item = {
+                                value: this.shops[i].shop_id,
+                                label: this.shops[i].shop_name,
+                                children: [],
+                                loading: false
+                            }
+                            this.data.push(item)
+                        }
+                        window.addEventListener('scroll',function(e)
+                        {console.log(e)
+                        }, true);
                     },
                     error => {
                         if (error.response) {
@@ -132,7 +149,10 @@
                     }
                 )
                 //GET CV
+
             }
+        },
+        mounted: {
         },
         watch : {
             post_chosen:function(val) {
@@ -141,7 +161,44 @@
             }
         },
         methods:
-            {
+            {scrollFunction()
+                {
+                  alert("scroll")
+                },
+                loadData (item, callback) {
+                    item.loading = true;
+                    //get jobs by shop
+                    getJobsByShop(0,item.value).then(res => {
+                        console.log( res.data.content.length)
+
+                        for(var i=0;i<res.data.content.length;i++) {
+                            console.log(res.data.content[i])
+                            var child = {
+                                value: res.data.content[i].job_id,
+                                label: res.data.content[i].job_name,
+                            }
+                            item.children.push(child);
+                        }
+
+                            console.log(  item.children)
+                            this.total_elements_job=res.data.total_elements
+
+                            item.loading = false;
+                            callback()
+                        },
+                        error => {
+                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                this.$Message.error('暂无岗位');
+                                console.log(error)
+                            }
+                            console.log(error)
+
+                            item.loading = false;
+                            callback()
+                        }
+                    )
+
+                },
                 getCVList:function(val)
                 {
                     if(val === "post 1")

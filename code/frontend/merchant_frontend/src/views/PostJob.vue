@@ -421,8 +421,6 @@
                             this.postJob()
                         }
                         else {
-                            console.log(this.get_added_time(this.formValidate.begin_date,this.formValidate.begin_time)
-                                > this.get_added_time(this.formValidate.end_apply_date,this.formValidate.end_apply_time) )
                             this.$Message.error("工作开始时间不能比招聘结束时间早");
                         }
                     } else {

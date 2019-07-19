@@ -2,11 +2,17 @@
     <div class="content">
         <Table border :columns="columns7" :data="bill">
             <div slot="header" class="table-height">月末账单</div>
+            <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                    <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+                </div>
+            </div>
             <div slot="footer" class="table-height">
                 本月需支付总金额：{{}}
 
                 <Button class="ivu-btn" @click="handleSubmit('formInline')" >确认支付</Button>
             </div>
+
 
         </Table>
 
@@ -18,6 +24,8 @@
         name: "ShowJobs",
         data() {
             return {
+                total_elements:10,
+                pagenum:1,
                 columns7: [
                     {
                         title: '店铺名称',
@@ -34,21 +42,21 @@
                     },
                     {
                         title: '员工名字',
-                        key: 'need_amount'
+                        key: 'emplyee_name'
                     },
                     {
                         title: '上班开始时间',
-                        key: 'begin_apply_date',
+                        key: 'begin_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.begin_apply_date).toJSON();
+                            var dateee = new Date(params.row.begin_time).toJSON();
                             return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
                         }
                     },
                     {
                         title: '上班结束时间',
-                        key: 'end_apply_date',
+                        key: 'end_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.end_apply_date).toJSON();
+                            var dateee = new Date(params.row.end_time).toJSON();
                             return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
                         }
                     },
@@ -57,10 +65,11 @@
                         key: 'salary'
                     },
                     {
-                        title: '确认状态',
-                        key: 'confirmed'
+                        title: '支付状态',
+                        key: 'paid'
                     }
                 ],
+                bill:[]
             }
         },
         watch:
@@ -71,10 +80,44 @@
                 this.$Message.warning('请登录');
             } else
             {
-//获取第一页账单
-
+                //获取第一页账单
+                this.mockTableData1(0)
             }
 
+        },
+        methods: {
+            mockTableData1(pagenum) {
+                //get bills
+                var prefix="/warehouse"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing",
+                    params:{
+                        page_count:pagenum,
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        this.bill=response.data.data.content;
+                        console.log("success");
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+            }, changePage(index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index - 1);
+            }
         }
     }
 </script>

@@ -25,11 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/user")
 @Validated
-@ApiImplicitParams(
-        @ApiImplicitParam(name = "x-internal-token",
-                value = "Internal authorization token",
-                required = true, dataType = "String", paramType = "header" )
-)
 public class WechatUserJobController {
 
     @Value("${app.wechat_user_prefix}")
@@ -91,10 +86,14 @@ public class WechatUserJobController {
     }
 
     @ApiOperation(value = "User apply for job with a set of cv.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Application success"),
+            @ApiResponse(code = 400, message = "Invalid application. Consult message field for further info.")
+    })
     @PostMapping("apply")
     public ResponseEntity<Response<Void>> applyJob(
-            @RequestBody JSONObject params,
-            @RequestHeader("x-internal-token") String token
+            @ApiParam("Param in json, contains jobId and cvId") @RequestBody JSONObject params,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);

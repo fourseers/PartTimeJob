@@ -18,6 +18,7 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "billing.job.beginDate as beginTime, " +
             "billing.job.endDate as endTime, " +
             "billing.job.salary as payment, " +
+            "billing.job.jobName as jobName, " +
             "billing.paid as paid from Billing billing " +
             "where billing.shop.company.companyId = ?1")
     Page<BillingProjection> getBillingsByCompanyIdOrderByBillIdDesc(Integer companyId, Pageable pageable);

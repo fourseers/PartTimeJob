@@ -11,6 +11,7 @@ public interface BillingProjection {
     String getEmployeeName();
     Timestamp getBeginTime();
     Timestamp getEndTime();
+    String getJobName();
     Double getPayment();
     Boolean getPaid();
 }

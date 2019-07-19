@@ -36,28 +36,33 @@ jobs:
     - cd ../arrangement
     - chmod +x ./mvnw
   - name: billing
+    if: type = pull_request
     before_install:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
     - cd ../billing
     - chmod +x ./mvnw
   - name: warehouse
+    if: type = pull_request
     before_install:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
     - cd ../warehouse
     - chmod +x ./mvnw
   - name: common lib
+    if: type = pull_request
     before_install:
     - cd code/backend/common
     - chmod +x ./mvnw
   - name: auth
+    if: type = pull_request
     before_install:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
     - cd ../auth
     - chmod +x ./mvnw
   - name: gateway
+    if: type = pull_request
     before_install:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
@@ -75,7 +80,7 @@ jobs:
       -in travis_secrets.tar.enc -out travis_secrets.tar -d
     - tar xvf travis_secrets.tar
     script:
-    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_APPSECRET"
+    - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_SECRET"
 
 stages:
 - test

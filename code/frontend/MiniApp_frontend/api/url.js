@@ -6,6 +6,7 @@ const user_info = "/warehouse/user/info"
 const modify_info = "/warehouse/user/info"
 const job_list = "/arrangement/user/jobs"
 const job_detail = "/arrangement/user/job?jobId="
+const apply_job = "/arrangement/user/apply"
 
 module.exports = {
   login,
@@ -15,5 +16,6 @@ module.exports = {
   user_info,
   modify_info,
   job_list,
-  job_detail
+  job_detail,
+  apply_job
 }

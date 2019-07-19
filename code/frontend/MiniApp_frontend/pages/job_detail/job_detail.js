@@ -1,7 +1,8 @@
 // pages/job-detail/job_detail.js
+const { $Toast } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
-import { host, job_detail } from "../../api/url.js"
+import { host, job_detail, apply_job } from "../../api/url.js"
 var job_id = 0;
 
 Page({
@@ -169,11 +170,27 @@ Page({
 
   // 对话框确定后发送岗位申请
   handleSendApply() {
-    // TODO
     // 发送岗位申请请求
-    app.globalData.showSendMessage = true;
-    wx.navigateBack({
-      
+    var req = new request();
+    req.postRequest(host + apply_job, {
+      jobId: parseInt(job_id),
+      cvId: "5d318647a095e24d3285f8e",//5d318647a095e24d3285f8ea
+    }, app.globalData.access_token).then(res => {
+      if(res.statusCode === 200){
+        app.globalData.showSendMessage = true;
+        wx.navigateBack({
+
+        })
+      }
+      if(res.statusCode === 400){
+        this.handleClose();
+        $Toast({
+          content: res.data.message,
+          type: 'error'
+        });
+      }
+    }).catch(err => {
+      console.log(err)
     })
   },
 

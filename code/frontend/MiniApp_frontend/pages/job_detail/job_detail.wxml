@@ -45,7 +45,7 @@
   <map class="job-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}"></map>
   <i-cell title="公司信息" label="{{shop_name}}--{{address}}"></i-cell>
 </i-panel>
-
+<i-toast id="toast" />
 <i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
     <view>您确定要应聘这个岗位吗</view>
 </i-modal>

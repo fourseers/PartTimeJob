@@ -115,33 +115,58 @@
                         key: 'education',
                     },
                     {
-                        title: '操作',
+                        title: '招聘状态',
                         key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type:'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        color: '#d63031',
-                                        borderColor:'#d63031',
-                                        backgroundColor:'#fff',
-                                        marginRight: '5px',
-                                        marginTop:'5px',
-                                        marginBottom:'5px'
-                                    },
+                        render: (h,params) => {
+                            return h('i-switch',{
+                                props: {
+                                    size: 'large',
+                                    value: !params.row.manual_stop
+                                },
+                                style: {
+                                    color: params.row.manual_stop?"#68B2FE":'#d63031',
+                                    borderColor: params.row.manual_stop?'#d63031':"#68B2FE",
+                                    backgroundColor: (params.row.manual_stop)?'#d63031':"#68B2FE",
+                                },
+                                on: {
+                                    'on-change': (value) =>
+                                    {
+                                        params.row.manual_stop= !value;
+                                        this.stopHire(params.row.job_id, params.row.manual_stop).then(res => {
+                                                if(res.status===200 &&  params.row.manual_stop)
+                                                {
+                                                    this.$Message.success('停止招聘成功');
+                                                }
+                                                else if(res.status===200 &&  !params.row.manual_stop)
+                                                {
+                                                    this.$Message.success('继续招聘成功');
+                                                }
 
-                                    on: {
-                                        click: () => {
-                                            //删除店铺
-                                        }
+                                            },
+                                            error => {
+                                                console.log(error.response);
+                                                if (error.response) {
+                                                    params.row.manual_stop= !value;
+
+                                                    if (error.response.data.status === 400  &&  params.manual_stop) {
+                                                        this.$Message.error('停止招聘失败');
+                                                    }
+                                                    else if(error.response.data.status === 400  &&!params.row.manual_stop)
+                                                    {
+                                                        this.$Message.success('继续招聘失败');
+                                                    }
+                                                }}
+                                        )
                                     }
-                                }, '停止招聘')
-                            ]);
+                                }
+                            }, [
+                                h('span', {
+                                    slot: 'open'
+                                }, '继续'),
+                                h('span', {
+                                    slot: 'close'
+                                }, '停止')
+                            ])
                         }
                     }
                 ],
@@ -232,6 +257,34 @@
 
         },
         methods: {
+            stopHire(id,stop)
+            {
+                var prefix="arrangement";
+                return new Promise((resolve, reject) => {
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
+                        },
+                        method:'put',
+                        url: prefix +"/merchant/job/stop",
+                        params:{
+                            job_id:id,
+                            stop:stop
+                        }
+                    }).then(({ status, data }) => {
+                        if (status === 200) {
+                            resolve(data);
+                        } else {
+                            reject( data);
+                        }
+                    }).catch(error => {
+                        reject( error);
+                    });
+                });
+            },
             mockTableData1 (pagenum,shop_id) {
                 var prefix = "/arrangement"
 

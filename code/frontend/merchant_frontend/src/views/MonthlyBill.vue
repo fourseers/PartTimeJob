@@ -2,11 +2,6 @@
     <div class="content">
         <Table border :columns="columns7" :data="bill">
             <div slot="header" class="table-height">月末账单</div>
-            <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                    <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
-                </div>
-            </div>
             <div slot="footer" class="table-height">
                 本月需支付总金额：{{}}
 
@@ -16,6 +11,11 @@
 
         </Table>
 
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -42,31 +42,38 @@
                     },
                     {
                         title: '员工名字',
-                        key: 'emplyee_name'
+                        key: 'employee_name'
                     },
                     {
                         title: '上班开始时间',
                         key: 'begin_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.begin_time).toJSON();
-                            return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
+                            return  h('div',[
+                                h('div',new Date(params.row.begin_time).toLocaleDateString()),
+                                h('div',new Date(params.row.begin_time).toTimeString().substr(0,5))
+                            ])
                         }
                     },
                     {
                         title: '上班结束时间',
                         key: 'end_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.end_time).toJSON();
-                            return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
+                            return  h('div',[
+                                h('div',new Date(params.row.end_time).toLocaleDateString()),
+                                h('div',new Date(params.row.end_time).toTimeString().substr(0,5))
+                            ])
                         }
                     },
                     {
                         title: '薪水',
-                        key: 'salary'
+                        key: 'payment'
                     },
                     {
                         title: '支付状态',
-                        key: 'paid'
+                        key: 'paid',
+                        render: (h, params) => {
+                            return  h('div', params.row.paid?"已支付":"拒绝支付")
+                        }
                     }
                 ],
                 bill:[]
@@ -88,7 +95,7 @@
         methods: {
             mockTableData1(pagenum) {
                 //get bills
-                var prefix="/warehouse"
+                var prefix="/billing"
                 this.axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",

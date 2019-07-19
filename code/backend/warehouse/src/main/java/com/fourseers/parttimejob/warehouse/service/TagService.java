@@ -1,13 +1,11 @@
 package com.fourseers.parttimejob.warehouse.service;
 
 import com.fourseers.parttimejob.common.entity.Tag;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface TagService {
 
     void addOne(Tag tag);
 
-    List<Tag> get(int pageCount, int pageSize);
-    List<Tag> getAll();
+    Page<Tag> get(int pageCount, int pageSize);
 }

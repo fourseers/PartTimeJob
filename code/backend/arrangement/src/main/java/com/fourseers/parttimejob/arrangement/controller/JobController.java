@@ -153,7 +153,7 @@ public class JobController {
     })
     @RequestMapping(value = "/job/stop", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<Response<Void>> stopJob(@RequestParam(value = "job_id") Integer jobId,
-                                                @ApiParam(value = "false: stop job hiring, true: restart job hiring") @RequestParam(value = "stop") Boolean stop,
+                                                @ApiParam(value = "false: restart job hiring, true: stop job hiring") @RequestParam(value = "stop") Boolean stop,
                                                 @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
         try {
             jobService.setJobHiringState(jobId, username, stop);

@@ -41,10 +41,10 @@ insert into shop (shop_id, address, brand, city, industry_industry_id, introduct
 (10, 'somewhere in Shanghai', 'Apple', 'Shanghai', 1, 'Make Apple great again', 31.230339, 121.473656, 'Shanghai', '上海市政府', 1);
 
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中及以上', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
+('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
 ('2019-07-14 16:00:00', '2019-07-16 16:00:00', '不限', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中及以上', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
+('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '大学本科及以上', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10);
+('2019-07-14 16:00:00', '2019-07-16 16:00:00', '本科毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10);

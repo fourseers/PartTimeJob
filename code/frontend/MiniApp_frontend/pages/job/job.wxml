@@ -17,7 +17,7 @@
       label="{{item.detail}}"
     >
       <view slot="icon">
-        <i-avatar size="small">厨</i-avatar>
+        <i-avatar size="small">{{item.name}}</i-avatar>
       </view>
       <view slot="footer">
         <i-tag

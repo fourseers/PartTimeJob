@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.billing.controller;
 
+import com.fourseers.parttimejob.billing.dto.BillDto;
 import com.fourseers.parttimejob.billing.projection.BillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.common.util.Response;
@@ -9,12 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping(value = "/merchant/billing")
@@ -56,6 +55,29 @@ public class BillingController {
         }
 
         return ResponseBuilder.build(HttpStatus.OK, bills, "success");
+    }
+
+    @ApiOperation(value = "Pay one billing")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company / bill not exist or not belong to current company / bill already paid"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/pay", method = POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> payBilling(
+            @ApiParam(value = "Bill ID you wish to pay")
+            @RequestBody BillDto billId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+       try {
+           billingService.payBill(username, billId.getBillId());
+           return ResponseBuilder.build(HttpStatus.OK, null, "success");
+       } catch (RuntimeException ex) {
+           return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+       }
     }
 
 }

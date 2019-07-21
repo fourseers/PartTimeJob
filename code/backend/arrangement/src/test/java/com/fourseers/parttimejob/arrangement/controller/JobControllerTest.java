@@ -54,7 +54,7 @@ public class JobControllerTest {
             .fluentPut("need_amount", 10)
             .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
             .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-            .fluentPut("education", "大学本科以上")
+            .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
 
@@ -94,7 +94,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -127,7 +127,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-            .fluentPut("education", "大学本科以上")
+            .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
 
@@ -160,7 +160,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -193,7 +193,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -226,7 +226,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Tue, 16 Jul 2019 16:00:01 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -259,7 +259,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Sat, 13 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -292,7 +292,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Mon Jul 15 2019 00:00:00 GMT+0800")
                 .fluentPut("end_apply_date", "Tue Jul 16 2019 00:00:00 GMT+0800")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", -1);
 
@@ -504,7 +504,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("大学本科以上");
+                job.setEducation("本科毕业");
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");
@@ -542,7 +542,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("大学本科以上");
+                job.setEducation("本科毕业");
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");

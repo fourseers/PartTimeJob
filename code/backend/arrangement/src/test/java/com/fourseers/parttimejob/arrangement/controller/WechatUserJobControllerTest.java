@@ -8,6 +8,7 @@ import com.fourseers.parttimejob.arrangement.repository.CVRepository;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
 import com.fourseers.parttimejob.common.entity.CV;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
 import com.mongodb.BasicDBObjectBuilder;
@@ -80,8 +81,6 @@ public class WechatUserJobControllerTest {
     private String userCVId;
     private Integer goodJobId, noEduJobId, outdateJobId, fullJobId, femaleJobId;
 
-    private int newJobId;
-
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
@@ -94,7 +93,7 @@ public class WechatUserJobControllerTest {
 
         CV cv = new CV();
         cv.setUserId(1);
-        cv.setEducation("高中毕业");
+        cv.setEducation(Etc.Education.SENIOR_HIGH);
         cv.setContent("Default content goes here...");
         cvRepository.save(cv);
         userCVId = cv.getId();

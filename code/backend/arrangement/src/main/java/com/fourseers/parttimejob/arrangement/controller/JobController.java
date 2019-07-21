@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.arrangement.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.service.JobService;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.util.Response;
@@ -51,7 +52,7 @@ public class JobController {
             job.setBeginApplyDate(new Timestamp(beginApplyDate.getTime()));
             Date endApplyDate = format.parse(body.getString("end_apply_date"));
             job.setEndApplyDate(new Timestamp(endApplyDate.getTime()));
-            job.setEducation(body.getString("education"));
+            job.setEducation(Etc.Education.fromName(body.getString("education")));
             List<Tag> tagList = new ArrayList<>();
             for (int i = 0; i < body.getJSONArray("tag_list").size(); i++) {
                 Tag tag = new Tag();

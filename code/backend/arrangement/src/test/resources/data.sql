@@ -18,7 +18,7 @@ insert into shop (address, brand, city, industry_industry_id, introduction, lati
 insert into tag (name) values ('IT');
 insert into tag (name) values ('互联网');
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '大学本科以上', '2019-07-15 16:00:00', '2019-07-17 16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
+('2019-07-14 16:00:00', '2019-07-16 16:00:00', '本科毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
 insert into job_tag_list (job_list_job_id, tag_list_id) values (1, 1);
 insert into merchant_user (username, password) values ('poor user', 'poor password');
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
@@ -43,7 +43,7 @@ insert into shop (shop_id, address, brand, city, industry_industry_id, introduct
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
 ('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '不限', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
+('2019-07-14 16:00:00', '2019-07-16 16:00:00', '初中毕业及以下', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
 ('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
 insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values

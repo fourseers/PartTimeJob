@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ public class WechatUser {
     private String phone;
     private String country;
     private String city;
-    private String education;
+    private Etc.Education education;
 
     private Set<Tag> tags;
 
@@ -84,12 +85,18 @@ public class WechatUser {
         this.city = city;
     }
 
-    public String getEducation() {
+    @NotNull
+    @Convert(converter = Etc.EducationColumnConverter.class)
+    public Etc.Education getEducation() {
         return education;
     }
 
-    public void setEducation(String education) {
+    public void setEducation(Etc.Education education) {
         this.education = education;
+    }
+
+    public void setEducation(String education) {
+        this.education = Etc.Education.valueOf(education);
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH)

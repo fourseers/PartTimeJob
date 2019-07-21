@@ -23,7 +23,7 @@ public class Job {
     private Integer appliedAmount = 0;
     private Timestamp beginApplyDate;
     private Timestamp endApplyDate;
-    private String education;
+    private Etc.Education education;
     private List<Tag> tagList;
     private Double salary;
     private Shop shop;
@@ -115,13 +115,18 @@ public class Job {
         this.endApplyDate = endApplyDate;
     }
 
-    @NotBlank
-    public String getEducation() {
+    @NotNull
+    @Convert(converter = Etc.EducationColumnConverter.class)
+    public Etc.Education getEducation() {
         return education;
     }
 
-    public void setEducation(String education) {
+    public void setEducation(Etc.Education education) {
         this.education = education;
+    }
+
+    public void setEducation(String education) {
+        this.education = Etc.Education.fromName(education);
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

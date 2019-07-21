@@ -1,0 +1,23 @@
+<!--pages/cv_inform/cv_inform.wxml-->
+<i-panel title="基础信息">
+  <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" error="{{name_error}}" right/>
+  <i-cell title="性别">
+    <i-switch id="gender-switch" value="{{ gender }}" bind:change="changeGender" slot="footer" i-class="{{gender ? 'man-background' : 'woman-background'}}">
+      <view slot="open">男</view>
+      <view slot="close">女</view>
+    </i-switch>
+  </i-cell>
+  <i-input value="{{ identity }}" title="身高/cm" placeholder="请输入身高" maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right />
+  <i-input value="{{ identity }}" title="体重/kg" placeholder="请输入体重  " maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right />
+  <i-input value="{{ phone_number }}" title="手机号" placeholder="请输入手机号" maxlength="11" bind:change="getPhoneNumber" error="{{phone_error}}" right />
+  <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right />
+</i-panel>
+<i-panel title="自我评价">
+
+</i-panel>
+<i-panel title="工作经历">
+  <block wx:for="{{experiences}}">
+    <i-input title="{{item}}"></i-input>
+  </block>
+  <i-button bind:click="addExperience">添加经历</i-button>
+</i-panel>

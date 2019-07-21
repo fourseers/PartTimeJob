@@ -95,10 +95,6 @@ public class WechatUser {
         this.education = education;
     }
 
-    public void setEducation(String education) {
-        this.education = Etc.Education.valueOf(education);
-    }
-
     @ManyToMany(cascade = CascadeType.REFRESH)
     public Set<Tag> getTags() {
         return tags;

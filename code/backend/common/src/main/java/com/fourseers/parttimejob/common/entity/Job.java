@@ -125,10 +125,6 @@ public class Job {
         this.education = education;
     }
 
-    public void setEducation(String education) {
-        this.education = Etc.Education.fromName(education);
-    }
-
     @ManyToMany(fetch = FetchType.EAGER)
     public List<Tag> getTagList() {
         return tagList;

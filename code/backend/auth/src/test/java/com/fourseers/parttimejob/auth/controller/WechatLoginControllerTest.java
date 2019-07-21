@@ -3,6 +3,7 @@ package com.fourseers.parttimejob.auth.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class WechatLoginControllerTest {
         wechatUser1.setOpenid("correct_openid");
         wechatUser1.setCity("Shanghai");
         wechatUser1.setCountry("China");
-        wechatUser1.setEducation("Master");
+        wechatUser1.setEducation(Etc.Education.ABOVE_BACHELOR);
         wechatUser1.setGender(true);
         wechatUser1.setIdentity("310000200001010000");
         wechatUserService.save(wechatUser1);
@@ -204,7 +205,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", "Primary School");
+        body.put("education", Etc.Education.BELOW_SENIOR.name());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -242,7 +243,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", "Primary School");
+        body.put("education", Etc.Education.BELOW_SENIOR.name());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -271,7 +272,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", "Primary School");
+        body.put("education", Etc.Education.BELOW_SENIOR.name());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -300,7 +301,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", "Primary School");
+        body.put("education", Etc.Education.BELOW_SENIOR.name());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 

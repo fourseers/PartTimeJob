@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.service.JobService;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.sql.Timestamp;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -504,7 +503,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("本科毕业");
+                job.setEducation(Etc.Education.BACHELOR);
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");
@@ -542,7 +541,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("本科毕业");
+                job.setEducation(Etc.Education.BACHELOR);
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");

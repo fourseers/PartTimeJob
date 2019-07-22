@@ -3,44 +3,31 @@ package com.fourseers.parttimejob.arrangement.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.arrangement.dao.CVDao;
 import com.fourseers.parttimejob.arrangement.repository.CVRepository;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
 import com.fourseers.parttimejob.common.entity.CV;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-import org.apache.logging.log4j.message.TimestampMessage;
-import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
-import org.bouncycastle.util.Times;
-import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import sun.awt.geom.AreaOp;
 
 import javax.transaction.Transactional;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
-import static java.util.Calendar.DATE;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,8 +67,6 @@ public class WechatUserJobControllerTest {
     private String userCVId;
     private Integer goodJobId, noEduJobId, outdateJobId, fullJobId, femaleJobId;
 
-    private int newJobId;
-
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
@@ -94,7 +79,7 @@ public class WechatUserJobControllerTest {
 
         CV cv = new CV();
         cv.setUserId(1);
-        cv.setEducation("高中毕业");
+        cv.setEducation(Etc.Education.SENIOR_HIGH);
         cv.setContent("Default content goes here...");
         cvRepository.save(cv);
         userCVId = cv.getId();
@@ -125,7 +110,7 @@ public class WechatUserJobControllerTest {
         job.setBeginDate(yesterdayNextWeek);
         job.setEndDate(tomorrowNextWeek);
         job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
         job.setNeedGender(2);
@@ -140,7 +125,7 @@ public class WechatUserJobControllerTest {
         job.setBeginDate(yesterdayNextWeek);
         job.setEndDate(tomorrowNextWeek);
         job.setSalary(100.0);
-        job.setEducation("本科毕业");
+        job.setEducation(Etc.Education.BACHELOR);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
         job.setNeedGender(2);
@@ -155,7 +140,7 @@ public class WechatUserJobControllerTest {
         job.setBeginDate(yesterdayNextWeek);
         job.setEndDate(tomorrowNextWeek);
         job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
         job.setNeedGender(2);
@@ -171,7 +156,7 @@ public class WechatUserJobControllerTest {
         job.setBeginDate(yesterdayNextWeek);
         job.setEndDate(tomorrowNextWeek);
         job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
         job.setNeedGender(2);
@@ -186,7 +171,7 @@ public class WechatUserJobControllerTest {
         job.setBeginDate(yesterdayNextWeek);
         job.setEndDate(tomorrowNextWeek);
         job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach English");
         job.setNeedGender(0);   // require female

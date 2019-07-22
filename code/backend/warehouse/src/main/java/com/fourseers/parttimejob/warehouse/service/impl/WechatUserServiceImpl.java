@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
@@ -62,7 +63,7 @@ public class WechatUserServiceImpl implements WechatUserService {
         if(userInfoDto.getString("phone") != null)
             user.setPhone(userInfoDto.getString("phone"));
         if(userInfoDto.getString("education") != null)
-            user.setEducation(userInfoDto.getString("education"));
+            user.setEducation(Etc.Education.valueOf(userInfoDto.getString("education")));
         if(userInfoDto.getJSONArray("tags") != null) {
             JSONArray tags = userInfoDto.getJSONArray("tags");
             Set<Tag> trueTags = new HashSet<>();

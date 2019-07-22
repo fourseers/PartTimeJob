@@ -12,8 +12,7 @@ public class CV {
     @Id
     private String id;
 
-    @NotBlank
-    private String education;
+    private Etc.Education education;
     private String content;
 
     @NotNull
@@ -27,11 +26,11 @@ public class CV {
         this.id = id;
     }
 
-    public String getEducation() {
+    public Etc.Education getEducation() {
         return education;
     }
 
-    public void setEducation(String education) {
+    public void setEducation(Etc.Education education) {
         this.education = education;
     }
 

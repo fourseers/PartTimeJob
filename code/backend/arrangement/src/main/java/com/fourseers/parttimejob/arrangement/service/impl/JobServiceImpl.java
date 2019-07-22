@@ -130,12 +130,12 @@ public class JobServiceImpl implements JobService {
 //            if(!user.getCity().equals(shop.getCity()))
 //                throw new RuntimeException("User and shop are from different cities.");
 //        }
-        Etc.Education actualEdu = Etc.Education.fromName(cv.getEducation());
-        Etc.Education requiredEdu = Etc.Education.fromName(job.getEducation());
+        Etc.Education actualEdu = cv.getEducation();
+        Etc.Education requiredEdu = job.getEducation();
         if(actualEdu == null || requiredEdu == null) {
             throw new RuntimeException("Invalid education");
         }
-        if(actualEdu.ordinal() < requiredEdu.ordinal()) {
+        if(!actualEdu.satisfies(requiredEdu)) {
             throw new RuntimeException("No enough education");
         }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.service.JobService;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.sql.Timestamp;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -54,7 +53,7 @@ public class JobControllerTest {
             .fluentPut("need_amount", 10)
             .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
             .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-            .fluentPut("education", "大学本科以上")
+            .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
 
@@ -94,7 +93,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -127,7 +126,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-            .fluentPut("education", "大学本科以上")
+            .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
 
@@ -160,7 +159,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -193,7 +192,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Mon, 15 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -226,7 +225,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Tue, 16 Jul 2019 16:00:01 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -259,7 +258,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Sun, 14 Jul 2019 16:00:00 GMT")
                 .fluentPut("end_apply_date", "Sat, 13 Jul 2019 16:00:00 GMT")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
 
@@ -292,7 +291,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_date", "Mon Jul 15 2019 00:00:00 GMT+0800")
                 .fluentPut("end_apply_date", "Tue Jul 16 2019 00:00:00 GMT+0800")
-                .fluentPut("education", "大学本科以上")
+                .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", -1);
 
@@ -504,7 +503,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("大学本科以上");
+                job.setEducation(Etc.Education.BACHELOR);
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");
@@ -542,7 +541,7 @@ public class JobControllerTest {
                 job.setNeedAmount(10);
                 job.setBeginApplyDate(new Timestamp(1563235000000L));
                 job.setEndApplyDate(new Timestamp(1563235100000L));
-                job.setEducation("大学本科以上");
+                job.setEducation(Etc.Education.BACHELOR);
                 job.setTagList(null);
                 job.setSalary(100d);
                 job.setJobDetail("sell");

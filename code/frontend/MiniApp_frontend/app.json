@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/cv_inform/cv_inform",
     "pages/index/index",
+    "pages/cv_inform/cv_inform",
     "pages/timeline/timeline",
     "pages/job_detail/job_detail",
     "pages/register/register",

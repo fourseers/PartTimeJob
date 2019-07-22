@@ -1,5 +1,9 @@
 /* pages/cv_inform/cv_inform.wxss */
 
+.container {
+  margin-bottom: 100rpx;
+}
+
 #gender-switch .man-background{
   background-color: #2d8cf0; 
   border-color: #2d8cf0; 
@@ -8,4 +12,14 @@
 #gender-switch .woman-background{
   background-color: pink; 
   border-color: pink; 
+}
+
+.experience-button{
+  width: 40%;
+}
+
+.save-button {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }

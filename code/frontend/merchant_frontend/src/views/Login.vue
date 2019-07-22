@@ -57,7 +57,6 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.login_process(this.formInline.user, this.formInline.password)
-
           } else {
             this.$Message.error('Fail!');
           }
@@ -81,8 +80,9 @@
                       if (error.response.data.status === 400) {
                         this.$Message.error('用户名或者密码错误');
                       }
-                    } else {
+                     else {
                       this.$Message.error('登录失败');
+                    }
                     }
 
                     reject(error.response.data.status);

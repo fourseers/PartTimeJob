@@ -3,12 +3,16 @@ module.exports = {
     'js',
     'jsx',
     'json',
-    'vue'
+    'vue',
+    "ts",
+    "tsx",
   ],
+
   transform: {
     '^.+\\.vue$': 'vue-jest',
     '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
-    '^.+\\.jsx?$': 'babel-jest'
+    '^.+\\.jsx?$': 'babel-jest',
+      "^.+\\.tsx?$": "ts-jest"
   },
   transformIgnorePatterns: [
     '/node_modules/'

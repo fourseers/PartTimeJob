@@ -1,11 +1,11 @@
-import {shallowMount,mount} from '@vue/test-utils'
+import VueTestUtils, {shallowMount,mount} from '@vue/test-utils'
 import Login from '@/views/Login.vue'
 import token from '@/util/token.js'
-describe('Login.vue', () => {
-    describe('Test for  Button Component', () => {
-        const wrapper = shallowMount(Login);
 
+describe('Login.vue', () => {
         it('calls handleSubmit(\'formInline\') when click on button', () => {
+
+            const wrapper = shallowMount(Login);
             // 创建mock函数
             const mockFn = jest.fn();
             // 设置 Wrapper vm 的方法并强制更新。
@@ -17,7 +17,6 @@ describe('Login.vue', () => {
             expect(mockFn).toBeCalled();
             expect(mockFn).toHaveBeenCalledTimes(1)
         })
-    });
 })
 
 describe('Login.vue', () => {
@@ -49,7 +48,6 @@ describe('Login.vue', () => {
         }
         Login.methods.login("user_one", "user_one").then(response => {
             expect(response.data.scope).toEqual(goodresponse.data.scope);
-
             done();
         });
 
@@ -83,7 +81,7 @@ describe('Login.vue', () => {
     const wrapper = shallowMount(Login)
     const vm = wrapper.vm
     it('tests password wrong', async () => {
-       // expect.assertions(1);
+        // expect.assertions(1);
         await expect(vm.login_process("user_one", "user_one222")).rejects.toEqual(
             400);
     });
@@ -91,7 +89,6 @@ describe('Login.vue', () => {
 
 
 describe('Login.vue', () => {
-
     const wrapper = shallowMount(Login)
     const vm = wrapper.vm
     it('tests no params ', async () => {
@@ -100,11 +97,9 @@ describe('Login.vue', () => {
             400);
     });
 })
-
 
 
 describe('Login.vue', () => {
-
     const wrapper = shallowMount(Login)
     const vm = wrapper.vm
     it('tests no params ', async () => {
@@ -113,3 +108,26 @@ describe('Login.vue', () => {
             400);
     });
 })
+
+describe('Login.vue', () => {
+    it('tests 401 ', async () => {
+
+        const wrapper = shallowMount(Login)
+        const vm = wrapper.vm
+        var axios = require('axios');
+        var MockAdapter = require('axios-mock-adapter');
+
+// This sets the mock adapter on the default instance
+        var mock = new MockAdapter(axios);
+
+        mock.onPost('http://202.120.40.8:30552/auth/merchant/login').reply(function(config) {
+            return [401, {
+                status: 401
+            }];
+        });
+        // expect.assertions(1);
+        await expect(vm.login_process("", "")).rejects.toEqual(
+            401);
+    });
+})
+

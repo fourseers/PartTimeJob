@@ -8,7 +8,7 @@ VueTestUtils.config.mocks['$token'] =  token
 VueTestUtils.config.mocks['$Message'] =  {
     success:function()
     {
-
+        return "success";
     },
     error:function()
     {
@@ -16,7 +16,7 @@ VueTestUtils.config.mocks['$Message'] =  {
     },
     warning:function()
     {
-
+        return "warning";
     }
 }
 VueTestUtils.config.mocks['$root'] =Vue

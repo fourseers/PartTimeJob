@@ -324,6 +324,8 @@ public class WechatUserJobControllerTest {
         assertNotNull(data.getString("job_detail"));
         assertNotNull(data.getString("begin_apply_time"));
         assertNotNull(data.getString("end_apply_time"));
+        assertNotNull(data.getString("begin_time"));
+        assertNotNull(data.getString("end_time"));
     }
 
 

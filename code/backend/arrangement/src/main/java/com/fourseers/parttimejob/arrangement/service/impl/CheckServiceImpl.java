@@ -50,7 +50,12 @@ public class CheckServiceImpl implements CheckService {
             throw new RuntimeException("Not within checkin time.");
 
         // new work entity
-        Work work = new Work();
+        Work work = workRepository.getByJobAndWorker(job, user);
+        if(work != null) {
+            if (work.getCheckin() != null)
+                throw new RuntimeException("Already checked in.");
+        } else
+            work = new Work();
         work.setWorkDate(Date.valueOf(LocalDate.now()));
         work.setCheckin(Time.valueOf(LocalTime.now()));
         work.setJob(job);
@@ -80,6 +85,9 @@ public class CheckServiceImpl implements CheckService {
         Work work = workRepository.getByJobAndWorker(job, user);
         if(work == null || work.getCheckin() == null)  {
             throw new RuntimeException("Haven't checked in yet.");
+        }
+        if(work.getCheckout() != null) {
+            throw new RuntimeException("Already checked out.");
         }
         work.setCheckout(Time.valueOf(LocalTime.now()));
         workRepository.save(work);

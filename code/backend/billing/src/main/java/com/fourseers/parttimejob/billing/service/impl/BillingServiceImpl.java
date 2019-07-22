@@ -56,6 +56,7 @@ public class BillingServiceImpl implements BillingService {
         billing.setWork(work);
         billingDao.save(billing);
         work.setBilling(billing);
+        work.setSalaryConfirmed(true);
         workDao.save(work);
     }
 

@@ -17,7 +17,8 @@ public class Etc {
         private Education(String name) {
             this.name = name;
         }
-        private String getName() {
+
+        public String getName() {
             return this.name;
         }
         public static Education fromName(String name) {

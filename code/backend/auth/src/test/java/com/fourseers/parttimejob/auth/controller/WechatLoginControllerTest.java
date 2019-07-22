@@ -205,7 +205,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", Etc.Education.BELOW_SENIOR.name());
+        body.put("education", Etc.Education.BELOW_SENIOR.getName());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -243,7 +243,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", Etc.Education.BELOW_SENIOR.name());
+        body.put("education", Etc.Education.BELOW_SENIOR.getName());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -272,7 +272,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", Etc.Education.BELOW_SENIOR.name());
+        body.put("education", Etc.Education.BELOW_SENIOR.getName());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 
@@ -301,7 +301,7 @@ public class WechatLoginControllerTest {
         body.put("name", "Trump");
         body.put("city", "Washington");
         body.put("country", "America");
-        body.put("education", Etc.Education.BELOW_SENIOR.name());
+        body.put("education", Etc.Education.BELOW_SENIOR.getName());
         body.put("gender", true);
         body.put("identity", "330000200001010000");
 

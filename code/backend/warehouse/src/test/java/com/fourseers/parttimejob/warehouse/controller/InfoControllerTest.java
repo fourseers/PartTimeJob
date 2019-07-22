@@ -3,6 +3,7 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.warehouse.service.TagService;
 import org.junit.After;
@@ -37,9 +38,7 @@ public class InfoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static List<String> educationList = Arrays.asList(
-            "初中以下", "初中毕业", "高中毕业", "本科毕业", "研究生及以上");
-
+    private static List<Etc.Education> educationList = InfoController.educationList;
     private static List<String> tags = Arrays.asList("服务员", "厨房后勤", "全天", "半天");
 
 
@@ -67,7 +66,7 @@ public class InfoControllerTest {
         assertNotNull(resp.getJSONObject("data"));
         JSONArray respEducation = resp.getJSONObject("data").getJSONArray("education");
         JSONArray respTags = resp.getJSONObject("data").getJSONArray("tags");
-        assertEquals(respEducation.size(), 5);
+        assertEquals(respEducation.size(), 6);
         assertEquals(respTags.size(), 4);
     }
 }

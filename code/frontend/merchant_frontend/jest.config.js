@@ -35,5 +35,8 @@ module.exports = {
   "!**/vendor/**",
      "!**/dist/**"
   ],
+  setupFiles: [
+    "<rootDir>/jest.init.js"
+  ]
 
 }

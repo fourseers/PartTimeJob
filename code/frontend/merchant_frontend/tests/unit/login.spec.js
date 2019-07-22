@@ -1,5 +1,6 @@
 import {shallowMount,mount} from '@vue/test-utils'
 import Login from '@/views/Login.vue'
+import token from '@/util/token.js'
 describe('Login.vue', () => {
     describe('Test for  Button Component', () => {
         const wrapper = shallowMount(Login);
@@ -54,7 +55,61 @@ describe('Login.vue', () => {
 
     })
 });
-import Vue from "vue";
+
+
+describe('Login.vue', () => {
+    it('test savetoken ok ', done => {
+        const wrapper = shallowMount(Login)
+        const goodresponse = {
+            "data": {
+                "access_token": "ed7da69b-45c0-4a19-8536-ea8ccb40bacb",
+                "refresh_token": "584ede9a-3f49-49b3-9046-c321166481c6",
+                "scope": "merchant",
+                "token_type": "bearer",
+                "expires_in": 41138,
+            }, "status": 200, "message": "success"
+        }
+        const vm = wrapper.vm
+        vm.login_process("user_one", "user_one").then(response => {
+            expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
+
+            done();
+        });
+    });
+})
+
+describe('Login.vue', () => {
+
+    const wrapper = shallowMount(Login)
+    const vm = wrapper.vm
+    it('tests password wrong', async () => {
+       // expect.assertions(1);
+        await expect(vm.login_process("user_one", "user_one222")).rejects.toEqual(
+            400);
+    });
+})
+
+
+describe('Login.vue', () => {
+
+    const wrapper = shallowMount(Login)
+    const vm = wrapper.vm
+    it('tests no params ', async () => {
+        // expect.assertions(1);
+        await expect(vm.login_process("", "")).rejects.toEqual(
+            400);
+    });
+})
 
 
 
+describe('Login.vue', () => {
+
+    const wrapper = shallowMount(Login)
+    const vm = wrapper.vm
+    it('tests no params ', async () => {
+        // expect.assertions(1);
+        await expect(vm.login_process("", "")).rejects.toEqual(
+            400);
+    });
+})

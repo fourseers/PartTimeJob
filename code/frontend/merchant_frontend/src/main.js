@@ -6,7 +6,6 @@ import routes from './router/path.js'
 import token from './util/token.js'
 import iView from 'iview'
 import axios from 'axios'
-import qs from 'qs'
 import 'iview/dist/styles/iview.css';
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
@@ -19,7 +18,6 @@ import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(Element)
 
-Vue.prototype.$qs = qs;
 Vue.prototype.axios = axios;
 Vue.prototype.$token = token;
 

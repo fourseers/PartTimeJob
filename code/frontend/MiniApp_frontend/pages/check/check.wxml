@@ -7,7 +7,7 @@
   bind:afterCalendarRender="afterCalendarRender"
 >
 </calendar>
-<i-panel title="安排（点击前往打卡）">
+<i-panel title="工作安排（点击前往打卡）">
   <i-cell-group>
     <i-cell
       wx:for="{{checks}}"

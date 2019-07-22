@@ -1,26 +1,17 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.arrangement.dto.JobDto;
 import com.fourseers.parttimejob.arrangement.service.JobService;
-import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
-import com.fourseers.parttimejob.common.entity.Tag;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import io.swagger.annotations.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping(value = "/merchant")
@@ -29,53 +20,48 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     private final static int PAGE_SIZE = 10;
 
-    @RequestMapping(value = "/job", method = RequestMethod.POST)
-    public ResponseEntity<Response<JSONObject>> addJob(@RequestBody JSONObject body,
-                                                       @RequestHeader("x-internal-token") String username) {
+    @ApiOperation(value = "Create one job")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "time incorrect / incorrect param / shop not exist or not belong to"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/job", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> addJob(@ApiParam(name = "data", value = "info about job")@RequestBody(required = true) JobDto jobDto,
+                                                 @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
 
-        int shopId;
-        Job job = new Job();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
+        Job job;
         try {
-            shopId = body.getIntValue("shop_id");
-            job.setJobName(body.getString("job_name"));
-            Date beginDate = format.parse(body.getString("begin_date"));
-            job.setBeginDate(new Timestamp(beginDate.getTime()));
-            Date endDate = format.parse(body.getString("end_date"));
-            job.setEndDate(new Timestamp(endDate.getTime()));
-            job.setJobDetail(body.getString("job_detail"));
-            job.setNeedGender(body.getInteger("need_gender"));
-            job.setNeedAmount(body.getInteger("need_amount"));
-            Date beginApplyDate = format.parse(body.getString("begin_apply_date"));
-            job.setBeginApplyDate(new Timestamp(beginApplyDate.getTime()));
-            Date endApplyDate = format.parse(body.getString("end_apply_date"));
-            job.setEndApplyDate(new Timestamp(endApplyDate.getTime()));
-            job.setEducation(Etc.Education.fromName(body.getString("education")));
-            List<Tag> tagList = new ArrayList<>();
-            for (int i = 0; i < body.getJSONArray("tag_list").size(); i++) {
-                Tag tag = new Tag();
-                tag.setId((Integer) body.getJSONArray("tag_list").get(i));
-                tagList.add(tag);
-            }
-            job.setTagList(tagList);
-            job.setSalary(body.getDouble("salary"));
+            job = modelMapper.map(jobDto, Job.class);
+            job.setJobId(null);
 
-            if (beginDate.after(endDate) || beginApplyDate.after(endApplyDate) || endApplyDate.after(beginDate)) {
+            if (jobDto.getBeginDate().after(jobDto.getEndDate()) ||
+                    job.getBeginApplyTime().after(job.getEndApplyTime()) ||
+                    job.getEndApplyTime().after(job.getEndDate())) {
                 throw new RuntimeException("time incorrect");
             }
-        } catch (ParseException ex) {
-            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
+            if (jobDto.getSalary() < 0) {
+                throw new RuntimeException("incorrect param");
+            }
         } catch (RuntimeException ex) {
             if (ex.getMessage().equals("time incorrect")) {
+                return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+            } else if (ex.getMessage().equals("incorrect param")) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
             }
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "unhandled exception");
         }
 
         try {
-            jobService.save(job, shopId, username);
+            jobService.save(job, job.getShop().getShopId(), username);
         } catch (RuntimeException ex) {
             if (ex.getMessage().contains("TAG")) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect tag");

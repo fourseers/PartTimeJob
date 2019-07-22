@@ -17,8 +17,8 @@ insert into shop (address, brand, city, industry_industry_id, introduction, lati
 ('somewhere in Chendu', '锤子', 'Chendu', 1, 'Aquire Apple in someday!', 30, 100, 'Sichuan', '锤科总部', 2);
 insert into tag (name) values ('IT');
 insert into tag (name) values ('互联网');
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '本科毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
 insert into job_tag_list (job_list_job_id, tag_list_id) values (1, 1);
 insert into merchant_user (username, password) values ('poor user', 'poor password');
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
@@ -40,11 +40,11 @@ insert into shop (shop_id, address, brand, city, industry_industry_id, introduct
 insert into shop (shop_id, address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
 (10, 'somewhere in Shanghai', 'Apple', 'Shanghai', 1, 'Make Apple great again', 31.230339, 121.473656, 'Shanghai', '上海市政府', 1);
 
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '初中毕业及以下', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '高中毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
-insert into job (begin_apply_date, begin_date, education, end_apply_date, end_date, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16 16:00:00', '本科毕业', '2019-07-15 16:00:00', '2019-07-17 16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-07-14 16:00:00', '2019-07-16', '初中毕业及以下', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10);

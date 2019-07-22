@@ -1,30 +1,25 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.billing.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-@Entity
-public class Billing {
-
-    private Integer billId;
+public class WorkBillingDto {
+    private Integer workId;
     private Double payment;
     private String method;
     private String meta;
-    private Work work;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getBillId() {
-        return billId;
+    @NotNull
+    public Integer getWorkId() {
+        return workId;
     }
 
-    public void setBillId(Integer billId) {
-        this.billId = billId;
+    public void setWorkId(Integer workId) {
+        this.workId = workId;
     }
 
+    @NotNull
     public Double getPayment() {
         return payment;
     }
@@ -49,15 +44,5 @@ public class Billing {
 
     public void setMeta(String meta) {
         this.meta = meta;
-    }
-
-    @OneToOne
-    @JsonIgnore
-    public Work getWork() {
-        return work;
-    }
-
-    public void setWork(Work work) {
-        this.work = work;
     }
 }

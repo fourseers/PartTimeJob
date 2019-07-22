@@ -20,6 +20,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     Job findByJobId(int jobId);
 
+
     // query is too much, so why not just leave it here
     JobDetailedInfoProjection findJobByJobId(int jobId);
 

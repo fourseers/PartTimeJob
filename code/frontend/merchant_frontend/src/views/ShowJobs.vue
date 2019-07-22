@@ -65,7 +65,7 @@
 
                     },
                     {
-                        title: '日薪',
+                        title: '薪水',
                         key: 'salary'
                     },
                     {
@@ -73,8 +73,7 @@
                         key: 'begin_apply_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.begin_apply_date).toLocaleDateString()),
-                                h('div',new Date(params.row.begin_apply_date).toTimeString().substr(0,5))
+                                h('div', params.row.begin_apply_time.replace('T',' ').substr(0,19))
                             ])}
                     },
                     {
@@ -82,17 +81,33 @@
                         key: 'end_apply_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.end_apply_date).toLocaleDateString()),
-                                h('div',new Date(params.row.end_apply_date).toTimeString().substr(0,5))
+                                h('div',params.row.end_apply_time.replace('T',' ').substr(0,19))
                             ])}
+                    },
+                    {
+                        title: '工作开始日期',
+                        key: 'begin_date',
+                        render: (h, params) => {
+                            return  h('div',[
+                                h('div',new Date(params.row.begin_date).toLocaleDateString())
+                            ])}
+
+                    },
+                    {
+                        title: '工作结束日期',
+                        key: 'end_date',
+                        render: (h, params) => {
+                            return  h('div',[
+                                h('div',new Date(params.row.end_date).toLocaleDateString())
+                            ])}
+
                     },
                     {
                         title: '工作开始时间',
                         key: 'begin_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.begin_date).toLocaleDateString()),
-                                h('div',new Date(params.row.begin_date).toTimeString().substr(0,5))
+                                h('div', params.row.begin_time )
                             ])}
 
                     },
@@ -101,8 +116,7 @@
                         key: 'end_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.end_date).toLocaleDateString()),
-                                h('div',new Date(params.row.end_date).toTimeString().substr(0,5))
+                                h('div', params.row.end_time  )
                             ])}
 
                     },
@@ -113,39 +127,69 @@
                     {
                         title: '教育',
                         key: 'education',
+                        render: (h, params) => {
+                            return  h('div',this.education_convert(params.row.education)
+                                    )}
+
                     },
                     {
-                        title: '操作',
+                        title: '招聘状态',
                         key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type:'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        color: '#d63031',
-                                        borderColor:'#d63031',
-                                        backgroundColor:'#fff',
-                                        marginRight: '5px',
-                                        marginTop:'5px',
-                                        marginBottom:'5px'
-                                    },
+                        render: (h,params) => {
+                            return h('i-switch',{
+                                props: {
+                                    size: 'large',
+                                    value: !params.row.manual_stop
+                                },
+                                style: {
+                                    color: params.row.manual_stop?"#68B2FE":'#d63031',
+                                    borderColor: params.row.manual_stop?'#d63031':"#68B2FE",
+                                    backgroundColor: (params.row.manual_stop)?'#d63031':"#68B2FE",
+                                },
+                                on: {
+                                    'on-change': (value) =>
+                                    {
+                                        params.row.manual_stop= !value;
+                                        this.stopHire(params.row.job_id, params.row.manual_stop).then(res => {
+                                            console.log(res)
+                                                if(res.status===200 &&  params.row.manual_stop)
+                                                {
+                                                    this.$Message.success('停止招聘成功');
+                                                }
+                                                else if(res.status===200 &&  !params.row.manual_stop)
+                                                {
+                                                    this.$Message.success('继续招聘成功');
+                                                }
 
-                                    on: {
-                                        click: () => {
-                                            //删除店铺
-                                        }
+                                            },
+                                            error => {
+                                                console.log(error.response);
+                                                if (error.response) {
+                                                    params.row.manual_stop= !value;
+
+                                                    if (error.response.data.status === 400  &&  params.manual_stop) {
+                                                        this.$Message.error('停止招聘失败');
+                                                    }
+                                                    else if(error.response.data.status === 400  &&!params.row.manual_stop)
+                                                    {
+                                                        this.$Message.success('继续招聘失败');
+                                                    }
+                                                }}
+                                        )
                                     }
-                                }, '停止招聘')
-                            ]);
+                                }
+                            }, [
+                                h('span', {
+                                    slot: 'open'
+                                }, '继续'),
+                                h('span', {
+                                    slot: 'close'
+                                }, '停止')
+                            ])
                         }
                     }
                 ],
-                jobs:this.mockTableData1(0),
+                jobs:[],
                 shop_chosen:"",
                 shops:[],
                 pagenum:1,
@@ -193,52 +237,49 @@
             {this.$Message.warning('请登录');}
             else {
                 //get jobs
-                getJobs(0).then(res => {
-                        console.log(res)
-                        this.jobs = res.data.content
-                        this.total_elements=res.data.total_elements
-                        this.total_pages= res.total_pages
-                    },
-                    error => {
-                        if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                            this.$Message.error('暂无岗位');
-                            console.log(error)
-                        }
-                        console.log(error)
-                    }
-                )
-
-
+                this.mockTableData1(0)
                 //get shops
-                getShops().then(res => {
-                        console.log(res)
-                        this.shops = res.data.content
-
-                        this.total_elements_shop=res.data.total_elements
-                    },
-                    error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                                console.log(error.response);
-                                this.$Message.error('暂无店铺');
-                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                                console.log(error.response);
-                                this.$Message.error('参数错误');
-                            }
-                        }
-
-                    }
-                ) }
-
+                this.mockTableData2(0)
+                 }
         },
         methods: {
-            mockTableData1 (pagenum,shop_id) {
+            stopHire(id,stop)
+            {
+                var prefix="arrangement";
+                return new Promise((resolve, reject) => {
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
+                        },
+                        method:'put',
+                        url: prefix +"/merchant/job/stop",
+                        params:{
+                            job_id:id,
+                            stop:stop
+                        }
+                    }).then(({ status, data }) => {
+                        if (status === 200) {
+                            resolve(data);
+                        } else {
+                            reject( data);
+                        }
+                    }).catch(error => {
+                        reject( error);
+                    });
+                });
+            },
+            mockTableData1 (pagenum) {
                 var prefix = "/arrangement"
 
                 //get jobs
                 getJobs(pagenum).then(res => {
                         console.log(res)
                         this.jobs = res.data.content
+                        this.total_pages= res.total_pages
+                        this.total_elements = res.data.total_elements
                     },
                     error => {
                         if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
@@ -254,6 +295,7 @@
                 getShops(pagenum).then(res => {
                         console.log(res.data)
                         this.shops = res.data.content
+                        this.total_elements_shop=res.data.total_elements
                     },
                     error => {
                         if (error.response) {
@@ -285,6 +327,39 @@
             {
                 this.shop_chosen = ""
                 this.mockTableData1(0);
+            },
+            education_convert(education)
+            {
+                if( education =="BELOW_SENIOR")
+                {
+                    return "初中毕业及以下"
+                }else if( education =="TECHICAL_JUNIOR")
+                {
+
+                    return "中专毕业"
+                }
+                else if(
+                    education =="SENIOR_HIGH")
+                {
+                    return "高中毕业"
+                }
+                else if(
+                    education =="JUNIOR_COLLEGE")
+                {
+                    return "大专毕业"
+                }
+                else if(
+                    education =="BACHELOR")
+                {
+                    return "本科毕业"
+                }
+                else if(
+                    education =="ABOVE_BACHELOR")
+                {
+                    return "研究生毕业及以上"
+                }
+
+
             }
         }
     }

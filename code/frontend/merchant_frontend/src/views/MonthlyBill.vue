@@ -1,15 +1,22 @@
 <template>
     <div class="content">
         <Table border :columns="columns7" :data="bill">
-            <div slot="header" class="table-height">月末账单</div>
+            <div slot="header" class="table-height" style="
+        font-size: 20px;">月末账单</div>
             <div slot="footer" class="table-height">
-                本月需支付总金额：{{}}
+                本月需支付总金额：{{this.sum}}
 
-                <Button class="ivu-btn" @click="handleSubmit('formInline')" >确认支付</Button>
+                <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
             </div>
+
 
         </Table>
 
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -18,6 +25,8 @@
         name: "ShowJobs",
         data() {
             return {
+                total_elements:10,
+                pagenum:1,
                 columns7: [
                     {
                         title: '店铺名称',
@@ -34,33 +43,41 @@
                     },
                     {
                         title: '员工名字',
-                        key: 'need_amount'
+                        key: 'employee_name'
                     },
                     {
                         title: '上班开始时间',
-                        key: 'begin_apply_date',
+                        key: 'begin_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.begin_apply_date).toJSON();
-                            return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
+                            return  h('div',[
+                                h('div', params.row.begin_time )
+                            ])
                         }
                     },
                     {
                         title: '上班结束时间',
-                        key: 'end_apply_date',
+                        key: 'end_time',
                         render: (h, params) => {
-                            var dateee = new Date(params.row.end_apply_date).toJSON();
-                            return h('div', new Date(new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '').substr(0, 16))
+                            return  h('div',[
+                                h('div',params.row.end_time)
+                            ])
                         }
                     },
                     {
-                        title: '日薪',
-                        key: 'salary'
+                        title: '薪水',
+                        key: 'payment'
                     },
                     {
-                        title: '确认状态',
-                        key: 'confirmed'
+                        title: '支付状态',
+                        key: 'paid',
+                        render: (h, params) => {
+                            return  h('div', params.row.paid?"已支付":"拒绝支付")
+                        }
                     }
                 ],
+                bill:[],
+                bill_id:0,
+                sum: this.getsum(),
             }
         },
         watch:
@@ -72,9 +89,97 @@
             } else
             {
 
+                //获取第一页账单
+                this.mockTableData1(0)
 
+                this.getsum();
             }
 
+        },
+        methods: {
+            getsum()
+            {
+
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/sum",
+                    params:{
+                        from:"2019-07-02",
+                        to:"2020-07-02",
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        this.sum = response.data.data.amount;
+
+                    }
+                    console.log( this.bill_id)
+                })
+                    .catch(error => {
+                        console.log(error.response)
+
+
+                    })
+            },
+
+            paybill( bill_id)
+            {
+                //pay bills
+
+
+            },
+            mockTableData1(pagenum) {
+                //get bills
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing",
+                    params:{
+                        page_count:pagenum,
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        this.bill=response.data.data.content;
+                        this.bill_id = response.data.data.content.bill_id;
+
+                    }
+                    console.log( this.bill_id)
+                })
+                    .catch(error => {
+                        console.log(error.response)
+
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "user does not belong to any company") {
+                                this.$Message.error('请添加公司');
+                            }
+                            else if(error.response.data.status === 400 && error.response.data.message === "no bills")
+                            {
+                                this.$Message.error('暂无账单');
+                            }
+                        }
+                    })
+
+            }, changePage(index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index - 1);
+            }
         }
     }
 </script>

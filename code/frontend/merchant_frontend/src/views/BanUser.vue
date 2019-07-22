@@ -90,7 +90,7 @@
                         }
                     }
                 ],
-                users: this.mockTableData1(0),
+                users: [],
                 pagenum:1,
                 total_elements: 10,
                 total_pages:2,

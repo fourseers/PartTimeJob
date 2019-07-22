@@ -1,15 +1,16 @@
 <template>
-    <div>
-        <Row >
-            <Select v-model="post_chosen" style="width:200px;  margin:10px">
-                <OptionGroup label="店铺1">
-                    <Option v-for="item in postList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </OptionGroup>
-                <OptionGroup label="店铺2">
-                    <Option v-for="item in postList2" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </OptionGroup>
-            </Select>
-        </Row>
+    <div class="content">
+        <div class="head">
+            <Row >
+                <Col span="4">
+                    <div v-on:scroll="scrollFunction">
+                    <Cascader :data="data" v-model="value1"  :load-data="loadData"  id="myCascader" >
+
+                    </Cascader>
+                    </div>
+                </Col>
+            </Row>
+        </div>
         <Row>
             <div >
                 <Carousel v-model="value1"   class="content">
@@ -42,30 +43,24 @@
 </template>
 
 <script>
+
+    import {getShops} from '../util/getShops.js'
+
+    import {getJobs, getJobsByShop} from '../util/getJobs.js'
     export default {
 
         name: "ScreeenCV",
         data () {
             return {
-                postList1: [
-                    {
-                        value: 'post 1',
-                        label: 'post 1'
-                    },
-                    {
-                        value:  'post 2',
-                        label: 'post 2'
-                    },
-                    {
-                        value:'post 3',
-                        label:'post 3'
-                    }
-                ],
-                postList2: [
-                    {
-                        value: 'post 4',
-                        label: 'post 4'
-                    }
+                Cascader:{},
+                options:{},
+                total_elements_shop:10,
+                total_elements_job:10,
+                formValidate:{
+                    shop:""
+                },
+                shops: [],
+                data: [
                 ],
                 CVList1:[{
                     name:'elizabeth',
@@ -123,8 +118,41 @@
                 this.$Message.warning('请登录');
             }
             else{
+                //get shops
+                getShops().then(res => {
+                        this.shops = res.data.content
+                        this.total_elements_shop=res.data.total_elements
+                        for(var i=0;i<this.shops.length;i++) {
+                            var item = {
+                                value: this.shops[i].shop_id,
+                                label: this.shops[i].shop_name,
+                                children: [],
+                                loading: false
+                            }
+                            this.data.push(item)
+                        }
+                        // window.addEventListener('scroll',function(e)
+                        // {console.log(e)
+                        // }, true);
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                console.log(error.response);
+                                this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
+                            }
+                        }
+
+                    }
+                )
                 //GET CV
+
             }
+        },
+        mounted: {
         },
         watch : {
             post_chosen:function(val) {
@@ -133,7 +161,44 @@
             }
         },
         methods:
-            {
+            {scrollFunction()
+                {
+                  alert("scroll")
+                },
+                loadData (item, callback) {
+                    item.loading = true;
+                    //get jobs by shop
+                    getJobsByShop(0,item.value).then(res => {
+                        console.log( res.data.content.length)
+
+                        for(var i=0;i<res.data.content.length;i++) {
+                            console.log(res.data.content[i])
+                            var child = {
+                                value: res.data.content[i].job_id,
+                                label: res.data.content[i].job_name,
+                            }
+                            item.children.push(child);
+                        }
+
+                            console.log(  item.children)
+                            this.total_elements_job=res.data.total_elements
+
+                            item.loading = false;
+                            callback()
+                        },
+                        error => {
+                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                this.$Message.error('暂无岗位');
+                                console.log(error)
+                            }
+                            console.log(error)
+
+                            item.loading = false;
+                            callback()
+                        }
+                    )
+
+                },
                 getCVList:function(val)
                 {
                     if(val === "post 1")
@@ -149,6 +214,33 @@
                 {
 
                 }
+                ,changePage (index) {
+                    // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                    this.mockTableData1(index-1);
+                },
+
+                mockTableData1 (pagenum) {
+                    //get shops
+                    getShops(pagenum).then(res => {
+                            console.log( res.data)
+                            this.shops  = res.data.content
+                        },
+                        error => {
+                            if (error.response) {
+                                if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                    console.log(error.response);
+                                    this.$Message.error('暂无店铺');
+                                } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                    console.log(error.response);
+                                    this.$Message.error('参数错误');
+                                }
+                            }
+
+                        }
+
+                    )
+                },
 
             }
 
@@ -157,9 +249,10 @@
 
 <style scoped>
     .content{
-        margin:10px 50px 50px;
+        margin-top:20px;
+        margin-left: 100px;
+        margin-right:50px;
         background-color: #fff;
-        height:500px;
     }
     ul li{
         list-style:none;
@@ -190,5 +283,8 @@
     }
     .cv-item{
         float:left;
+    }
+    .head{
+        margin :20px;
     }
 </style>

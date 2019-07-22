@@ -78,9 +78,9 @@ public class ShopControllerTest {
 
         ShopDto shopDto = new ShopDto();
         shopDto.setShopName("Apple iamp");
-        shopDto.setProvince("Shanghai");
-        shopDto.setCity("Shanghai");
-        shopDto.setAddress("Somewhere in Shanghai");
+        shopDto.setProvince("310000");
+        shopDto.setCity("310100");
+        shopDto.setAddress("310101");
         shopDto.setLongitude(new Integer(120).floatValue());
         shopDto.setLatitude(new Integer(30).floatValue());
         shopDto.setBrand("Apple");
@@ -106,9 +106,9 @@ public class ShopControllerTest {
 
         ShopDto anotherShopDto = new ShopDto();
         anotherShopDto.setShopName("Chuizi somewhere");
-        anotherShopDto.setProvince("Sichuan");
-        anotherShopDto.setCity("Chendu");
-        anotherShopDto.setAddress("Somewhere in Chendu");
+        anotherShopDto.setProvince("510000");
+        anotherShopDto.setCity("510100");
+        anotherShopDto.setAddress("510101");
         anotherShopDto.setLongitude(new Integer(110).floatValue());
         anotherShopDto.setLatitude(new Integer(30).floatValue());
         anotherShopDto.setBrand("Chuizi");
@@ -124,9 +124,9 @@ public class ShopControllerTest {
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp 2")
-            .fluentPut("province", "Shanghai")
-            .fluentPut("city", "Shanghai")
-            .fluentPut("address", "Somewhere in Shanghai")
+            .fluentPut("province", "310000")
+            .fluentPut("city", "310100")
+            .fluentPut("address", "310101")
             .fluentPut("longitude", 120)
             .fluentPut("latitude", 30)
             .fluentPut("brand", "Apple")
@@ -164,9 +164,9 @@ public class ShopControllerTest {
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp 2")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -190,9 +190,9 @@ public class ShopControllerTest {
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp 2")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -216,9 +216,9 @@ public class ShopControllerTest {
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -243,9 +243,9 @@ public class ShopControllerTest {
 
         JSONObject body = new JSONObject();
         body.fluentPut("shop_name", "Apple iamp")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -349,9 +349,9 @@ public class ShopControllerTest {
         for (int i = 0; i < 95; i++) {
             ShopDto shopDto = new ShopDto();
             shopDto.setShopName("MS " + i);
-            shopDto.setProvince("Shanghai");
-            shopDto.setCity("Shanghai");
-            shopDto.setAddress("Somewhere in Shanghai");
+            shopDto.setProvince("310000");
+            shopDto.setCity("310100");
+            shopDto.setAddress("310101");
             shopDto.setLongitude(new Integer(120).floatValue());
             shopDto.setLatitude(new Integer(30).floatValue());
             shopDto.setBrand("MS");
@@ -465,9 +465,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 1)
                 .fluentPut("shop_name", "Apple iamp new name")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -503,9 +503,9 @@ public class ShopControllerTest {
         JSONObject body = new JSONObject();
         body
                 .fluentPut("shop_id", 1)
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -532,9 +532,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 1)
                 .fluentPut("shop_name", "Apple iamp new name")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -561,9 +561,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 1)
                 .fluentPut("shop_name", "Chuizi somewhere")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -590,9 +590,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 1)
                 .fluentPut("shop_name", "Apple iamp new name")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -619,9 +619,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 1)
                 .fluentPut("shop_name", "Apple iamp new name")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")
@@ -648,9 +648,9 @@ public class ShopControllerTest {
         body
                 .fluentPut("shop_id", 666)
                 .fluentPut("shop_name", "Apple iamp new name")
-                .fluentPut("province", "Shanghai")
-                .fluentPut("city", "Shanghai")
-                .fluentPut("address", "Somewhere in Shanghai")
+                .fluentPut("province", "310000")
+                .fluentPut("city", "310100")
+                .fluentPut("address", "310101")
                 .fluentPut("longitude", 120)
                 .fluentPut("latitude", 30)
                 .fluentPut("brand", "Apple")

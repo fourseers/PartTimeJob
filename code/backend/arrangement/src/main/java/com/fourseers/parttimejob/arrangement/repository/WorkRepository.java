@@ -21,6 +21,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.checkin as checkin, " +
             "work.checkout as checkout, " +
             "work.score as score, " +
+            "work.job.salary as payment, " +
             "work.salaryConfirmed as paid from Work work " +
             "where work.job.shop = ?1")
     Page<WorkProjection> findPageByShopOrderByWorkIdDesc(Shop shop, Pageable pageable);
@@ -35,6 +36,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.checkin as checkin, " +
             "work.checkout as checkout, " +
             "work.score as score, " +
+            "work.job.salary as payment, " +
             "work.salaryConfirmed as paid from Work work " +
             "where work.job.shop.company = ?1")
     Page<WorkProjection> findPageByCompanyOrderByWorkIdDesc(Company company, Pageable pageable);

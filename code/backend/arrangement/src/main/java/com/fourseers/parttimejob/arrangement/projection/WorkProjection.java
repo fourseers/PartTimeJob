@@ -11,5 +11,6 @@ public interface WorkProjection {
     String getCheckin();
     String getCheckout();
     Integer getScore();
+    Double getPayment();
     Boolean getPaid();
 }

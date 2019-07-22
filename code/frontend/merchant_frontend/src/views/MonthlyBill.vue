@@ -4,7 +4,7 @@
             <div slot="header" class="table-height" style="
         font-size: 20px;">月末账单</div>
             <div slot="footer" class="table-height">
-                本月需支付总金额：{{}}
+                本月需支付总金额：{{this.sum}}
 
                 <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
             </div>
@@ -77,6 +77,7 @@
                 ],
                 bill:[],
                 bill_id:0,
+                sum: this.getsum(),
             }
         },
         watch:
@@ -90,10 +91,44 @@
 
                 //获取第一页账单
                 this.mockTableData1(0)
+
+                this.getsum();
             }
 
         },
         methods: {
+            getsum()
+            {
+
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/sum",
+                    params:{
+                        from:"2019-07-02",
+                        to:"2020-07-02",
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        this.sum = response.data.data.amount;
+
+                    }
+                    console.log( this.bill_id)
+                })
+                    .catch(error => {
+                        console.log(error.response)
+
+
+                    })
+            },
 
             paybill( bill_id)
             {

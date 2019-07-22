@@ -146,7 +146,7 @@
                 this.$Message.warning('请登录');
             } else {
                 //get checkin
-               // this.mockTableData1(0)
+                // this.mockTableData1(0)
                 //get shops
                 this.mockTableData2(0)
 
@@ -266,8 +266,14 @@
                     }
                 })
                     .catch(error => {
-                        console.log(error)
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "work already paid") {
+                                console.log(error.response);
+                                this.$Message.error('已经支付过了');
+                                console.log(error)
+                            }}
                     })
+
 
             },
             show (index) {

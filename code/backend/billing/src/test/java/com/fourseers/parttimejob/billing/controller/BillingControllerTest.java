@@ -93,7 +93,10 @@ public class BillingControllerTest {
         String bossname = "罗永浩";
 
         JSONObject body = new JSONObject();
-        body.put("bill_id", 2);
+        body.fluentPut("work_id", 2)
+            .fluentPut("payment", 100)
+            .fluentPut("method", "微信支付")
+            .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
@@ -110,7 +113,10 @@ public class BillingControllerTest {
         String bossname = "罗永浩";
 
         JSONObject body = new JSONObject();
-        body.put("bill_id", 666);
+        body.fluentPut("work_id", 666)
+            .fluentPut("payment", 100)
+            .fluentPut("method", "微信支付")
+            .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
@@ -119,7 +125,7 @@ public class BillingControllerTest {
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("bill not exist or not belong to current company", response.getString("message"));
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
     }
 
     @Test
@@ -127,7 +133,10 @@ public class BillingControllerTest {
         String bossname = "罗永浩";
 
         JSONObject body = new JSONObject();
-        body.put("bill_id", 1);
+        body.fluentPut("work_id", 1)
+            .fluentPut("payment", 100)
+            .fluentPut("method", "微信支付")
+            .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
@@ -136,7 +145,7 @@ public class BillingControllerTest {
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("bill already paid", response.getString("message"));
+        assertEquals("work already paid", response.getString("message"));
     }
 
     @Test
@@ -144,7 +153,10 @@ public class BillingControllerTest {
         String bossname = "Poor user";
 
         JSONObject body = new JSONObject();
-        body.put("bill_id", 2);
+        body.fluentPut("work_id", 2)
+            .fluentPut("payment", 100)
+            .fluentPut("method", "微信支付")
+            .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
@@ -161,7 +173,10 @@ public class BillingControllerTest {
         String bossname = "Tim Cook";
 
         JSONObject body = new JSONObject();
-        body.put("bill_id", 2);
+        body.fluentPut("work_id", 2)
+            .fluentPut("payment", 100)
+            .fluentPut("method", "微信支付")
+            .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
@@ -170,6 +185,6 @@ public class BillingControllerTest {
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("bill not exist or not belong to current company", response.getString("message"));
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
     }
 }

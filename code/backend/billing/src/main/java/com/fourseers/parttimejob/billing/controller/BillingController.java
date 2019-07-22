@@ -1,8 +1,9 @@
 package com.fourseers.parttimejob.billing.controller;
 
-import com.fourseers.parttimejob.billing.dto.BillDto;
-import com.fourseers.parttimejob.billing.projection.BillingProjection;
+import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
+import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
+import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import io.swagger.annotations.*;
@@ -34,12 +35,12 @@ public class BillingController {
                     required = true, dataType = "string", paramType = "header")
     })
     @RequestMapping(value = "", method = GET, produces = "application/json")
-    public ResponseEntity<Response<Page<BillingProjection>>> getBillings(
+    public ResponseEntity<Response<Page<WorkBillingProjection>>> getBillings(
             @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
             @RequestParam(value = "page_count") Integer pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
 
-        Page<BillingProjection> bills;
+        Page<WorkBillingProjection> bills;
         try {
             bills = billingService.getBillingsByUsernameOrderByBillIdDesc(username, pageCount, PAGE_SIZE);
         } catch (RuntimeException ex) {
@@ -60,7 +61,7 @@ public class BillingController {
     @ApiOperation(value = "Pay one billing")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "user does not belong to any company / bill not exist or not belong to current company / bill already paid"),
+            @ApiResponse(code = 400, message = "user does not belong to any company / work not exist or not belong to current company / work already paid"),
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
@@ -68,12 +69,16 @@ public class BillingController {
     })
     @RequestMapping(value = "/pay", method = POST, produces = "application/json")
     public ResponseEntity<Response<Void>> payBilling(
-            @ApiParam(value = "Bill ID you wish to pay")
-            @RequestBody BillDto billId,
+            @ApiParam(value = "Work you wish to pay")
+            @RequestBody WorkBillingDto workBillingDto,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
 
        try {
-           billingService.payBill(username, billId.getBillId());
+           Billing billing = new Billing();
+           billing.setPayment(workBillingDto.getPayment());
+           billing.setMethod(workBillingDto.getMethod());
+           billing.setMeta(workBillingDto.getMeta());
+           billingService.payBill(username, workBillingDto.getWorkId(), billing);
            return ResponseBuilder.build(HttpStatus.OK, null, "success");
        } catch (RuntimeException ex) {
            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());

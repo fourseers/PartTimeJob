@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotNull;
 
 public class CheckinDto {
@@ -8,9 +10,11 @@ public class CheckinDto {
     Integer jobId;
 
     @NotNull
+    @Range(min = -180, max = 180)
     Float longitude;
 
     @NotNull
+    @Range(min = -90, max = 90)
     Float latitude;
 
     public Integer getJobId() {

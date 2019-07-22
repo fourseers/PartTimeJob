@@ -74,7 +74,6 @@ public class WechatUserJobControllerTest {
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
-
     @Before
     public void before() throws Exception {
 

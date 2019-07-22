@@ -14,11 +14,13 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
+@Validated
 @RequestMapping("/user")
 public class WechatCheckController {
 
@@ -34,7 +36,7 @@ public class WechatCheckController {
     @ApiOperation(value = "Wechat employee check in")
     @PostMapping(value = "/checkin")
     public ResponseEntity<Response<Void>> checkIn(
-            @ApiParam @RequestBody CheckinDto params,
+            @ApiParam @RequestBody @Validated CheckinDto params,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
@@ -58,7 +60,7 @@ public class WechatCheckController {
     @ApiOperation(value = "Wechat employee check out")
     @PostMapping(value = "/checkout")
     public ResponseEntity<Response<Void>> checkIn(
-            @ApiParam @RequestBody CheckoutDto params,
+            @ApiParam @RequestBody @Validated CheckoutDto params,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);

@@ -40,16 +40,18 @@ Page({
     // 向后台获取注册元数据, 包括文化水平list、tags list
     req.getRequest(host + register_data, null).then(res => {
       if (res.statusCode === 200) {
+        // console.log(res);
         // 给后端返回的tags的列表中的每个json都添加isChosen字段
-        var tags = res.data.tags;
+        var tags = res.data.data.tags;
         for (var index in tags) {
           tags[index].isChosen = false;
         }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
-          education_list: res.data.education,
+          education_list: res.data.data.education,
           tags: tags,
         })
+        this.getUserInfo();
       }
       else if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
@@ -58,14 +60,17 @@ Page({
       // console.log(err);
       // TODO: 添加请求失败的处理
     });
+  },
 
+  getUserInfo() {
+    var req = new request();
     //onshow的时候从后端获取当前用户的信息，填充为用户表单上的默认信息
     req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var info = res.data.data.info;
-        
+
         var toChosen = this.data.tags;
-        for(var i in info.tags) {
+        for (var i in info.tags) {
           var switchId = info.tags[i].id;
           for (var j in this.data.tags) {
             if (this.data.tags[j].id === switchId) {

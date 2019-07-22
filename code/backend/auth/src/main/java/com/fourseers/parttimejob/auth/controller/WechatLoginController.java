@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
 import com.fourseers.parttimejob.auth.util.Pair;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
@@ -105,7 +106,7 @@ public class WechatLoginController {
         user.setPhone(body.getString("phone"));
         user.setCountry(body.getString("country"));
         user.setCity(body.getString("city"));
-        user.setEducation(body.getString("education"));
+        user.setEducation(Etc.Education.fromName(body.getString("education")));
         wechatUserService.save(user);
 
         return oauthResult(user.getOpenid(), basicAuth);

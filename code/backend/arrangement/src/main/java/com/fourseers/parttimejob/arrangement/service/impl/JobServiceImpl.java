@@ -4,21 +4,15 @@ import com.fourseers.parttimejob.arrangement.dao.ApplicationDao;
 import com.fourseers.parttimejob.arrangement.dao.CVDao;
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
-import com.fourseers.parttimejob.arrangement.repository.CVRepository;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Page;
-import org.springframework.jca.cci.RecordTypeNotSupportedException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.HTMLDocument;
 import javax.transaction.Transactional;
-import java.awt.dnd.DropTarget;
 import java.util.Date;
 
 @Service
@@ -112,8 +106,10 @@ public class JobServiceImpl implements JobService {
         Job job = jobDao.findByJobId(jobId);
         if(job == null)
             throw new RuntimeException("Invalid job.");
+        if(job.getManualStop())
+            throw new RuntimeException("Job recruit manually stopped by merchant.");
         Date currentTime = new Date();
-        if(job.getBeginApplyDate().after(currentTime) || job.getEndApplyDate().before(currentTime))
+        if(job.getBeginApplyTime().after(currentTime) || job.getEndApplyTime().before(currentTime))
             throw new RuntimeException("Sorry, you've missed the apply date.");
 
         Shop shop = job.getShop();
@@ -130,12 +126,12 @@ public class JobServiceImpl implements JobService {
 //            if(!user.getCity().equals(shop.getCity()))
 //                throw new RuntimeException("User and shop are from different cities.");
 //        }
-        Etc.Education actualEdu = Etc.Education.fromName(cv.getEducation());
-        Etc.Education requiredEdu = Etc.Education.fromName(job.getEducation());
+        Etc.Education actualEdu = cv.getEducation();
+        Etc.Education requiredEdu = job.getEducation();
         if(actualEdu == null || requiredEdu == null) {
             throw new RuntimeException("Invalid education");
         }
-        if(actualEdu.ordinal() < requiredEdu.ordinal()) {
+        if(!actualEdu.satisfies(requiredEdu)) {
             throw new RuntimeException("No enough education");
         }
 
@@ -150,7 +146,8 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobDetailedInfoProjection getJobDetail(int jobId) {
-        return jobDao.getJobDetail(jobId);
+        JobDetailedInfoProjection projection = jobDao.getJobDetail(jobId);
+        return projection;
     }
 
     @Override

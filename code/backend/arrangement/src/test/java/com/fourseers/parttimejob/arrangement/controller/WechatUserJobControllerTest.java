@@ -3,44 +3,34 @@ package com.fourseers.parttimejob.arrangement.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.arrangement.dao.CVDao;
 import com.fourseers.parttimejob.arrangement.repository.CVRepository;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
 import com.fourseers.parttimejob.common.entity.CV;
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBObject;
-import org.apache.logging.log4j.message.TimestampMessage;
-import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
-import org.bouncycastle.util.Times;
-import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import sun.awt.geom.AreaOp;
 
 import javax.transaction.Transactional;
-
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 
-import static java.util.Calendar.DATE;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -79,8 +69,7 @@ public class WechatUserJobControllerTest {
     private String invalidUserHeader;
     private String userCVId;
     private Integer goodJobId, noEduJobId, outdateJobId, fullJobId, femaleJobId;
-
-    private int newJobId;
+    private Integer stoppedJobId;
 
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
@@ -94,7 +83,7 @@ public class WechatUserJobControllerTest {
 
         CV cv = new CV();
         cv.setUserId(1);
-        cv.setEducation("高中毕业");
+        cv.setEducation(Etc.Education.SENIOR_HIGH);
         cv.setContent("Default content goes here...");
         cvRepository.save(cv);
         userCVId = cv.getId();
@@ -120,14 +109,16 @@ public class WechatUserJobControllerTest {
         Job job = new Job();
         job.setNeedAmount(50);
         job.setJobDetail("job detail...");
-        job.setBeginApplyDate(yesterday);
-        job.setEndApplyDate(tomorrow);
-        job.setBeginDate(yesterdayNextWeek);
-        job.setEndDate(tomorrowNextWeek);
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));
         job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
         job.setNeedGender(2);
         jobRepository.save(job);
         goodJobId = job.getJobId();
@@ -135,14 +126,15 @@ public class WechatUserJobControllerTest {
         job = new Job();
         job.setNeedAmount(50);
         job.setJobDetail("job detail...");
-        job.setBeginApplyDate(yesterday);
-        job.setEndApplyDate(tomorrow);
-        job.setBeginDate(yesterdayNextWeek);
-        job.setEndDate(tomorrowNextWeek);
-        job.setSalary(100.0);
-        job.setEducation("本科毕业");
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));job.setSalary(100.0);
+        job.setEducation(Etc.Education.BACHELOR);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
         job.setNeedGender(2);
         jobRepository.save(job);
         noEduJobId = job.getJobId();
@@ -150,14 +142,15 @@ public class WechatUserJobControllerTest {
         job = new Job();
         job.setNeedAmount(50);
         job.setJobDetail("job detail...");
-        job.setBeginApplyDate(yesterdayLastWeek);
-        job.setEndApplyDate(tomorrowLastWeek);
-        job.setBeginDate(yesterdayNextWeek);
-        job.setEndDate(tomorrowNextWeek);
-        job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setBeginApplyTime(yesterdayLastWeek);
+        job.setEndApplyTime(tomorrowLastWeek);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));job.setSalary(100.0);
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
         job.setNeedGender(2);
         jobRepository.save(job);
         outdateJobId = job.getJobId();
@@ -166,14 +159,15 @@ public class WechatUserJobControllerTest {
         job.setNeedAmount(50);
         job.setAppliedAmount(50);
         job.setJobDetail("job detail...");
-        job.setBeginApplyDate(yesterday);
-        job.setEndApplyDate(tomorrow);
-        job.setBeginDate(yesterdayNextWeek);
-        job.setEndDate(tomorrowNextWeek);
-        job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));job.setSalary(100.0);
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach abc");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
         job.setNeedGender(2);
         jobRepository.save(job);
         fullJobId = job.getJobId();
@@ -181,17 +175,35 @@ public class WechatUserJobControllerTest {
         job = new Job();
         job.setNeedAmount(50);
         job.setJobDetail("job detail...");
-        job.setBeginApplyDate(yesterday);
-        job.setEndApplyDate(tomorrow);
-        job.setBeginDate(yesterdayNextWeek);
-        job.setEndDate(tomorrowNextWeek);
-        job.setSalary(100.0);
-        job.setEducation("高中毕业");
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));job.setSalary(100.0);
+        job.setEducation(Etc.Education.SENIOR_HIGH);
         job.setShop(shopRepository.getOne(1));
         job.setJobName("Teach English");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
         job.setNeedGender(0);   // require female
         jobRepository.save(job);
         femaleJobId = job.getJobId();
+
+        job = new Job();
+        job.setManualStop(true);
+        job.setNeedAmount(50);
+        job.setJobDetail("job detail...");
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));job.setSalary(100.0);
+        job.setEducation(Etc.Education.SENIOR_HIGH);
+        job.setShop(shopRepository.getOne(1));
+        job.setJobName("Teach English");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
+        job.setNeedGender(2);
+        jobRepository.save(job);
+        stoppedJobId = job.getJobId();
     }
 
     @After
@@ -296,7 +308,7 @@ public class WechatUserJobControllerTest {
     @Test
     public void testGetJobSuccess() throws Exception {
         MvcResult result = mockMvc.perform(get("/user/job")
-                .param("jobId", "1")
+                .param("job_id", goodJobId.toString())
                 .header("x-internal-token", userHeader))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -310,15 +322,15 @@ public class WechatUserJobControllerTest {
         assertNotNull(shop.getFloat("latitude"));
         assertNotNull(shop.getString("address"));
         assertNotNull(data.getString("job_detail"));
-        assertNotNull(data.getString("begin_apply_date"));
-        assertNotNull(data.getString("end_apply_date"));
+        assertNotNull(data.getString("begin_apply_time"));
+        assertNotNull(data.getString("end_apply_time"));
     }
 
 
     @Test
     public void testGetJobInvalidJobId() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("jobId", "-1")
+                .param("job_id", "-1")
                 .header("x-internal-token", userHeader))
                 .andExpect(status().is4xxClientError());
     }
@@ -333,14 +345,14 @@ public class WechatUserJobControllerTest {
     @Test
     public void testGetJobNoAuthToken() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("jobId", "1"))
+                .param("job_id", "1"))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void testGetJobInvalidAuthToken() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("jobId", "1")
+                .param("job_id", goodJobId.toString())
                 .header("x-internal-token", invalidUserHeader))
                 .andExpect(status().isForbidden());
     }
@@ -348,8 +360,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobSuccess() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", goodJobId)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", goodJobId)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -362,7 +374,7 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobNoJobId() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("cvId", userCVId);
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -374,7 +386,7 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobNoCV() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", goodJobId);
+                .fluentPut("job_id", goodJobId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -386,8 +398,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobMissedApplicationDate() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", outdateJobId)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", outdateJobId)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -399,8 +411,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobNoEdu() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", noEduJobId)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", noEduJobId)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -413,8 +425,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobInvalidCV() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", noEduJobId)
-                .fluentPut("cvId", 10000);
+                .fluentPut("job_id", noEduJobId)
+                .fluentPut("cv_id", 10000);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -426,8 +438,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobInvalidJob() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", 1000)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", 1000)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -439,8 +451,8 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobNoMoreSeats() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", fullJobId)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", fullJobId)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -452,8 +464,21 @@ public class WechatUserJobControllerTest {
     @Test
     public void testUserApplyJobDifferentGender() throws Exception {
         JSONObject req = new JSONObject()
-                .fluentPut("jobId", femaleJobId)
-                .fluentPut("cvId", userCVId);
+                .fluentPut("job_id", femaleJobId)
+                .fluentPut("cv_id", userCVId);
+        MvcResult result = mockMvc.perform(post("/user/apply")
+                .content(req.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-internal-token", userHeader))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+    }
+
+    @Test
+    public void testUserApplyJobManuallyStopped() throws Exception {
+        JSONObject req = new JSONObject()
+                .fluentPut("job_id", stoppedJobId)
+                .fluentPut("cv_id", userCVId);
         MvcResult result = mockMvc.perform(post("/user/apply")
                 .content(req.toString())
                 .contentType(MediaType.APPLICATION_JSON)

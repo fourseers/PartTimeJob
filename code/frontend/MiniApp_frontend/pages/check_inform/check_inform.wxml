@@ -3,6 +3,13 @@
 <view class="tag-container">
   <view class="tag" bind:tap="handleTransport">可打卡区域</view>
 </view>
+<i-divider color="#e9eaec" lineColor="#e9eaec" height="12"></i-divider>
+<i-panel title="打卡详细信息">
+  <i-cell-group>
+    <i-cell title="允许打卡时间"></i-cell>
+    <i-cell title="打卡地点"></i-cell>
+  </i-cell-group>
+</i-panel>
 <i-button class="check-button" bind:click="handleCheck" type="success">
   <text>打卡</text>
 </i-button>

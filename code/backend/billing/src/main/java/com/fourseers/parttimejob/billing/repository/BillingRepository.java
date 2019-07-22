@@ -22,4 +22,6 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "billing.paid as paid from Billing billing " +
             "where billing.shop.company.companyId = ?1")
     Page<BillingProjection> getBillingsByCompanyIdOrderByBillIdDesc(Integer companyId, Pageable pageable);
+
+    Billing findByBillId(Integer billId);
 }

@@ -1,8 +1,7 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.arrangement.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -12,10 +11,9 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Entity
-public class Job {
+public class JobDto {
 
-    private Integer jobId;
+    private Integer shopId;
     private String jobName;
     private Date beginDate;
     private Date endDate;
@@ -24,23 +22,18 @@ public class Job {
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
-    private Integer appliedAmount = 0;
     private Timestamp beginApplyTime;
     private Timestamp endApplyTime;
-    private Etc.Education education;
-    private List<Tag> tagList;
+    private String education;
+    private List<Integer> tagList;
     private Double salary;
-    private Shop shop;
-    private Boolean manualStop = false;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getJobId() {
-        return jobId;
+    public Integer getShopId() {
+        return shopId;
     }
 
-    public void setJobId(Integer jobId) {
-        this.jobId = jobId;
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 
     @NotBlank
@@ -71,6 +64,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+0")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -80,6 +74,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+0")
     public Time getEndTime() {
         return endTime;
     }
@@ -89,7 +84,6 @@ public class Job {
     }
 
     @NotNull
-    @Column(columnDefinition = "TEXT")
     public String getJobDetail() {
         return jobDetail;
     }
@@ -120,6 +114,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+0")
     public Timestamp getBeginApplyTime() {
         return beginApplyTime;
     }
@@ -129,6 +124,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+0")
     public Timestamp getEndApplyTime() {
         return endApplyTime;
     }
@@ -137,22 +133,21 @@ public class Job {
         this.endApplyTime = endApplyTime;
     }
 
-    @NotNull
-    @Convert(converter = Etc.EducationColumnConverter.class)
-    public Etc.Education getEducation() {
+    @NotBlank
+    public String getEducation() {
         return education;
     }
 
-    public void setEducation(Etc.Education education) {
+    public void setEducation(String education) {
         this.education = education;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    public List<Tag> getTagList() {
+    @NotNull
+    public List<Integer> getTagList() {
         return tagList;
     }
 
-    public void setTagList(List<Tag> tagList) {
+    public void setTagList(List<Integer> tagList) {
         this.tagList = tagList;
     }
 
@@ -164,32 +159,5 @@ public class Job {
 
     public void setSalary(Double salary) {
         this.salary = salary;
-    }
-
-    @ManyToOne
-    @JsonIgnore
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
-
-    @Column(columnDefinition = "INTEGER DEFAULT 0")
-    public Integer getAppliedAmount() {
-        return appliedAmount;
-    }
-
-    public void setAppliedAmount(Integer appliedAmount) {
-        this.appliedAmount = appliedAmount;
-    }
-
-    public Boolean getManualStop() {
-        return manualStop;
-    }
-
-    public void setManualStop(Boolean manualStop) {
-        this.manualStop = manualStop;
     }
 }

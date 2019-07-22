@@ -1,7 +1,7 @@
 /* pages/check_inform/check_inform.wxss */
 
 .check-map {
-  height: 950rpx;
+  height: 600rpx;
   width: 100%;
 }
 

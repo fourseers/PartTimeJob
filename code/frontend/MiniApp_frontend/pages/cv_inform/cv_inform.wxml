@@ -1,0 +1,35 @@
+<!--pages/cv_inform/cv_inform.wxml-->
+<view class="container">
+  <i-panel title="基础信息">
+    <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" error="{{name_error}}" right/>
+    <i-cell title="性别">
+      <i-switch id="gender-switch" value="{{ gender }}" bind:change="changeGender" slot="footer" i-class="{{gender ? 'man-background' : 'woman-background'}}">
+        <view slot="open">男</view>
+        <view slot="close">女</view>
+      </i-switch>
+    </i-cell>
+    <i-input value="{{ phone_number }}" title="手机号" placeholder="请输入手机号" maxlength="11" bind:change="getPhoneNumber" error="{{phone_error}}" right />
+    <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right />
+    <i-input value="{{ height }}" title="身高/cm" placeholder="请输入身高" maxlength="10" bind:change="getHeight" type="number" right />
+    <i-input value="{{ weight }}" title="体重/kg" placeholder="请输入体重" maxlength="10" bind:change="getWeight" type="number" right />
+  </i-panel>
+  <i-panel title="自我评价">
+    <i-input placeholder="请输入你的自我评价" bind:change="getEvaluation" maxlength="150" type="textarea"></i-input>
+  </i-panel>
+  <i-panel title="工作经历">
+    <block wx:for="{{exp_index}}" wx:key="item">
+      <i-input id="{{index}}" placeholder="请输入你的{{item}}" bind:change="getExperiences" maxlength="150" type="textarea"></i-input>
+    </block>
+    <i-button id="add-experience" bind:click="addExperience" i-class="experience-button" inline>添加经历</i-button>
+    <i-button bind:click="deleteExperience" i-class="experience-button" inline>删除经历</i-button>
+  </i-panel>
+</view>
+
+<i-button class="save-button" bind:click="handleSave" type="success">
+  <text>保存</text>
+</i-button>
+
+<i-modal visible="{{ del_modal_visible }}" bind:ok="delConfirm" bind:cancel="delCancel">
+    <view>您最后一条经历不为空，确定要删除吗？</view>
+</i-modal>
+<i-toast id="toast" />

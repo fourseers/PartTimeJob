@@ -3,17 +3,16 @@ package com.fourseers.parttimejob.common.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Null;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Time;
+import java.sql.Date;
 
 @Entity
 public class Work {
     private Integer workId;
     private Date workDate;
-    private Integer rank;
-    private Timestamp checkin;
-    private Timestamp checkout;
+    private Integer score;
+    private Time checkin;
+    private Time checkout;
     private String log;
     private Boolean salaryConfirmed = false;
     private WechatUser worker;
@@ -38,36 +37,32 @@ public class Work {
         this.workDate = workDate;
     }
 
-    @Null
     @Min(value = 0)
     @Max(value = 5)
-    public Integer getRank() {
-        return rank;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setRank(Integer rank) {
-        this.rank = rank;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
-    @Null
-    public Timestamp getCheckin() {
+    public Time getCheckin() {
         return checkin;
     }
 
-    public void setCheckin(Timestamp checkin) {
+    public void setCheckin(Time checkin) {
         this.checkin = checkin;
     }
 
-    @Null
-    public Timestamp getCheckout() {
+    public Time getCheckout() {
         return checkout;
     }
 
-    public void setCheckout(Timestamp checkout) {
+    public void setCheckout(Time checkout) {
         this.checkout = checkout;
     }
 
-    @Null
     public String getLog() {
         return log;
     }

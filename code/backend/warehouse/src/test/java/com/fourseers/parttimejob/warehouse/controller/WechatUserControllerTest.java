@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -113,7 +112,7 @@ public class WechatUserControllerTest {
         assertEquals(info.getString("name"), "SJH");
         assertEquals(info.getBoolean("gender"), true);
         assertEquals(info.getString("phone"), "13812345678");
-        assertEquals(info.getString("education"), Etc.Education.BELOW_SENIOR.name());
+        assertEquals(info.getString("education"), Etc.Education.BELOW_SENIOR.getName());
         assertNull(info.getString("openid"));
     }
 
@@ -151,7 +150,7 @@ public class WechatUserControllerTest {
         request.fluentPut("name", "ZJY");
         request.fluentPut("gender", false);
         request.fluentPut("phone", "13887654321");
-        request.fluentPut("education", Etc.Education.BACHELOR.name());
+        request.fluentPut("education", Etc.Education.BACHELOR.getName());
         mockMvc.perform(
                 post("/user/info")
                 .header("x-internal-token", internalTokenString)
@@ -175,7 +174,7 @@ public class WechatUserControllerTest {
         assertEquals(info.getString("name"), "ZJY");
         assertEquals(info.getBoolean("gender"), false);
         assertEquals(info.getString("phone"), "13887654321");
-        assertEquals(info.getString("education"), Etc.Education.BACHELOR.name());
+        assertEquals(info.getString("education"), Etc.Education.BACHELOR.getName());
         assertNull(info.getString("openid"));
     }
 

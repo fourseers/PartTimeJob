@@ -69,7 +69,7 @@ Page({
    * 元数据包括education_list和tags
    */
   onShow(){
-    console.log(app.globalData.userInfo);
+    //console.log(app.globalData.userInfo);
     var req = new request();
     req.getRequest(host + register_data, null).then(res => {
       if(res.statusCode === 200){

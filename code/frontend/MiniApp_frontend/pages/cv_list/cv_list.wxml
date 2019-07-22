@@ -1,0 +1,8 @@
+<!--pages/cv_list/cv_list.wxml-->
+<i-panel title="我的简历">
+  <i-cell-group>
+    <block wx:for="{{cv_list}}" wx:index="index">
+      <i-cell title="{{item.name}}" url="/pages/cv_inform/cv_inform?id={{item.id}}" is-link></i-cell>
+    </block>
+  </i-cell-group>
+</i-panel>

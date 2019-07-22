@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Service
 @Transactional
@@ -59,7 +59,7 @@ public class BillingServiceImpl implements BillingService {
         workDao.save(work);
     }
 
-    public Double getBillingAmountByUsernameInGivenPeriod(String username, Timestamp from, Timestamp to) {
+    public Double getBillingAmountByUsernameInGivenPeriod(String username, Date from, Date to) {
 
         if (from.after(to)) {
             throw new RuntimeException("incorrect param");
@@ -71,7 +71,12 @@ public class BillingServiceImpl implements BillingService {
             throw new RuntimeException("user does not belong to any company");
         }
 
-        return billingDao.getBillingAmountByCompanyIdInGivenPeriod(company.getCompanyId(), from, to);
+        Double result = billingDao.getBillingAmountByCompanyIdInGivenPeriod(company.getCompanyId(), from, to);
+        if (result != null) {
+            return result;
+        } else {
+            return (double) 0;
+        }
     }
 
 }

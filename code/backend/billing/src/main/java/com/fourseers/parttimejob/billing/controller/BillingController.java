@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.billing.controller;
 
+import com.fourseers.parttimejob.billing.dto.BillingAmountDto;
 import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
@@ -13,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -90,20 +91,28 @@ public class BillingController {
     @ApiOperation(value = "Get billing sum in a given period")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = ""),
+            @ApiResponse(code = 400, message = "user does not belong to any company / incorrect param"),
     })
             @ApiImplicitParams({
                     @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
                             required = true, dataType = "string", paramType = "header")
             })
     @RequestMapping(value = "/sum", method = GET, produces = "application/json")
-    public ResponseEntity<Response<Void>> getBillings(
-            @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
-            @RequestParam(value = "from") long from,
-            @RequestParam(value = "to") long to,
+    public ResponseEntity<Response<BillingAmountDto>> getBillings(
+            @ApiParam(value = "from date, yyyy-MM-dd") @RequestParam(value = "from") String from,
+            @ApiParam(value = "to date, yyyy-MM-dd") @RequestParam(value = "to") String to,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
-        Timestamp fromTS = new Timestamp(from);
-        Timestamp toTS = new Timestamp(to);
-        return null;
+
+        Date fromDate = Date.valueOf(from);
+        Date toDate = Date.valueOf(to);
+
+        try {
+            Double amount = billingService.getBillingAmountByUsernameInGivenPeriod(username, fromDate, toDate);
+            BillingAmountDto billingAmountDto = new BillingAmountDto();
+            billingAmountDto.setAmount(amount);
+            return ResponseBuilder.build(HttpStatus.OK, billingAmountDto, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
     }
 }

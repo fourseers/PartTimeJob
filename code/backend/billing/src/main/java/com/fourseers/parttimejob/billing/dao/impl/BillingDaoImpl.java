@@ -6,7 +6,7 @@ import com.fourseers.parttimejob.common.entity.Billing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Repository
 public class BillingDaoImpl implements BillingDao {
@@ -20,8 +20,7 @@ public class BillingDaoImpl implements BillingDao {
     }
 
     @Override
-    public Double getBillingAmountByCompanyIdInGivenPeriod(Integer companyId, Timestamp from, Timestamp to) {
-
+    public Double getBillingAmountByCompanyIdInGivenPeriod(Integer companyId, Date from, Date to) {
         return billingRepository.getBillingAmountByCompanyIdInGivenPeriod(companyId, from, to);
     }
 }

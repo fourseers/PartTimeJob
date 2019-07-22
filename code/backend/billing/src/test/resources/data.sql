@@ -22,3 +22,10 @@ insert into billing (meta, method, payment, work_work_id) values (null, '微信�
 update work set billing_bill_id = 1 where work_id = 1;
 insert into work (checkin, checkout, log, salary_confirmed, score, work_date, billing_bill_id, job_job_id, worker_user_id) values
 ('08:00:00', '16:00:00', null, false, 5, '2019-07-18', null, 1, 1);
+
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
+('2019-08-14 16:00:00', '2019-08-16', '高中毕业', '2019-08-15 16:00:00', '2019-08-17', '08:00:00', '16:00:00', 'sell Chuizi products', 'seller', 10, 2, 100, 1);
+insert into work (checkin, checkout, log, salary_confirmed, score, work_date, billing_bill_id, job_job_id, worker_user_id) values
+('08:00:00', '16:00:00', null, true, 5, '2019-08-17', null, 2, 1);
+insert into billing (meta, method, payment, work_work_id) values (null, '微信支付', 100, 3);
+update work set billing_bill_id = 2 where work_id = 3;

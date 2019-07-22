@@ -187,4 +187,92 @@ public class BillingControllerTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("work not exist or not belong to current company", response.getString("message"));
     }
+
+    @Test
+    public void getBillAmountOnePartsSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/sum")
+                .header("x-internal-token", bossname)
+                .param("from", "2019-07-15")
+                .param("to", "2019-07-24")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals(Double.valueOf(100d), response.getJSONObject("data").getDouble("amount"));
+
+    }
+
+    @Test
+    public void getBillAmountMorePartSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/sum")
+                .header("x-internal-token", bossname)
+                .param("from", "2019-07-15")
+                .param("to", "2019-08-24")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals(Double.valueOf(200d), response.getJSONObject("data").getDouble("amount"));
+
+    }
+
+    @Test
+    public void getBillAmountIncorrectParamSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/sum")
+                .header("x-internal-token", bossname)
+                .param("from", "2019-07-15")
+                .param("to", "2018-08-24")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("incorrect param", response.getString("message"));
+
+    }
+
+    @Test
+    public void getBillAmountZero() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/sum")
+                .header("x-internal-token", bossname)
+                .param("from", "2018-07-15")
+                .param("to", "2018-08-24")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(200))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals(Double.valueOf(0), response.getJSONObject("data").getDouble("amount"));
+
+    }
+
+    @Test
+    public void getBillNoCompany() throws Exception {
+        String bossname = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/sum")
+                .header("x-internal-token", bossname)
+                .param("from", "2019-07-15")
+                .param("to", "2019-08-24")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to any company", response.getString("message"));
+
+    }
 }

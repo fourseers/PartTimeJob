@@ -5,9 +5,13 @@
             登录
         </MenuItem>
 
-        <MenuItem name="17" to="/logout" v-if="this.$root.logged " >
+        <MenuItem name="18" to="/logout" v-if="this.$root.logged " >
             <Icon type="md-log-out" />
             登出
+        </MenuItem>
+        <MenuItem name="19" to="/banuser" v-if="this.$root.admin " >
+            <Icon type="ios-paper" />
+            管理用户
         </MenuItem>
         <MenuItem name="2" to="/register">
             <Icon type="md-log-in" />

@@ -73,8 +73,7 @@
                         key: 'begin_apply_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.begin_apply_date).toLocaleDateString()),
-                                h('div',new Date(params.row.begin_apply_date).toTimeString().substr(0,5))
+                                h('div', params.row.begin_apply_time.replace('T',' ').substr(0,19))
                             ])}
                     },
                     {
@@ -82,17 +81,33 @@
                         key: 'end_apply_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.end_apply_date).toLocaleDateString()),
-                                h('div',new Date(params.row.end_apply_date).toTimeString().substr(0,5))
+                                h('div',params.row.end_apply_time.replace('T',' ').substr(0,19))
                             ])}
+                    },
+                    {
+                        title: '工作开始日期',
+                        key: 'begin_date',
+                        render: (h, params) => {
+                            return  h('div',[
+                                h('div',new Date(params.row.begin_date).toLocaleDateString())
+                            ])}
+
+                    },
+                    {
+                        title: '工作结束日期',
+                        key: 'end_date',
+                        render: (h, params) => {
+                            return  h('div',[
+                                h('div',new Date(params.row.end_date).toLocaleDateString())
+                            ])}
+
                     },
                     {
                         title: '工作开始时间',
                         key: 'begin_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.begin_date).toLocaleDateString()),
-                                h('div',new Date(params.row.begin_date).toTimeString().substr(0,5))
+                                h('div', params.row.begin_time )
                             ])}
 
                     },
@@ -101,8 +116,7 @@
                         key: 'end_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.end_date).toLocaleDateString()),
-                                h('div',new Date(params.row.end_date).toTimeString().substr(0,5))
+                                h('div', params.row.end_time  )
                             ])}
 
                     },
@@ -113,6 +127,10 @@
                     {
                         title: '教育',
                         key: 'education',
+                        render: (h, params) => {
+                            return  h('div',this.education_convert(params.row.education)
+                                    )}
+
                     },
                     {
                         title: '招聘状态',
@@ -223,7 +241,6 @@
                 //get shops
                 this.mockTableData2(0)
                  }
-
         },
         methods: {
             stopHire(id,stop)
@@ -310,6 +327,17 @@
             {
                 this.shop_chosen = ""
                 this.mockTableData1(0);
+            },
+            education_convert(education)
+            {
+                if( education =="BELOW_SENIOR")
+                {
+                    return "初中毕业及以下"
+                }else if(
+                    education =="JUNIOR_COLLEGE")
+                {
+                    return "大专毕业及以下"
+                }
             }
         }
     }

@@ -97,8 +97,7 @@
         methods: {
             paybill( bill_id)
             {
-
-                //get bills
+                //pay bills
                 var prefix="/billing"
                 this.axios({
                     headers: {

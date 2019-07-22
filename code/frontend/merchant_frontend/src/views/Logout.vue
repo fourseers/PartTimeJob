@@ -15,6 +15,10 @@
                 console.log(this.$token.loadToken());
 
                 this.$root.logged = false;
+                if(this.$root.admin)
+                {
+                    this.$root.admin=false;
+                }
                 this.$router.push({ name: "login"})
                 this.$Message.success('登出成功');
             }

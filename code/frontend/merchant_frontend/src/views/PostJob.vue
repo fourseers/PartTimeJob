@@ -497,8 +497,8 @@
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
-                        begin_apply_date: this.format_date(this.begin_apply_date),
-                        end_apply_date:  this.format_date(this.end_apply_date),
+                        begin_apply_time: this.format_date(this.begin_apply_date),
+                        end_apply_time:  this.format_date(this.end_apply_date),
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
                         salary: this.formValidate.salary

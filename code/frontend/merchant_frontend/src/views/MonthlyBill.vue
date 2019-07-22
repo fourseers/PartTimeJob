@@ -1,11 +1,12 @@
 <template>
     <div class="content">
         <Table border :columns="columns7" :data="bill">
-            <div slot="header" class="table-height">月末账单</div>
+            <div slot="header" class="table-height" style="
+        font-size: 20px;">月末账单</div>
             <div slot="footer" class="table-height">
                 本月需支付总金额：{{}}
 
-                <Button class="ivu-btn" @click="handleSubmit('formInline')" >确认支付</Button>
+                <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
             </div>
 
 
@@ -76,7 +77,8 @@
                         }
                     }
                 ],
-                bill:[]
+                bill:[],
+                bill_id:0,
             }
         },
         watch:
@@ -93,6 +95,35 @@
 
         },
         methods: {
+            paybill( bill_id)
+            {
+
+                //get bills
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/billing/pay",
+                    data:{
+                       bill_id: bill_id,
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        console.log("success");
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+            },
             mockTableData1(pagenum) {
                 //get bills
                 var prefix="/billing"
@@ -113,11 +144,14 @@
                     if(response.status ===  200)
                     {
                         this.bill=response.data.data.content;
-                        console.log("success");
+                        this.bill_id = response.data.data.content.bill_id;
+
+                        this.$Message.success('支付成功');
                     }
                 })
                     .catch(error => {
                         console.log(error)
+                        this.$Message.success('支付失败');
                     })
 
             }, changePage(index) {

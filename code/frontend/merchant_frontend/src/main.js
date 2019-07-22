@@ -48,12 +48,6 @@ new Vue({
   ,
   created:function(){
     console.log(this.$token.loadToken() );
-    console.log(this.$token.loadToken().access_token === "null");
-    if(this.$token.loadToken().access_token === "null"){
       this.$root.logged = false;
-    }
-    else {
-      this.$root.logged =true;
-    }
   },
 }).$mount('#app');

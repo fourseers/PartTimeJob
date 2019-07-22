@@ -131,9 +131,9 @@
                             }
                             this.data.push(item)
                         }
-                        window.addEventListener('scroll',function(e)
-                        {console.log(e)
-                        }, true);
+                        // window.addEventListener('scroll',function(e)
+                        // {console.log(e)
+                        // }, true);
                     },
                     error => {
                         if (error.response) {

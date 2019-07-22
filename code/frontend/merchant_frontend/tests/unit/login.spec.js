@@ -34,43 +34,23 @@ describe('Login.vue', () => {
 
 
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-
 describe('Login.vue', () => {
-    it('returns data when sendMessage is called', done => {
-        var mock = new MockAdapter(axios);
+    it('login() returns response', done => {
 
-        const goodresponse = { response:{
-                message: 'success'
-            }};
-
-        // 模拟成功请求
-        mock.onPost( 'http://202.120.40.8:30552/auth/merchant/login').reply(200,  goodresponse );
-
-        //模拟登录                POST
-
+        const goodresponse = {
+            "data": {
+                "access_token": "ed7da69b-45c0-4a19-8536-ea8ccb40bacb",
+                "refresh_token": "584ede9a-3f49-49b3-9046-c321166481c6",
+                "scope": "merchant",
+                "token_type": "bearer",
+                "expires_in": 41138
+            }, "status": 200, "message": "success"
+        }
         Login.methods.login("user_one", "user_one").then(response => {
-            expect(response).toEqual( goodresponse );
+            expect(response.data.scope).toEqual(goodresponse.data.scope);
+
             done();
         });
 
     })
 });
-
-//
-// describe('Login.vue', () => {
-//     it('test for error handling', done => {
-//         var mock = new MockAdapter(axios);
-//
-//         mock.onPost( 'http://202.120.40.8:30552/auth/merchant/login').networkError()
-//
-//         //模拟登录                POST
-//
-//         Login.methods.login("user_one", "user_one").then(response => {
-//
-//             expect(response).toEqual({});
-//             done();
-//         });
-//
-//     })
-// })

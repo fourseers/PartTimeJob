@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
@@ -9,7 +9,10 @@ import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.util.UserDecoder;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +75,7 @@ public class WechatUserJobController {
     })
     @GetMapping("/job")
     public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
-            @RequestParam @Min(1) int jobId,
+            @RequestParam("job_id") @Min(1) int jobId,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -90,9 +93,9 @@ public class WechatUserJobController {
             @ApiResponse(code = 200, message = "Application success"),
             @ApiResponse(code = 400, message = "Invalid application. Consult message field for further info.")
     })
-    @PostMapping("apply")
+    @PostMapping(value = "apply")
     public ResponseEntity<Response<Void>> applyJob(
-            @ApiParam("Param in json, contains jobId and cvId") @RequestBody JSONObject params,
+            @ApiParam("Param in json, contains jobId and cvId") @RequestBody ApplyDto params,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -101,8 +104,8 @@ public class WechatUserJobController {
                 UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
-        Integer jobId = params.getInteger("jobId");
-        String cvId = params.getString("cvId");
+        Integer jobId = params.getJobId();
+        String cvId = params.getCvId();
         if(jobId == null || cvId == null) {
             return ResponseBuilder.build(BAD_REQUEST, null, "Missing params.");
         }

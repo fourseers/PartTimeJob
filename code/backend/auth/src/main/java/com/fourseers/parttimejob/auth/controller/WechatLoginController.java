@@ -106,7 +106,7 @@ public class WechatLoginController {
         user.setPhone(body.getString("phone"));
         user.setCountry(body.getString("country"));
         user.setCity(body.getString("city"));
-        user.setEducation(Etc.Education.valueOf(body.getString("education")));
+        user.setEducation(Etc.Education.fromName(body.getString("education")));
         wechatUserService.save(user);
 
         return oauthResult(user.getOpenid(), basicAuth);

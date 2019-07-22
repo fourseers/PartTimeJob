@@ -7,6 +7,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -15,14 +17,16 @@ public class Job {
 
     private Integer jobId;
     private String jobName;
-    private Timestamp beginDate;
-    private Timestamp endDate;
+    private Date beginDate;
+    private Date endDate;
+    private Time beginTime;
+    private Time endTime;
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
     private Integer appliedAmount = 0;
-    private Timestamp beginApplyDate;
-    private Timestamp endApplyDate;
+    private Timestamp beginApplyTime;
+    private Timestamp endApplyTime;
     private Etc.Education education;
     private List<Tag> tagList;
     private Double salary;
@@ -49,21 +53,39 @@ public class Job {
     }
 
     @NotNull
-    public Timestamp getBeginDate() {
+    public Date getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Timestamp beginDate) {
+    public void setBeginDate(Date beginDate) {
         this.beginDate = beginDate;
     }
 
     @NotNull
-    public Timestamp getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @NotNull
+    public Time getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Time beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    @NotNull
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
     }
 
     @NotNull
@@ -98,21 +120,21 @@ public class Job {
     }
 
     @NotNull
-    public Timestamp getBeginApplyDate() {
-        return beginApplyDate;
+    public Timestamp getBeginApplyTime() {
+        return beginApplyTime;
     }
 
-    public void setBeginApplyDate(Timestamp beginApplyDate) {
-        this.beginApplyDate = beginApplyDate;
+    public void setBeginApplyTime(Timestamp beginApplyTime) {
+        this.beginApplyTime = beginApplyTime;
     }
 
     @NotNull
-    public Timestamp getEndApplyDate() {
-        return endApplyDate;
+    public Timestamp getEndApplyTime() {
+        return endApplyTime;
     }
 
-    public void setEndApplyDate(Timestamp endApplyDate) {
-        this.endApplyDate = endApplyDate;
+    public void setEndApplyTime(Timestamp endApplyTime) {
+        this.endApplyTime = endApplyTime;
     }
 
     @NotNull

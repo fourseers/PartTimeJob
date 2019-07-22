@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+
 @Service
 @Transactional
 public class BillingServiceImpl implements BillingService {
@@ -55,6 +57,21 @@ public class BillingServiceImpl implements BillingService {
         billingDao.save(billing);
         work.setBilling(billing);
         workDao.save(work);
+    }
+
+    public Double getBillingAmountByUsernameInGivenPeriod(String username, Timestamp from, Timestamp to) {
+
+        if (from.after(to)) {
+            throw new RuntimeException("incorrect param");
+        }
+
+        Company company = companyDao.findByUsername(username);
+
+        if (company == null) {
+            throw new RuntimeException("user does not belong to any company");
+        }
+
+        return billingDao.getBillingAmountByCompanyIdInGivenPeriod(company.getCompanyId(), from, to);
     }
 
 }

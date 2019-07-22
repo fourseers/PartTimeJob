@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -85,4 +87,23 @@ public class BillingController {
        }
     }
 
+    @ApiOperation(value = "Get billing sum in a given period")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = ""),
+    })
+            @ApiImplicitParams({
+                    @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                            required = true, dataType = "string", paramType = "header")
+            })
+    @RequestMapping(value = "/sum", method = GET, produces = "application/json")
+    public ResponseEntity<Response<Void>> getBillings(
+            @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
+            @RequestParam(value = "from") long from,
+            @RequestParam(value = "to") long to,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+        Timestamp fromTS = new Timestamp(from);
+        Timestamp toTS = new Timestamp(to);
+        return null;
+    }
 }

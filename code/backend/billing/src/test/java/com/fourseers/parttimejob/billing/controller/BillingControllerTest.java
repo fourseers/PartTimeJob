@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -85,5 +86,90 @@ public class BillingControllerTest {
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("user does not belong to any company", response.getString("message"));
+    }
+
+    @Test
+    public void payBillSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.put("bill_id", 2);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void payBillNotExist() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.put("bill_id", 666);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("bill not exist or not belong to current company", response.getString("message"));
+    }
+
+    @Test
+    public void payBillAlreadyPaid() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.put("bill_id", 1);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("bill already paid", response.getString("message"));
+    }
+
+    @Test
+    public void payBillUserNoCompany() throws Exception {
+        String bossname = "Poor user";
+
+        JSONObject body = new JSONObject();
+        body.put("bill_id", 2);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to any company", response.getString("message"));
+    }
+
+    @Test
+    public void payBillNotBelongTo() throws Exception {
+        String bossname = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body.put("bill_id", 2);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("bill not exist or not belong to current company", response.getString("message"));
     }
 }

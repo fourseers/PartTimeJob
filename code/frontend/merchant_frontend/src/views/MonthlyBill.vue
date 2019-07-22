@@ -50,8 +50,7 @@
                         key: 'begin_time',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.begin_time).toLocaleDateString()),
-                                h('div',new Date(params.row.begin_time).toTimeString().substr(0,5))
+                                h('div', params.row.begin_time )
                             ])
                         }
                     },
@@ -60,8 +59,7 @@
                         key: 'end_time',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div',new Date(params.row.end_time).toLocaleDateString()),
-                                h('div',new Date(params.row.end_time).toTimeString().substr(0,5))
+                                h('div',params.row.end_time)
                             ])
                         }
                     },
@@ -89,7 +87,7 @@
                 this.$Message.warning('请登录');
             } else
             {
- 
+
                 //获取第一页账单
                 this.mockTableData1(0)
             }
@@ -100,31 +98,7 @@
             paybill( bill_id)
             {
                 //pay bills
-                var prefix="/billing"
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/billing/pay",
-                    data:{
-                        bill_id: bill_id,
-                    }
-                }).then(response => {
-                    console.log(response);
-                    if(response.status ===  200)
-                    {
-                        console.log("success");
 
-                        this.$Message.success('支付成功');
-                    }
-                })
-                    .catch(error => {
-                        console.log(error)
-                    })
 
             },
             mockTableData1(pagenum) {
@@ -150,6 +124,7 @@
                         this.bill_id = response.data.data.content.bill_id;
 
                     }
+                    console.log( this.bill_id)
                 })
                     .catch(error => {
                         console.log(error.response)
@@ -158,8 +133,11 @@
                             if (error.response.data.status === 400 && error.response.data.message === "user does not belong to any company") {
                                 this.$Message.error('请添加公司');
                             }
+                            else if(error.response.data.status === 400 && error.response.data.message === "no bills")
+                            {
+                                this.$Message.error('暂无账单');
+                            }
                         }
-                        this.$Message.error('支付失败');
                     })
 
             }, changePage(index) {

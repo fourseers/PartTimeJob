@@ -59,6 +59,10 @@
                         key: 'checkout'
                     },
                     {
+                        title: '薪水',
+                        key: 'payment'
+                    },
+                    {
                         title: '打分',
                         key: 'score',
                         width: 190,
@@ -100,7 +104,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.pay(params.row.workid)
+                                            this.pay(params.row.work_id,params.row.payment)
 
                                         }
                                     }
@@ -234,7 +238,7 @@
                 )
             }
             ,
-            pay(workid)
+            pay(workid,payment)
             {
 
                 var prefix="/billing"
@@ -250,7 +254,7 @@
                     data:{
                         work_id: workid,
                         meta:"this is meta",
-                        payment:11,
+                        payment:payment,
                         method:"this is method"
                     }
                 }).then(response => {

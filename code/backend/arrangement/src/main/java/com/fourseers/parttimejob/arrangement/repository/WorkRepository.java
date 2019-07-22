@@ -1,15 +1,15 @@
 package com.fourseers.parttimejob.arrangement.repository;
 
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
-import com.fourseers.parttimejob.common.entity.Company;
-import com.fourseers.parttimejob.common.entity.Shop;
-import com.fourseers.parttimejob.common.entity.Work;
+import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface WorkRepository extends JpaRepository<Work, Integer> {
+
+    Work getByJobAndWorker(Job job, WechatUser wechatUser);
 
     @Query("select " +
             "work.worker.name as employeeName, " +

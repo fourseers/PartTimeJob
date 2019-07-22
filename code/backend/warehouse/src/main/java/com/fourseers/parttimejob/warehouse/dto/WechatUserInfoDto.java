@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.warehouse.dto;
 
+import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Tag;
 
 import javax.validation.constraints.NotNull;
@@ -79,7 +80,7 @@ public class WechatUserInfoDto {
         return education;
     }
 
-    public void setEducation(String education) { this.education = education; }
+    public void setEducation(Etc.Education education) { this.education = education.getName(); }
 
     public Set<Tag> getTags() {
         return tags;

@@ -63,7 +63,7 @@ public class WechatUserServiceImpl implements WechatUserService {
         if(userInfoDto.getString("phone") != null)
             user.setPhone(userInfoDto.getString("phone"));
         if(userInfoDto.getString("education") != null)
-            user.setEducation(Etc.Education.valueOf(userInfoDto.getString("education")));
+            user.setEducation(Etc.Education.fromName(userInfoDto.getString("education")));
         if(userInfoDto.getJSONArray("tags") != null) {
             JSONArray tags = userInfoDto.getJSONArray("tags");
             Set<Tag> trueTags = new HashSet<>();

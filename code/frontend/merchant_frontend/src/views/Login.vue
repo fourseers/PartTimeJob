@@ -74,7 +74,6 @@
                   this.$router.push({ name: "postjob"})
                 },
                 error => {
-
                   console.log(error.response);
                   if (error.response) {
                     if (error.response.data.status === 400) {
@@ -93,7 +92,6 @@
                     this.$Message.error('登录失败');
                   }
 
-                  // 执行失败的回调函数
                 });
       },
       login(username, password) {

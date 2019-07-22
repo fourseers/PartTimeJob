@@ -43,7 +43,7 @@ describe('Login.vue', () => {
                 "refresh_token": "584ede9a-3f49-49b3-9046-c321166481c6",
                 "scope": "merchant",
                 "token_type": "bearer",
-                "expires_in": 41138
+                "expires_in": 41138,
             }, "status": 200, "message": "success"
         }
         Login.methods.login("user_one", "user_one").then(response => {
@@ -54,3 +54,7 @@ describe('Login.vue', () => {
 
     })
 });
+import Vue from "vue";
+
+
+

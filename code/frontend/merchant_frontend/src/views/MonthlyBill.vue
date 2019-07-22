@@ -110,13 +110,15 @@
                     method: 'post',
                     url: prefix +"/merchant/billing/pay",
                     data:{
-                       bill_id: bill_id,
+                        bill_id: bill_id,
                     }
                 }).then(response => {
                     console.log(response);
                     if(response.status ===  200)
                     {
                         console.log("success");
+
+                        this.$Message.success('支付成功');
                     }
                 })
                     .catch(error => {
@@ -146,12 +148,17 @@
                         this.bill=response.data.data.content;
                         this.bill_id = response.data.data.content.bill_id;
 
-                        this.$Message.success('支付成功');
                     }
                 })
                     .catch(error => {
-                        console.log(error)
-                        this.$Message.success('支付失败');
+                        console.log(error.response)
+
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "user does not belong to any company") {
+                                this.$Message.error('请添加公司');
+                            }
+                        }
+                        this.$Message.error('支付失败');
                     })
 
             }, changePage(index) {

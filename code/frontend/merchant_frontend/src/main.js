@@ -47,7 +47,11 @@ new Vue({
     }}
   ,
   created:function(){
-    console.log(this.$token.loadToken() );
+    console.log(this.$token.loadToken());
       this.$root.logged = false;
+      if(this.$token.loadToken().access_token)
+      {
+        this.$root.logged = true;
+      }
   },
 }).$mount('#app');

@@ -3,6 +3,7 @@ import ShowJobs from '@/views/ShowJobs.vue'
 import Login from '@/views/Login.vue'
 
 
+import token from '@/util/token.js'
 import axios from 'axios';
 describe('Login.vue', () => {
     it('returns 200', done => {
@@ -20,14 +21,4 @@ describe('Login.vue', () => {
 });
 
 
-
-describe('ShowJobs.vue', () => {
-    describe('Test for  mounted', () => {
-        const wrapper = shallowMount(ShowJobs);
-
-        it('calls mockTableData1', () => {
-            // 创建mock函数 
-        })
-    });
-})
 

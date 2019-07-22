@@ -3,6 +3,10 @@ const { $Toast } = require("../../dist/base/index");
 
 Page({
 
+  onLoad(options) {
+    console.log(options);
+  },
+
   /**
    * 页面的初始数据
    */

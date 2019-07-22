@@ -33,6 +33,11 @@ Page({
         title: "关于",
         url: "/pages/index/index",
         src: "/assets/icons/about.png"
+      },
+      {
+        title: "简历",
+        url: "/pages/cv_list/cv_list",
+        src: "/assets/icons/resume.png"
       }
     ]
   },

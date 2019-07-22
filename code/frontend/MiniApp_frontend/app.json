@@ -11,7 +11,8 @@
     "pages/user_inform/user_inform",
     "pages/check/check",
     "pages/check_inform/check_inform",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/cv_list/cv_list"
   ],
   "window": {
     "backgroundTextStyle": "light",

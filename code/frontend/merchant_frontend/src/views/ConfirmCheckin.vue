@@ -30,10 +30,10 @@
                 columns7: [
                     {
                         title: '员工名字',
-                        key: 'name',
+                        key: 'employee_name',
                         render: (h, params) => {
                             return h('div', [
-                                h('strong', params.row.name)
+                                h('strong', params.row.employee_name)
                             ]);
                         }
                     },
@@ -48,7 +48,7 @@
                     },
                     {
                         title: '签到时间',
-                        key: 'checkin_time'
+                        key: 'checkin'
                     },
                     {
                         title: '工作结束时间',
@@ -56,22 +56,25 @@
                     },
                     {
                         title: '签离时间',
-                        key: 'checkout_time'
+                        key: 'checkout'
                     },
                     {
                         title: '打分',
-                        key: 'action',
+                        key: 'score',
                         width: 190,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
                                 h('Rate', {
+                                    props:{
+                                        value:params.row.score
+                                    },
                                     style: {
                                         marginRight: '5px'
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.show(params.row.score)
                                         }
                                     }
                                 }, 'View')
@@ -128,22 +131,6 @@
                     }
                 ],
                 data6: [
-                    {
-                        name: 'John Brown',
-                        shop_name:"shop1",
-                        begin_time:"2020-2-2",
-                        checkin_time:"2026-2-2",
-                        end_time:"2020-2-3",
-                        checkout_time:"2020-2-2"
-                    },
-                    {
-                        name: 'John Brown',
-                        shop_name:"shop2",
-                        begin_time:"2020-2-2",
-                        checkin_time:"2026-2-2",
-                        end_time:"2020-2-3",
-                        checkout_time:"2020-2-2"
-                    }
                 ],
 
                 shop_chosen:"",
@@ -153,14 +140,30 @@
         created:function() {
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
-            } else { 
+            } else {
                 //get checkin
-                this.mockTableData1(0)
+               // this.mockTableData1(0)
                 //get shops
                 this.mockTableData2(0)
 
             }
         },
+        watch:
+            {
+                shop_chosen:{
+                    handler(val, oldVal){
+                        // console.log(val);
+                        // console.log(oldVal)
+
+                        if (typeof(val) == "undefined"){
+                            //翻页按钮
+                        }
+                        else {
+                            this.mockTableData1 (0)
+                        }
+                    }
+                }
+            },
         methods: {
             changePage (index) {
                 if(this.shop_chosen === "")
@@ -174,7 +177,6 @@
                 this.mockTableData2(index-1);
             },
             mockTableData1 (pagenum) {
-                var prefix = "/arrangement"
                 //get checkin
                 var prefix="/arrangement"
                 this.axios({
@@ -187,20 +189,26 @@
                     method: 'get',
                     url: prefix +"/merchant/works",
                     params:{
-                        shop_id: 2,
-                        page_count:0
+                        shop_id: this.shop_chosen,
+                        page_count:pagenum
                     }
                 }).then(response => {
-                    this.data6=response.content
+                    this.data6=response.data.data.content
                     console.log(response);
                     if(response.status ===  200)
                     {
                         console.log("success");
-                        this.$Message.success('发放成功');
                     }
                 })
                     .catch(error => {
                         console.log(error)
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "work not exist") {
+                                console.log(error.response);
+                                this.$Message.error('暂无打卡');
+                            }
+                        }
+
                     })
 
             },

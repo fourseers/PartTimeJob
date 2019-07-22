@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 public class Job {
 
-
     private Integer jobId;
     private String jobName;
     private Timestamp beginDate;
@@ -21,12 +20,15 @@ public class Job {
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
+    private Integer appliedAmount = 0;
     private Timestamp beginApplyDate;
     private Timestamp endApplyDate;
     private String education;
     private List<Tag> tagList;
     private Double salary;
     private Shop shop;
+    private Boolean manualStop = false;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getJobId() {
@@ -149,5 +151,22 @@ public class Job {
 
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    public Integer getAppliedAmount() {
+        return appliedAmount;
+    }
+
+    public void setAppliedAmount(Integer appliedAmount) {
+        this.appliedAmount = appliedAmount;
+    }
+
+    public Boolean getManualStop() {
+        return manualStop;
+    }
+
+    public void setManualStop(Boolean manualStop) {
+        this.manualStop = manualStop;
     }
 }

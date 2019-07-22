@@ -14,9 +14,11 @@ public interface JobService {
     Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize);
 
     Page<Job> findJobs(WechatUser user, int pageCount);
-
     Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount);
     Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
 
+    boolean apply(WechatUser user, int jobId, String cvId);
     JobDetailedInfoProjection getJobDetail(int jobId);
+
+    void setJobHiringState(Integer jobId, String username, Boolean stop);
 }

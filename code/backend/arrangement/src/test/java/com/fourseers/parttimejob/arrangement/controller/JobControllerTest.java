@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.sql.Timestamp;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -568,4 +568,84 @@ public class JobControllerTest {
 
     }
 
+    @Test
+    public void stopJobSuccess() throws Exception {
+        String bossname = "葛越";
+
+        MvcResult result = mockMvc.perform(put("/merchant/job/stop")
+                .header("x-internal-token", bossname)
+                .param("job_id", "1")
+                .param("stop", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+
+        Job job = jobService.findByJobIdAndUsername(1, bossname);
+        assertTrue(job.getManualStop());
+    }
+
+    @Test
+    public void stopJobNotExist() throws Exception {
+        String bossname = "葛越";
+
+        MvcResult result = mockMvc.perform(put("/merchant/job/stop")
+                .header("x-internal-token", bossname)
+                .param("job_id", "666")
+                .param("stop", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("job not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void stopJobNotBelongTo() throws Exception {
+        String bossname = "poor user";
+
+        MvcResult result = mockMvc.perform(put("/merchant/job/stop")
+                .header("x-internal-token", bossname)
+                .param("job_id", "1")
+                .param("stop", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to a company", response.getString("message"));
+    }
+
+    @Test
+    public void restartJobSuccess() throws Exception {
+        String bossname = "葛越";
+
+        MvcResult result = mockMvc.perform(put("/merchant/job/stop")
+                .header("x-internal-token", bossname)
+                .param("job_id", "1")
+                .param("stop", "true")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+
+        result = mockMvc.perform(put("/merchant/job/stop")
+                .header("x-internal-token", bossname)
+                .param("job_id", "1")
+                .param("stop", "false")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+
+        Job job = jobService.findByJobIdAndUsername(1, bossname);
+        assertFalse(job.getManualStop());
+    }
 }

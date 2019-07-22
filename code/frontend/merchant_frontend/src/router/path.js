@@ -14,7 +14,8 @@ import ScreenCV from '../views/ScreenCV.vue'
 import PostStat from '../views/PostStat.vue'
 import ShowJobs from '../views/ShowJobs.vue'
 import ShopDetail from '../views/ShopDetail.vue'
-
+import AdminLogin from '../views/AdminLogin.vue'
+import BanUser from '../views/BanUser.vue'
 import Logout from '../views/Logout.vue'
 
 const  routes =[
@@ -27,6 +28,17 @@ const  routes =[
         path: '/login',
         name: 'login',
         component:Login
+    },
+    {
+        path: '/adminlogin',
+        name: 'adminlogin',
+        component:AdminLogin
+    },
+
+    {
+        path: '/banuser',
+        name: 'banuser',
+        component:BanUser
     },
     {
         path: '/register',

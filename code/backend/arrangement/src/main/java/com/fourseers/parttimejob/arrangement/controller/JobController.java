@@ -1,6 +1,5 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.dto.JobDto;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.Job;
@@ -36,8 +35,8 @@ public class JobController {
                     required = true, dataType = "string", paramType = "header")
     })
     @RequestMapping(value = "/job", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response<JSONObject>> addJob(@RequestBody JobDto jobDto,
-                                                       @RequestHeader("x-internal-token") String username) {
+    public ResponseEntity<Response<Void>> addJob(@ApiParam(name = "data", value = "info about job")@RequestBody(required = true) JobDto jobDto,
+                                                 @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
 
         Job job;
         try {

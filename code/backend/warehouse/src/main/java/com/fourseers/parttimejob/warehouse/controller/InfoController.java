@@ -44,7 +44,7 @@ public class InfoController {
         public void setEducationByEnum(List<Etc.Education> educations) {
             List<String> educationStringList = new ArrayList<>();
             for(Etc.Education edu: educations)
-                educationStringList.add(edu.name());
+                educationStringList.add(edu.getName());
             this.setEducation(educationStringList);
         }
 

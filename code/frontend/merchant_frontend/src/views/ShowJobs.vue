@@ -333,11 +333,33 @@
                 if( education =="BELOW_SENIOR")
                 {
                     return "初中毕业及以下"
-                }else if(
+                }else if( education =="TECHICAL_JUNIOR")
+                {
+
+                    return "中专毕业"
+                }
+                else if(
+                    education =="SENIOR_HIGH")
+                {
+                    return "高中毕业"
+                }
+                else if(
                     education =="JUNIOR_COLLEGE")
                 {
-                    return "大专毕业及以下"
+                    return "大专毕业"
                 }
+                else if(
+                    education =="BACHELOR")
+                {
+                    return "本科毕业"
+                }
+                else if(
+                    education =="ABOVE_BACHELOR")
+                {
+                    return "研究生毕业及以上"
+                }
+
+
             }
         }
     }

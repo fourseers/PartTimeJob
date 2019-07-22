@@ -89,6 +89,9 @@
                 this.$Message.warning('请登录');
             } else
             {
+
+                //get shops
+                this.mockTableData2(0)
                 //获取第一页账单
                 this.mockTableData1(0)
             }

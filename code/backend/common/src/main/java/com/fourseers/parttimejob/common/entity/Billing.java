@@ -42,7 +42,6 @@ public class Billing {
         this.method = method;
     }
 
-    @Null
     public String getMeta() {
         return meta;
     }

@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     @Query("select " +
+            "work.workId as workId, " +
             "work.worker.name as employeeName, " +
             "work.job.shop.shopName as shopName, " +
             "work.workDate as workDate, " +
@@ -25,6 +26,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     Page<WorkProjection> findPageByShopOrderByWorkIdDesc(Shop shop, Pageable pageable);
 
     @Query("select " +
+            "work.workId as workId, " +
             "work.worker.name as employeeName, " +
             "work.job.shop.shopName as shopName, " +
             "work.workDate as workDate, " +

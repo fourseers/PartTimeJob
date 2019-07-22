@@ -95,12 +95,14 @@ Page({
     }
   },
 
+  //每次更新evaluation的input组件后都重新获取evaluation
   getEvaluation(e) {
     this.setData({
       evaluation: e.detail.detail.value,
     })
   },
 
+  //每次更新experience的input组件后都重新获取evaluation
   getExperiences(e) {
     var newExp = this.data.experience;
     newExp[e.target.id] = e.detail.detail.value;
@@ -110,6 +112,7 @@ Page({
     })
   },
 
+  //添加工作经历input
   addExperience() {
     var newInd = this.data.exp_index;
     newInd[newInd.length] = "经历" + (newInd.length + 1);
@@ -121,6 +124,7 @@ Page({
     })
   },
 
+  //删除最后一个工作经历input
   deleteExperience() {
     var newInd = this.data.exp_index;
     var length = this.data.exp_index.length;
@@ -143,6 +147,7 @@ Page({
     }
   },
 
+  //（对话框）确认删除
   delConfirm() {
     var newInd = this.data.exp_index;
     var newExp = this.data.experience;
@@ -155,12 +160,14 @@ Page({
     })
   },
 
+  //（对话框）取消删除
   delCancel() {
     this.setData({
       del_modal_visible: true
     })
   },
 
+  //保存简历
   handleSave() {
     if (this.data.height === "") {
       $Toast({

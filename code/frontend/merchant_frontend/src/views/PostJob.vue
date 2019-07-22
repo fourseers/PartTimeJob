@@ -31,25 +31,20 @@
 
                     </Row>
                     <Row>
-                        <FormItem class="ivu-form-item ivu-form-item-required" label="工作时间">
+                        <FormItem class="ivu-form-item ivu-form-item-required" label="工作日期">
                             <Row>
+
                                 <Col span="8">
                                     <FormItem prop="begin_date">
                                         <Date-picker
                                                 type="date"
                                                 format="yyyy-MM-dd"
                                                 v-model="formValidate.begin_date"
-                                                placeholder="请选择工作开始时间"
+                                                placeholder="请选择工作开始日期"
                                                 :options="startTimeOptions"
                                                 @on-change="startTimeChange"
                                                 placement="bottom-end">
                                         </Date-picker>
-                                    </FormItem>
-                                    <FormItem prop="begin_time">
-                                        <TimePicker format="HH:mm" placeholder="Select time"
-
-                                                    v-model="formValidate.begin_time"
-                                        ></TimePicker>
                                     </FormItem>
                                 </Col>
                                 <Col span="8">
@@ -58,24 +53,36 @@
                                                 type="date"
                                                 format="yyyy-MM-dd"
                                                 v-model="formValidate.end_date"
-                                                placeholder="请选择工作结束时间"
+                                                placeholder="请选择工作结束日期"
                                                 :options="endTimeOptions"
                                                 @on-change="endTimeChange"
                                                 placement="bottom-end">
                                         </Date-picker>
                                     </FormItem>
+                                </Col>
+                            </Row>
+                        </FormItem>
+                        <FormItem class="ivu-form-item ivu-form-item-required" label="工作时间">
+                            <Row>
+                                <Col span="8">
+                                    <FormItem prop="begin_time">
+                                        <TimePicker format="HH:mm" placeholder="Select time"
 
+                                                    v-model="formValidate.begin_time"
+                                        ></TimePicker>
+                                    </FormItem>
+                                </Col>
+                                <Col span="8">
                                     <FormItem prop="end_time">
                                         <TimePicker format="HH:mm" placeholder="Select time"
                                                     v-model="formValidate.end_time"
                                         ></TimePicker>
                                     </FormItem>
+
                                 </Col>
                             </Row>
-                        </FormItem>
 
-                    </Row>
-                    <Row>
+                        </FormItem>
                         <FormItem class="ivu-form-item ivu-form-item-required"  label="招聘时间">
                             <Row>
                                 <Col span="8">
@@ -131,12 +138,12 @@
                         </FormItem>
                         <FormItem label="学历要求" prop="education">
                             <CheckboxGroup v-model="formValidate.education">
-                                <Checkbox label="小学"></Checkbox>
-                                <Checkbox label="初中"></Checkbox>
-                                <Checkbox label="中专"></Checkbox>
-                                <Checkbox label="高中"></Checkbox>
-                                <Checkbox label="专科"></Checkbox>
-                                <Checkbox label="本科"></Checkbox>
+                                <Checkbox label="初中毕业及以下"></Checkbox>
+                                <Checkbox label="中专毕业"></Checkbox>
+                                <Checkbox label="高中毕业"></Checkbox>
+                                <Checkbox label="大专毕业"></Checkbox>
+                                <Checkbox label="本科毕业"></Checkbox>
+                                <Checkbox label="研究生毕业及以上"></Checkbox>
                             </CheckboxGroup>
                         </FormItem>
 
@@ -264,7 +271,7 @@
                     end_apply_date: '',
                     job_detail: '',
                     need_amount: '',
-                    job_tag: [],
+                    job_tag: [1],
                     salary: ''
                 },
                 count: ["标签1", "标签2"],
@@ -323,21 +330,14 @@
                     return 2;
                 return 2;
             },
-            begin_date:function()
-            {
-               return this.get_added_utcstring(this.formValidate.begin_date,this.formValidate.begin_time);
-            },
-            end_date:function()
-            {
-                return this.get_added_utcstring(this.formValidate.end_date,this.formValidate.end_time);
-            },
+
             begin_apply_date:function()
             {
-                return this.get_added_utcstring(this.formValidate.begin_apply_date,this.formValidate.begin_apply_time);
+                return this.get_added(this.formValidate.begin_apply_date,this.formValidate.begin_apply_time);
             },
             end_apply_date:function()
             {
-                return this.get_added_utcstring(this.formValidate.end_apply_date,this.formValidate.end_apply_time);
+                return this.get_added(this.formValidate.end_apply_date,this.formValidate.end_apply_time);
             }
 
         },
@@ -345,8 +345,27 @@
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
             } else {
-                    //获取第一页表格
+                //获取第一页表格
                 this.mockTableData1 (0);
+            }
+            Date.prototype.Format = function (fmt) {
+                var o = {
+                    "M+": this.getMonth() + 1, //月份 
+                    "d+": this.getDate(), //日 
+                    "h+": this.getHours(), //小时 
+                    "m+": this.getMinutes(), //分 
+                    "s+": this.getSeconds(), //秒 
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+                    "S": this.getMilliseconds() //毫秒 
+                };
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o){
+                    if (new RegExp("(" + k + ")").test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    }
+                }
+                return fmt;
             }
 
         },
@@ -377,15 +396,21 @@
 
                 this.mockTableData1(index-1);
             },
-            get_added_utcstring(date,time)
+            format_only_date(d)
             {
-                var t=new Date;
-                var t_s=date.getTime();
-                var seconds = this.convert_to_seconds(time);
-                t.setTime(t_s + 1000 * seconds);
-                return t.toUTCString();
+                return new Date(d).Format("yyyy-MM-dd");
             },
-            get_added_time(date,time)
+            format_time(t)
+            {
+                var d=new Date;
+                d.setTime(1000* this.convert_to_seconds(t)- 8*3600*1000);
+                return new Date(d).Format("hh:mm:ss")
+            },
+            format_date(d)
+            {
+                return new Date(d).Format("yyyy-MM-dd hh:mm:ss");
+            },
+            get_added(date,time)
             {
                 var t=new Date;
                 var t_s=date.getTime();
@@ -415,13 +440,16 @@
                             this.$Message.error("请选择店铺");
                             return;
                         }
-                        if(this.get_added_time(this.formValidate.begin_date,this.formValidate.begin_time)
-                            > this.get_added_time(this.formValidate.end_apply_date,this.formValidate.end_apply_time) )
+                        if( this.formValidate.begin_date >
+                            this.formValidate.end_apply_date )
                         {
                             this.postJob()
                         }
                         else {
-                            this.$Message.error("工作开始时间不能比招聘结束时间早");
+                            this.$Message.error("工作开始日期不能比招聘结束时间早");
+
+                            this.startTimeOptions= {};
+                            this.endTimeOptions={};
                         }
                     } else {
                         this.$Message.error('Fail!');
@@ -431,9 +459,9 @@
             handleReset(name) {
                 this.$refs[name].resetFields();
                 this.startTimeOptions= {}, //开始日期设置
-                this.endTimeOptions={}, //结束日期设置
-                this.startTimeOptions2={}, //开始日期设置
-                this.endTimeOptions2={}
+                    this.endTimeOptions={}, //结束日期设置
+                    this.startTimeOptions2={}, //开始日期设置
+                    this.endTimeOptions2={}
             },
             handleAdd() {
                 if (this.count.length) {
@@ -462,13 +490,15 @@
                     data: {
                         shop_id: this.formValidate.shop,
                         job_name: this.formValidate.job_name,
-                        begin_date: this.begin_date,
-                        end_date: this.end_date,
+                        begin_date:  this.format_only_date(this.formValidate.begin_date),
+                        end_date: this.format_only_date( this.formValidate.end_date),
+                        begin_time:  this.format_time(this.formValidate.begin_time),
+                        end_time:  this.format_time(this.formValidate.end_time),
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
-                        begin_apply_date: this.begin_apply_date,
-                        end_apply_date: this.end_apply_date,
+                        begin_apply_date: this.format_date(this.begin_apply_date),
+                        end_apply_date:  this.format_date(this.end_apply_date),
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
                         salary: this.formValidate.salary
@@ -506,7 +536,7 @@
                 {
                     this.formValidate.begin_date=""
                     this.formValidate.end_date=""
-                    this.$message.warning("工作开始时间不能比招聘结束时间早")
+                    this.$message.warning("工作开始日期不能比招聘结束时间早")
                 }
 
             },
@@ -546,8 +576,8 @@
                     this.formValidate.end_date=""
 
                     this.startTimeOptions= {}, //开始日期设置
-                    this.endTimeOptions={}, //结束日期设置
-                    this.$message.warning("工作开始时间不能比招聘结束时间早")
+                        this.endTimeOptions={}, //结束日期设置
+                        this.$message.warning("工作开始日期不能比招聘结束时间早")
                 }
 
             }

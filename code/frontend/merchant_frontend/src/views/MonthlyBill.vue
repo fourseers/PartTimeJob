@@ -121,11 +121,9 @@
                         this.sum = response.data.data.amount;
 
                     }
-                    console.log( this.bill_id)
                 })
                     .catch(error => {
-                        console.log(error.response)
-
+                        console.log(error)
 
                     })
             },

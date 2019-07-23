@@ -17,8 +17,8 @@ insert into shop (address, brand, city, industry_industry_id, introduction, lati
 ('510104', '锤子', '510100', 1, 'Aquire Apple in someday!', 30, 100, '510000', '锤科总部', 2);
 insert into tag (name) values ('IT');
 insert into tag (name) values ('互联网');
-insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id, manual_stop) values
+('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', 'sell Apple products', 'seller', 10, 2, 100, 2, false);
 insert into job_tag_list (job_list_job_id, tag_list_id) values (1, 1);
 insert into merchant_user (username, password) values ('poor user', 'poor password');
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
@@ -40,14 +40,14 @@ insert into shop (shop_id, address, brand, city, industry_industry_id, introduct
 insert into shop (shop_id, address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
 (10, '310101', 'Apple', '310100', 1, 'Make Apple great again', 31.230339, 121.473656, '310000', '上海市政府', 1);
 
-insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7);
-insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16', '初中毕业及以下', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8);
-insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9);
-insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id) values
-('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id, manual_stop) values
+('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '扮演精神病人', 'seller', 10, 2, 100, 7, false);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id, manual_stop) values
+('2019-07-14 16:00:00', '2019-07-16', '初中毕业及以下', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '当一个无用之人', 'seller', 10, 2, 100, 8, false);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id, manual_stop) values
+('2019-07-14 16:00:00', '2019-07-16', '高中毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '跳伞运动员', 'seller', 10, 2, 100, 9, false);
+insert into job (begin_apply_time, begin_date, education, end_apply_time, end_date, begin_time, end_time, job_detail, job_name, need_amount, need_gender, salary, shop_shop_id, manual_stop) values
+('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10, false);
 
 insert into work (checkin, checkout, log, salary_confirmed, score, work_date, billing_bill_id, job_job_id, worker_user_id) values
 ('08:00:00', '16:00:00', null, false, 5, '2019-07-16', null, 1, 1);

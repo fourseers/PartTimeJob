@@ -2,8 +2,8 @@ package com.fourseers.parttimejob.common.entity;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Convert;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Document("CV")
@@ -12,6 +12,7 @@ public class CV {
     @Id
     private String id;
 
+    @Convert(converter = Etc.EducationColumnConverter.class)
     private Etc.Education education;
     private String content;
 

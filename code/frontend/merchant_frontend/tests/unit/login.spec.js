@@ -122,4 +122,4 @@ describe('Login.vue', () => {
         await expect(vm.handleSubmit()).toEqual()
     });
 })
-//
+//wrapper.find({ ref: 'foo' })

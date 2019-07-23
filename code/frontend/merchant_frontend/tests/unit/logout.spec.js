@@ -18,7 +18,7 @@ const goodresponse = {
 describe('logout.vue', ( ) => {
     it('test admin logout', done => {
 
-        token.savetoken(goodresponse.data) 
+        token.savetoken(goodresponse.data)
         const wrapper = shallowMount(Logout);
         const vm = wrapper.vm
         vm.logout ();

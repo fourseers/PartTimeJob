@@ -7,6 +7,7 @@
     </Layout>
 </template>
 <script>
+    import  axios from"axios";
     export default {
         name: "InfoConfig",
         data () {
@@ -24,9 +25,17 @@
                 this.$Message.warning('请登录');
             }
             else {
+                this.getcompany();
+            }
+        },
+
+        methods: {
+            getcompany()
+            {
+
                 var prefix = "/warehouse"
                 //测试用的url
-                this.axios({
+                 axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',
@@ -50,16 +59,13 @@
                             }
                         }
                     })
-            }
-        },
-
-        methods: {
+            },
             ChangeCompany()
             {
                 console.log(this.$token.loadToken().access_token)
                 var prefix="/warehouse"
                 //测试用的url
-                this.axios({
+                 axios({
                     headers: {
                         'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                         'Content-type': 'application/json',

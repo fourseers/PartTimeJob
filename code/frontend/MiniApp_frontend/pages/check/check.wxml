@@ -25,3 +25,5 @@
     </i-cell>
   </i-cell-group>
 </i-panel>
+
+<i-toast id="toast" />

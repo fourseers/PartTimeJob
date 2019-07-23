@@ -2,9 +2,10 @@
 const app = getApp();
 const { $Toast } = require("../../dist/base/index");
 import request from "../../api/request.js"
-import { host, job_detail, apply_job } from "../../api/url.js"
+import { host, job_detail, apply_job, checkin } from "../../api/url.js"
 var job_id = 0;
 var default_radius = 100;
+var default_check_avail = 15; //minutes
 
 Page({
 
@@ -41,14 +42,32 @@ Page({
    *    4. 允许打卡时间
    */
   onShow() {
+    wx.getLocation({
+      type: "gcj02",
+      success: res => {
+        this.setData({
+          longitude: res.longitude,
+          latitude: res.latitude,
+        })
+      }
+    });
+
     var req = new request();
+    //console.log("test");
     req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
       if(res.statusCode === 200) {
         var info = res.data.data;
         this.setData({
+          job_name: info.job_name,
           address: info.shop.address,
-          begin_check_time: info.beginTime,
-          end_check_time: info.endTime
+          begin_check_time: info.begin_time,
+          end_check_time: info.end_time,
+          markers: [{
+            id: 0,
+            latitude: res.latitude,
+            longitude: res.longitude,
+            name: '我的位置',
+          }]
         })
         wx.getLocation({
           type: "gcj02",
@@ -97,7 +116,29 @@ Page({
 
   handleCheck(e) {
     //console.log(e);
-    //app.login();
+    var req = new request();
+
+    req.postRequest(host + checkin, 
+    {
+      "job_id": job_id,
+      "latitude": this.data.latitude,
+      "longitude": this.data.longitude
+    }, app.globalData.access_token).then(res => {
+      if(res.statusCode === 200){
+        app.globalData.showSendMessage = true;
+        wx.navigateBack({
+          
+        })
+      }
+      if(res.statusCode === 400){
+        $Toast({
+          content: res.data.message,
+          type: 'error'
+        });
+      }
+    }).catch(err => {
+
+    })
   }
 
 })

@@ -1,4 +1,7 @@
-// pages/check/check.js
+// pages/check/check.
+const { $Toast } = require("../../dist/base/index");
+const app = getApp();
+
 Page({
 
   /**
@@ -15,13 +18,17 @@ Page({
         checkinTime: "8:30",
         checkoutTime: "12:30",
         canCheck: true,
-        id: 0,
+        id: 1,
       },
     ],
   },
 
   // onShow的时候向后端请求当前的工作列表
   onShow() {
+    if (app.globalData.showSendMessage) {
+      app.globalData.showSendMessage = false;
+      this.handleCheckSuccess();
+    }
     const data = [
       {
         year: '2019',
@@ -35,7 +42,7 @@ Page({
         todoText: '工作'
       }
     ];
-    // 异步请求
+    // 异步请求t
     setTimeout(() => {
       this.calendar.setTodoLabels({
         // circle: true,
@@ -61,6 +68,14 @@ Page({
 
   afterCalendarRender(e) {
     //console.log('afterCalendarRender', e);
+  },
+
+  //显示注册成功的toast
+  handleCheckSuccess() {
+    $Toast({
+      content: '打卡成功',
+      type: 'success'
+    });
   },
 
 })

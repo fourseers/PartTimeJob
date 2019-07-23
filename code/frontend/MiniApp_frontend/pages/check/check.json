@@ -1,5 +1,6 @@
 {
   "usingComponents": {
+    "i-toast": "../../dist/toast/index",
     "calendar": "../../component/calendar/index",
     "i-avatar": "../../dist/avatar/index",
     "i-button": "../../dist/button/index",

@@ -4,12 +4,15 @@
   <view class="tag" bind:tap="handleTransport">可打卡区域</view>
 </view>
 <i-divider color="#e9eaec" lineColor="#e9eaec" height="12"></i-divider>
-<i-panel title="打卡详细信息">
+<i-panel title="{{job_name}}">
   <i-cell-group>
-    <i-cell title="允许打卡时间"></i-cell>
-    <i-cell title="打卡地点"></i-cell>
+    <i-cell>上班打卡时间：{{begin_check_time}}</i-cell>
+    <i-cell>下班打卡时间：{{end_check_time}}</i-cell>
+    <i-cell>打卡地点：{{address}}</i-cell>
   </i-cell-group>
 </i-panel>
 <i-button class="check-button" bind:click="handleCheck" type="success">
   <text>打卡</text>
 </i-button>
+
+<i-toast id="toast" />

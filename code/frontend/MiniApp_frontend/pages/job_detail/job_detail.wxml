@@ -11,7 +11,7 @@
     </view>
   </i-cell>
 </i-panel>
-<i-button bind:click="handleClickApply" type="success" shape="circle" size="small">立即报名</i-button>
+<i-button bind:click="handleClickApply" type="success" shape="circle" size="small" loading="{{isLoading}}">立即报名</i-button>
 <i-panel i-class="detail-box">
   <i-cell title="职位描述"></i-cell>
   <i-cell>

@@ -50,6 +50,6 @@ insert into job (begin_apply_time, begin_date, education, end_apply_time, end_da
 ('2019-07-14 16:00:00', '2019-07-16', '本科毕业', '2019-07-15 16:00:00', '2019-07-17', '08:00:00', '16:00:00', '炸弹小组技术专家', 'seller', 10, 2, 100, 10, false);
 
 insert into work (checkin, checkout, log, salary_confirmed, score, work_date, billing_bill_id, job_job_id, worker_user_id) values
-('08:00:00', '16:00:00', null, false, 5, '2019-07-16', null, 1, 1);
+('08:00:00', '16:00:00', null, false, null, '2019-07-16', null, 1, 1);
 insert into work (checkin, checkout, log, salary_confirmed, score, work_date, billing_bill_id, job_job_id, worker_user_id) values
 ('08:00:00', '16:00:00', null, false, 5, '2019-07-17', null, 2, 1);

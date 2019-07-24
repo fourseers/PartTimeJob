@@ -12,7 +12,8 @@
     "pages/check/check",
     "pages/check_inform/check_inform",
     "pages/user/user",
-    "pages/cv_list/cv_list"
+    "pages/cv_list/cv_list",
+    "pages/switchcity/switchcity"
   ],
   "window": {
     "backgroundTextStyle": "light",

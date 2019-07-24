@@ -21,7 +21,7 @@ Page({
     country: "China",
     country_error: false,
     country_modified: false,
-    city: "Shanghai",
+    city: "",
     city_error: false,
     city_modified: false,
     education: "primary school",
@@ -31,7 +31,8 @@ Page({
     info_saved: null,
     tags: [],
     chosen_tags: [],
-    tags_modified: false
+    tags_modified: false,
+    city_code: ""
   },
 
   onShow(){
@@ -84,15 +85,31 @@ Page({
           identity: info.identity,
           phone_number: info.phone,
           country: info.country,
-          city: info.city,
           education: info.education,
           info_saved: info,
           chosen_tags: info.tags,
-          tags: toChosen,
+          tags: toChosen
         })
+        if (app.globalData.city === null) {
+          console.log(app.globalData.city);
+          this.setData({
+            city: info.city
+          })
+        }
       }
       if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
+      }
+      // 在通过api调用数据后再更新从city selector获得的数据
+      if (app.globalData.city !== null) {
+        console.log(app.globalData.city);
+        this.setData({
+          city: app.globalData.city,
+          city_code: app.globalData.code,
+          city_modified: true,
+        })
+        app.globalData.city = null;
+        app.globalData.code = null;
       }
     }).catch(err => {
       // console.log(err);
@@ -156,7 +173,7 @@ Page({
     }
   },
 
-  //每次更新city的input组件后都重新获取city
+  /*每次更新city的input组件后都重新获取city
   getCity(e) {
     // TODO 添加城市的正则表达式 or 使用picker
     // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
@@ -184,6 +201,7 @@ Page({
       })
     }
   },
+  */
 
   //每次更新education的input组件后都重新获取education
   getEducation(e) {

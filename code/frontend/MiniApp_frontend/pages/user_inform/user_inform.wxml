@@ -2,11 +2,15 @@
 <i-panel title="基础信息">
   <i-input value="{{ phone_number }}" title="手机号" placeholder="请输入手机号" maxlength="11" bind:change="getPhoneNumber" error="{{phone_error}}" right />
   <i-input value="{{ country }}" title="国家" placeholder="请输入国家" maxlength="11" bind:change="getCountry" error="{{country_error}}" right />
-  <i-input value="{{ city }}" title="城市" placeholder="请输入城市" maxlength="11" bind:change="getCity" error="{{city_error}}" right />
+  <!--<i-input value="{{ city }}" title="城市" placeholder="请输入城市" maxlength="11" bind:change="getCity" error="{{city_error}}" right />-->
+  <i-cell title="城市" url="/pages/switchcity/switchcity" is-link>
+    <view slot="footer">{{city}}</view>
+  </i-cell>
   <i-cell is-link>
     <picker bind:change="getEducation" value="{{education_list.length}}" range="{{education_list}}">
-      请选择文化水平: {{education}}
+      文化水平
     </picker>
+    <view slot="footer">{{education}}</view>
   </i-cell>
 </i-panel>
 

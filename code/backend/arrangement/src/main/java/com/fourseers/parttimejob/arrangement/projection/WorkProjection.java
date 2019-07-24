@@ -10,6 +10,7 @@ public interface WorkProjection {
     String getEndTime();
     String getCheckin();
     String getCheckout();
+    String getJobName();
     Integer getScore();
     Double getPayment();
     Boolean getPaid();

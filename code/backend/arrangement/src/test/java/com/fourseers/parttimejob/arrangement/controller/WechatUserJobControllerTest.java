@@ -6,10 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.repository.CVRepository;
 import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
-import com.fourseers.parttimejob.common.entity.CV;
-import com.fourseers.parttimejob.common.entity.Etc;
-import com.fourseers.parttimejob.common.entity.Job;
-import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.arrangement.repository.WechatUserRepository;
+import com.fourseers.parttimejob.common.entity.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,6 +26,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import static org.junit.Assert.*;
@@ -47,7 +45,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Transactional
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class WechatUserJobControllerTest {
 
     @Autowired
@@ -65,6 +64,9 @@ public class WechatUserJobControllerTest {
     @Autowired
     private CVRepository cvRepository;
 
+    @Autowired
+    private WechatUserRepository wechatUserRepository;
+
     private String userHeader;
     private String invalidUserHeader;
     private String userCVId;
@@ -80,10 +82,19 @@ public class WechatUserJobControllerTest {
         userHeader = WECHAT_USER_PREFIX + "fakeOpenid";
         invalidUserHeader = WECHAT_USER_PREFIX + "wrongOpenid";
 
+        WechatUser user = wechatUserRepository.getOne(1);
         CV cv = new CV();
-        cv.setUserId(1);
+        cv.setUserId(user.getUserId());
+        cv.setName(user.getName());
+        cv.setGender(user.getGender());
+        cv.setTitle("hahaha");
+        cv.setHeight(180f);
+        cv.setWeight(80f);
+        cv.setExperiences(Arrays.asList("exp 1", "exp 2"));
+        cv.setPhone("12312341234");
+        cv.setIdentity("310110123412341234");
         cv.setEducation(Etc.Education.SENIOR_HIGH);
-        cv.setContent("Default content goes here...");
+        cv.setStatement("default content goes here...");
         cvRepository.save(cv);
         userCVId = cv.getId();
 

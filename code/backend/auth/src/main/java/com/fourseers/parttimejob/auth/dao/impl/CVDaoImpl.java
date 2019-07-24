@@ -17,8 +17,11 @@ public class CVDaoImpl implements CVDao {
     public CV saveDefault(WechatUser wechatUser) {
         CV cv = new CV();
         cv.setUserId(wechatUser.getUserId());
+        cv.setName(wechatUser.getName());
+        cv.setIdentity(wechatUser.getIdentity());
+        cv.setPhone(wechatUser.getPhone());
+        cv.setGender(wechatUser.getGender());
         cv.setEducation(wechatUser.getEducation());
-        cv.setContent("Default cv, no content. Add content here.");
         cvRepository.save(cv);
         return cv;
     }

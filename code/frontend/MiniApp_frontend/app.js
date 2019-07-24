@@ -64,8 +64,8 @@ App({
     refresh_token: null,
     token_expires_in: null,
 
-    city: "市",
-    code: "",
+    city: null,
+    code: null,
   },
 
   // use app.login() from other .js file to refresh the token

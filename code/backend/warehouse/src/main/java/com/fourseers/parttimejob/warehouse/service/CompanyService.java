@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.warehouse.service;
 
-import com.fourseers.parttimejob.warehouse.entity.Company;
+import com.fourseers.parttimejob.common.entity.Company;
 
 public interface CompanyService {
 
@@ -9,4 +9,6 @@ public interface CompanyService {
     void save(Company company, String bossName);
 
     Company findByCompanyName(String companyName);
+
+    Company findByUsername(String username);
 }

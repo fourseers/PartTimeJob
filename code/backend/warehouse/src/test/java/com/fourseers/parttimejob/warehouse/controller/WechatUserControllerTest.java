@@ -3,8 +3,9 @@ package com.fourseers.parttimejob.warehouse.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.entity.Tag;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
+import com.fourseers.parttimejob.common.entity.Etc;
+import com.fourseers.parttimejob.common.entity.Tag;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.service.TagService;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
 import org.junit.After;
@@ -24,7 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -62,7 +64,7 @@ public class WechatUserControllerTest {
         wechatUser.setGender(true);
         wechatUser.setCountry("China");
         wechatUser.setCity("Shanghai");
-        wechatUser.setEducation("Junior High School");
+        wechatUser.setEducation(Etc.Education.BELOW_SENIOR);
         wechatUser.setIdentity("310110123412341234");
         wechatUser.setPhone("13812345678");
 
@@ -110,7 +112,7 @@ public class WechatUserControllerTest {
         assertEquals(info.getString("name"), "SJH");
         assertEquals(info.getBoolean("gender"), true);
         assertEquals(info.getString("phone"), "13812345678");
-        assertEquals(info.getString("education"), "Junior High School");
+        assertEquals(info.getString("education"), Etc.Education.BELOW_SENIOR.getName());
         assertNull(info.getString("openid"));
     }
 
@@ -148,7 +150,7 @@ public class WechatUserControllerTest {
         request.fluentPut("name", "ZJY");
         request.fluentPut("gender", false);
         request.fluentPut("phone", "13887654321");
-        request.fluentPut("education", "college");
+        request.fluentPut("education", Etc.Education.BACHELOR.getName());
         mockMvc.perform(
                 post("/user/info")
                 .header("x-internal-token", internalTokenString)
@@ -172,7 +174,7 @@ public class WechatUserControllerTest {
         assertEquals(info.getString("name"), "ZJY");
         assertEquals(info.getBoolean("gender"), false);
         assertEquals(info.getString("phone"), "13887654321");
-        assertEquals(info.getString("education"), "college");
+        assertEquals(info.getString("education"), Etc.Education.BACHELOR.getName());
         assertNull(info.getString("openid"));
     }
 

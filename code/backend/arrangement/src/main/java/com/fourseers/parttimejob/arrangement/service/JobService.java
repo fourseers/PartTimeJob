@@ -1,8 +1,9 @@
 package com.fourseers.parttimejob.arrangement.service;
 
-import com.fourseers.parttimejob.arrangement.entity.Job;
-
-import java.util.List;
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
+import com.fourseers.parttimejob.common.entity.Job;
+import com.fourseers.parttimejob.common.entity.WechatUser;
+import org.springframework.data.domain.Page;
 
 public interface JobService {
 
@@ -10,7 +11,14 @@ public interface JobService {
 
     Job findByJobIdAndUsername(int jobId, String username);
 
-    List<Job> findByShopIdAndUsername(int shopId, String username);
+    Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize);
 
-    List<Job> findByUsername(String username);
+    Page<Job> findJobs(WechatUser user, int pageCount);
+    Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount);
+    Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
+
+    boolean apply(WechatUser user, int jobId, String cvId);
+    JobDetailedInfoProjection getJobDetail(int jobId);
+
+    void setJobHiringState(Integer jobId, String username, Boolean stop);
 }

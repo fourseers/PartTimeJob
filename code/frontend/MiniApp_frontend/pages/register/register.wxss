@@ -27,3 +27,13 @@
 .tips{
   margin-left: 100rpx;
 }
+
+#gender-switch .man-background{
+  background-color: #2d8cf0; 
+  border-color: #2d8cf0; 
+}
+
+#gender-switch .woman-background{
+  background-color: pink; 
+  border-color: pink; 
+}

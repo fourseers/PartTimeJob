@@ -1,6 +1,8 @@
 package com.fourseers.parttimejob.warehouse.dao;
 
-import com.fourseers.parttimejob.warehouse.entity.Shop;
+import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,7 +14,9 @@ public interface ShopDao {
 
     Shop findByShopIdAndUsername(int shopId, String username);
 
-    List<Shop> findAllByUserId(int userId);
+    Page<Shop> findPageByUserId(int userId, int pageCount, int pageSize);
 
-    List<Shop> findAllByUsername(String username);
+    Page<Shop> findPageByUsername(String username, int pageCount, int pageSize);
+
+    List<ShopBriefProjection> findShopBriefByUsername(String username);
 }

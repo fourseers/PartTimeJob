@@ -11,7 +11,7 @@
     </view>
   </i-cell>
 </i-panel>
-<i-button bind:click="handleClickApply" type="success" shape="circle" size="small">立即报名</i-button>
+<i-button bind:click="handleClickApply" type="success" shape="circle" size="small" loading="{{isLoading}}">立即报名</i-button>
 <i-panel i-class="detail-box">
   <i-cell title="职位描述"></i-cell>
   <i-cell>
@@ -43,9 +43,9 @@
 <i-panel>
   <i-cell title="工作地点" label="{{address}}"></i-cell>
   <map class="job-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}"></map>
-  <i-cell title="公司信息" label="{{company_name}}--{{shop_name}}--{{industry}}--{{brand}}"></i-cell>
+  <i-cell title="公司信息" label="{{shop_name}}--{{address}}"></i-cell>
 </i-panel>
-
+<i-toast id="toast" />
 <i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
     <view>您确定要应聘这个岗位吗</view>
 </i-modal>

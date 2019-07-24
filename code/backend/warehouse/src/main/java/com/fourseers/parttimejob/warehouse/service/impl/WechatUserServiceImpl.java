@@ -2,13 +2,13 @@ package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fourseers.parttimejob.common.entity.Etc;
+import com.fourseers.parttimejob.common.entity.Tag;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.TagDao;
 import com.fourseers.parttimejob.warehouse.dao.WechatUserDao;
 import com.fourseers.parttimejob.warehouse.dto.WechatUserInfoDto;
-import com.fourseers.parttimejob.warehouse.entity.Tag;
-import com.fourseers.parttimejob.warehouse.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
-import com.netflix.discovery.converters.Auto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +32,7 @@ public class WechatUserServiceImpl implements WechatUserService {
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
-    public WechatUser findByOpenid(String openid) {
+    public WechatUser getUserByOpenid(String openid) {
         return wechatUserDao.findByOpenid(openid);
     }
 
@@ -63,7 +63,7 @@ public class WechatUserServiceImpl implements WechatUserService {
         if(userInfoDto.getString("phone") != null)
             user.setPhone(userInfoDto.getString("phone"));
         if(userInfoDto.getString("education") != null)
-            user.setEducation(userInfoDto.getString("education"));
+            user.setEducation(Etc.Education.fromName(userInfoDto.getString("education")));
         if(userInfoDto.getJSONArray("tags") != null) {
             JSONArray tags = userInfoDto.getJSONArray("tags");
             Set<Tag> trueTags = new HashSet<>();

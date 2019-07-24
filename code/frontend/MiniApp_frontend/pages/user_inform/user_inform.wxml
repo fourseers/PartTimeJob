@@ -1,30 +1,26 @@
 <!--pages/user_inform/user_inform.wxml-->
 <i-panel title="基础信息">
-  <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" error="{{name_error}}" right disabled />
-  <i-cell title="性别">
-    <i-switch id="gender-switch" value="{{ gender }}" bind:change="changeGender" slot="footer" i-class="{{gender ? 'man-background' : 'woman-background'}}" disabled>
-      <view slot="open">男</view>
-      <view slot="close">女</view>
-    </i-switch>
-  </i-cell>
-  <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right disabled />
-  <i-input value="{{ phoneNumber }}" title="手机号" placeholder="请输入手机号" maxlength="11" bind:change="getPhoneNumber" error="{{phone_error}}" right />
+  <i-input value="{{ phone_number }}" title="手机号" placeholder="请输入手机号" maxlength="11" bind:change="getPhoneNumber" error="{{phone_error}}" right />
   <i-input value="{{ country }}" title="国家" placeholder="请输入国家" maxlength="11" bind:change="getCountry" error="{{country_error}}" right />
-  <i-input value="{{ city }}" title="城市" placeholder="请输入城市" maxlength="11" bind:change="getCity" error="{{city_error}}" right />
+  <!--<i-input value="{{ city }}" title="城市" placeholder="请输入城市" maxlength="11" bind:change="getCity" error="{{city_error}}" right />-->
+  <i-cell title="城市" url="/pages/switchcity/switchcity" is-link>
+    <view slot="footer">{{city}}</view>
+  </i-cell>
   <i-cell is-link>
-    <picker bind:change="getEducation" value="{{educationList.length}}" range="{{educationList}}">
-      请选择文化水平: {{education}}
+    <picker bind:change="getEducation" value="{{education_list.length}}" range="{{education_list}}">
+      文化水平
     </picker>
+    <view slot="footer">{{education}}</view>
   </i-cell>
 </i-panel>
 
 <i-panel title="职业倾向" hide-border="{{ true }}">
   <i-cell title="已选倾向">
-    <view wx:if="{{chosenTags.length===0}}">
+    <view wx:if="{{chosen_tags.length===0}}">
       <text style='color: #D3D3D3'>请从下方选择您的职业倾向</text>
     </view>
     <i-tag
-      wx:for="{{chosenTags}}"
+      wx:for="{{chosen_tags}}"
       wx:key="{{index}}"
       bind:change="deleteTags"
       checkable="{{true}}"

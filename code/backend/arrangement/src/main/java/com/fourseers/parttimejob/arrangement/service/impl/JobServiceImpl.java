@@ -1,18 +1,19 @@
 package com.fourseers.parttimejob.arrangement.service.impl;
 
+import com.fourseers.parttimejob.arrangement.dao.ApplicationDao;
+import com.fourseers.parttimejob.arrangement.dao.CVDao;
 import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
-import com.fourseers.parttimejob.arrangement.entity.Company;
-import com.fourseers.parttimejob.arrangement.entity.Job;
-import com.fourseers.parttimejob.arrangement.entity.MerchantUser;
-import com.fourseers.parttimejob.arrangement.entity.Shop;
+import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
+import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -23,6 +24,15 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     MerchantUserDao merchantUserDao;
+
+    @Autowired
+    CVDao cvDao;
+
+    @Autowired
+    ApplicationDao applicationDao;
+
+    @Value("${app.pagination.pageSize}")
+    private int PAGE_SIZE;
 
     public void save(Job job, int shopId, String username) {
 
@@ -61,7 +71,7 @@ public class JobServiceImpl implements JobService {
         throw new RuntimeException("job not exist or not belong to");
     }
 
-    public List<Job> findByShopIdAndUsername(int shopId, String username) {
+    public Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
@@ -69,8 +79,8 @@ public class JobServiceImpl implements JobService {
         }
         for (Shop shop : user.getCompany().getShops()) {
             if (shop.getShopId() == shopId) {
-                List<Job> jobs = jobDao.findByShop(shop);
-                if (jobs.size() == 0) {
+                Page<Job> jobs = jobDao.findPageByShop(shop, pageCount, pageSize);
+                if (jobs.isEmpty()) {
                     throw new RuntimeException("job not exist");
                 }
                 return jobs;
@@ -80,24 +90,81 @@ public class JobServiceImpl implements JobService {
         throw new RuntimeException("shop not exist or not belong to");
     }
 
-    public List<Job> findByUsername(String username) {
+    public Page<Job> findPageByUsername(String username, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
             throw new RuntimeException("user does not belong to a company");
         }
 
-        List<Job> jobs = new ArrayList<>();
+        return jobDao.findPageByCompany(user.getCompany(), pageCount, pageSize);
 
-        for (Shop shop : user.getCompany().getShops()) {
-            jobs.addAll(jobDao.findByShop(shop));
+    }
+
+    @Override
+    public boolean apply(WechatUser user, int jobId, String cvId) {
+        Job job = jobDao.findByJobId(jobId);
+        if(job == null)
+            throw new RuntimeException("Invalid job.");
+        if(job.getManualStop())
+            throw new RuntimeException("Job recruit manually stopped by merchant.");
+        Date currentTime = new Date();
+        if(job.getBeginApplyTime().after(currentTime) || job.getEndApplyTime().before(currentTime))
+            throw new RuntimeException("Sorry, you've missed the apply date.");
+
+        Shop shop = job.getShop();
+        CV cv = cvDao.getOne(cvId);
+        if(cv == null)
+            throw new RuntimeException("Invalid cv.");
+        if(job.getAppliedAmount() >= job.getNeedAmount()) {
+            throw new RuntimeException("Sorry, no more seats available.");
+        }
+        if(job.getNeedGender() != 2 && (job.getNeedGender() == 1) != user.getGender()) {
+            throw new RuntimeException("Sorry, this job requires a different gender.");
+        }
+//        if(user.getCity() != null && shop.getCity() != null) {
+//            if(!user.getCity().equals(shop.getCity()))
+//                throw new RuntimeException("User and shop are from different cities.");
+//        }
+        Etc.Education actualEdu = cv.getEducation();
+        Etc.Education requiredEdu = job.getEducation();
+        if(actualEdu == null || requiredEdu == null) {
+            throw new RuntimeException("Invalid education");
+        }
+        if(!actualEdu.satisfies(requiredEdu)) {
+            throw new RuntimeException("No enough education");
         }
 
-        if (jobs.size() == 0) {
-            throw new RuntimeException("job not exist");
-        }
+        // all checks completed
+        Application application = new Application();
+        application.setWechatUser(user);
+        application.setCvId(cvId);
+        application.setStatus(null);
+        applicationDao.addOne(application);
+        return true;
+    }
 
-        return jobs;
+    @Override
+    public JobDetailedInfoProjection getJobDetail(int jobId) {
+        JobDetailedInfoProjection projection = jobDao.getJobDetail(jobId);
+        return projection;
+    }
 
+    @Override
+    public void setJobHiringState(Integer jobId, String username, Boolean stop) {
+        Job job = findByJobIdAndUsername(jobId, username);
+
+        job.setManualStop(stop);
+        jobDao.save(job);
+    }
+
+    @Override
+    public Page<Job> findJobs(WechatUser user, int pageCount) {
+        return jobDao.findJobs(user, pageCount, PAGE_SIZE);
+    }
+
+    @Override
+    public Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount) {
+        return jobDao.findJobsByGeoLocation(user, longitude, latitude, pageCount, PAGE_SIZE);
     }
 }

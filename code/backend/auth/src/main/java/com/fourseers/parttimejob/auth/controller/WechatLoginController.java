@@ -2,10 +2,12 @@ package com.fourseers.parttimejob.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
 import com.fourseers.parttimejob.auth.util.Pair;
-import com.fourseers.parttimejob.auth.util.ResponseBuilder;
+import com.fourseers.parttimejob.common.entity.Etc;
+import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.util.Response;
+import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +53,7 @@ public class WechatLoginController {
         return new Pair<>(openid, wechatUserService.findByOpenid(openid));
     }
 
-    private ResponseEntity<JSONObject> oauthResult(String openid, String basicAuth) {
+    private ResponseEntity<Response<JSONObject>> oauthResult(String openid, String basicAuth) {
 
         JSONObject data = oauth.getToken(WECHAT_USER_PREFIX + openid, WECHAT_PASSWD_PLACEHOLDER,"password", basicAuth);
 
@@ -63,7 +65,7 @@ public class WechatLoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> login(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
+    public ResponseEntity<Response<JSONObject>> login(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         Pair<String, WechatUser> result = getWechatUser(body);
 
         if (result == null) {
@@ -82,7 +84,7 @@ public class WechatLoginController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> register(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
+    public ResponseEntity<Response<JSONObject>> register(@RequestBody JSONObject body, @RequestHeader("Authorization") String basicAuth) {
         Pair<String, WechatUser> result = getWechatUser(body);
 
         if (result == null) {
@@ -104,7 +106,7 @@ public class WechatLoginController {
         user.setPhone(body.getString("phone"));
         user.setCountry(body.getString("country"));
         user.setCity(body.getString("city"));
-        user.setEducation(body.getString("education"));
+        user.setEducation(Etc.Education.fromName(body.getString("education")));
         wechatUserService.save(user);
 
         return oauthResult(user.getOpenid(), basicAuth);

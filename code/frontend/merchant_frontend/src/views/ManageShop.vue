@@ -1,13 +1,23 @@
 <template>
     <div class="content">
         <Table border :columns="columns7" :data="shops"></Table>
+        <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+                <Page :total="total_elements" :current="pagenum"  @on-change="changePage"></Page>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+    import { CodeToText } from 'element-china-area-data'
+
+    import {getShops} from '../util/getShops.js'
+    import {getIndustry} from '../util/getIndustry.js'
     export default {
         name: "ManageShop",
         data () {
             return {
+                industry:[],
                 columns7: [
                     {
                         title: '店铺名称',
@@ -35,12 +45,18 @@
                     },
                     {
                         title: '省份',
-                        key: 'province'
+                        key: 'province',
+                        render: (h, params) => {
+                            return h('div',CodeToText[ params.row.province])
+                        }
                     },
 
                     {
                         title: '城市',
-                        key: 'city'
+                        key: 'city',
+                        render: (h, params) => {
+                            return h('div',CodeToText[ params.row.city])
+                        }
                     },
                     {
                         title: '地址',
@@ -54,12 +70,16 @@
                         title: '营业领域',
                         key: 'industry',
                         render: (h, params) => {
-                            return h('ul', this.shops[params.index].industry.map(item => {
-                                    return h('li',{style:{listStyle:"none"}}, item)
-
-                                }
-                            ))
+                            return h('div', this.industry[params.row.industry-1].industry_name)
                         }
+
+                        // render: (h, params) => {
+                        //     return h('ul', this.shops[params.index].industry.map(item => {
+                        //             return h('li',{style:{listStyle:"none"}}, item)
+                        //
+                        //         }
+                        //     ))
+                        // }
                     },
                     {
                         title: '操作',
@@ -83,88 +103,61 @@
                                             this.$router.push({ name: "shopdetail",params:this.shops[params.index]})
                                         }
                                     }
-                                }, '修改信息'),
-                                h('Button', {
-                                    props: {
-                                        type:'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        color: '#d63031',
-                                        borderColor:'#d63031',
-                                        backgroundColor:'#fff',
-                                        marginRight: '5px',
-                                        marginTop:'5px',
-                                        marginBottom:'5px'
-                                    },
-
-                                    on: {
-                                        click: () => {
-                                            //删除店铺
-                                        }
-                                    }
-                                }, '删除店铺')
+                                }, '修改信息')
                             ]);
                         }
                     }
                 ],
-                data6: [
-                    {
-                        shop_name:'豆汁汁',
-                        province:'北京',
-                        city: '北京',
-                        address:'大裤衩楼底下',
-                        industry:["饮料","零售"],
-                        brand:'老豆汁'
-                    },
-                    {
-                        shop_name: '一点点',
-                        province:'上海',
-                        city: '上海',
-                        address:'东川路800号',
-                        industry:['饮料',"零售"],
-                        brand:'一点点'
-                    }
-                ],
-                shops:[]
+                shops:[],
+                pagenum:1,
+                total_elements: 10,
+                total_pages:2,
             }
         },
         created: function() {
-                var prefix = "/warehouse"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'get',
-                    url: prefix + "/merchant/shop"
-                }).then(response => {
-                    console.log(response);
-                    if(response.data.status ===  200){
 
-                        this.shops = response.data.data.shops;
-                        console.log("success");
-                    }
-                })
-                    .catch(error => {
-                        if(error.response){
-                            if(error.response.data.status === 400)
-                            {
+            if (!this.$root.logged) {
+                this.$Message.warning('请登录');
+            } else { 
+
+                //获取第一页表格
+                this.mockTableData1 (0);
+                //get industry
+                getIndustry().then(res => {
+                        console.log(res.data)
+                        this.industry = res.data
+                    },
+                    error => {
+                        console.log(error)
+                    })
+            }
+        },
+
+        methods: {
+            mockTableData1 (pagenum) {
+                //get shops
+                getShops(pagenum).then(res => {
+                    console.log( res.data)
+                        this.shops  = res.data.content
+                    },
+                    error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
                                 console.log(error.response);
                                 this.$Message.error('暂无店铺');
+                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                console.log(error.response);
+                                this.$Message.error('参数错误');
                             }
                         }
-                    })
-            },
-        methods: {
-            show (index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-                })
+
+                    }
+
+                )
+            },changePage (index) {
+                // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
+
+                this.mockTableData1(index-1);
             }
         }
     }

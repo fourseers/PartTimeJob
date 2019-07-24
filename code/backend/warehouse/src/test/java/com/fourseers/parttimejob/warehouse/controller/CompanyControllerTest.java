@@ -2,8 +2,8 @@ package com.fourseers.parttimejob.warehouse.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.warehouse.entity.Company;
-import com.fourseers.parttimejob.warehouse.entity.MerchantUser;
+import com.fourseers.parttimejob.common.entity.Company;
+import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import org.junit.Before;
@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,6 +56,38 @@ public class CompanyControllerTest {
         anotherBoss.setUsername("罗永浩");
         anotherBoss.setPassword("some password");
         merchantUserService.save(anotherBoss);
+    }
+
+    @Test
+    public void getCompanySuccess() throws Exception {
+
+        String bossName = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(get("/merchant/company")
+                .header("x-internal-token", bossName))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertNotNull(response.getJSONObject("data"));
+        assertEquals("Apple", response.getJSONObject("data").getString("company_name"));
+
+    }
+
+    @Test
+    public void getCompanyNoCompany() throws Exception {
+
+        String bossName = "";
+
+        MvcResult result = mockMvc.perform(get("/merchant/company")
+                .header("x-internal-token", bossName))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user not belong to any company", response.getString("message"));
+
     }
 
     @Test

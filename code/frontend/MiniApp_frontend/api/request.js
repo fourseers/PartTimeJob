@@ -49,7 +49,6 @@ class request {
       })
     })
   }
-
 }
 
 export default request

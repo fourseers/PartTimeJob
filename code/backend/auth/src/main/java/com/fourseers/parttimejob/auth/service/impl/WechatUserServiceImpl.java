@@ -1,8 +1,8 @@
 package com.fourseers.parttimejob.auth.service.impl;
 
 import com.fourseers.parttimejob.auth.dao.WechatUserDao;
-import com.fourseers.parttimejob.auth.entity.WechatUser;
 import com.fourseers.parttimejob.auth.service.WechatUserService;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

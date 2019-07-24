@@ -1,0 +1,29 @@
+<!--pages/check/check.wxml-->
+<calendar
+  calendarConfig="{{calendar_config}}"
+  bind:afterTapDay="afterTapDay"
+  bind:whenChangeMonth="whenChangeMonth"
+  bind:onTapDay="onTapDay"
+  bind:afterCalendarRender="afterCalendarRender"
+>
+</calendar>
+<i-panel title="工作安排（点击前往打卡）">
+  <i-cell-group>
+    <i-cell
+      wx:for="{{checks}}"
+      wx:key="{{index}}"
+      url="/pages/check_inform/check_inform?id={{item.id}}" 
+      title="{{item.title}}" 
+      is-link
+    >
+      <view slot="icon">
+        <i-avatar size="small">砖</i-avatar>
+      </view>
+      <view slot="footer">
+        {{item.checkBeginTime}}~{{item.checkEndTime}}
+      </view>
+    </i-cell>
+  </i-cell-group>
+</i-panel>
+
+<i-toast id="toast" />

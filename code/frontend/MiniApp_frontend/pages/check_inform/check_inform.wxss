@@ -1,0 +1,30 @@
+/* pages/check_inform/check_inform.wxss */
+
+.check-map {
+  height: 600rpx;
+  width: 100%;
+}
+
+.tag-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  height: 80rpx;
+  background: #fdcb6e;
+  border-radius: 10rpx;
+  color: white;
+}
+
+.check-button {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}

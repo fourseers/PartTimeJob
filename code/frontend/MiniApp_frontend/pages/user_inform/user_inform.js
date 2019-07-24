@@ -15,23 +15,24 @@ Page({
     name_error: false,
     identity: "310110123456781000",
     identity_error: false,
-    phoneNumber: "13812345678",
+    phone_number: "13812345678",
     phone_error: false,
     phone_modified: false,
     country: "China",
     country_error: false,
     country_modified: false,
-    city: "Shanghai",
+    city: "",
     city_error: false,
     city_modified: false,
     education: "primary school",
     education_modified: false,
-    educationList: [],
+    education_list: [],
     isLoading: false,
     info_saved: null,
     tags: [],
-    chosenTags: [],
-    tags_modified: false
+    chosen_tags: [],
+    tags_modified: false,
+    city_code: ""
   },
 
   onShow(){
@@ -40,16 +41,18 @@ Page({
     // 向后台获取注册元数据, 包括文化水平list、tags list
     req.getRequest(host + register_data, null).then(res => {
       if (res.statusCode === 200) {
+        // console.log(res);
         // 给后端返回的tags的列表中的每个json都添加isChosen字段
-        var tags = res.data.tags;
+        var tags = res.data.data.tags;
         for (var index in tags) {
           tags[index].isChosen = false;
         }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
-          educationList: res.data.education,
+          education_list: res.data.data.education,
           tags: tags,
         })
+        this.getUserInfo();
       }
       else if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
@@ -58,14 +61,17 @@ Page({
       // console.log(err);
       // TODO: 添加请求失败的处理
     });
+  },
 
+  getUserInfo() {
+    var req = new request();
     //onshow的时候从后端获取当前用户的信息，填充为用户表单上的默认信息
     req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var info = res.data.data.info;
-        
+
         var toChosen = this.data.tags;
-        for(var i in info.tags) {
+        for (var i in info.tags) {
           var switchId = info.tags[i].id;
           for (var j in this.data.tags) {
             if (this.data.tags[j].id === switchId) {
@@ -77,17 +83,33 @@ Page({
           name: info.name,
           gender: info.gender,
           identity: info.identity,
-          phoneNumber: info.phone,
+          phone_number: info.phone,
           country: info.country,
-          city: info.city,
           education: info.education,
           info_saved: info,
-          chosenTags: info.tags,
-          tags: toChosen,
+          chosen_tags: info.tags,
+          tags: toChosen
         })
+        if (app.globalData.city === null) {
+          console.log(app.globalData.city);
+          this.setData({
+            city: info.city
+          })
+        }
       }
       if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
+      }
+      // 在通过api调用数据后再更新从city selector获得的数据
+      if (app.globalData.city !== null) {
+        console.log(app.globalData.city);
+        this.setData({
+          city: app.globalData.city,
+          city_code: app.globalData.code,
+          city_modified: true,
+        })
+        app.globalData.city = null;
+        app.globalData.code = null;
       }
     }).catch(err => {
       // console.log(err);
@@ -95,45 +117,7 @@ Page({
     });
   },
 
-  //用于性别switch的切换
-  changeGender(e) {
-    this.setData({
-      gender: !this.data.gender
-    })
-  },
-
-  //每次更新name的input组件后都重新获取name
-  getName(e) {
-    if (e.detail.detail.value.length <= 1) {
-      this.setData({
-        name_error: true
-      })
-    }
-    else {
-      this.setData({
-        name: e.detail.detail.value,
-        name_error: false
-      })
-    }
-  },
-
-  //每次更新identity的input组件后都重新获取identity
-  getIdentity(e) {
-    var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-    if (reg.test(e.detail.detail.value) === false) {
-      this.setData({
-        identity_error: true
-      })
-    }
-    else {
-      this.setData({
-        identity: e.detail.detail.value,
-        identity_error: false
-      })
-    }
-  },
-
-  //每次更新phoneNumber的input组件后都重新获取phoneNumber
+  //每次更新phone_number的input组件后都重新获取phone_number
   getPhoneNumber(e) {
     var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
     if (reg.test(e.detail.detail.value) === false) {
@@ -143,7 +127,7 @@ Page({
     }
     else {
       this.setData({
-        phoneNumber: e.detail.detail.value,
+        phone_number: e.detail.detail.value,
         phone_error: false
       })
     }
@@ -189,7 +173,7 @@ Page({
     }
   },
 
-  //每次更新city的input组件后都重新获取city
+  /*每次更新city的input组件后都重新获取city
   getCity(e) {
     // TODO 添加城市的正则表达式 or 使用picker
     // var reg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
@@ -217,14 +201,15 @@ Page({
       })
     }
   },
+  */
 
   //每次更新education的input组件后都重新获取education
   getEducation(e) {
     this.setData({
-      education: this.data.educationList[e.detail.value]
+      education: this.data.education_list[e.detail.value]
     })
     //判断是否有修改，如果没有就不用post了
-    if (this.data.educationList[e.detail.value] !== this.data.info_saved.education){
+    if (this.data.education_list[e.detail.value] !== this.data.info_saved.education){
       this.setData({
         education_modified: true
       })
@@ -238,7 +223,7 @@ Page({
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
   chooseTags(e) {
-    var newChosen = this.data.chosenTags;
+    var newChosen = this.data.chosen_tags;
     var hasSame = false;
     //判断已选技术中是否有重复的
     for (var index in newChosen) {
@@ -251,7 +236,7 @@ Page({
       toChosen[e.detail.name].isChosen = true;
       newChosen.push(this.data.tags[e.detail.name]);
       this.setData({
-        chosenTags: newChosen,
+        chosen_tags: newChosen,
         tags: toChosen,
         tags_modified: true,
       })
@@ -263,7 +248,7 @@ Page({
 
   //这个方法实现了：用户点击已选tag后，将tag从已选中删除
   deleteTags(e) {
-    var newChosen = this.data.chosenTags;
+    var newChosen = this.data.chosen_tags;
     var toChosen = this.data.tags;
     var switchId = newChosen[e.detail.name].id;
     newChosen.splice(e.detail.name, 1);
@@ -277,7 +262,7 @@ Page({
     }
     toChosen[index].isChosen = false;
     this.setData({
-      chosenTags: newChosen,
+      chosen_tags: newChosen,
       tags: toChosen,
       tags_modified: true
     })
@@ -296,7 +281,7 @@ Page({
     var postData = {};
     var isModified = false;
     if (this.data.phone_modified) {
-      postData.phone = this.data.phoneNumber;
+      postData.phone = this.data.phone_number;
       isModified = true;
     }
     if (this.data.country_modified) {
@@ -313,8 +298,8 @@ Page({
     }
     if (this.data.tags_modified) {
       var tags = [];
-      for (var i in this.data.chosenTags) {
-        tags.push(this.data.chosenTags[i].id);
+      for (var i in this.data.chosen_tags) {
+        tags.push(this.data.chosen_tags[i].id);
       }
       postData.tags = tags;
       isModified = true;

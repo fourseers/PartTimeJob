@@ -7,11 +7,7 @@ var token= {
         sessionStorage.setItem("scope",token.scope);
     },
     deleteToken: function () {
-        sessionStorage.setItem("access_token", null);
-        sessionStorage.setItem("expires_in", null);
-        sessionStorage.setItem("refresh_token", null);
-        sessionStorage.setItem("token_type", null);
-        sessionStorage.setItem("scope",null);
+        sessionStorage.clear()
     },
     loadToken: function () {
         let tokenInfo = {};
@@ -19,7 +15,7 @@ var token= {
         tokenInfo.expires_in = sessionStorage.getItem("expires_in");
         tokenInfo.refresh_token = sessionStorage.getItem("refresh_token");
         tokenInfo.token_type = sessionStorage.getItem("token_type");
-        tokenInfo.token_type = sessionStorage.getItem("scope");
+        tokenInfo.scope = sessionStorage.getItem("scope");
         return tokenInfo;
     },
 }

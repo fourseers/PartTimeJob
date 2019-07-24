@@ -42,6 +42,12 @@
                         title: '店铺名',
                         key: 'shop_name'
                     },
+
+
+                    {
+                        title: '岗位名称',
+                        key: 'job_name'
+                    },
                     {
                         title: '工作开始时间',
                         key: 'begin_time'
@@ -71,14 +77,16 @@
                             return h('div', [
                                 h('Rate', {
                                     props:{
-                                        value:params.row.score
+                                        value:params.row.score,
+                                        disabled:params.row.score?true:false
                                     },
                                     style: {
                                         marginRight: '5px'
                                     },
                                     on: {
-                                        click: () => {
-                                            this.show(params.row.score)
+                                        'on-change': (value) =>{
+                                                this.remark(value,params.row.work_id)
+
                                         }
                                     }
                                 }, 'View')
@@ -169,6 +177,49 @@
                 }
             },
         methods: {
+
+            remark(score,work_id)
+            {
+
+                //get checkin
+                var prefix="/arrangement"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/work/remark",
+                    data:{
+                        score:score,
+                        work_id:work_id
+                    }
+                }).then(response => {
+                    console.log(response);
+                    if(response.status ===  200)
+                    {
+                        this.$Message.success("打分成功");
+
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+                        if(error.response)
+                        {
+                            if (error.response.data.status === 400 && error.response.data.message === "work already remarked")
+                            {
+                                console.log(error.response);
+                                this.$Message.error('已经打过分');
+                            }
+                        }
+
+
+
+                    })
+
+            },
             changePage (index) {
                 if(this.shop_chosen === "")
                 {this.mockTableData1(index-1);}

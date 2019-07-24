@@ -32,7 +32,7 @@ public class WechatUserServiceImpl implements WechatUserService {
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
 
-    public WechatUser findByOpenid(String openid) {
+    public WechatUser getUserByOpenid(String openid) {
         return wechatUserDao.findByOpenid(openid);
     }
 

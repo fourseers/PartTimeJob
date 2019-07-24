@@ -1,57 +1,38 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.warehouse.dto;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Document("CV")
-public class CV {
-
-    @Id
-    private String id;
-
-    @NotBlank
+public class CVDto {
+    @NotNull
+    private String cvId;
+    @NotNull
     private String title;
-
-    @NotBlank
+    @NotNull
     private String name;
-
     @NotNull
     private Boolean gender;
-
-    @NotBlank
+    @NotNull
     private String phone;
-
-    @NotBlank
+    @NotNull
     private String identity;
-
     @NotNull
     private Float height;
-
     @NotNull
     private Float weight;
-
     @NotNull
-    private Etc.Education education;
+    private String education;
 
-    @NotBlank
     private String statement;
-
-    @NotNull
-    private Integer userId;
-
-    @NotBlank
     private List<String> experiences;
+    // no user id
 
-    public String getId() {
-        return id;
+    public String getCvId() {
+        return cvId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCvId(String cvId) {
+        this.cvId = cvId;
     }
 
     public String getTitle() {
@@ -68,22 +49,6 @@ public class CV {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Etc.Education getEducation() {
-        return education;
-    }
-
-    public void setEducation(Etc.Education education) {
-        this.education = education;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Boolean getGender() {
@@ -124,6 +89,14 @@ public class CV {
 
     public void setWeight(Float weight) {
         this.weight = weight;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
     }
 
     public String getStatement() {

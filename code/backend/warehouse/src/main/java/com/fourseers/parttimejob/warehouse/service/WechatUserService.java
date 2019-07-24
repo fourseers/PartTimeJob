@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface WechatUserService {
 
-    WechatUser findByOpenid(String openid);
-
     WechatUser findByInternalToken(String internalToken);
+
+    WechatUser getUserByOpenid(String openId);
 
     WechatUserInfoDto getUserInfo(WechatUser user);
 

@@ -145,7 +145,7 @@
                         'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
-                    url: prefix +"/merchant/billing",
+                    url: prefix +"/merchant/billing/last_month",
                     params:{
                         page_count:pagenum,
                     }

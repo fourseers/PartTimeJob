@@ -150,9 +150,10 @@
                     </Row>
                     <Row>
 
-                        <FormItem label="Tag" prop="job_tag">
-                            <Tag  v-model="formValidate.tag_list" v-for="item in count" :key="item" :name="item" closable @on-close="handleClose2">{{ item }}</Tag>
-                            <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加标签</Button>
+                        <FormItem label="Tag"  prop="job_tag">
+                            <CheckboxGroup v-model="formValidate.job_tag" v-for="item in job_tags">
+                                <Checkbox :label="item.id "  >{{item.name}}</Checkbox>
+                            </CheckboxGroup>
 
                         </FormItem>
 
@@ -249,6 +250,7 @@
                 }, 1000)
             };
             return {
+                job_tags:[],
                 pagenum2:1,
                 total_elements_shop:0,
                 startTimeOptions: {}, //开始日期设置
@@ -271,10 +273,9 @@
                     end_apply_date: '',
                     job_detail: '',
                     need_amount: '',
-                    job_tag: [1],
+                    job_tag: [],
                     salary: ''
                 },
-                count: ["标签1", "标签2"],
                 ruleValidate: {
                     job_name: [
                         {required: true, message: '请填写岗位名称', trigger: 'blur'},
@@ -347,6 +348,7 @@
             } else {
                 //获取第一页表格
                 this.mockTableData1 (0);
+                this.get_tags();
             }
             Date.prototype.Format = function (fmt) {
                 var o = {
@@ -370,6 +372,37 @@
 
         },
         methods: {
+            get_tags()
+            {
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/tags",
+                }).then(response => {
+                    console.log(response.data);
+                    if (response.status === 200) {
+                        this.job_tags = response.data.data;
+
+                    }
+                })
+                    .catch(error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+
+                            }
+                        }
+                        JSON.stringify(error);
+                        console.log(error)
+                    })
+
+            },
             mockTableData1 (pagenum) {
                 //get shops
                 getShops(pagenum).then(res => {
@@ -446,6 +479,10 @@
                             this.postJob()
                         }
                         else {
+
+                            this.formValidate.begin_date=""
+                            this.formValidate.end_date=""
+
                             this.$Message.error("工作开始日期不能比招聘结束时间早");
 
                             this.startTimeOptions= {};

@@ -69,4 +69,22 @@ public class InfoControllerTest {
         assertEquals(respEducation.size(), 6);
         assertEquals(respTags.size(), 4);
     }
+
+    @Test
+    public void testGetTagList() throws Exception {
+
+        for(String tagName: tags) {
+            Tag tag = new Tag();
+            tag.setName(tagName);
+            tagService.addOne(tag);
+        }
+
+        MvcResult result = mockMvc.perform(get("/merchant/tags"))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject resp = JSON.parseObject(result.getResponse().getContentAsString());
+        assertNotNull(resp.getJSONArray("data"));
+        JSONArray respTags = resp.getJSONArray("data");
+        assertEquals(respTags.size(), 4);
+    }
 }

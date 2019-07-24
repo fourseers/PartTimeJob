@@ -2,9 +2,9 @@
     <div class="content">
         <Table border :columns="columns7" :data="bill">
             <div slot="header" class="table-height" style="
-        font-size: 20px;">月末账单</div>
+        font-size: 20px;">本月需支付总金额：{{this.sum}}
+            </div>
             <div slot="footer" class="table-height">
-                本月需支付总金额：{{this.sum}}
 
                 <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
             </div>

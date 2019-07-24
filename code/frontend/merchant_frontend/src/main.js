@@ -21,7 +21,7 @@ Vue.use(Element)
 Vue.prototype.axios = axios;
 Vue.prototype.$token = token;
 
-const router = new VueRouter({ 
+const router = new VueRouter({
   routes: routes
 });
 Vue.config.productionTip = false;

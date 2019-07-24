@@ -38,6 +38,10 @@ Page({
         title: "简历",
         url: "/pages/cv_list/cv_list",
         src: "/assets/icons/resume.png"
+      },
+      {
+        title: "",
+        url: "/pages/switchcity/switchcity"
       }
     ]
   },

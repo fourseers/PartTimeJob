@@ -35,7 +35,7 @@ Page({
     city_code: ""
   },
 
-  onShow(){
+  onReady(){
     var req = new request();
 
     // 向后台获取注册元数据, 包括文化水平list、tags list
@@ -61,6 +61,21 @@ Page({
       // console.log(err);
       // TODO: 添加请求失败的处理
     });
+    
+  },
+
+  onShow(){
+    // 在通过api调用数据后再更新从city selector获得的数据
+    if (app.globalData.city !== null) {
+      console.log(app.globalData.city);
+      this.setData({
+        city: app.globalData.city,
+        city_code: app.globalData.code,
+        city_modified: true,
+      })
+      app.globalData.city = null;
+      app.globalData.code = null;
+    }
   },
 
   getUserInfo() {
@@ -99,17 +114,6 @@ Page({
       }
       if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
-      }
-      // 在通过api调用数据后再更新从city selector获得的数据
-      if (app.globalData.city !== null) {
-        console.log(app.globalData.city);
-        this.setData({
-          city: app.globalData.city,
-          city_code: app.globalData.code,
-          city_modified: true,
-        })
-        app.globalData.city = null;
-        app.globalData.code = null;
       }
     }).catch(err => {
       // console.log(err);

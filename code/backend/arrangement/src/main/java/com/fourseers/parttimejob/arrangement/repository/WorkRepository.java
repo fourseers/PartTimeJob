@@ -40,4 +40,6 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.salaryConfirmed as paid from Work work " +
             "where work.job.shop.company = ?1")
     Page<WorkProjection> findPageByCompanyOrderByWorkIdDesc(Company company, Pageable pageable);
+
+    Work findByWorkId(int workId);
 }

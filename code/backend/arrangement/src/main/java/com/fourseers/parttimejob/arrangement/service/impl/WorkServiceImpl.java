@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
 import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.common.entity.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,28 @@ public class WorkServiceImpl implements WorkService {
         }
 
         throw new RuntimeException("shop not exist or not belong to");
+    }
+
+    @Override
+    public void remark(String username, int workId, int score) {
+        MerchantUser user = merchantUserDao.findByUsername(username);
+
+        if (user.getCompany() == null) {
+            throw new RuntimeException("user does not belong to a company");
+        }
+
+        Work work = workDao.findById(workId);
+
+        if (work == null || work.getJob().getShop().getCompany() != user.getCompany()) {
+            throw new RuntimeException("work not exist or not managed by current user");
+        }
+
+        if (work.getScore() != null) {
+            throw new RuntimeException("work already remarked");
+        }
+
+        work.setScore(score);
+        workDao.save(work);
     }
 
 }

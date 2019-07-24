@@ -62,6 +62,7 @@ Page({
     education: "",
     education_list: [],
     isLoading: false,
+    city_code: ""
   },
 
   /* 
@@ -93,7 +94,17 @@ Page({
     }).catch(err => {
       // console.log(err);
       // TODO: 添加请求失败的处理
-    })
+    });
+
+    if (app.globalData.city !== null) {
+      console.log(app.globalData.city);
+      this.setData({
+        city: app.globalData.city,
+        city_code: app.globalData.code,
+      })
+      app.globalData.city = null;
+      app.globalData.code = null;
+    }
   },
 
   //这个方法实现了：用户点击可选tag后，将tag加入到已选职业倾向中
@@ -317,15 +328,18 @@ Page({
             }
             else {
               app.globalData.is_registered = false;
+              this.setData({
+                isLoading: false
+              });
             }
           }).catch(err => {
             console.log(err)
+            this.setData({
+              isLoading: false
+            });
           });
         }
       })
-      this.setData({
-        isLoading: false
-      });
     }
   }
 

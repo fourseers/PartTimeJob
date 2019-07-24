@@ -20,6 +20,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.job.endTime as endTime, " +
             "work.checkin as checkin, " +
             "work.checkout as checkout, " +
+            "work.job.jobName as jobName, " +
             "work.score as score, " +
             "work.job.salary as payment, " +
             "work.salaryConfirmed as paid from Work work " +
@@ -35,9 +36,12 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.job.endTime as endTime, " +
             "work.checkin as checkin, " +
             "work.checkout as checkout, " +
+            "work.job.jobName as jobName, " +
             "work.score as score, " +
             "work.job.salary as payment, " +
             "work.salaryConfirmed as paid from Work work " +
             "where work.job.shop.company = ?1")
     Page<WorkProjection> findPageByCompanyOrderByWorkIdDesc(Company company, Pageable pageable);
+
+    Work findByWorkId(int workId);
 }

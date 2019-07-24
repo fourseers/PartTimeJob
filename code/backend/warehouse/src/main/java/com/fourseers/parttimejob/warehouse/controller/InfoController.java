@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("")
 public class InfoController {
 
     public static final List<Etc.Education> educationList = Arrays.asList(
@@ -69,11 +69,22 @@ public class InfoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success")
     })
-    @GetMapping(value = "/register-info", produces = "application/json")
+    @GetMapping(value = "/user/register-info", produces = "application/json")
     public ResponseEntity<Response<Info>> getUserRegisterInfo() {
         Info info = new Info();
         info.setEducationByEnum(educationList);
         info.setTags(tagService.findAll());
         return ResponseBuilder.build(HttpStatus.OK, info, "success");
+    }
+
+    @ApiOperation(value = "Get all tags")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success")
+    })
+    @GetMapping(value = "/merchant/tags", produces = "application/json")
+    public ResponseEntity<Response<List<Tag>>> getTags() {
+        List<Tag> tags = tagService.findAll();
+
+        return ResponseBuilder.build(HttpStatus.OK, tags, "success");
     }
 }

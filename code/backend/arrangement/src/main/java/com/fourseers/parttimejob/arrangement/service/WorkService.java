@@ -8,4 +8,6 @@ public interface WorkService {
     Page<WorkProjection> findPageByUsername(String username, int pageCount, int pageSize);
 
     Page<WorkProjection> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize);
+
+    void remark(String username, int workId, int score);
 }

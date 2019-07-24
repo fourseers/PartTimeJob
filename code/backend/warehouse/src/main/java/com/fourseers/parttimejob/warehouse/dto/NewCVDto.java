@@ -1,18 +1,10 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.warehouse.dto;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Document("CV")
-public class CV {
-
-    @Id
-    private String id;
-
+public class NewCVDto {
     @NotBlank
     private String title;
 
@@ -34,25 +26,14 @@ public class CV {
     @NotNull
     private Float weight;
 
-    @NotNull
-    private Etc.Education education;
+    @NotBlank
+    private String education;
 
     @NotBlank
     private String statement;
 
     @NotNull
-    private Integer userId;
-
-    @NotBlank
     private List<String> experiences;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -68,22 +49,6 @@ public class CV {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Etc.Education getEducation() {
-        return education;
-    }
-
-    public void setEducation(Etc.Education education) {
-        this.education = education;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Boolean getGender() {
@@ -124,6 +89,14 @@ public class CV {
 
     public void setWeight(Float weight) {
         this.weight = weight;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
     }
 
     public String getStatement() {

@@ -46,6 +46,7 @@ Page({
     end_apply_date: (new Date()).getDate(),
     salary: "5K-10K",
     create_time: new Date(),
+    isLoading: false,
     //need_gender: 0,
     //education: "本科",
     tags: [
@@ -107,23 +108,23 @@ Page({
       if (res.statusCode === 200) {
         var begin_date = new Date(info.begin_date);
         var end_date = new Date(info.end_date);
-        var begin_apply_date = new Date(info.begin_apply_date);
-        var end_apply_date = new Date(info.end_apply_date);
+        var begin_apply_date = new Date(info.begin_apply_time);
+        var end_apply_date = new Date(info.end_apply_time);
         this.setData({
           job_name: info.job_name,
           job_detail: info.job_detail,
           begin_year: begin_date.getFullYear(),
-          begin_month: begin_date.getMonth(),
+          begin_month: begin_date.getMonth()+1,
           begin_date: begin_date.getDate(),
           end_year: end_date.getFullYear(),
-          end_month: end_date.getMonth(),
+          end_month: end_date.getMonth()+1,
           end_date: end_date.getDate(),
           need_amount: 4,
           begin_apply_year: begin_apply_date.getFullYear(),
-          begin_apply_month: begin_apply_date.getMonth(),
+          begin_apply_month: begin_apply_date.getMonth()+1,
           begin_apply_date: begin_apply_date.getDate(),
           end_apply_year: end_apply_date.getFullYear(),
-          end_apply_month: end_apply_date.getMonth(),
+          end_apply_month: end_apply_date.getMonth()+1,
           end_apply_date: end_apply_date.getDate(),
           salary: info.salary,
           tags: info.tag_list,
@@ -172,9 +173,12 @@ Page({
   handleSendApply() {
     // 发送岗位申请请求
     var req = new request();
+    this.setData({
+      isLoading: true,
+    })
     req.postRequest(host + apply_job, {
-      jobId: parseInt(job_id),
-      cvId: "5d318647a095e24d3285f8e",//5d318647a095e24d3285f8ea
+      job_id: parseInt(job_id),
+      cv_id: "5d365f928ba346f03eb1177a",//5d318647a095e24d3285f8ea
     }, app.globalData.access_token).then(res => {
       if(res.statusCode === 200){
         app.globalData.showSendMessage = true;
@@ -188,6 +192,9 @@ Page({
           content: res.data.message,
           type: 'error'
         });
+        this.setData({
+          isLoading: false,
+        })
       }
     }).catch(err => {
       console.log(err)

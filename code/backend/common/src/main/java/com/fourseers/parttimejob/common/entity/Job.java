@@ -185,6 +185,7 @@ public class Job {
         this.appliedAmount = appliedAmount;
     }
 
+    @NotNull
     public Boolean getManualStop() {
         return manualStop;
     }

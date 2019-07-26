@@ -7,6 +7,7 @@ import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dto.CVDto;
 import com.fourseers.parttimejob.warehouse.dto.NewCVDto;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.dto.UserShopDto;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -49,6 +50,13 @@ public class AppConfig {
             @Override
             protected void configure() {
                 map().setIndustry(source.getIndustry().getIndustryId());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<Shop, UserShopDto>() {
+            @Override
+            protected void configure() {
+                map().setIndustry(source.getIndustry().getIndustryName());
             }
         });
 

@@ -33,6 +33,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -49,6 +51,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "666")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -64,6 +68,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "-1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -74,11 +80,31 @@ public class BillingControllerTest {
     }
 
     @Test
+    public void getBillingsPageNoBilling() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing")
+                .header("x-internal-token", bossname)
+                .param("from", "2018-07-01")
+                .param("to", "2018-07-31")
+                .param("page_count", "0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("no bills", response.getString("message"));
+    }
+
+    @Test
     public void getBillingsPageNoCompany() throws Exception {
         String bossname = "poor user";
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))

@@ -1,10 +1,6 @@
-package com.fourseers.parttimejob.common.entity;
+package com.fourseers.parttimejob.warehouse.dto;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-
-@Entity
-public class Shop {
+public class UserShopDto {
 
     private Integer shopId;
     private String shopName;
@@ -14,12 +10,11 @@ public class Shop {
     private Float longitude;
     private Float latitude;
     private String brand;
-    private Industry industry;
+    private String industry;
     private String introduction;
-    private Company company;
+    private Float avgScore;
+    private Integer userScore;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getShopId() {
         return shopId;
     }
@@ -28,8 +23,6 @@ public class Shop {
         this.shopId = shopId;
     }
 
-    @Column(unique = true)
-    @Size(max = 64)
     public String getShopName() {
         return shopName;
     }
@@ -38,7 +31,6 @@ public class Shop {
         this.shopName = shopName;
     }
 
-    @Size(max = 10)
     public String getProvince() {
         return province;
     }
@@ -47,7 +39,6 @@ public class Shop {
         this.province = province;
     }
 
-    @Size(max = 20)
     public String getCity() {
         return city;
     }
@@ -56,7 +47,6 @@ public class Shop {
         this.city = city;
     }
 
-    @Size(max = 128)
     public String getAddress() {
         return address;
     }
@@ -81,7 +71,6 @@ public class Shop {
         this.latitude = latitude;
     }
 
-    @Size(max = 20)
     public String getBrand() {
         return brand;
     }
@@ -90,16 +79,14 @@ public class Shop {
         this.brand = brand;
     }
 
-    @ManyToOne
-    public Industry getIndustry() {
+    public String getIndustry() {
         return industry;
     }
 
-    public void setIndustry(Industry industry) {
+    public void setIndustry(String industry) {
         this.industry = industry;
     }
 
-    @Size(max = 4096)
     public String getIntroduction() {
         return introduction;
     }
@@ -108,13 +95,19 @@ public class Shop {
         this.introduction = introduction;
     }
 
-    @ManyToOne
-    public Company getCompany() {
-        return company;
+    public Float getAvgScore() {
+        return avgScore;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setAvgScore(Float avgScore) {
+        this.avgScore = avgScore;
     }
 
+    public Integer getUserScore() {
+        return userScore;
+    }
+
+    public void setUserScore(Integer userScore) {
+        this.userScore = userScore;
+    }
 }

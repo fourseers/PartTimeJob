@@ -8,7 +8,7 @@ import java.sql.Date;
 
 public interface BillingService {
 
-    Page<WorkBillingProjection> getBillingsByUsernameOrderByBillIdDesc(String username, int pageCount, int pageSize);
+    Page<WorkBillingProjection> getBillingsByUsernameOrderByBillIdDescInGivenPeriod(String username, Date fromDate, Date toDate, int pageCount, int pageSize);
 
     void payBill(String username, Integer billId, Billing billing);
 

@@ -40,13 +40,18 @@ public class BillingController {
     })
     @RequestMapping(value = "", method = GET, produces = "application/json")
     public ResponseEntity<Response<Page<WorkBillingProjection>>> getBillings(
+            @ApiParam(value = "from date, yyyy-MM-dd") @RequestParam(value = "from") String from,
+            @ApiParam(value = "to date, yyyy-MM-dd") @RequestParam(value = "to") String to,
             @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
             @RequestParam(value = "page_count") Integer pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
 
+        Date fromDate = Date.valueOf(from);
+        Date toDate = Date.valueOf(to);
+
         Page<WorkBillingProjection> bills;
         try {
-            bills = billingService.getBillingsByUsernameOrderByBillIdDesc(username, pageCount, PAGE_SIZE);
+            bills = billingService.getBillingsByUsernameOrderByBillIdDescInGivenPeriod(username, fromDate, toDate, pageCount, PAGE_SIZE);
         } catch (RuntimeException ex) {
             if (ex.getMessage().contains("Page index must not be less than zero!")) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect param");
@@ -99,7 +104,7 @@ public class BillingController {
                             required = true, dataType = "string", paramType = "header")
             })
     @RequestMapping(value = "/sum", method = GET, produces = "application/json")
-    public ResponseEntity<Response<BillingAmountDto>> getBillings(
+    public ResponseEntity<Response<BillingAmountDto>> getBillingAmount(
             @ApiParam(value = "from date, yyyy-MM-dd") @RequestParam(value = "from") String from,
             @ApiParam(value = "to date, yyyy-MM-dd") @RequestParam(value = "to") String to,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {

@@ -54,7 +54,7 @@ public class BillingServiceImpl implements BillingService {
     @Value("${app.alipay_gateway_url}")
     String alipayGatewayUrl;
 
-    public Page<WorkBillingProjection> getBillingsByUsernameOrderByBillIdDesc(String username, int pageCount, int pageSize) {
+    public Page<WorkBillingProjection> getBillingsByUsernameOrderByBillIdDescInGivenPeriod(String username, Date fromDate, Date toDate, int pageCount, int pageSize) {
 
         Company company = companyDao.findByUsername(username);
 
@@ -62,7 +62,7 @@ public class BillingServiceImpl implements BillingService {
             throw new RuntimeException("user does not belong to any company");
         }
 
-        return workDao.getBillingsByCompanyIdOrderByBillIdDesc(company.getCompanyId(), pageCount, pageSize);
+        return workDao.getBillingsByCompanyIdOrderByBillIdDescInGivenPeriod(company.getCompanyId(), fromDate, toDate, pageCount, pageSize);
     }
 
     public void payBill(String username, Integer workId, Billing billing) {

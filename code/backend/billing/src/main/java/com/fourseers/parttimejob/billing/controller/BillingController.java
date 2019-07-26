@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.billing.controller;
 
 import com.fourseers.parttimejob.billing.dto.BillingAmountDto;
 import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
+import com.fourseers.parttimejob.billing.dto.YearMonthDto;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.common.entity.Billing;
@@ -111,6 +112,29 @@ public class BillingController {
             BillingAmountDto billingAmountDto = new BillingAmountDto();
             billingAmountDto.setAmount(amount);
             return ResponseBuilder.build(HttpStatus.OK, billingAmountDto, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Merchant user pay bill of previous month")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company / nothing to pay / **other exceptions raised by Alipay**"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/monthly-pay", method = POST, produces = "application/json")
+    public ResponseEntity<Response<String>> monthlyPay(
+            @RequestBody YearMonthDto yearMonthDto,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+
+        try {
+            String url = billingService.monthlyPayBill(username, yearMonthDto.getYear(), yearMonthDto.getMonth());
+            return ResponseBuilder.build(HttpStatus.OK, url, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }

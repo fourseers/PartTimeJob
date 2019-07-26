@@ -1,0 +1,23 @@
+<!--pages/shop/shop.wxml-->
+<i-panel title="商家信息">
+  <i-cell >
+    <view class="shop-name">{{name}}</view>
+    <view slot="footer">
+      {{brand}}-{{industry}}
+    </view>
+  </i-cell>
+  <i-cell title="商家简介" label="{{introduction}}"></i-cell>
+  <i-cell title="商家地址" label="{{province}}---{{city}}---{{address}}"></i-cell>
+  <map class="job-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}"></map>
+  <i-cell title="评分">
+    <multiple-rate rate="{{avg_score}}" disabled="true">
+      <text style="font-size: 48rpx; margin-left: 40rpx;">{{avg_score}} 分</text>
+    </multiple-rate>
+  </i-cell>
+</i-panel>
+
+<i-panel title="我来评价">
+  <i-cell>
+    <multiple-rate rate="{{rate}}" icon="star" bindchange="handleRate"></multiple-rate>
+  </i-cell>
+</i-panel>

@@ -123,6 +123,35 @@ public class MonthlyBillServiceImpl implements MonthlyBillService {
         return monthlyBillDao.findByMeta(meta);
     }
 
+    @Override
+    public String findMonthlyPayStatusByUsernameAndYearAndMonth(String username, Integer year, Integer month) {
+        Company company = companyDao.findByUsername(username);
+
+        if (company == null) {
+            throw new RuntimeException("user does not belong to any company");
+        }
+
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.set(Calendar.YEAR, year);
+        aCalendar.set(Calendar.MONTH, month - 1);
+        aCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date from = new Date(aCalendar.getTime().getTime());
+        aCalendar.set(Calendar.DAY_OF_MONTH, aCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(aCalendar.getTime().getTime());
+
+        Double amount = billingDao.getBillingAmountByCompanyIdInGivenPeriod(company.getCompanyId(), from, to);
+        if (amount == null) {
+            return "paid";
+        }
+
+        MonthlyBill monthlyBill = monthlyBillDao.findByCompanyAndYearAndMonth(company, year, month);
+        if (monthlyBill == null) {
+            return "unpaid";
+        } else {
+            return monthlyBill.getStatus();
+        }
+    }
+
     public void save(MonthlyBill monthlyBill) {
         monthlyBillDao.save(monthlyBill);
     }

@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,6 +91,73 @@ public class MonthlyBillControllerTest {
         MvcResult result = mockMvc.perform(post("/merchant/billing/monthly-pay")
                 .header("x-internal-token", bossname)
                 .content(body.toJSONString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to any company", response.getString("message"));
+    }
+
+    @Test
+    public void getMonthlyBillStatusPendingSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/monthly-pay")
+                .header("x-internal-token", bossname)
+                .param("year", "2019")
+                .param("month", "8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals("pending", response.getString("data"));
+    }
+
+    @Test
+    public void getMonthlyBillStatusUnpaidSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/monthly-pay")
+                .header("x-internal-token", bossname)
+                .param("year", "2019")
+                .param("month", "7")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals("unpaid", response.getString("data"));
+    }
+
+    @Test
+    public void getMonthlyBillStatusNoBillThenPaid() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/monthly-pay")
+                .header("x-internal-token", bossname)
+                .param("year", "2017")
+                .param("month", "8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+        assertEquals("paid", response.getString("data"));
+    }
+
+    @Test
+    public void getMonthlyBillNoCompany() throws Exception {
+        String bossname = "poor user";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing/monthly-pay")
+                .header("x-internal-token", bossname)
+                .param("year", "2019")
+                .param("month", "7")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
                 .andReturn();

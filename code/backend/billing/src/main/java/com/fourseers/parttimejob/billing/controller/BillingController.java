@@ -143,4 +143,27 @@ public class BillingController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }
     }
+
+    @ApiOperation(value = "Merchant user get bill state of previous month. Paid, pending(submitted but hasn't been verified by Alipay) or unpaid(not submitted yet)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/monthly-pay", method = GET, produces = "application/json")
+    public ResponseEntity<Response<String>> monthlyPayStatus(
+            @ApiParam(value = "year, yyyy") @RequestParam(value = "year") Integer year,
+            @ApiParam(value = "month, MM") @RequestParam(value = "month") Integer month,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            String status = monthlyBillService.findMonthlyPayStatusByUsernameAndYearAndMonth(username, year, month);
+            return ResponseBuilder.build(HttpStatus.OK, status, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
 }

@@ -8,5 +8,7 @@ public interface MonthlyBillService {
 
     MonthlyBill findByMeta(String meta);
 
+    String findMonthlyPayStatusByUsernameAndYearAndMonth(String username, Integer year, Integer month);
+
     void save(MonthlyBill monthlyBill);
 }

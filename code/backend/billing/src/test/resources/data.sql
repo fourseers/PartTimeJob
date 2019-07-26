@@ -29,3 +29,5 @@ insert into work (checkin, checkout, log, salary_confirmed, score, work_date, bi
 ('08:00:00', '16:00:00', null, true, 5, '2019-08-17', null, 2, 1);
 insert into billing (meta, method, payment, work_work_id) values (null, '微信支付', 100, 3);
 update work set billing_bill_id = 2 where work_id = 3;
+insert into monthly_bill (amount, meta, method, month, status, year, company_company_id) values
+(100, '1234567890', '支付宝', 8, 'pending', 2019, 1);

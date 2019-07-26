@@ -49,7 +49,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // check if should be authenticated
         String path = exchange.getRequest().getPath().toString();
-        if (path.startsWith("/auth") || path.endsWith("register-info") || path.contains("swagger") || path.contains("/v2/api-docs"))
+        if (path.startsWith("/auth") || path.endsWith("register-info") || path.contains("swagger") || path.contains("/v2/api-docs") || path.startsWith("/billing/alipay"))
             return chain.filter(exchange);
 
         Logger logger = LoggerFactory.getLogger(this.getClass());

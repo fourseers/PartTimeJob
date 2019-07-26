@@ -8,5 +8,5 @@ public interface MonthlyBillRepository extends JpaRepository<MonthlyBill, Intege
 
     MonthlyBill findByCompanyAndYearAndMonth(Company company, Integer year, Integer month);
 
-    MonthlyBill findByMonthlyBillId(String monthlyBillId);
+    MonthlyBill findByMeta(String meta);
 }

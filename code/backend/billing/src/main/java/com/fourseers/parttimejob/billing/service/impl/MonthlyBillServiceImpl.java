@@ -119,8 +119,8 @@ public class MonthlyBillServiceImpl implements MonthlyBillService {
         }
     }
 
-    public MonthlyBill findByMonthlyBillId(String monthlyBillId) {
-        return monthlyBillDao.findByMonthlyBillId(monthlyBillId);
+    public MonthlyBill findByMeta(String meta) {
+        return monthlyBillDao.findByMeta(meta);
     }
 
     public void save(MonthlyBill monthlyBill) {

@@ -17,8 +17,8 @@ public class MonthlyBillDaoImpl implements MonthlyBillDao {
         return monthlyBillRepository.findByCompanyAndYearAndMonth(company, year, month);
     }
 
-    public MonthlyBill findByMonthlyBillId(String monthlyBillId) {
-        return monthlyBillRepository.findByMonthlyBillId(monthlyBillId);
+    public MonthlyBill findByMeta(String meta) {
+        return monthlyBillRepository.findByMeta(meta);
     }
 
     @Override

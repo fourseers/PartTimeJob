@@ -6,7 +6,7 @@ public interface MonthlyBillService {
 
     String monthlyPayBill(String username, Integer year, Integer month);
 
-    MonthlyBill findByMonthlyBillId(String monthlyBillId);
+    MonthlyBill findByMeta(String meta);
 
     void save(MonthlyBill monthlyBill);
 }

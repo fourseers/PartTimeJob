@@ -7,7 +7,7 @@ public interface MonthlyBillDao {
 
     MonthlyBill findByCompanyAndYearAndMonth(Company company, Integer year, Integer month);
 
-    MonthlyBill findByMonthlyBillId(String monthlyBillId);
+    MonthlyBill findByMeta(String meta);
 
     void save(MonthlyBill monthlyBill);
 }

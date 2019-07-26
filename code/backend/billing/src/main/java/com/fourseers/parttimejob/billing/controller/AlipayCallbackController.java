@@ -36,7 +36,7 @@ public class AlipayCallbackController {
             return "failure";
         }
 
-        MonthlyBill monthlyBill = monthlyBillService.findByMonthlyBillId(parameters.get("out_trade_no"));
+        MonthlyBill monthlyBill = monthlyBillService.findByMeta(parameters.get("out_trade_no"));
         if (monthlyBill == null) {
             return "failure";
         }

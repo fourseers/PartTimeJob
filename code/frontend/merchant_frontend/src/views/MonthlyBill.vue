@@ -6,7 +6,7 @@
             </div>
             <div slot="footer" class="table-height">
 
-                <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
+                <Button class="ivu-btn" @click="paybill(bill_id)" >确认支付</Button>
             </div>
 
 
@@ -97,9 +97,43 @@
 
         },
         methods: {
+            former_month()
+            {
+
+                var myDate = new Date();
+                var newd=new Date;
+                newd.setTime(myDate.getTime() - 8*3600*1000);
+
+                newd.getFullYear(); //获取完整的年份(4位,1970-????)
+                newd.getMonth(); //获取当前月份(0-11,0代表1月)
+                var month = newd.getMonth() === 0?12:newd.getMonth()
+                newd.setDate(0);
+                var year=newd.getMonth() === 0?  newd.getFullYear()-1:  newd.getFullYear();
+                return {
+                    from:year.toString()+"-"+month.toString()+"-"+"1",
+                    to:year.toString()+"-"+month.toString()+"-"+newd.getDate()
+                }
+            },
+            former_month2()
+            {
+
+                var myDate = new Date();
+                var newd=new Date;
+                newd.setTime(myDate.getTime() - 8*3600*1000);
+
+                newd.getFullYear(); //获取完整的年份(4位,1970-????)
+                newd.getMonth(); //获取当前月份(0-11,0代表1月)
+                var month = newd.getMonth() === 0?12:newd.getMonth()
+                var year=newd.getMonth() === 0?  newd.getFullYear()-1:  newd.getFullYear();
+                return {
+                    year:year.toString(),
+                    month:month.toString()
+                }
+            },
             getsum()
             {
 
+                console.log( this.former_month())
                 var prefix="/billing"
                 this.axios({
                     headers: {
@@ -111,8 +145,8 @@
                     method: 'get',
                     url: prefix +"/merchant/billing/sum",
                     params:{
-                        from:"2019-07-02",
-                        to:"2020-07-02",
+                        from:this.former_month().from,
+                        to:this.former_month().to
                     }
                 }).then(response => {
                     console.log(response);
@@ -128,10 +162,36 @@
                     })
             },
 
-            paybill( bill_id)
+            paybill( )
             {
-                //pay bills
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    data:{
+                            year:this.former_month2().year,
+                            month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        const div = document.createElement('div')
+                        div.innerHTML = response.data.data//此处form就是后台返回接收到的数据
+                        document.body.appendChild(div)
+                        document.forms[0].submit()
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
 
+                    })
 
             },
             mockTableData1(pagenum) {

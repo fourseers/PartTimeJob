@@ -429,9 +429,12 @@
 
                 this.mockTableData1(index-1);
             },
-            format_only_date(d)
+            format_only_date(d,t)
             {
+                var newd=new Date;
+                newd.setTime(d.getTime() +1000* this.convert_to_seconds(t)- 8*3600*1000);
                 return new Date(d).Format("yyyy-MM-dd");
+
             },
             format_time(t)
             {
@@ -465,6 +468,7 @@
                 return new Date(date+seconds*1000);
             },
             handleSubmit(name) {
+                console.log( this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time))
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if( !this.formValidate.shop)
@@ -527,8 +531,8 @@
                     data: {
                         shop_id: this.formValidate.shop,
                         job_name: this.formValidate.job_name,
-                        begin_date:  this.format_only_date(this.formValidate.begin_date),
-                        end_date: this.format_only_date( this.formValidate.end_date),
+                        begin_date:  this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time),
+                        end_date: this.format_only_date( this.formValidate.end_date,this.formValidate.end_time),
                         begin_time:  this.format_time(this.formValidate.begin_time),
                         end_time:  this.format_time(this.formValidate.end_time),
                         job_detail: this.formValidate.job_detail,

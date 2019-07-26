@@ -62,6 +62,10 @@
             <Icon type="md-clock" />
             确认打卡
         </MenuItem>
+        <MenuItem name="20" to="/askforleave">
+            <Icon type="md-clock" />
+            审批请假
+        </MenuItem>
         <MenuItem name="12" to="/monthlybill">
             <Icon type="ios-people" />
             月末账单

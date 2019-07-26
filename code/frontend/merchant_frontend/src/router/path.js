@@ -18,6 +18,7 @@ import AdminLogin from '../views/AdminLogin.vue'
 import BanUser from '../views/BanUser.vue'
 import Logout from '../views/Logout.vue'
 
+import AskForLeave from '../views/AskForLeave.vue'
 const  routes =[
     {
         path: '/',
@@ -124,6 +125,13 @@ const  routes =[
         name: 'logout',
         component:Logout
     }
+    ,
+    {
+        path: '/askforleave',
+        name: 'askforleave',
+        component:AskForLeave
+    }
+
 
 
 

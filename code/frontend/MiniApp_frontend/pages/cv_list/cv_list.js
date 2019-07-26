@@ -17,5 +17,12 @@ Page({
     ]
   },
 
+  onReady() {
+    
+  },
+
+  onShow() {
+    
+  }
 
 })

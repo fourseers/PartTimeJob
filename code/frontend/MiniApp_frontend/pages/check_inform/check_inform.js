@@ -26,6 +26,18 @@ Page({
     begin_check_time: "",
     end_check_time: "",
     address: "",
+    action_visible: false,
+    actions: [
+      {
+        name: "上班打卡"
+      },
+      {
+        name: "下班打卡"
+      },
+      {
+        name: "请假"
+      }
+    ]
   },
 
   // onLoad，保存从check页面传来的job的id
@@ -114,7 +126,37 @@ Page({
     })
   },
 
-  handleCheck(e) {
+  handleClick() {
+    this.setData({
+      action_visible: true,
+    })
+  },
+
+  handleCancel() {
+    this.setData({
+      action_visible: false,
+    })
+  },
+
+  handleClickItem({ detail }) {
+    if (detail.index === 0){
+      console.log("上班打卡");
+    }
+    else if (detail.index === 1){
+      console.log("下班打卡");
+    }
+    else if (detail.index === 2){
+      //console.log("请假")
+      wx.navigateTo({
+        url: "/pages/leave/leave",
+      })
+    }
+    this.setData({
+      action_visible: false,
+    })
+  },
+
+  checkin(e) {
     //console.log(e);
     var req = new request();
 

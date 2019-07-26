@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/leave/leave",
     "pages/index/index",
     "pages/cv_inform/cv_inform",
     "pages/timeline/timeline",

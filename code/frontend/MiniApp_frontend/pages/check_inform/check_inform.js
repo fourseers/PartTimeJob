@@ -146,11 +146,17 @@ Page({
       console.log("下班打卡");
     }
     else if (detail.index === 2){
-      console.log("请假")
+      //console.log("请假")
+      wx.navigateTo({
+        url: "/pages/leave/leave",
+      })
     }
+    this.setData({
+      action_visible: false,
+    })
   },
 
-  check(e) {
+  checkin(e) {
     //console.log(e);
     var req = new request();
 

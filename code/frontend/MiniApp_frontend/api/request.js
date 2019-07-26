@@ -33,6 +33,20 @@ class request {
     return this.requestAll(url, data, header, 'POST')
   }
 
+  putRequest(url, data, token = null, header = this._header) {
+    if (token !== null) {
+      header["x-access-token"] = token;
+    }
+    return this.requestAll(url, data, header, 'PUT')
+  }
+
+  deleteRequest(url, data, token = null, header = this._header) {
+    if (token !== null) {
+      header["x-access-token"] = token;
+    }
+    return this.requestAll(url, data, header, 'DELETE')
+  }
+
   requestAll(url, data, header, method){
     return new Promise((resolve, reject) => {
       wx.request({

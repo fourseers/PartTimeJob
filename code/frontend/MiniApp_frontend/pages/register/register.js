@@ -328,10 +328,10 @@ Page({
             }
             else {
               app.globalData.is_registered = false;
-              this.setData({
-                isLoading: false
-              });
             }
+            this.setData({
+              isLoading: false
+            });
           }).catch(err => {
             console.log(err)
             this.setData({

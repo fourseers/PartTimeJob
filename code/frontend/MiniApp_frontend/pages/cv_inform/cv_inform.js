@@ -1,5 +1,8 @@
 // pages/cv_inform/cv_inform.js
 const { $Toast } = require("../../dist/base/index");
+const app = getApp();
+import request from "../../api/request.js"
+import { host, register, register_data } from "../../api/url.js"
 
 Page({
 
@@ -14,6 +17,7 @@ Page({
     exp_index: ["经历1"],
     experience: [""],
     del_modal_visible: false,
+    title: "",
     name: "",
     name_error: false,
     gender: false,
@@ -23,7 +27,42 @@ Page({
     phone_error: false,
     identity: "",
     identity_error: false,
-    evaluation: ""
+    evaluation: "",
+    education_list: [],
+    education: ""
+  },
+
+  onReady() {
+    var req = new request();
+    req.getRequest(host + register_data, null).then(res => {
+      if (res.statusCode === 200) {
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          education_list: res.data.data.education,
+          tags: tags,
+          city: app.globalData.userInfo.city,
+          country: app.globalData.userInfo.country,
+          gender: app.globalData.userInfo.gender
+        })
+      }
+      else if (res.statusCode === 400) {
+        // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
+  },
+
+  getTitle(e) {
+    this.setData({
+      title: e.detail.detail.value
+    })
   },
 
   //每次更新name的input组件后都重新获取name
@@ -93,6 +132,13 @@ Page({
         identity_error: false
       })
     }
+  },
+
+  //每次更新education的input组件后都重新获取education
+  getEducation(e) {
+    this.setData({
+      education: this.data.education_list[e.detail.value]
+    })
   },
 
   //每次更新evaluation的input组件后都重新获取evaluation

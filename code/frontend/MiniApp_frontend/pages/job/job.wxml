@@ -36,4 +36,5 @@
     </i-cell>
   </i-cell-group>
 </view>
+<i-load-more loading="{{ isLoading }}" />
 <i-toast id="toast" />

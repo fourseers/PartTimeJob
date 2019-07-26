@@ -62,7 +62,7 @@ Page({
           avg_score: (data.avg_score === null) ? "暂无评" : data.avg_score,
           avg_rate: avg_rate,
           brand: data.brand,
-          city: data.brand,
+          city: data.city,
           industry: data.industry,
           introduction: data.introduction,
           latitude: data.latitude,

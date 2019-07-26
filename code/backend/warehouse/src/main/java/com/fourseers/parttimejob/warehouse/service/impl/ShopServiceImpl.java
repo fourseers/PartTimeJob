@@ -109,13 +109,14 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public UserShopDto getShopDetailWithAvgScore(int shopId) {
+    public UserShopDto getShopDetailWithAvgScore(WechatUser wechatUser, int shopId) {
         Shop shop = shopDao.findByShopId(shopId);
         if(shop == null)
             throw new RuntimeException("Shop does not exist.");
 
         UserShopDto ret = modelMapper.map(shop, UserShopDto.class);
         ret.setAvgScore(shopDao.getAvgScore(shop));
+        ret.setUserScore(scoreDao.getOne(wechatUser, shopId));
         return ret;
     }
 

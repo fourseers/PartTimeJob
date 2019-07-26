@@ -13,6 +13,7 @@ public class UserShopDto {
     private String industry;
     private String introduction;
     private Float avgScore;
+    private Integer userScore;
 
     public Integer getShopId() {
         return shopId;
@@ -100,5 +101,13 @@ public class UserShopDto {
 
     public void setAvgScore(Float avgScore) {
         this.avgScore = avgScore;
+    }
+
+    public Integer getUserScore() {
+        return userScore;
+    }
+
+    public void setUserScore(Integer userScore) {
+        this.userScore = userScore;
     }
 }

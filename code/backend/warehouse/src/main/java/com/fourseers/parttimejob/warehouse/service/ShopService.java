@@ -26,7 +26,7 @@ public interface ShopService {
 
     List<ShopBriefProjection> findShopBriefByUsername(String username);
 
-    UserShopDto getShopDetailWithAvgScore(int shopId);
+    UserShopDto getShopDetailWithAvgScore(WechatUser wechatUser, int shopId);
 
     boolean scoreShop(int shopId, WechatUser wechatUser, int score);
 }

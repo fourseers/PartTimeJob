@@ -197,6 +197,10 @@ public class WechatUserController {
     }
 
     @ApiOperation(value = "Get detail for one shop.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful, return shop detail with avg score."),
+            @ApiResponse(code = 400, message = "Invalid shop id")
+    })
     @GetMapping("/shop")
     public ResponseEntity<Response<UserShopDto>> getShopDetail(
             @ApiParam @RequestParam("shop_id") int shopId,
@@ -209,7 +213,7 @@ public class WechatUserController {
             return ResponseBuilder.buildEmpty(FORBIDDEN);
 
         try {
-            return ResponseBuilder.build(OK, shopService.getShopDetailWithAvgScore(shopId));
+            return ResponseBuilder.build(OK, shopService.getShopDetailWithAvgScore(user, shopId));
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {
@@ -217,7 +221,12 @@ public class WechatUserController {
         }
     }
 
-    @ApiOperation(value = "Give a score to a shop.")
+    @ApiOperation(value = "Add a score to a shop. " +
+            "This operation either add a new score or modify the existing score.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successful."),
+            @ApiResponse(code = 400, message = "Invalid shop id or invalid score.")
+    })
     @PostMapping("/shop/score")
     public ResponseEntity<Response<Void>> scoreShop(
             @ApiParam("parameters, contain shop id and score in int") @RequestBody @Validated ScoreDto scoreDto,

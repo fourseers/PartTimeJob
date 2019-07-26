@@ -9,6 +9,8 @@ import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class ScoreDaoImpl implements ScoreDao {
 
@@ -36,5 +38,19 @@ public class ScoreDaoImpl implements ScoreDao {
         scoreEntity.setScore(score);
         scoreRepository.save(scoreEntity);
         return true;
+    }
+
+    @Override
+    public Integer getOne(WechatUser user, int shopId) {
+        if(!shopRepository.existsById(shopId))
+            throw new RuntimeException("Shop doesn't exist.");
+        ScoreKey scoreKey = new ScoreKey();
+        scoreKey.setWechatUserId(user.getUserId());
+        scoreKey.setShopId(shopId);
+        Optional<Score> score = scoreRepository.findById(scoreKey);
+        if(score.isPresent())
+            return score.get().getScore();
+        else
+            return null;
     }
 }

@@ -205,9 +205,11 @@
                         'x-access-token': this.$token.loadToken().access_token,
                     },
                     method: 'get',
-                    url: prefix +"/merchant/billing/last_month",
+                    url: prefix +"/merchant/billing",
                     params:{
                         page_count:pagenum,
+                        from:this.former_month().from,
+                        to:this.former_month().to
                     }
                 }).then(response => {
                     console.log(response);

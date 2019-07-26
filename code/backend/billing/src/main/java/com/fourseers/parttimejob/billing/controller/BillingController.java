@@ -5,6 +5,7 @@ import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
 import com.fourseers.parttimejob.billing.dto.YearMonthDto;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
+import com.fourseers.parttimejob.billing.service.MonthlyBillService;
 import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
@@ -26,6 +27,9 @@ public class BillingController {
 
     @Autowired
     private BillingService billingService;
+
+    @Autowired
+    private MonthlyBillService monthlyBillService;
 
     private final static int PAGE_SIZE = 10;
 
@@ -133,7 +137,7 @@ public class BillingController {
 
 
         try {
-            String url = billingService.monthlyPayBill(username, yearMonthDto.getYear(), yearMonthDto.getMonth());
+            String url = monthlyBillService.monthlyPayBill(username, yearMonthDto.getYear(), yearMonthDto.getMonth());
             return ResponseBuilder.build(HttpStatus.OK, url, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());

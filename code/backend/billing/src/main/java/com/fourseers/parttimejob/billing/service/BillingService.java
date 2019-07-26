@@ -13,6 +13,4 @@ public interface BillingService {
     void payBill(String username, Integer billId, Billing billing);
 
     Double getBillingAmountByUsernameInGivenPeriod(String username, Date from, Date to);
-
-    String monthlyPayBill(String username, Integer year, Integer month);
 }

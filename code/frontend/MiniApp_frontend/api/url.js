@@ -9,6 +9,8 @@ const job_detail = "/arrangement/user/job?job_id="
 const apply_job = "/arrangement/user/apply"
 const checkin = "/arrangement/user/checkin"
 const checkout = "/arrangement/user/checkout"
+const cv_list = "/warehouse/user/cv-list"
+const cv_curd = "/warehouse/user/cv"
 
 module.exports = {
   login,
@@ -21,5 +23,7 @@ module.exports = {
   job_detail,
   apply_job,
   checkin,
-  checkout
+  checkout,
+  cv_list,
+  cv_curd
 }

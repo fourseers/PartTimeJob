@@ -1,6 +1,6 @@
-/* pages/cv_list/cv_list.wxss */
+/* pages/leave/leave.wxss */
 
-.add-button {
+.click-button {
   position: fixed;
   bottom: 0px;
   width: 100%;

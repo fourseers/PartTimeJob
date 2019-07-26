@@ -1,6 +1,8 @@
 package com.fourseers.parttimejob.warehouse.service;
 
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.dto.UserShopDto;
 import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import org.springframework.data.domain.Page;
 
@@ -23,4 +25,8 @@ public interface ShopService {
     Page<ShopDto> findPageByUsername(String username, int pageCount, int pageSize);
 
     List<ShopBriefProjection> findShopBriefByUsername(String username);
+
+    UserShopDto getShopDetailWithAvgScore(int shopId);
+
+    boolean scoreShop(int shopId, WechatUser wechatUser, int score);
 }

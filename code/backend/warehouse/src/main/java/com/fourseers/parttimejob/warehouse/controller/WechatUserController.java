@@ -7,8 +7,11 @@ import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.util.UserDecoder;
 import com.fourseers.parttimejob.warehouse.dto.CVDto;
 import com.fourseers.parttimejob.warehouse.dto.NewCVDto;
+import com.fourseers.parttimejob.warehouse.dto.ScoreDto;
+import com.fourseers.parttimejob.warehouse.dto.UserShopDto;
 import com.fourseers.parttimejob.warehouse.projection.CVBriefProjection;
 import com.fourseers.parttimejob.warehouse.service.CVService;
+import com.fourseers.parttimejob.warehouse.service.ShopService;
 import com.fourseers.parttimejob.warehouse.service.WechatUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,6 +37,9 @@ public class WechatUserController {
 
     @Autowired
     private CVService cvService;
+
+    @Autowired
+    private ShopService shopService;
 
     @Value("${app.wechat_user_prefix}")
     private String WECHAT_USER_PREFIX;
@@ -183,6 +189,52 @@ public class WechatUserController {
                 return ResponseBuilder.buildEmpty(OK);
             else
                 return ResponseBuilder.build(BAD_REQUEST, null, "Some check failed.");
+        } catch (RuntimeException e) {
+            return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+        } catch (Exception e) {
+            return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Get detail for one shop.")
+    @GetMapping("/shop")
+    public ResponseEntity<Response<UserShopDto>> getShopDetail(
+            @ApiParam @RequestParam("shop_id") int shopId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
+        if (!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if (user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+
+        try {
+            return ResponseBuilder.build(OK, shopService.getShopDetailWithAvgScore(shopId));
+        } catch (RuntimeException e) {
+            return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+        } catch (Exception e) {
+            return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Give a score to a shop.")
+    @PostMapping("/shop/score")
+    public ResponseEntity<Response<Void>> scoreShop(
+            @ApiParam("parameters, contain shop id and score in int") @RequestBody @Validated ScoreDto scoreDto,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
+        if (!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if (user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+
+        try {
+            if(shopService.scoreShop(scoreDto.getShopId(), user, scoreDto.getScore()))
+                return ResponseBuilder.buildEmpty(OK);
+            else
+                // shouldn't happen at this point
+                return ResponseBuilder.buildEmpty(INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {

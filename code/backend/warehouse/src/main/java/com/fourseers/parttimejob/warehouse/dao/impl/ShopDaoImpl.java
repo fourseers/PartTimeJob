@@ -3,6 +3,7 @@ package com.fourseers.parttimejob.warehouse.dao.impl;
 import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
 import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
+import com.fourseers.parttimejob.warehouse.repository.ScoreRepository;
 import com.fourseers.parttimejob.warehouse.repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,9 @@ public class ShopDaoImpl implements ShopDao {
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private ScoreRepository scoreRepository;
+
     public void save(Shop shop) {
         shopRepository.save(shop);
     }
@@ -28,6 +32,16 @@ public class ShopDaoImpl implements ShopDao {
 
     public Shop findByShopIdAndUsername(int shopId, String username) {
         return shopRepository.findByShopIdAndUsername(shopId, username);
+    }
+
+    @Override
+    public Shop findByShopId(int shopId) {
+        return shopRepository.findById(shopId).orElse(null);
+    }
+
+    @Override
+    public Float getAvgScore(Shop shop) {
+        return scoreRepository.getShopAverageScore(shop);
     }
 
     public Page<Shop> findPageByUserId(int userId, int pageCount, int pageSize) {

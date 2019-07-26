@@ -32,6 +32,12 @@ Component({
   detached: function () {
   },
 
+  observers: {
+    "rate": function() {
+      this.getStarArr()
+    }
+  },
+
   methods: {
     getStarArr: function () {
       let starArr = [];

@@ -2,6 +2,7 @@
   "usingComponents": {
     "multiple-rate": "../../component/multiple-rate/multiple-rate",
     "i-toast": "../../dist/toast/index",
+    "i-button": "../../dist/button/index",
     "i-cell": "../../dist/cell/index",
     "i-panel": "../../dist/panel/index"
   }

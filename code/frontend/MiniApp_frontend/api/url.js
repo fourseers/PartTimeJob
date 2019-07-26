@@ -11,6 +11,8 @@ const checkin = "/arrangement/user/checkin"
 const checkout = "/arrangement/user/checkout"
 const cv_list = "/warehouse/user/cv-list"
 const cv_curd = "/warehouse/user/cv"
+const shop_inform = "/warehouse/user/shop?shop_id="
+const shop_score = "/warehouse/user/shop/score"
 
 module.exports = {
   login,
@@ -25,5 +27,7 @@ module.exports = {
   checkin,
   checkout,
   cv_list,
-  cv_curd
+  cv_curd,
+  shop_inform,
+  shop_score
 }

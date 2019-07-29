@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 public interface ApplicationRepository extends JpaRepository<Application, Integer> {
@@ -29,4 +31,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
     boolean existsByWechatUserAndJob(WechatUser wechatUser, Job job);
     Application findByWechatUserAndJob(WechatUser wechatUser, Job job);
+
+    @Query("from Application a where a.status = true and a.wechatUser = ?1 " +
+            "and not (a.appliedBeginDate > ?2 or a.appliedEndDate < ?3) " +
+            "and not (a.job.beginTime > ?4 or a.job.endTime < ?5)")
+    List<Application> getAlreadyOccupied(WechatUser wechatUser,
+            Date appliedBeginDate, Date appliedEndDate, Time appliedBeginTime, Time appliedEndTime);
 }

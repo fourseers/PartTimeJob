@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 @Repository
@@ -53,5 +55,10 @@ public class ApplicationDaoImpl implements ApplicationDao {
     @Override
     public void update(Application application) {
         applicationRepository.save(application);
+    }
+
+    @Override
+    public List<Application> findWithin(WechatUser wechatUser, Date beginDate, Date endDate, Time beginTime, Time endTime) {
+        return applicationRepository.getAlreadyOccupied(wechatUser, beginDate, endDate, beginTime, endTime);
     }
 }

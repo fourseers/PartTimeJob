@@ -148,7 +148,12 @@ public class JobServiceImpl implements JobService {
         if(applicationDao.haveAlreadyApplied(user, job))
             throw new RuntimeException("You've already applied for that job.");
 
-        // check applied date and time
+        // check if user is already occupied
+        List<Application> occupied = applicationDao.findWithin(
+                user, applyDto.getBeginDate(), applyDto.getEndDate(), job.getBeginTime(), job.getEndTime());
+        if(occupied.size() > 0)
+            throw new RuntimeException("You've already applied for a job during this time period.");
+
         List<Application> acceptedApplication = applicationDao.getAppliedByJob(job);
         for(Application app: acceptedApplication) {
             if(!(app.getAppliedBeginDate().toLocalDate().isAfter(applyDto.getEndDate().toLocalDate()) ||

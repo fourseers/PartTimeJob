@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     Work getByJobAndWorker(Job job, WechatUser wechatUser);
@@ -47,4 +49,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     @Query("from Work w where w.workDate = current_date and w.worker = ?1 and w.job = ?2")
     Work findTodayByUserAndJob(WechatUser user, Job job);
+
+    List<Work> findAllByWorker(WechatUser wechatUser);
+
 }

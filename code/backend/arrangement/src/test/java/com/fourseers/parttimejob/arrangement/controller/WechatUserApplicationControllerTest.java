@@ -64,7 +64,7 @@ public class WechatUserApplicationControllerTest {
     private String userHeader, user2Header;
     private String invalidUserHeader;
     private String userCVId, user2CVId;
-    private Integer goodJobId, noEduJobId, outdateJobId, fullJobId, femaleJobId;
+    private Integer goodJobId, goodJob2Id, noEduJobId, outdateJobId, fullJobId, femaleJobId;
     private Integer stoppedJobId;
 
     @Value("${app.wechat_user_prefix}")
@@ -143,6 +143,23 @@ public class WechatUserApplicationControllerTest {
         job.setNeedGender(2);
         jobRepository.save(job);
         goodJobId = job.getJobId();
+
+        job = new Job();
+        job.setNeedAmount(50);
+        job.setJobDetail("job detail...");
+        job.setBeginApplyTime(yesterday);
+        job.setEndApplyTime(tomorrow);
+        job.setBeginDate(new Date(yesterdayNextWeek.getTime()));
+        job.setEndDate(new Date(tomorrowNextWeek.getTime()));
+        job.setSalary(100.0);
+        job.setEducation(Etc.Education.SENIOR_HIGH);
+        job.setShop(shopRepository.getOne(2));
+        job.setJobName("Teach abc");
+        job.setBeginTime(Time.valueOf(LocalTime.of(6,0)));
+        job.setEndTime(Time.valueOf(LocalTime.of(18,0)));
+        job.setNeedGender(2);
+        jobRepository.save(job);
+        goodJob2Id = job.getJobId();
 
         job = new Job();
         job.setNeedAmount(50);
@@ -476,6 +493,7 @@ public class WechatUserApplicationControllerTest {
         assertEquals("Sorry, time already applied.", response.getString("message"));
     }
 
+
     @Test
     public void testMultipleUserApplyForOneJob() throws Exception {
         Job job = jobRepository.findByJobId(goodJobId);
@@ -506,6 +524,38 @@ public class WechatUserApplicationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("x-internal-token", user2Header))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUserApplyTimeAlreadyOccupied() throws Exception {
+        Job job = jobRepository.findByJobId(goodJobId);
+        JSONObject req = new JSONObject()
+                .fluentPut("job_id", goodJobId)
+                .fluentPut("cv_id", userCVId)
+                .fluentPut("begin_date", job.getBeginDate().toString())
+                .fluentPut("end_date",
+                        Date.valueOf(job.getBeginDate().toLocalDate().plusDays(1)).toString());
+        mockMvc.perform(post("/user/apply")
+                .content(req.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isOk());
+        // mock that merchant user approved application
+        WechatUser user = wechatUserRepository.getOne(1);
+        Application application = applicationRepository.findByWechatUserAndJob(user, job);
+        application.setStatus(true);
+        applicationRepository.save(application);
+        // another user applied
+        req = new JSONObject()
+                .fluentPut("job_id", goodJob2Id)
+                .fluentPut("cv_id", userCVId)
+                .fluentPut("begin_date", job.getBeginDate())
+                .fluentPut("end_date", job.getEndDate());
+        mockMvc.perform(post("/user/apply")
+                .content(req.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isBadRequest());
     }
 
 } 

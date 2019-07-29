@@ -12,6 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -41,7 +44,29 @@ public class ApplicationDaoImpl implements ApplicationDao {
         return applicationRepository.findApprovedByJob(job);
     }
 
+    @Override
+    public List<Application> getAppliedByUserAndDate(WechatUser user, LocalDate beginDate, LocalDate endDate) {
+        return applicationRepository.findApprovedByUserAndDate(
+                user, Date.valueOf(beginDate), Date.valueOf(endDate));
+    }
+
+    @Override
     public boolean haveAlreadyApplied(WechatUser user, Job job) {
         return applicationRepository.existsByWechatUserAndJob(user, job);
+    }
+
+    @Override
+    public Application findByApplicationId(Integer applicationId) {
+        return applicationRepository.findById(applicationId).orElse(null);
+    }
+
+    @Override
+    public void update(Application application) {
+        applicationRepository.save(application);
+    }
+
+    @Override
+    public List<Application> findWithin(WechatUser wechatUser, Date beginDate, Date endDate, Time beginTime, Time endTime) {
+        return applicationRepository.getAlreadyOccupied(wechatUser, beginDate, endDate, beginTime, endTime);
     }
 }

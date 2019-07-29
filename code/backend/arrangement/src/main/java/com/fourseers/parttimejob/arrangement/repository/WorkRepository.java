@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     Work getByJobAndWorker(Job job, WechatUser wechatUser);
@@ -44,4 +46,6 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     Page<WorkProjection> findPageByCompanyOrderByWorkIdDesc(Company company, Pageable pageable);
 
     Work findByWorkId(int workId);
+
+    List<Work> findAllByWorker(WechatUser wechatUser);
 }

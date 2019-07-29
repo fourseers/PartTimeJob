@@ -3,9 +3,7 @@ package com.fourseers.parttimejob.arrangement.dao.impl;
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.repository.WorkRepository;
-import com.fourseers.parttimejob.common.entity.Company;
-import com.fourseers.parttimejob.common.entity.Shop;
-import com.fourseers.parttimejob.common.entity.Work;
+import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +29,11 @@ public class WorkDaoImpl implements WorkDao {
     @Override
     public Work findById(int workId) {
         return workRepository.findByWorkId(workId);
+    }
+
+    @Override
+    public Work findTodayByUserAndJob(WechatUser user, Job job) {
+        return workRepository.findTodayByUserAndJob(user, job);
     }
 
     @Override

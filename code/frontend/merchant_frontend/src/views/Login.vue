@@ -16,7 +16,7 @@
         </FormItem>
         <br>
         <FormItem>
-          <Button class="ivu-btn" @click="handleSubmit('formInline')" >登录</Button>
+          <Button class="ivu-btn" @click="handleSubmit()" >登录</Button>
         </FormItem>
       </Form>
     </Content>
@@ -30,9 +30,12 @@
 <script>
 
   import axios from 'axios/index';
-
+  import { Form } from 'iview';
   export default {
     name: 'Login',
+    components: {
+      'Form': Form
+    },
     data() {
       return {
         state: "",
@@ -53,14 +56,16 @@
       }
     },
     methods: {
-      handleSubmit(name) {
-        this.$refs[name].validate((valid) => {
+      handleSubmit() {
+        this.$refs.formInline.validate((valid) => {
           if (valid) {
             this.login_process(this.formInline.user, this.formInline.password)
           } else {
             this.$Message.error('Fail!');
           }
-        })
+        }).catch(error => {
+          console.log( error);
+        });
       },
       //this.$Message.success('Success!');
       login_process( user,  password){
@@ -80,9 +85,9 @@
                       if (error.response.data.status === 400) {
                         this.$Message.error('用户名或者密码错误');
                       }
-                     else {
-                      this.$Message.error('登录失败');
-                    }
+                      else {
+                        this.$Message.error('登录失败');
+                      }
                     }
 
                     reject(error.response.data.status);

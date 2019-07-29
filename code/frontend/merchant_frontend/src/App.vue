@@ -46,6 +46,7 @@
     import ShopDetail from './views/ShopDetail.vue'
     import Logout from './views/Logout.vue'
 
+    import AskForLeave from './views/AskForLeave.vue'
 
     export default {
         name: 'app',

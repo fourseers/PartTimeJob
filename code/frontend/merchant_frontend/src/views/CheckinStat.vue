@@ -44,6 +44,10 @@
                         }
                     },
                     {
+                        title: '岗位名称',
+                        key: 'job_name'
+                    },
+                    {
                         title: '工作开始时间',
                         key: 'begin_time'
                     },
@@ -207,27 +211,6 @@
                             },
                         },
 
-                        {
-                            name:  'Wetland',
-                            type: 'bar',
-                            barGap: 0,
-                            label: this.labelOption,
-                            data: [2, 32, 30,21],
-
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true, //开启显示
-                                        position: 'top', //在上方显示 ,
-                                        formatter: '{b}\n{c}%',
-                                        textStyle: { //数值样式
-                                            color: 'black',
-                                            fontSize: 16
-                                        }
-                                    }
-                                }
-                            },
-                        },
                     ]
 
                 }

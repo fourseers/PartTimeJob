@@ -3,20 +3,20 @@ import Login from '@/views/Login.vue'
 import token from '@/util/token.js'
 
 describe('Login.vue', () => {
-        it('calls handleSubmit(\'formInline\') when click on button', () => {
+    it('calls handleSubmit(\'formInline\') when click on button', () => {
 
-            const wrapper = shallowMount(Login);
-            // 创建mock函数
-            const mockFn = jest.fn();
-            // 设置 Wrapper vm 的方法并强制更新。
-            wrapper.setMethods({
-                handleSubmit: mockFn
-            });
-            // 触发按钮的点击事件
-            wrapper.find('button').trigger('click');
-            expect(mockFn).toBeCalled();
-            expect(mockFn).toHaveBeenCalledTimes(1)
-        })
+        const wrapper = shallowMount(Login);
+        // 创建mock函数
+        const mockFn = jest.fn();
+        // 设置 Wrapper vm 的方法并强制更新。
+        wrapper.setMethods({
+            handleSubmit: mockFn
+        });
+        // 触发按钮的点击事件
+        wrapper.find('button').trigger('click');
+        expect(mockFn).toBeCalled();
+        expect(mockFn).toHaveBeenCalledTimes(1)
+    })
 })
 
 describe('Login.vue', () => {
@@ -110,24 +110,16 @@ describe('Login.vue', () => {
 })
 
 describe('Login.vue', () => {
-    it('tests 401 ', async () => {
-
-        const wrapper = shallowMount(Login)
-        const vm = wrapper.vm
-        var axios = require('axios');
-        var MockAdapter = require('axios-mock-adapter');
-
-// This sets the mock adapter on the default instance
-        var mock = new MockAdapter(axios);
-
-        mock.onPost('http://202.120.40.8:30552/auth/merchant/login').reply(function(config) {
-            return [401, {
-                status: 401
-            }];
-        });
+    const wrapper = mount(Login
+   )
+    const vm= wrapper.vm
+    it('tests handlesubmit ', async () => {
         // expect.assertions(1);
-        await expect(vm.login_process("", "")).rejects.toEqual(
-            401);
+        vm. formInline= {
+            user: 'user_one',
+                password: 'user_one'
+        };
+        await expect(vm.handleSubmit()).toEqual()
     });
 })
-
+//wrapper.find({ ref: 'foo' })

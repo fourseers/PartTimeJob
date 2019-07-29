@@ -26,10 +26,8 @@ public class Application {
     @CreationTimestamp
     private Timestamp createTime;
 
-    @NotNull
     private Date appliedBeginDate;
 
-    @NotNull
     private Date appliedEndDate;
 
     private Boolean status;

@@ -158,7 +158,7 @@ public class JobController {
     @ApiOperation(value = "Get one page of job applications")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
-            @ApiResponse(code = 400, message = "job not exist / user does not belong to a company / shop not exist or not belong to / user does not belong to a company"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / job not exist or not belong to / application not exist"),
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "x-access-token", value = "Authorization token",

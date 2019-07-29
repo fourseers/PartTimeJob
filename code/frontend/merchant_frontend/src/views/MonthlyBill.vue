@@ -200,6 +200,9 @@
                             },
                             onCancel: () => {
                                 this.$Message.info('Clicked cancel');
+                            },
+                            style:{
+
                             }
                         }
                         this.$Modal.confirm(config)

@@ -37,7 +37,9 @@ module.exports = {
      "**/*/*.{js,jsx,vue}",
   "!**/node_modules/**",
   "!**/vendor/**",
-     "!**/dist/**"
+     "!**/dist/**",
+     "!**/coverage/**",
+     "!**/*.config.js"
   ],
   setupFiles: [
     "<rootDir>/jest.init.js"

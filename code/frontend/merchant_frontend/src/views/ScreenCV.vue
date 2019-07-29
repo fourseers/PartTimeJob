@@ -4,20 +4,20 @@
             <Row >
                 <Col span="4">
                     <div >
-                    <Cascader :data="data" v-model="value1"  :load-data="loadData"  id="myCascader" >
+                        <Cascader :data="data" v-model="value1"  :load-data="loadData"  id="myCascader" >
 
-                    </Cascader>
+                        </Cascader>
                     </div>
                 </Col>
             </Row>
         </div>
         <Row>
             <div >
-                <Carousel   class="content">
+                <Carousel   class="content" v-model="carousel_index">
                     <li style="list-style:none" v-for="item in CVList">
                         <CarouselItem >
                             <ul id="v-for-object" class="cv">
-                                <li v-for="(value, name) in item">
+                                <li v-for="(value, name) in item.cv ">
                                     <p  class="cv-item">
                                         {{ name }}: {{ value }}
                                     </p>
@@ -26,10 +26,10 @@
                             </ul>
                             <div class="buttons">
                                 <Col span="12">
-                                    <Button type="success"  @click="hire(item)">雇佣</Button>
+                                    <Button type="success"  @click="hire(item.application_id)">雇佣</Button>
                                 </Col>
                                 <Col span="12">
-                                    <Button class="reject" @click="reject(item)">拒绝</Button>
+                                    <Button class="reject" @click="reject(item.application_id)">拒绝</Button>
                                 </Col>
                             </div>
                         </CarouselItem>
@@ -62,53 +62,11 @@
                 shops: [],
                 data: [
                 ],
-                CVList1:[{
-                    name:'elizabeth',
-                    age:98,
-                    education:'bachlor',
-                    gender:'female'
-                },{
-                    name:'smith',
-                    age:38,
-                    education:'bachlor',
-                    gender:'male'
-                },{
-                    name:'batman',
-                    age:42,
-                    education:'bachlor',
-                    gender:'male'
-                }, {
-                    name:'clara',
-                    age:23,
-                    education:'bachlor',
-                    gender:'female'
-                },
-                ],
-                CVList2:[{
-                    name:'da vinci',
-                    age:98,
-                    education:'bachlor',
-                    gender:'male'
-                },{
-                    name:'dali',
-                    age:38,
-                    education:'bachlor',
-                    gender:'male'
-                },{
-                    name:'botechelli',
-                    age:42,
-                    education:'bachlor',
-                    gender:'male'
-                }, {
-                    name:'rafell',
-                    age:23,
-                    education:'bachlor',
-                    gender:'male'
-                },
-                ],
                 CVList:[],
-                post_chosen: '',
                 value1:  [],
+                carousel_index:0,
+                page_index:0,
+                total_pages:0,
             }
         },
         created:function()
@@ -119,7 +77,7 @@
             }
             else{
                 //get shops
-                getShops().then(res => {
+                getShops(0).then(res => {
                         this.shops = res.data.content
                         this.total_elements_shop=res.data.total_elements
                         for(var i=0;i<this.shops.length;i++) {
@@ -131,9 +89,9 @@
                             }
                             this.data.push(item)
                         }
-
                     },
                     error => {
+                        console.log(error.response)
                         if (error.response) {
                             if (error.response.data.status === 400 && error.response.data.message === "no shops") {
                                 console.log(error.response);
@@ -149,46 +107,64 @@
 
             }
         },
-        mounted: {
-        },
         watch : {
-            post_chosen:function(val) {
+            carousel_index:function(val) {
                 console.log(val);
+                if(val+1 ===  this.CVList.length && this.total_pages >this.page_index )
+                {
+                    console.log("next page");
+                    this.getCV(this.page_index) .then(
+                        res=> {
+                            this.total_pages=  res.data.total_pages
+                            this.CVList = this.CVList.concat(res.data.content);
+                        },
+                        error => {
+
+                            console.log(error.response)
+                        })
+
+                    this.page_index++;
+                }
             },
             value1:function(val) {
-                console.log(val);
-                this.getCV(0);
-                    //job_id:value1[1]
+                this.getCV(0) .then(
+                    res=> {
+                        this.total_pages=  res.data.total_pages
+                        this.CVList = res.data.content;
+                        this.page_index+=1;
+                    },
+                    error => {
+
+                        console.log(error.response)
+                    })
             }
         },
         methods:
             { getCV(index)
                 {
                     var prefix="/arrangement"
-                    this.axios({
-                        headers: {
-                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                            'Content-type': 'application/json',
-                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                            'x-access-token': this.$token.loadToken().access_token,
-                        },
-                        method: 'get',
-                        url: prefix +"/merchant/applications",
-                        params:{
-                            job_id:this.value1[1],
-                            page_count:index
-                        }
-                    }).then(response => {
-                        console.log(response);
-                        if(response.status ===  200)
-                        {
-                            this.CVList=response.data.content
-                        }
-                    })
-                        .catch(error => {
-                            console.log(error)
+                    return new Promise((resolve, reject) => {
+                        this.axios({
+                            headers: {
+                                'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                                'Content-type': 'application/json',
+                                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                                'x-access-token': this.$token.loadToken().access_token,
+                            },
+                            method: 'get',
+                            url: prefix + "/merchant/applications",
+                            params: {
+                                job_id: this.value1[1],
+                                page_count: index
+                            }
+                        }).then(({ status, data }) => {
 
+                            resolve(data);
                         })
+                            .catch(error => {
+                                reject(error );
+                            })
+                    })
 
                 },
                 loadData (item, callback) {
@@ -197,13 +173,13 @@
                     //get jobs by shop
                     getJobsByShop(0,item.value).then(res => {
 
-                        for(var i=0;i<res.data.content.length;i++) {
-                            var child = {
-                                value: res.data.content[i].job_id,
-                                label: res.data.content[i].job_name,
+                            for(var i=0;i<res.data.content.length;i++) {
+                                var child = {
+                                    value: res.data.content[i].job_id,
+                                    label: res.data.content[i].job_name,
+                                }
+                                item.children.push(child);
                             }
-                            item.children.push(child);
-                        }
 
                             this.total_elements_job=res.data.total_elements
 
@@ -213,7 +189,6 @@
                         error => {
                             if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
                                 this.$Message.error('暂无岗位');
-                                console.log(error)
                             }
                             console.log(error)
 
@@ -223,20 +198,67 @@
                     )
 
                 },
-                getCVList:function(val)
+                hire:function(application_id)
                 {
-                    if(val === "post 1")
-                        return this.CVList1;
-                    if(val === "post 2")
-                        return this.CVList2;
+                    var prefix="/arrangement"
+                    return new Promise((resolve, reject) => {
+                        this.axios({
+                            headers: {
+                                'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                                'Content-type': 'application/json',
+                                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                                'x-access-token': this.$token.loadToken().access_token,
+                            },
+                            method: 'post',
+                            url: prefix + "/merchant/application/accept",
+                            params: {
+                                application_id: application_id
+                            }
+                        }).then(response => {
+                            console.log(response);
+                            if (response.status === 200) {
+                                this.$Message.success('雇佣成功');
+                                resolve(response.data.data.content);
+                            }
+                        })
+                            .catch(error => {
+                                if (error.response.data.status === 400 && error.response.data.message === "application already processed") {
+                                    this.$Message.error('已经处理过这个申请');
+                                }
+                                reject(error );
+                            })
+                    })
                 },
-                hire:function(CV)
+                reject:function(application_id)
                 {
-
-                },
-                reject:function(CV)
-                {
-
+                    var prefix="/arrangement"
+                    return new Promise((resolve, reject) => {
+                        this.axios({
+                            headers: {
+                                'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                                'Content-type': 'application/json',
+                                'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                                'x-access-token': this.$token.loadToken().access_token,
+                            },
+                            method: 'post',
+                            url: prefix + "/merchant/application/reject",
+                            params: {
+                                application_id: application_id
+                            }
+                        }).then(response => {
+                            console.log(response);
+                            if (response.status === 200) {
+                                this.$Message.error('拒绝雇佣');
+                                resolve(response.data.data.content);
+                            }
+                        })
+                            .catch(error => {
+                                if (error.response.data.status === 400 && error.response.data.message === "application already processed") {
+                                    this.$Message.error('已经处理过这个申请');
+                                }
+                                reject(error );
+                            })
+                    })
                 }
                 ,changePage (index) {
                     // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
@@ -299,7 +321,7 @@
         border-color:#d63031;
     }
     .buttons{
-        margin:200px;
+        margin-bottom:100px;
     }
     .cv{
         padding-left:150px;

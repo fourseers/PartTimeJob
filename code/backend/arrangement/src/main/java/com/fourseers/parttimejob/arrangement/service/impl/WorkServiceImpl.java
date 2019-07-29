@@ -1,16 +1,20 @@
 package com.fourseers.parttimejob.arrangement.service.impl;
 
+import com.fourseers.parttimejob.arrangement.dao.ApplicationDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
+import com.fourseers.parttimejob.arrangement.dto.ScheduleDto;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
-import com.fourseers.parttimejob.common.entity.MerchantUser;
-import com.fourseers.parttimejob.common.entity.Shop;
-import com.fourseers.parttimejob.common.entity.Work;
+import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,6 +25,9 @@ public class WorkServiceImpl implements WorkService {
 
     @Autowired
     private WorkDao workDao;
+
+    @Autowired
+    private ApplicationDao applicationDao;
 
     public Page<WorkProjection> findPageByUsername(String username, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
@@ -79,6 +86,23 @@ public class WorkServiceImpl implements WorkService {
 
         work.setScore(score);
         workDao.save(work);
+    }
+
+    @Override
+    public List<ScheduleDto> getSchedule(WechatUser user, LocalDate beginDate, LocalDate endDate) {
+        List<Application> involvedApps = applicationDao.getAppliedByUserAndDate(user, beginDate, endDate);
+        List<ScheduleDto> ret = new ArrayList<>();
+        for(Application app: involvedApps) {
+            ScheduleDto scheduleDto = new ScheduleDto();
+            scheduleDto.setBeginDate(app.getAppliedBeginDate());
+            scheduleDto.setEndDate(app.getAppliedEndDate());
+            scheduleDto.setJobId(app.getJob().getJobId());
+            scheduleDto.setJobName(app.getJob().getJobName());
+            scheduleDto.setShopId(app.getJob().getShop().getShopId());
+            scheduleDto.setShopName(app.getJob().getShop().getShopName());
+            ret.add(scheduleDto);
+        }
+        return ret;
     }
 
 }

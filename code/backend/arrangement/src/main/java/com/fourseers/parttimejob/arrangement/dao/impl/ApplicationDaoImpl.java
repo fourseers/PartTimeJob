@@ -8,6 +8,8 @@ import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -29,6 +31,12 @@ public class ApplicationDaoImpl implements ApplicationDao {
     @Override
     public List<Application> getAppliedByJob(Job job) {
         return applicationRepository.findApprovedByJob(job);
+    }
+
+    @Override
+    public List<Application> getAppliedByUserAndDate(WechatUser user, LocalDate beginDate, LocalDate endDate) {
+        return applicationRepository.findApprovedByUserAndDate(
+                user, Date.valueOf(beginDate), Date.valueOf(endDate));
     }
 
     @Override

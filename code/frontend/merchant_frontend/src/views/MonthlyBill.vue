@@ -71,7 +71,7 @@
                         title: '支付状态',
                         key: 'paid',
                         render: (h, params) => {
-                            return  h('div', params.row.paid?"已支付":"拒绝支付")
+                            return  h('div', params.row.paid?"已支付给员工":"拒绝支付")
                         }
                     }
                 ],
@@ -92,7 +92,6 @@
                 //获取第一页账单
                 this.mockTableData1(0)
 
-                this.getsum();
             }
 
         },
@@ -175,17 +174,38 @@
                     method: 'post',
                     url: prefix +"/merchant/billing/monthly-pay",
                     data:{
-                            year:this.former_month2().year,
-                            month:this.former_month2().month
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
                     }
                 }).then(response => {
                     console.log(response.data.data);
                     if(response.status ===  200)
-                    {
-                        const div = document.createElement('div')
-                        div.innerHTML = response.data.data//此处form就是后台返回接收到的数据
-                        document.body.appendChild(div)
-                        document.forms[0].submit()
+                    {//response.data.data;
+
+                        let dwSafari
+                        dwSafari=window.open();
+                        dwSafari.document.open();
+                        let dataObj=response.data.data;
+                        let html=  dataObj.replace(/[^\u0000-\u00FF]/g,function($0){return escape($0).replace(/(%u)(\w{4})/gi,"&#x$2;")});
+                        dwSafari.document.write("<html><head><title></title><meta charset='utf-8'><body>"+dataObj+"</body></html>")
+                        dwSafari.document.forms[0].submit()
+                        dwSafari.document.close()
+                        let config={
+                            title: '请确认支付',
+                            //   content: '<p>Content of dialog</p><p>Content of dialog</p>',
+                            okText: '我已支付',
+                            cancelText: '取消支付',
+                            onOk: () => {
+                              this.get_payment_status();
+                            },
+                            onCancel: () => {
+                                this.$Message.info('Clicked cancel');
+                            },
+                            style:{
+
+                            }
+                        }
+                        this.$Modal.confirm(config)
                     }
                 })
                     .catch(error => {
@@ -193,6 +213,31 @@
 
                     })
 
+            },
+            get_payment_status()
+            {
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    params:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        this.$Message.success('支付成功');
+                       this.$router.push({name: "postjob"})
+                    }
+                })
             },
             mockTableData1(pagenum) {
                 //get bills
@@ -219,7 +264,6 @@
                         this.bill_id = response.data.data.content.bill_id;
 
                     }
-                    console.log( this.bill_id)
                 })
                     .catch(error => {
                         console.log(error.response)

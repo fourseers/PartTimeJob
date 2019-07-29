@@ -134,6 +134,7 @@
 
                                     on: {
                                         click: () => {
+                                            this.reject(params.row.work_id)
 
                                         }
                                     }
@@ -289,44 +290,85 @@
                 )
             }
             ,
-            pay(workid,payment)
-            {
+        pay(workid,payment)
+        {
 
-                var prefix="/billing"
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/billing/pay",
-                    data:{
-                        work_id: workid,
-                        meta:"this is meta",
-                        payment:payment,
-                        method:"this is method"
-                    }
-                }).then(response => {
-                    console.log(response);
-                    if(response.status ===  200)
+            var prefix="/billing"
+            this.axios({
+                headers: {
+                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                    'Content-type': 'application/json',
+                    'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                    'x-access-token': this.$token.loadToken().access_token,
+                },
+                method: 'post',
+                url: prefix +"/merchant/billing/pay",
+                data:{
+                    work_id: workid,
+                    meta:"this is meta",
+                    payment:payment,
+                    method:"this is method"
+                }
+            }).then(response => {
+                console.log(response);
+                if(response.status ===  200)
+                {
+                    console.log("success");
+                    this.$Message.success('发放成功');
+                }
+            })
+                .catch(error => {
+                    if (error.response) {
+                        if (error.response.data.status === 400 && error.response.data.message === "work already paid") {
+                            console.log(error.response);
+                            this.$Message.error('已经支付过了');
+                            console.log(error)
+                        }}
+                })
+
+
+        },
+        reject(workid )
+        {
+
+            var prefix="/billing"
+            this.axios({
+                headers: {
+                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                    'Content-type': 'application/json',
+                    'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                    'x-access-token': this.$token.loadToken().access_token,
+                },
+                method: 'post',
+                url: prefix +"/merchant/billing/reject",
+                data:{
+                    work_id: workid,
+                }
+            }).then(response => {
+                console.log(response);
+                if(response.status ===  200)
+                {
+                    console.log("success");
+                    this.$Message.success('拒绝发放');
+                }
+            })
+                .catch(error => {
+                    if (error.response) {
+                        if (error.response.data.status === 400 && error.response.data.message === "work already paid") {
+                            console.log(error.response);
+                            this.$Message.error('已经支付过了');
+                            console.log(error)
+                        }}
+                    else if (error.response.data.status === 400 && error.response.data.message ==="work already rejected")
                     {
-                        console.log("success");
-                        this.$Message.success('发放成功');
+                        console.log(error.response);
+                        this.$Message.error('已经拒绝支付');
+                        console.log(error)
                     }
                 })
-                    .catch(error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "work already paid") {
-                                console.log(error.response);
-                                this.$Message.error('已经支付过了');
-                                console.log(error)
-                            }}
-                    })
 
 
-            },
+        },
             show (index) {
                 this.$Modal.info({
                     title: 'User Info',

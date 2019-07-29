@@ -6,6 +6,8 @@ var job_id = 0;
 const app = getApp();
 import request from "../../api/request.js";
 import { host, job_detail, cv_list, applied_time, apply_job } from "../../api/url.js";
+var begin_date;
+var end_date;
 
 Page({
 
@@ -36,29 +38,25 @@ Page({
 
   onLoad(options) {
     // TODO
-    // console.log(options.id)
+    console.log(options)
     job_id = options.id;
+    begin_date = options.begin_date;
+    end_date = options.end_date;
   },
 
   onReady() {
+    // var req = new request();
+  },
+
+  onShow() {
     var req = new request();
-    var begin_date;
-    var end_date;
     select_time = 0;
-    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
-      if(res.statusCode === 200) {
-        var info = res.data.data;
-        begin_date = info.begin_date;
-        end_date = info.end_date;
-      }
-    }).catch(err => {
-      console.log(err);
-    })
+
+
     req.getRequest(host + applied_time + job_id, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var new_config = this.data.calendar_config;
         new_config.defaultDay = util.formatDate(new Date());
-
         var unable_dates = util.getDates(res.data.data.applied_dates);
         var able_dates = [{
           begin_date: begin_date,
@@ -66,7 +64,10 @@ Page({
         }]
         this.calendar.enableDays(util.getDates(able_dates));
         this.calendar.setSelectedDays(util.getDatesJson(able_dates));
-        this.calendar.disableDay(able_dates);
+        console.log(util.getDates(able_dates));
+        console.log(util.getDatesJson(able_dates));
+        console.log(unable_dates);
+        this.calendar.disableDay(unable_dates);
         this.setData({
           calendar_config: new_config,
           unable_dates: unable_dates,
@@ -76,16 +77,14 @@ Page({
       }
       if (res.statusCode === 400) {
         wx.navigateBack({
-          
+
         })
       }
     }).catch(err => {
       console.log(err);
-    })
-  },
+    });
 
-  onShow() {
-    var req = new request();
+
     req.getRequest(host + cv_list, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         this.setData({
@@ -94,7 +93,9 @@ Page({
       }
     }).catch(err => {
       console.log(err);
-    })
+    });
+
+
   },
 
   handleAddCv() {

@@ -165,7 +165,7 @@ Page({
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
     wx.navigateTo({
-      url: "/pages/choose_date/choose_date?id=" + job_id,
+      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_apply_year + "-" + this.data.begin_apply_month + "-" + this.data.begin_apply_date + "&end_date=" + this.data.end_apply_year + "-" + this.data.end_apply_month + "-" + this.data.end_apply_date,
     })
   },
 

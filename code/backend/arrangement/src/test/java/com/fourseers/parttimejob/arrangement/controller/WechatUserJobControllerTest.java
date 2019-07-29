@@ -3,10 +3,7 @@ package com.fourseers.parttimejob.arrangement.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.arrangement.repository.CVRepository;
-import com.fourseers.parttimejob.arrangement.repository.JobRepository;
-import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
-import com.fourseers.parttimejob.arrangement.repository.WechatUserRepository;
+import com.fourseers.parttimejob.arrangement.repository.*;
 import com.fourseers.parttimejob.common.entity.*;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -31,7 +27,6 @@ import java.util.Calendar;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -57,6 +52,9 @@ public class WechatUserJobControllerTest {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -357,7 +355,7 @@ public class WechatUserJobControllerTest {
     @Test
     public void testGetJobNoAuthToken() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("job_id", "1"))
+                .param("job_id", goodJobId.toString()))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -368,135 +366,4 @@ public class WechatUserJobControllerTest {
                 .header("x-internal-token", invalidUserHeader))
                 .andExpect(status().isForbidden());
     }
-
-    @Test
-    public void testUserApplyJobSuccess() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", goodJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-
-    @Test
-    public void testUserApplyJobNoJobId() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoCV() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", goodJobId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobMissedApplicationDate() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", outdateJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoEdu() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", noEduJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-
-    @Test
-    public void testUserApplyJobInvalidCV() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", noEduJobId)
-                .fluentPut("cv_id", 10000);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobInvalidJob() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", 1000)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoMoreSeats() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", fullJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobDifferentGender() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", femaleJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobManuallyStopped() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", stoppedJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
 } 

@@ -1,6 +1,6 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
-import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
+import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
@@ -88,35 +88,30 @@ public class WechatUserJobController {
         return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
     }
 
-    @ApiOperation(value = "User apply for job with a set of cv.")
+    @ApiOperation(value = "Get applied dates for one job.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Application success"),
-            @ApiResponse(code = 400, message = "Invalid application. Consult message field for further info.")
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "invalid job id")
     })
-    @PostMapping(value = "apply")
-    public ResponseEntity<Response<Void>> applyJob(
-            @ApiParam("Param in json, contains jobId and cvId") @RequestBody ApplyDto params,
-            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
-    ) {
+    @GetMapping("/job/applied-time")
+    public ResponseEntity<Response<AppliedTimeDto>> getAppliedDates(
+            @ApiParam @RequestParam("job_id") Integer jobId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
         WechatUser user = wechatUserService.getUserByOpenid(
                 UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
-        Integer jobId = params.getJobId();
-        String cvId = params.getCvId();
-        if(jobId == null || cvId == null) {
-            return ResponseBuilder.build(BAD_REQUEST, null, "Missing params.");
-        }
         try {
-            jobService.apply(user, jobId, cvId);
-            return ResponseBuilder.buildEmpty(OK);
+            return ResponseBuilder.build(OK, jobService.getJobAppliedTime(jobId));
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {
             return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
     }
+
+
 
 }

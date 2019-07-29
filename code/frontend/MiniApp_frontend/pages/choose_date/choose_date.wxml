@@ -11,6 +11,23 @@
 
 <i-button type="success" bind:click="handleTimeSlot">选定时间区间</i-button>
 
+<i-panel title="{{cv_list.length === 0 ? '你还没有填写简历' : '请选择你要投递的简历'}}">
+  <block wx:if="{{cv_list.length === 0}}">
+    <i-button type="error" bind:click="handleAddCv">前往添加简历</i-button>
+  </block>
+  <radio-group wx:else class="radio-group" bindchange="radioChange">
+    <label wx:for="{{cv_list}}" wx:key="index">
+      <radio class="radio" value="{{item.id}}" checked="{{item.checked}}">
+        <text>{{item.title}}</text>
+      </radio>
+    </label>
+  </radio-group>
+</i-panel>
+
+<i-button class="apply-button" bind:click="handleSendApply" type="success">
+  <text>申请岗位</text>
+</i-button>
+
 <i-toast id="toast" />
 <i-modal title="错误" visible="{{ error_visible }}" bind:click="handleRefresh" actions="{{error_action}}">
   <view>{{tips}}</view>

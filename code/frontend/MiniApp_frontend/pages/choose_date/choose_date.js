@@ -2,6 +2,10 @@
 const { $Toast } = require('../../dist/base/index');
 var util = require("../../utils/util.js")
 var select_time = 0;
+var job_id = 0;
+const app = getApp();
+import request from "../../api/request.js";
+import { host, cv_list, applied_time } from "../../api/url.js";
 
 Page({
 
@@ -25,40 +29,68 @@ Page({
         name: "刷新页面",
       }
     ],
-    date_selected: false
+    date_selected: false,
+    cv_list: [],
+    cd_id: ""
   },
 
   onLoad(options) {
     // TODO
     // console.log(options.id)
+    job_id = options.id;
   },
 
   onReady() {
-    select_time = 0;
+    var req = new request();
+    req.getRequest(host + applied_time + job_id, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        select_time = 0;
+        var new_config = this.data.calendar_config;
+        new_config.defaultDay = util.formatDate(new Date());
 
-    var new_config = this.data.calendar_config;
-    new_config.defaultDay = util.formatDate(new Date());
-
-    var applied_dates = [
-      {
-        begin_date: "2019-06-25",
-        end_date: "2019-07-29"
-      },
-      {
-        begin_date: "2019-08-01",
-        end_date: "2019-08-08"
+        var applied_dates = res.data.data.applied_dates;
+        var able_dates = util.getDates(applied_dates);
+        this.calendar.enableDays(able_dates);
+        this.calendar.setSelectedDays(util.getDatesJson(applied_dates))
+        this.setData({
+          calendar_config: new_config,
+          able_dates: able_dates,
+          begin_date: {},
+          end_date: {},
+        })
       }
-    ]
-    
-    //console.log(util.getDates(date_range))
-    var able_dates = util.getDates(applied_dates);
-    this.calendar.enableDays(able_dates);
-    this.calendar.setSelectedDays(util.getDatesJson(applied_dates))
+      if (res.statusCode === 400) {
+        wx.navigateBack({
+          
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  },
+
+  onShow() {
+    var req = new request();
+    req.getRequest(host + cv_list, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        this.setData({
+          cv_list: res.data.data
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  },
+
+  handleAddCv() {
+    wx.navigateTo({
+      url: "/pages/cv_list/cv_list",
+    })
+  },
+
+  radioChange(e) {
     this.setData({
-      calendar_config: new_config,
-      able_dates: able_dates,
-      begin_date: {},
-      end_date: {},
+      cd_id: e.detail.value
     })
   },
 
@@ -71,6 +103,20 @@ Page({
 
   // 对话框确定后发送岗位申请
   handleSendApply() {
+    if (this.data.date_selected === false) {
+      $Toast({
+        content: "请选择一个合适的时间区间",
+        type: "error"
+      })
+      return;
+    }
+    if (this.data.cv_id === "") {
+      $Toast({
+        content: "请选择一条简历",
+        type: "error"
+      })
+      return;
+    }
     // 发送岗位申请请求
     var req = new request();
     this.setData({
@@ -78,7 +124,9 @@ Page({
     })
     req.postRequest(host + apply_job, {
       job_id: parseInt(job_id),
-      cv_id: "5d365f928ba346f03eb1177a",//5d318647a095e24d3285f8ea
+      cv_id: this.data.cv_id,
+      begin_date: this.data.begin_date,
+      end_date: this.date.end_date
     }, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         app.globalData.showSendMessage = true;

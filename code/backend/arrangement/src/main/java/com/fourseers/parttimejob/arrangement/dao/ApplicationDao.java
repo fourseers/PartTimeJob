@@ -17,4 +17,8 @@ public interface ApplicationDao {
     List<Application> getAppliedByJob(Job job);
 
     boolean haveAlreadyApplied(WechatUser user, Job job);
+
+    Application findByApplicationId(Integer applicationId);
+
+    void update(Application application);
 }

@@ -179,4 +179,26 @@ public class JobController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }
     }
+
+    @ApiOperation(value = "Reject an application")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / application not exist or not belong to / application already processed"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/application/reject", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> rejectApplication(
+            @RequestParam(value = "application_id", required = false) Integer applicationId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            applicationService.rejectByUsernameAndApplicationId(username, applicationId);
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
 }

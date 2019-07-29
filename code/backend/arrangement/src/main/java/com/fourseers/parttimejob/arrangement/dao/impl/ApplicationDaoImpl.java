@@ -44,4 +44,14 @@ public class ApplicationDaoImpl implements ApplicationDao {
     public boolean haveAlreadyApplied(WechatUser user, Job job) {
         return applicationRepository.existsByWechatUserAndJob(user, job);
     }
+
+    @Override
+    public Application findByApplicationId(Integer applicationId) {
+        return applicationRepository.findById(applicationId).orElse(null);
+    }
+
+    @Override
+    public void update(Application application) {
+        applicationRepository.save(application);
+    }
 }

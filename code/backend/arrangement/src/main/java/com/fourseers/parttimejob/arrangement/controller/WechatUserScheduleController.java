@@ -45,7 +45,7 @@ public class WechatUserScheduleController {
     })
     @GetMapping(value = "schedule")
     public ResponseEntity<Response<List<ScheduleDto>>> getSchedule(
-            @RequestParam("start_date") Date startDate,
+            @RequestParam("begin_date") Date beginDate,
             @RequestParam("end_date") Date endDate,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -55,9 +55,12 @@ public class WechatUserScheduleController {
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
 
+        if(beginDate.toLocalDate().isAfter(endDate.toLocalDate()))
+            return ResponseBuilder.build(BAD_REQUEST, null, "Invalid date.");
+
         try {
             return ResponseBuilder.build(OK,
-                    workService.getSchedule(user, startDate.toLocalDate(), endDate.toLocalDate()));
+                    workService.getSchedule(user, beginDate.toLocalDate(), endDate.toLocalDate()));
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {

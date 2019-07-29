@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
 
-import com.fourseers.parttimejob.arrangement.dao.impl.CheckStatusDto;
+import com.fourseers.parttimejob.arrangement.dto.CheckStatusDto;
 import com.fourseers.parttimejob.arrangement.dto.CheckinDto;
 import com.fourseers.parttimejob.arrangement.dto.CheckoutDto;
 import com.fourseers.parttimejob.arrangement.service.CheckService;

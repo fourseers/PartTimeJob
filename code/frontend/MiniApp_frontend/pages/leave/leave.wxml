@@ -1,9 +1,12 @@
 <!--pages/leave/leave.wxml-->
 <i-panel title="员工请假">
   <i-cell title="请假类型："></i-cell>
-  <i-cell title="开始时间："></i-cell>
-  <i-cell title="结束时间："></i-cell>
-  <i-cell></i-cell>
+  <i-cell title="开始时间：">
+    <picker mode="date" start="{{begin_choose}}" end="{{end_choose}}">{{begin_date}}</picker>
+  </i-cell>
+  <i-cell title="结束时间：">
+    <picker mode="date" start="{{begin_choose}}" end="{{end_choose}}">{{end_date}}</picker>
+  </i-cell>
 </i-panel>
 
 <i-panel title="请假原因">

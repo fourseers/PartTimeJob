@@ -3,7 +3,7 @@
         <div class="head">
             <Row >
                 <Col span="4">
-                    <div v-on:scroll="scrollFunction">
+                    <div >
                     <Cascader :data="data" v-model="value1"  :load-data="loadData"  id="myCascader" >
 
                     </Cascader>
@@ -13,7 +13,7 @@
         </div>
         <Row>
             <div >
-                <Carousel v-model="value1"   class="content">
+                <Carousel   class="content">
                     <li style="list-style:none" v-for="item in CVList">
                         <CarouselItem >
                             <ul id="v-for-object" class="cv">
@@ -108,7 +108,7 @@
                 ],
                 CVList:[],
                 post_chosen: '',
-                value1: 0
+                value1:  [],
             }
         },
         created:function()
@@ -131,9 +131,7 @@
                             }
                             this.data.push(item)
                         }
-                        // window.addEventListener('scroll',function(e)
-                        // {console.log(e)
-                        // }, true);
+
                     },
                     error => {
                         if (error.response) {
@@ -148,7 +146,6 @@
 
                     }
                 )
-                //GET CV
 
             }
         },
@@ -158,21 +155,50 @@
             post_chosen:function(val) {
                 console.log(val);
                 this.CVList = this.getCVList(val);
+            },
+            value1:function(val) {
+                console.log(val);
+                this.getCV(0);
+                    //job_id:value1[1]
             }
         },
         methods:
-            {scrollFunction()
+            { getCV(index)
                 {
-                  alert("scroll")
+                    var prefix="/arrangement"
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                            'x-access-token': this.$token.loadToken().access_token,
+                        },
+                        method: 'get',
+                        url: prefix +"/merchant/applications",
+                        params:{
+                            job_id:this.value1[1],
+                            page_count:index
+                        }
+                    }).then(response => {
+                        console.log(response);
+                        if(response.status ===  200)
+                        {
+
+                        }
+                    })
+                        .catch(error => {
+                            console.log(error)
+
+                        })
+
                 },
                 loadData (item, callback) {
                     item.loading = true;
+
                     //get jobs by shop
                     getJobsByShop(0,item.value).then(res => {
-                        console.log( res.data.content.length)
 
                         for(var i=0;i<res.data.content.length;i++) {
-                            console.log(res.data.content[i])
                             var child = {
                                 value: res.data.content[i].job_id,
                                 label: res.data.content[i].job_name,
@@ -180,7 +206,6 @@
                             item.children.push(child);
                         }
 
-                            console.log(  item.children)
                             this.total_elements_job=res.data.total_elements
 
                             item.loading = false;

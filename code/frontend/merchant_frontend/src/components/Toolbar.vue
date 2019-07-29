@@ -20,21 +20,18 @@
         <Submenu name="3">
             <template slot="title">
                 <Icon type="ios-paper" />
-                商户信息管理
+                商户管理
             </template>
             <MenuItem name="4" to="/infoconfig">
                 <Icon type="ios-paper" />
-                查看商户信息
+                查看信息
             </MenuItem>
             <MenuItem name="5" to="/addcompany">
                 <Icon type="ios-paper" />
                 注册公司
             </MenuItem>
         </Submenu>
-        <MenuItem name="6" to="/screenCV">
-            <Icon type="ios-people" />
-            筛选简历
-        </MenuItem>
+
         <Submenu name="7">
             <template slot="title">
                 <Icon type="md-settings" />
@@ -55,15 +52,23 @@
         </MenuItem>
         <MenuItem name="17" to="/showjobs">
             <Icon type="ios-people" />
-            查看已发布岗位
+            岗位管理
+        </MenuItem>
+        <MenuItem name="6" to="/screenCV">
+            <Icon type="ios-people" />
+            筛选简历
         </MenuItem>
         <MenuItem name="11" to="/confirmcheckin">
             <Icon type="md-clock" />
             确认打卡
         </MenuItem>
+        <MenuItem name="20" to="/askforleave">
+            <Icon type="md-clock" />
+            审批请假
+        </MenuItem>
         <MenuItem name="12" to="/monthlybill">
             <Icon type="ios-people" />
-            结算月末账单
+            月末账单
         </MenuItem>
         <Submenu name="13">
             <template slot="title">
@@ -103,3 +108,19 @@
 
     }
 </script>
+
+
+<style scoped>
+    .ivu-menu,.ivu-menu-vertical .ivu-menu-item， .ivu-menu-vertical .ivu-menu-submenu  {
+        display: block;
+        outline: 0;
+        list-style: none;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+        cursor: pointer;
+        transition: all .2s ease-in-out;
+        text-align: left;
+        padding-left: 30px;
+    }
+</style>

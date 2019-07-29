@@ -1,13 +1,25 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
 
 public class ApplyDto {
     @NotNull
-    Integer jobId;
+    private Integer jobId;
     @NotBlank
-    String cvId;
+    private String cvId;
+
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+0")
+    private Date beginDate;
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+0")
+    private Date endDate;
 
     public Integer getJobId() {
         return jobId;
@@ -23,5 +35,21 @@ public class ApplyDto {
 
     public void setCvId(String cvId) {
         this.cvId = cvId;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

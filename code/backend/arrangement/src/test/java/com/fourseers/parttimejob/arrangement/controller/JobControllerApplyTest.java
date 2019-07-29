@@ -21,11 +21,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,6 +54,9 @@ public class JobControllerApplyTest {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private WorkRepository workRepository;
 
     private String userHeader;
     private String invalidUserHeader;
@@ -384,6 +385,99 @@ public class JobControllerApplyTest {
 
         MvcResult result = mockMvc.perform(post("/merchant/application/reject")
                 .param("application_id", "666")
+                .header("x-internal-token", bossname))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("application not exist or not belong to", response.getString("message"));
+    }
+
+    @Test
+    public void acceptApplicationsSuccess() throws Exception {
+        String bossname = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(post("/merchant/application/accept")
+                .param("application_id", String.valueOf(notProcessedApplicationId))
+                .header("x-internal-token", bossname))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+
+        List<Work> works = workRepository.findAllByWorker(wechatUserRepository.getOne(1));
+        Application application = applicationRepository.findById(notProcessedApplicationId).orElse(null);
+        assertNotNull(application);
+        Date beginDate = application.getAppliedBeginDate();
+        Date endDate = application.getAppliedEndDate();
+
+        Map<Date, Boolean> required = new HashMap<>();
+        for (Date date = beginDate; !date.after(endDate); date = new Date(date.getTime() + 24 * 60 * 60 * 1000)) {
+            required.put(date, false);
+        }
+
+        for (Work work : works) {
+            if (required.containsKey(work.getWorkDate())) {
+                required.put(work.getWorkDate(), true);
+            }
+        }
+
+        for (Boolean value : required.values()) {
+            if (!value) {
+                fail();
+            }
+        }
+    }
+
+    @Test
+    public void acceptApplicationsAlreadyReject() throws Exception {
+        String bossname = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(post("/merchant/application/accept")
+                .param("application_id", String.valueOf(rejectedApplicationId))
+                .header("x-internal-token", bossname))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("application already processed", response.getString("message"));
+    }
+
+    @Test
+    public void acceptApplicationsAlreadyAccepted() throws Exception {
+        String bossname = "Tim Cook";
+
+        MvcResult result = mockMvc.perform(post("/merchant/application/accept")
+                .param("application_id", String.valueOf(acceptedApplicationId))
+                .header("x-internal-token", bossname))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("application already processed", response.getString("message"));
+    }
+
+    @Test
+    public void acceptApplicationsNoCompany() throws Exception {
+        String bossname = "poor user";
+
+        MvcResult result = mockMvc.perform(post("/merchant/application/accept")
+                .param("application_id", String.valueOf(notProcessedApplicationId))
+                .header("x-internal-token", bossname))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to a company", response.getString("message"));
+    }
+
+    @Test
+    public void acceptApplicationsApplicationNotBelongTo() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(post("/merchant/application/accept")
+                .param("application_id", String.valueOf(notProcessedApplicationId))
                 .header("x-internal-token", bossname))
                 .andExpect(status().is(400))
                 .andReturn();

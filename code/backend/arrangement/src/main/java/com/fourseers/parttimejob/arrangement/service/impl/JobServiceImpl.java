@@ -107,8 +107,6 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public boolean apply(WechatUser user, ApplyDto applyDto) {
-        if(applyDto.getBeginDate().toLocalDate().isAfter(applyDto.getEndDate().toLocalDate()))
-            throw new RuntimeException("Invalid applied date.");
         Job job = jobDao.findByJobId(applyDto.getJobId());
         if(job == null)
             throw new RuntimeException("Invalid job.");

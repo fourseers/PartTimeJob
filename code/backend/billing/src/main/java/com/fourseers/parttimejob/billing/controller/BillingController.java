@@ -2,10 +2,12 @@ package com.fourseers.parttimejob.billing.controller;
 
 import com.fourseers.parttimejob.billing.dto.BillingAmountDto;
 import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
+import com.fourseers.parttimejob.billing.dto.WorkRejectDto;
 import com.fourseers.parttimejob.billing.dto.YearMonthDto;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.billing.service.MonthlyBillService;
+import com.fourseers.parttimejob.billing.service.WorkService;
 import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
@@ -27,6 +29,9 @@ public class BillingController {
 
     @Autowired
     private BillingService billingService;
+
+    @Autowired
+    private WorkService workService;
 
     @Autowired
     private MonthlyBillService monthlyBillService;
@@ -96,6 +101,29 @@ public class BillingController {
        } catch (RuntimeException ex) {
            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
        }
+    }
+
+    @ApiOperation(value = "reject to pay one work")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company / work not exist or not belong to current company / work already paid"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/reject", method = POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> payBilling(
+            @ApiParam(value = "Work you wish to reject")
+            @RequestBody WorkRejectDto workRejectDto,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            workService.rejectByUserAndWorkId(username, workRejectDto.getWorkId());
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
     }
 
     @ApiOperation(value = "Get billing sum in a given period")

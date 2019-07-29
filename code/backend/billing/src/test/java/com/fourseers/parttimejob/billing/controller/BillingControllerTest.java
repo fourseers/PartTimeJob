@@ -215,6 +215,114 @@ public class BillingControllerTest {
     }
 
     @Test
+    public void rejectWorkSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkNotExist() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 666);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkAlreadyPaid() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 1);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work already paid", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkAlreadyRejected() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 4);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work already rejected", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkUserNoCompany() throws Exception {
+        String bossname = "Poor user";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2)
+                .fluentPut("payment", 100)
+                .fluentPut("method", "微信支付")
+                .fluentPut("meta", null);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to any company", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkNotBelongTo() throws Exception {
+        String bossname = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2)
+                .fluentPut("payment", 100)
+                .fluentPut("method", "微信支付")
+                .fluentPut("meta", null);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
+    }
+
+    @Test
     public void getBillAmountOnePartsSuccess() throws Exception {
         String bossname = "罗永浩";
 

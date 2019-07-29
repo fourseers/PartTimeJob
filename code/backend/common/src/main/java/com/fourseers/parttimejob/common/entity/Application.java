@@ -4,7 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class Application {
@@ -19,14 +20,21 @@ public class Application {
     @NotNull
     private String cvId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Job job;
+
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
+    private Timestamp createTime;
+
+    @NotNull
+    private Date appliedBeginDate;
+
+    @NotNull
+    private Date appliedEndDate;
 
     private Boolean status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date employDate;
+    private Timestamp employTime;
 
     public Integer getApplicationId() {
         return applicationId;
@@ -36,12 +44,12 @@ public class Application {
         this.applicationId = applicationId;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Timestamp getCreateTime() {
+        return createTime;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public Boolean getStatus() {
@@ -52,12 +60,36 @@ public class Application {
         this.status = status;
     }
 
-    public Date getEmployDate() {
-        return employDate;
+    public Job getJob() {
+        return job;
     }
 
-    public void setEmployDate(Date employDate) {
-        this.employDate = employDate;
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public Date getAppliedBeginDate() {
+        return appliedBeginDate;
+    }
+
+    public void setAppliedBeginDate(Date appliedBeginDate) {
+        this.appliedBeginDate = appliedBeginDate;
+    }
+
+    public Date getAppliedEndDate() {
+        return appliedEndDate;
+    }
+
+    public void setAppliedEndDate(Date appliedEndDate) {
+        this.appliedEndDate = appliedEndDate;
+    }
+
+    public Timestamp getEmployTime() {
+        return employTime;
+    }
+
+    public void setEmployTime(Timestamp employTime) {
+        this.employTime = employTime;
     }
 
     public WechatUser getWechatUser() {

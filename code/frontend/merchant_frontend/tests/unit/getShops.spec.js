@@ -24,7 +24,7 @@ describe('getShops.js', () => {
         vm.login_process("user_one", "user_one").then(response => {
            // expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
             getShops(0).then(res  => {
-                expect(res.data.content[0]).toEqual(shopres);
+                expect(res.data.content[0].longitude).toEqual(shopres.longitude);
                 done();
             })
             done();
@@ -42,7 +42,7 @@ describe('getShops.js', () => {
             const vm2 = wrapper2.vm
             const shopres={"address": "ew", "brand": "e", "city": "110100", "industry": 1, "introduction": "we", "latitude": 0.2, "longitude": 0.2, "province": "110000", "shop_id": 11, "shop_name": "w"}
             vm2.mockTableData1(0).then(res  => {
-                expect(res.data.content[0]).toEqual(shopres);
+                expect(res.data.content[0].longitude).toEqual(shopres.longitude);
                 done();
             })
             done();

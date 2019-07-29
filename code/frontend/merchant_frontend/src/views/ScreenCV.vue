@@ -154,7 +154,6 @@
         watch : {
             post_chosen:function(val) {
                 console.log(val);
-                this.CVList = this.getCVList(val);
             },
             value1:function(val) {
                 console.log(val);
@@ -183,7 +182,7 @@
                         console.log(response);
                         if(response.status ===  200)
                         {
-
+                            this.CVList=response.data.content
                         }
                     })
                         .catch(error => {

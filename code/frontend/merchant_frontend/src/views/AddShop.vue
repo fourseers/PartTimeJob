@@ -192,13 +192,8 @@
             {this.$Message.warning('请登录');}
             else {
                 //get industry
-                getIndustry().then(res => {
-                        console.log(  res.data)
-                        this.industry = res.data
-                    },
-                    error => {
-                        console.log(error)
-                    })
+                this.get_industry()
+
             }
             this.debouncedGetLocation = _.debounce(this.findAddress, 500)
         },
@@ -222,6 +217,20 @@
         computed:{
         },
         methods: {
+            get_industry()
+            {
+                return new Promise((resolve, reject) => {
+                    getIndustry().then(res => {
+                            console.log(res.data)
+                            this.industry = res.data
+                            resolve(res);
+                        },
+                        error => {
+                            console.log(error)
+                            reject(error.response.data.status);
+                        })
+                })
+            },
             locate(val)
             {
                 for(var i = 0 ;i < this. addressCandidate.length;i++)

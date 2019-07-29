@@ -5,7 +5,7 @@ var select_time = 0;
 var job_id = 0;
 const app = getApp();
 import request from "../../api/request.js";
-import { host, cv_list, applied_time } from "../../api/url.js";
+import { host, job_detail, cv_list, applied_time, apply_job } from "../../api/url.js";
 
 Page({
 
@@ -21,7 +21,7 @@ Page({
     visible: false,
     begin_date: {},
     end_date: {},
-    able_dates: [],
+    unable_dates: [],
     tips: "",
     error_visible: false,
     error_action: [
@@ -42,19 +42,34 @@ Page({
 
   onReady() {
     var req = new request();
+    var begin_date;
+    var end_date;
+    select_time = 0;
+    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
+      if(res.statusCode === 200) {
+        var info = res.data.data;
+        begin_date = info.begin_date;
+        end_date = info.end_date;
+      }
+    }).catch(err => {
+      console.log(err);
+    })
     req.getRequest(host + applied_time + job_id, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
-        select_time = 0;
         var new_config = this.data.calendar_config;
         new_config.defaultDay = util.formatDate(new Date());
 
-        var applied_dates = res.data.data.applied_dates;
-        var able_dates = util.getDates(applied_dates);
-        this.calendar.enableDays(able_dates);
-        this.calendar.setSelectedDays(util.getDatesJson(applied_dates))
+        var unable_dates = util.getDates(res.data.data.applied_dates);
+        var able_dates = [{
+          begin_date: begin_date,
+          end_date: end_date
+        }]
+        this.calendar.enableDays(util.getDates(able_dates));
+        this.calendar.setSelectedDays(util.getDatesJson(able_dates));
+        this.calendar.disableDay(able_dates);
         this.setData({
           calendar_config: new_config,
-          able_dates: able_dates,
+          unable_dates: unable_dates,
           begin_date: {},
           end_date: {},
         })
@@ -90,7 +105,7 @@ Page({
 
   radioChange(e) {
     this.setData({
-      cd_id: e.detail.value
+      cv_id: e.detail.value
     })
   },
 
@@ -110,13 +125,15 @@ Page({
       })
       return;
     }
-    if (this.data.cv_id === "") {
+    console.log(this.data.cv_id);
+    if (this.data.cv_id === null) {
       $Toast({
         content: "请选择一条简历",
         type: "error"
       })
       return;
     }
+    
     // 发送岗位申请请求
     var req = new request();
     this.setData({
@@ -125,8 +142,8 @@ Page({
     req.postRequest(host + apply_job, {
       job_id: parseInt(job_id),
       cv_id: this.data.cv_id,
-      begin_date: this.data.begin_date,
-      end_date: this.date.end_date
+      begin_date: this.data.begin_date.year + "-" + this.data.begin_date.month + "-" + this.data.begin_date.day,
+      end_date: this.data.end_date.year + "-" + this.data.end_date.month + "-" + this.data.end_date.day
     }, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         app.globalData.showSendMessage = true;
@@ -207,19 +224,20 @@ Page({
         content: "你已选定了合适的时间区间",
         type: "warning"
       })
-      /*
+      
       var tap_date = [{
         year: selected.year,
         month: selected.month,
         day: selected.day,
       }]
+      // console.log(tap_date)
       if(selected.choosed === true) {
         this.calendar.setUnselectedDays(tap_date)
       }
       else{
         this.calendar.setSelectedDays(tap_date)
       }
-      */
+      
     }
   },
 
@@ -250,7 +268,7 @@ Page({
     else {
       while (true) {
         // console.log(util.formatDate(begin_date))
-        if (this.data.able_dates.indexOf(util.formatDate(begin_date)) === -1) {
+        if (this.data.unable_dates.indexOf(util.formatDate(begin_date)) !== -1) {
           this.setData({
             tips: "选择的时间段中存在不允许的日期",
             error_visible: true
@@ -272,6 +290,10 @@ Page({
       this.calendar.setUnselectedDays(util.getDatesJson(dates));
       this.setData({
         date_selected: true,
+      })
+      $Toast({
+        content: "选定时间区间成功",
+        type: "success"
       })
     }
   },

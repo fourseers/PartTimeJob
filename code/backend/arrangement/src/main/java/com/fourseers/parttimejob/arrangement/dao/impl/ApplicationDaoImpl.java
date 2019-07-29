@@ -34,6 +34,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
     public Page<ApplicationProjection> getApplicationsByJobId(Integer jobId, int pageCount, int pageSize) {
         Pageable pageable = PageRequest.of(pageCount, pageSize);
         return applicationRepository.getApplicationsByJobId(jobId, pageable);
+    }
 
     @Override
     public List<Application> getAppliedByJob(Job job) {

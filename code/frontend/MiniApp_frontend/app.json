@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/choose_date/choose_date",
     "pages/index/index",
     "pages/cv_inform/cv_inform",
     "pages/timeline/timeline",
@@ -14,7 +15,8 @@
     "pages/user/user",
     "pages/cv_list/cv_list",
     "pages/shop/shop",
-    "pages/leave/leave"
+    "pages/leave/leave",
+    "pages/switchcity/switchcity"
   ],
   "window": {
     "backgroundTextStyle": "light",

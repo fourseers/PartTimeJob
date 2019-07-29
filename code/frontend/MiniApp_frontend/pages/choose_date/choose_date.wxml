@@ -1,0 +1,9 @@
+<!--pages/choose_date/choose_date.wxml-->
+<calendar
+  calendarConfig="{{calendar_config}}"
+  bind:afterTapDay="afterTapDay"
+  bind:whenChangeMonth="whenChangeMonth"
+  bind:onTapDay="onTapDay"
+  bind:afterCalendarRender="afterCalendarRender"
+>
+</calendar>

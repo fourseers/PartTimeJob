@@ -20,12 +20,9 @@ export function getShops(pagenum) {
         }).then( ({ status, data }) => {
             if (status === 200) {
                 resolve(data);
-            } else {
-                reject( data);
             }
         })
             .catch(error => {
-
                 reject( error);
             })
     })

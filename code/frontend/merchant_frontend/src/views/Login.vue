@@ -29,7 +29,7 @@
 
 <script>
 
-  import axios from 'axios/index';
+  import axios from 'axios';
   import { Form } from 'iview';
   export default {
     name: 'Login',
@@ -89,18 +89,17 @@
                         this.$Message.error('登录失败');
                       }
                     }
-
                     reject(error.response.data.status);
                   }
           );
         })
       },
       login(username, password){
-        const url = 'http://202.120.40.8:30552/auth/merchant/login';
+        const  prefix ="auth"
         return new Promise((resolve, reject) => {
-          axios({
+            axios({
             method: 'POST',
-            url,
+            url: prefix + "/merchant/login",
             headers: {
               'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
               'Content-type': 'application/json',

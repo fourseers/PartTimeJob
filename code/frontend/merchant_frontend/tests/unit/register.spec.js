@@ -19,4 +19,7 @@ describe('Register.vue', () => {
     });
 
 })
+
+
+
 })

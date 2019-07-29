@@ -4,6 +4,9 @@ import token from "./src/util/token.js"
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from "./src/router/path";
+
+import axios from 'axios';
+axios.defaults.baseURL = "http://202.120.40.8:30552";
 VueTestUtils.config.mocks['$token'] =  token
 VueTestUtils.config.mocks['$Message'] =  {
     success:function()

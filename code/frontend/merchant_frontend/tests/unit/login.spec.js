@@ -70,7 +70,6 @@ describe('Login.vue', () => {
         const vm = wrapper.vm
         vm.login_process("user_one", "user_one").then(response => {
             expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
-
             done();
         });
     });
@@ -98,16 +97,6 @@ describe('Login.vue', () => {
     });
 })
 
-
-describe('Login.vue', () => {
-    const wrapper = shallowMount(Login)
-    const vm = wrapper.vm
-    it('tests no params ', async () => {
-        // expect.assertions(1);
-        await expect(vm.login_process("", "")).rejects.toEqual(
-            400);
-    });
-})
 
 describe('Login.vue', () => {
     const wrapper = mount(Login

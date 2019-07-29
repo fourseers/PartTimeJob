@@ -120,6 +120,8 @@ public class WechatUserScheduleControllerTest {
         Application application = applicationRepository.getOne(applicationId);
         assertEquals(application.getAppliedBeginDate(), entry.getSqlDate("begin_date"));
         assertEquals(application.getAppliedEndDate(), entry.getSqlDate("end_date"));
+        assertEquals(application.getJob().getBeginTime().toString(), entry.getString("begin_time"));
+        assertEquals(application.getJob().getEndTime().toString(), entry.getString("end_time"));
         assertNotNull(entry.getInteger("shop_id"));
         assertNotNull(entry.getString("shop_name"));
     }

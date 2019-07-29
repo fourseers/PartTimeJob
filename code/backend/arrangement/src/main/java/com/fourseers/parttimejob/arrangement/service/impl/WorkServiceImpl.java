@@ -100,6 +100,8 @@ public class WorkServiceImpl implements WorkService {
             scheduleDto.setJobName(app.getJob().getJobName());
             scheduleDto.setShopId(app.getJob().getShop().getShopId());
             scheduleDto.setShopName(app.getJob().getShop().getShopName());
+            scheduleDto.setBeginTime(app.getJob().getBeginTime());
+            scheduleDto.setEndTime(app.getJob().getEndTime());
             ret.add(scheduleDto);
         }
         return ret;

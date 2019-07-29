@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
 import java.sql.Date;
+import java.sql.Time;
 
 public class ScheduleDto {
     // job info
@@ -10,6 +11,8 @@ public class ScheduleDto {
     private String shopName;
     private Date beginDate;
     private Date endDate;
+    private Time beginTime;
+    private Time endTime;
 
     public Integer getJobId() {
         return jobId;
@@ -57,5 +60,21 @@ public class ScheduleDto {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Time getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(Time beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
     }
 }

@@ -76,7 +76,6 @@ Page({
     //shop_id不用显示，但是可以用于跳转页面
     shop_id: 0,
     //用于对话框的变量
-    visible: false,
     longitude: 0.0,
     latitude: 0.0,
     markers: [{
@@ -165,48 +164,9 @@ Page({
 
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
-    this.setData({
-      visible: true
-    });
-  },
-
-  // 对话框确定后发送岗位申请
-  handleSendApply() {
-    // 发送岗位申请请求
-    var req = new request();
-    this.setData({
-      isLoading: true,
-    })
-    req.postRequest(host + apply_job, {
-      job_id: parseInt(job_id),
-      cv_id: "5d365f928ba346f03eb1177a",//5d318647a095e24d3285f8ea
-    }, app.globalData.access_token).then(res => {
-      if(res.statusCode === 200){
-        app.globalData.showSendMessage = true;
-        wx.navigateBack({
-
-        })
-      }
-      if(res.statusCode === 400){
-        this.handleClose();
-        $Toast({
-          content: res.data.message,
-          type: 'error'
-        });
-        this.setData({
-          isLoading: false,
-        })
-      }
-    }).catch(err => {
-      console.log(err)
+    wx.navigateTo({
+      url: "/pages/choose_date/choose_date?id=" + job_id,
     })
   },
-
-  // 对话框取消后隐藏对话框
-  handleClose() {
-    this.setData({
-      visible: false
-    })
-  }
 
 })

@@ -1,4 +1,5 @@
 <!--pages/choose_date/choose_date.wxml-->
+<i-panel title="请选择你要应聘的时间段"></i-panel>
 <calendar
   calendarConfig="{{calendar_config}}"
   bind:afterTapDay="afterTapDay"
@@ -7,3 +8,13 @@
   bind:afterCalendarRender="afterCalendarRender"
 >
 </calendar>
+
+<i-button type="success" bind:click="handleTimeSlot">选定时间区间</i-button>
+
+<i-toast id="toast" />
+<i-modal title="错误" visible="{{ error_visible }}" bind:click="handleRefresh" actions="{{error_action}}">
+  <view>{{tips}}</view>
+</i-modal>
+<i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
+    <view>您确定要应聘这个岗位吗</view>
+</i-modal>

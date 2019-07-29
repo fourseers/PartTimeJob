@@ -33,6 +33,18 @@ const formatDate = date => {
   return [year, month, day].map(formatNumber).join('-')
 }
 
+const formatDateJson = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  return {
+    year: year,
+    month: month,
+    day: day
+  }
+}
+
 const getDate = str => {
   var temp = str.split("-");
   var date = new Date(temp[0], temp[1]-1, temp[2]);
@@ -41,21 +53,38 @@ const getDate = str => {
 
 const getDates = date_range => {
   var result = Array()
-  console.log(date_range)
   for (var i in date_range) {
     var start = date_range[i].begin_date;
     var end = date_range[i].end_date;
     var startTime = getDate(start);
     var endTime = getDate(end);
     while (true) {
-      var date = formatDate(startTime)
-      result.push(date);
+      result.push(formatDate(startTime));
       if ((startTime.getDate() === endTime.getDate()) && (startTime.getMonth() === endTime.getMonth()) && (startTime.getFullYear() === endTime.getFullYear())) {
         break;
       }
       startTime.setDate(startTime.getDate() + 1);
     }
-    
+
+  }
+  return result;
+}
+
+const getDatesJson = date_range => {
+  var result = Array()
+  for (var i in date_range) {
+    var start = date_range[i].begin_date;
+    var end = date_range[i].end_date;
+    var startTime = getDate(start);
+    var endTime = getDate(end);
+    while (true) {
+      result.push(formatDateJson(startTime));
+      if ((startTime.getDate() === endTime.getDate()) && (startTime.getMonth() === endTime.getMonth()) && (startTime.getFullYear() === endTime.getFullYear())) {
+        break;
+      }
+      startTime.setDate(startTime.getDate() + 1);
+    }
+
   }
   return result;
 }
@@ -70,5 +99,7 @@ module.exports = {
   formatBeginDate: formatBeginDate,
   formatEndDate: formatEndDate,
   formatDate: formatDate,
-  getDates: getDates
+  getDates: getDates,
+  getDatesJson: getDatesJson,
+  getDate: getDate
 }

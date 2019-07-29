@@ -22,7 +22,6 @@ Vue.prototype.axios = axios;
 Vue.prototype.$token = token;
 
 const router = new VueRouter({
-  mode: 'history',
   routes: routes
 });
 Vue.config.productionTip = false;

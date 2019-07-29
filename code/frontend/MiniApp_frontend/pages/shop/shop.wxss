@@ -1,0 +1,10 @@
+/* pages/shop/shop.wxss */
+
+.shop-name{
+  font-size: 64rpx;
+  font-weight: 500;
+}
+
+.job-map{
+  width: 100%;
+}

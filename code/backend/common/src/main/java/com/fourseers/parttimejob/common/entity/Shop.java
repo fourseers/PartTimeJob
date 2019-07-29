@@ -116,4 +116,5 @@ public class Shop {
     public void setCompany(Company company) {
         this.company = company;
     }
+
 }

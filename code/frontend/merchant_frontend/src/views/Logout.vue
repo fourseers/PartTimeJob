@@ -18,6 +18,8 @@
                 if(this.$root.admin)
                 {
                     this.$root.admin=false;
+                    console.log("   this.$root.admin=false;");
+
                 }
                 this.$router.push({ name: "login"})
                 this.$Message.success('登出成功');

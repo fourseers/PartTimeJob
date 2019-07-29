@@ -1,6 +1,7 @@
 <!--pages/cv_inform/cv_inform.wxml-->
 <view class="container">
   <i-panel title="基础信息">
+    <i-input value="{{ title }}" title="简历名称" placeholder="请输入简历名称" maxlength="32" bind:change="getTitle" right/>
     <i-input value="{{ name }}" title="姓名" placeholder="请输入姓名" maxlength="4" bind:change="getName" error="{{name_error}}" right/>
     <i-cell title="性别">
       <i-switch id="gender-switch" value="{{ gender }}" bind:change="changeGender" slot="footer" i-class="{{gender ? 'man-background' : 'woman-background'}}">
@@ -12,20 +13,26 @@
     <i-input value="{{ identity }}" title="身份证" placeholder="请输入身份证" maxlength="18" bind:change="getIdentity" error="{{identity_error}}" right />
     <i-input value="{{ height }}" title="身高/cm" placeholder="请输入身高" maxlength="10" bind:change="getHeight" type="number" right />
     <i-input value="{{ weight }}" title="体重/kg" placeholder="请输入体重" maxlength="10" bind:change="getWeight" type="number" right />
+    <i-cell is-link>
+      <picker bind:change="getEducation" value="{{education_list.length}}" range="{{education_list}}">
+        文化水平
+      </picker>
+      <view slot="footer">{{education}}</view>
+    </i-cell>
   </i-panel>
   <i-panel title="自我评价">
-    <i-input placeholder="请输入你的自我评价" bind:change="getEvaluation" maxlength="150" type="textarea"></i-input>
+    <i-input value="{{evaluation}}" placeholder="请输入你的自我评价" bind:change="getEvaluation" maxlength="150" type="textarea"></i-input>
   </i-panel>
   <i-panel title="工作经历">
     <block wx:for="{{exp_index}}" wx:key="item">
-      <i-input id="{{index}}" placeholder="请输入你的{{item}}" bind:change="getExperiences" maxlength="150" type="textarea"></i-input>
+      <i-input value="{{experience[index]}}" id="{{index}}" placeholder="请输入你的{{item}}" bind:change="getExperiences" maxlength="150" type="textarea"></i-input>
     </block>
     <i-button id="add-experience" bind:click="addExperience" i-class="experience-button" inline>添加经历</i-button>
     <i-button bind:click="deleteExperience" i-class="experience-button" inline>删除经历</i-button>
   </i-panel>
 </view>
 
-<i-button class="save-button" bind:click="handleSave" type="success">
+<i-button class="save-button" bind:click="handleSave" type="success" loading="{{isLoading}}">
   <text>保存</text>
 </i-button>
 

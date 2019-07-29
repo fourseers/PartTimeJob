@@ -2,9 +2,12 @@ package com.fourseers.parttimejob.warehouse.service.impl;
 
 import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.common.entity.Shop;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
+import com.fourseers.parttimejob.warehouse.dao.ScoreDao;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
+import com.fourseers.parttimejob.warehouse.dto.UserShopDto;
 import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
 import org.modelmapper.ModelMapper;
@@ -24,6 +27,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private MerchantUserDao merchantUserDao;
+
+    @Autowired
+    private ScoreDao scoreDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -100,5 +106,22 @@ public class ShopServiceImpl implements ShopService {
 
     public List<ShopBriefProjection> findShopBriefByUsername(String username) {
         return shopDao.findShopBriefByUsername(username);
+    }
+
+    @Override
+    public UserShopDto getShopDetailWithAvgScore(WechatUser wechatUser, int shopId) {
+        Shop shop = shopDao.findByShopId(shopId);
+        if(shop == null)
+            throw new RuntimeException("Shop does not exist.");
+
+        UserShopDto ret = modelMapper.map(shop, UserShopDto.class);
+        ret.setAvgScore(shopDao.getAvgScore(shop));
+        ret.setUserScore(scoreDao.getOne(wechatUser, shopId));
+        return ret;
+    }
+
+    @Override
+    public boolean scoreShop(int shopId, WechatUser wechatUser, int score) {
+        return scoreDao.submitOne(wechatUser, shopId, score);
     }
 }

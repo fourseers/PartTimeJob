@@ -17,6 +17,7 @@ public class Work {
     private Time expectedCheckout;
     private String log;
     private Boolean salaryConfirmed = false;
+    private Boolean rejected = false;
     private WechatUser worker;
     private Job job;
     private Billing billing;
@@ -79,6 +80,14 @@ public class Work {
 
     public void setSalaryConfirmed(Boolean salaryConfirmed) {
         this.salaryConfirmed = salaryConfirmed;
+    }
+
+    public Boolean getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;
     }
 
     @ManyToOne

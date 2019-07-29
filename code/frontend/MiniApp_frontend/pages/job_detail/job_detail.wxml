@@ -43,7 +43,11 @@
 <i-panel>
   <i-cell title="工作地点" label="{{address}}"></i-cell>
   <map class="job-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}"></map>
-  <i-cell title="公司信息" label="{{shop_name}}--{{address}}"></i-cell>
+  <i-cell title="公司信息" label="{{shop_name}}--{{address}}" is-link url="/pages/shop/shop?id={{shop_id}}">
+    <view slot="footer">
+      查看详细
+    </view>
+  </i-cell>
 </i-panel>
 <i-toast id="toast" />
 <i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">

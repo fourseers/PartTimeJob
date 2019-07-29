@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Date;
+
 public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     @Query("select " +
@@ -21,8 +23,8 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             "work.billing.payment as payment, " +
             "work.job.jobName as jobName, " +
             "work.salaryConfirmed as paid from Work work " +
-            "where work.job.shop.company.companyId = ?1")
-    Page<WorkBillingProjection> getBillingsByCompanyIdOrderByBillIdDesc(Integer companyId, Pageable pageable);
+            "where work.workDate >= ?2 and work.workDate <= ?3 and work.job.shop.company.companyId = ?1")
+    Page<WorkBillingProjection> getBillingsByCompanyIdOrderByBillIdDescInGivenPeriod(Integer companyId, Date fromDate, Date toDate, Pageable pageable);
 
     Work findByWorkId(Integer workId);
 }

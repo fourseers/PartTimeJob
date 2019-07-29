@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+
 @Repository
 public class WorkDaoImpl implements WorkDao {
 
@@ -17,10 +19,10 @@ public class WorkDaoImpl implements WorkDao {
     WorkRepository workRepository;
 
     @Override
-    public Page<WorkBillingProjection> getBillingsByCompanyIdOrderByBillIdDesc(Integer companyId, int pageCount, int pageSize) {
+    public Page<WorkBillingProjection> getBillingsByCompanyIdOrderByBillIdDescInGivenPeriod(Integer companyId, Date fromDate, Date toDate, int pageCount, int pageSize) {
         Pageable pageable = PageRequest.of(pageCount, pageSize);
 
-        return workRepository.getBillingsByCompanyIdOrderByBillIdDesc(companyId, pageable);
+        return workRepository.getBillingsByCompanyIdOrderByBillIdDescInGivenPeriod(companyId, fromDate, toDate, pageable);
     }
 
     @Override

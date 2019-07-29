@@ -17,6 +17,7 @@ Page({
     latitude: 0.0,
     longitude: 0.0,
     pageCount: 0,
+    isLoading: false,
   },
 
   onReady() {
@@ -95,7 +96,13 @@ Page({
   // 触底加载更多
   onReachBottom() {
     //console.log("onBottom");
+    this.setData({
+      isLoading: true,
+    })
     this.getUserJob();
+    this.setData({
+      isLoading: false,
+    })
   },
 
   // 用户选择位置

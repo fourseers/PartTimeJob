@@ -128,6 +128,7 @@ Page({
           end_apply_date: end_apply_date.getDate(),
           salary: info.salary,
           tags: info.tag_list,
+          shop_id: info.shop.shop_id,
           shop_name: info.shop.shop_name,
           address: info.shop.address,
           longitude: info.shop.longitude,

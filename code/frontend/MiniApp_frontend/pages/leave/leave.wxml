@@ -1,0 +1,15 @@
+<!--pages/leave/leave.wxml-->
+<i-panel title="员工请假">
+  <i-cell title="请假类型："></i-cell>
+  <i-cell title="开始时间："></i-cell>
+  <i-cell title="结束时间："></i-cell>
+  <i-cell></i-cell>
+</i-panel>
+
+<i-panel title="请假原因">
+  <i-input type="textarea"></i-input>
+</i-panel>
+
+<i-button class="click-button" bind:click="handleClick" type="success">
+  <text>提交请假申请</text>
+</i-button>

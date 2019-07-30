@@ -20,8 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
-
 import java.math.BigDecimal;
 
 import static org.springframework.http.HttpStatus.*;
@@ -47,8 +48,8 @@ public class WechatUserJobController {
     })
     @GetMapping("/jobs")
     public ResponseEntity<Response<Page<Job>>> getJobList(
-            @RequestParam(required = false) BigDecimal longitude,
-            @RequestParam(required = false) BigDecimal latitude,
+            @RequestParam(required = false) @DecimalMin("-180") @DecimalMax("180") BigDecimal longitude,
+            @RequestParam(required = false) @DecimalMin("-90") @DecimalMax("90") BigDecimal latitude,
             @RequestHeader(defaultValue = "0") int pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {

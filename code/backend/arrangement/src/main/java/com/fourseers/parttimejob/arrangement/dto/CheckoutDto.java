@@ -1,7 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
-import org.hibernate.validator.constraints.Range;
-
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -9,8 +9,12 @@ public class CheckoutDto {
     @NotNull
     Integer jobId;
 
+    @DecimalMin("-180")
+    @DecimalMax("180")
     BigDecimal longitude;
 
+    @DecimalMin("-90")
+    @DecimalMax("90")
     BigDecimal latitude;
 
     public Integer getJobId() {

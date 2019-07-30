@@ -66,6 +66,7 @@ public class Shop {
         this.address = address;
     }
 
+    @Column(columnDefinition = "DECIMAL(10,6)")
     public BigDecimal getLongitude() {
         return longitude;
     }
@@ -74,6 +75,7 @@ public class Shop {
         this.longitude = longitude;
     }
 
+    @Column(columnDefinition = "DECIMAL(10,6)")
     public BigDecimal getLatitude() {
         return latitude;
     }

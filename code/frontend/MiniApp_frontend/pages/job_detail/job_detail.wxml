@@ -50,6 +50,3 @@
   </i-cell>
 </i-panel>
 <i-toast id="toast" />
-<i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
-    <view>您确定要应聘这个岗位吗</view>
-</i-modal>

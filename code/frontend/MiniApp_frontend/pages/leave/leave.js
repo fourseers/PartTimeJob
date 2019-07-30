@@ -1,66 +1,32 @@
 // pages/leave/leave.js
+var util = require("../../utils/util.js")
+
 Page({
 
   /**
    * 页面的初始数据
+   * begin_choose: 可请假的时间的开始
+   * end_choose: 可请假的时间的结束
+   * begin_date: 选择的开始请假时间
+   * end_date: 选择的结束请假时间
    */
   data: {
-
+    begin_choose: 0,
+    end_choose: 0,
+    begin_date: 1970-1-1,
+    end_date: 1970-1-1
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  onShow() {
+    var begin_choose = util.formatBeginDate(new Date());
+    var end_choose = util.formatEndDate(new Date());
+    console.log(begin_choose)
+    this.setData({
+      begin_choose: begin_choose,
+      end_choose: end_choose,
+      begin_date: begin_choose,
+      end_date: begin_choose
+    })
   }
+
 })

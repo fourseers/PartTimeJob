@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.service;
 
+import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
+import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
@@ -17,8 +19,9 @@ public interface JobService {
     Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount);
     Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
 
-    boolean apply(WechatUser user, int jobId, String cvId);
+    boolean apply(WechatUser user, ApplyDto applyDto);
     JobDetailedInfoProjection getJobDetail(int jobId);
+    AppliedTimeDto getJobAppliedTime(int jobId);
 
     void setJobHiringState(Integer jobId, String username, Boolean stop);
 }

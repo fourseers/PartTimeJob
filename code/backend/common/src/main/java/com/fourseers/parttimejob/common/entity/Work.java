@@ -3,8 +3,8 @@ package com.fourseers.parttimejob.common.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.sql.Time;
 import java.sql.Date;
+import java.sql.Time;
 
 @Entity
 public class Work {
@@ -13,6 +13,8 @@ public class Work {
     private Integer score;
     private Time checkin;
     private Time checkout;
+    private Time expectedCheckin;
+    private Time expectedCheckout;
     private String log;
     private Boolean salaryConfirmed = false;
     private Boolean rejected = false;
@@ -113,5 +115,21 @@ public class Work {
 
     public void setBilling(Billing billing) {
         this.billing = billing;
+    }
+
+    public Time getExpectedCheckin() {
+        return expectedCheckin;
+    }
+
+    public void setExpectedCheckin(Time expectedCheckin) {
+        this.expectedCheckin = expectedCheckin;
+    }
+
+    public Time getExpectedCheckout() {
+        return expectedCheckout;
+    }
+
+    public void setExpectedCheckout(Time expectedCheckout) {
+        this.expectedCheckout = expectedCheckout;
     }
 }

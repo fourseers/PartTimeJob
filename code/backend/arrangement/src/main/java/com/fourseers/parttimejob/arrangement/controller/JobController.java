@@ -1,6 +1,8 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
+import com.fourseers.parttimejob.arrangement.dto.ApplyOutDto;
 import com.fourseers.parttimejob.arrangement.dto.JobDto;
+import com.fourseers.parttimejob.arrangement.service.ApplicationService;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.util.Response;
@@ -19,6 +21,9 @@ public class JobController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -144,6 +149,75 @@ public class JobController {
                                                 @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
         try {
             jobService.setJobHiringState(jobId, username, stop);
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Get one page of job applications")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / job not exist or not belong to / application not exist"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/applications", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<Page<ApplyOutDto>>> getJobApplications(
+            @RequestParam(value = "job_id", required = false) Integer jobId,
+            @ApiParam(value = "This param tells the server which page to query, " +
+                    "starting from 0, with each page having 10 items.")
+            @RequestParam(value = "page_count") Integer pageCount,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            Page<ApplyOutDto> applyOutDtos = applicationService.getApplicationsByUsernameAndJobId(username, jobId, pageCount, PAGE_SIZE);
+            return ResponseBuilder.build(HttpStatus.OK, applyOutDtos, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Reject an application")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / application not exist or not belong to / application already processed"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/application/reject", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> rejectApplication(
+            @RequestParam(value = "application_id", required = false) Integer applicationId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            applicationService.rejectByUsernameAndApplicationId(username, applicationId);
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Accept an application")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / application not exist or not belong to / application already processed"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/application/accept", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Response<Void>> acceptApplication(
+            @RequestParam(value = "application_id", required = false) Integer applicationId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            applicationService.acceptByUsernameAndApplicationId(username, applicationId);
             return ResponseBuilder.build(HttpStatus.OK, null, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());

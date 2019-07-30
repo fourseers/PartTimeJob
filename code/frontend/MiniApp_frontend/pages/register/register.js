@@ -65,15 +65,10 @@ Page({
     city_code: ""
   },
 
-  /* 
-   * onshow触发的时候向后台获取注册元数据
-   * 元数据包括education_list和tags
-   */
-  onShow(){
-    //console.log(app.globalData.userInfo);
+  onReady() {
     var req = new request();
     req.getRequest(host + register_data, null).then(res => {
-      if(res.statusCode === 200){
+      if (res.statusCode === 200) {
         // 给后端返回的tags的列表中的每个json都添加isChosen字段
         var tags = res.data.data.tags;
         for (var index in tags) {
@@ -88,13 +83,21 @@ Page({
           gender: app.globalData.userInfo.gender
         })
       }
-      else if (res.statusCode === 400){
+      else if (res.statusCode === 400) {
         // TODO: 添加请求失败的处理
       }
     }).catch(err => {
       // console.log(err);
       // TODO: 添加请求失败的处理
     });
+  },
+
+  /* 
+   * onshow触发的时候向后台获取注册元数据
+   * 元数据包括education_list和tags
+   */
+  onShow(){
+    //console.log(app.globalData.userInfo);
 
     if (app.globalData.city !== null) {
       console.log(app.globalData.city);

@@ -266,8 +266,8 @@ public class WechatUserJobControllerTest {
             Job job = jobRepository.getOne(jobId);
             assertNotNull(job);
             Shop shop = job.getShop();
-            float cur = Math.abs(shop.getLatitude() - latitude) +
-                    Math.abs(shop.getLongitude() - longitude);
+            float cur = Math.abs(shop.getLatitude().floatValue() - latitude) +
+                    Math.abs(shop.getLongitude().floatValue() - longitude);
             assertTrue(cur >= prev);
         }
     }
@@ -366,4 +366,4 @@ public class WechatUserJobControllerTest {
                 .header("x-internal-token", invalidUserHeader))
                 .andExpect(status().isForbidden());
     }
-} 
+}

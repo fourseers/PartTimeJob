@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @EnableJpaRepositories("com.fourseers.parttimejob.common.entity.*")
@@ -30,7 +31,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
             value = "SELECT *, abs(shop.longitude - ?1) + abs(shop.latitude - ?2) as dis " +
             "FROM job INNER JOIN shop on job.shop_shop_id = shop.shop_id ORDER BY dis ASC",
     countQuery = "SELECT COUNT(*) FROM job INNER JOIN shop ON job.shop_shop_id = shop.shop_id")
-    Page<Job> findByGeoLocation(float longitude, float latitude, PageRequest pageRequest);
+    Page<Job> findByGeoLocation(BigDecimal longitude, BigDecimal latitude, PageRequest pageRequest);
     Page<Job> findPageByShopOrderByJobIdDesc(Shop shop, Pageable pageable);
 
     @Query("select job from Shop shop inner join Job job on shop = job.shop where shop.company = ?1 order by job.jobId desc")

@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static junit.framework.TestCase.fail;
@@ -81,8 +82,8 @@ public class ShopControllerTest {
         shopDto.setProvince("310000");
         shopDto.setCity("310100");
         shopDto.setAddress("310101");
-        shopDto.setLongitude(new Integer(120).floatValue());
-        shopDto.setLatitude(new Integer(30).floatValue());
+        shopDto.setLongitude(new BigDecimal(120));
+        shopDto.setLatitude(new BigDecimal(30));
         shopDto.setBrand("Apple");
         shopDto.setIndustry(1);
         shopDto.setIntroduction("Make Apple great again");
@@ -109,8 +110,8 @@ public class ShopControllerTest {
         anotherShopDto.setProvince("510000");
         anotherShopDto.setCity("510100");
         anotherShopDto.setAddress("510101");
-        anotherShopDto.setLongitude(new Integer(110).floatValue());
-        anotherShopDto.setLatitude(new Integer(30).floatValue());
+        anotherShopDto.setLongitude(new BigDecimal(110));
+        anotherShopDto.setLatitude(new BigDecimal(30));
         anotherShopDto.setBrand("Chuizi");
         anotherShopDto.setIndustry(1);
         anotherShopDto.setIntroduction("Acquire Apple Someday!");
@@ -352,8 +353,8 @@ public class ShopControllerTest {
             shopDto.setProvince("310000");
             shopDto.setCity("310100");
             shopDto.setAddress("310101");
-            shopDto.setLongitude(new Integer(120).floatValue());
-            shopDto.setLatitude(new Integer(30).floatValue());
+            shopDto.setLongitude(new BigDecimal(120));
+            shopDto.setLatitude(new BigDecimal(30));
             shopDto.setBrand("MS");
             shopDto.setIndustry(1);
             shopDto.setIntroduction("Make MS great again");

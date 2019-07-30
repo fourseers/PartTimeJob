@@ -38,7 +38,6 @@ Page({
 
   onLoad(options) {
     // TODO
-    console.log(options)
     job_id = options.id;
     begin_date = options.begin_date;
     end_date = options.end_date;
@@ -52,22 +51,29 @@ Page({
     var req = new request();
     select_time = 0;
 
-
     req.getRequest(host + applied_time + job_id, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var new_config = this.data.calendar_config;
         new_config.defaultDay = util.formatDate(new Date());
         var unable_dates = util.getDates(res.data.data.applied_dates);
-        var able_dates = [{
+        var able = [{
           begin_date: begin_date,
           end_date: end_date
         }]
-        this.calendar.enableDays(util.getDates(able_dates));
-        this.calendar.setSelectedDays(util.getDatesJson(able_dates));
-        console.log(util.getDates(able_dates));
-        console.log(util.getDatesJson(able_dates));
-        console.log(unable_dates);
-        this.calendar.disableDay(unable_dates);
+        var able_dates = util.getDates(able);
+        var able_dates_json = util.getDatesJson(able);
+        for (var i in unable_dates) {
+          for (var j in able_dates) {
+            if (unable_dates[i] == able_dates[j]) {
+              able_dates.splice(j, 1)
+              able_dates_json.splice(j, 1)
+            }
+          }
+        }
+        this.calendar.enableDays(able_dates);
+        this.calendar.setSelectedDays(able_dates_json);
+        // this.calendar.disableDay(unable_dates);
+        console.log(unable_dates)
         this.setData({
           calendar_config: new_config,
           unable_dates: unable_dates,
@@ -83,7 +89,6 @@ Page({
     }).catch(err => {
       console.log(err);
     });
-
 
     req.getRequest(host + cv_list, null, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
@@ -243,6 +248,7 @@ Page({
   },
 
   handleRefresh(e) {
+    this.calendar.clearTodoLabels();
     this.onReady();
     this.setData({
       error_visible: false
@@ -250,11 +256,21 @@ Page({
   },
 
   handleTimeSlot() {
-    if (this.data.begin_date === {} || this.data.end_date === {}) {
+    if (JSON.stringify(this.data.begin_date) == "{}" && JSON.stringify(this.data.end_date) == "{}") {
       $Toast({
         content: '请选择要应聘的时间段',
         type: 'error'
       });
+      return;
+    }
+    if (JSON.stringify(this.data.end_date) == "{}" && select_time == 1) {
+      $Toast({
+        content: "选定时间区间成功",
+        type: "success"
+      })
+      this.setData({
+        end_date: this.data.begin_date
+      })
       return;
     }
     var begin_date = new Date(this.data.begin_date.year, this.data.begin_date.month - 1, this.data.begin_date.day);

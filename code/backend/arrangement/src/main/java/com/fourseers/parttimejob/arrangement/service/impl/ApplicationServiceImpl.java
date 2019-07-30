@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Service
 @Transactional
@@ -102,6 +103,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("application already processed");
         }
         application.setStatus(true);
+        application.setEmployTime(new Timestamp(System.currentTimeMillis()));
         applicationDao.update(application);
         Date beginDate = application.getAppliedBeginDate();
         Date endDate = application.getAppliedEndDate();

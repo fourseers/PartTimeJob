@@ -27,7 +27,7 @@ Page({
   },
 
   // onShow的时候向后端请求当前的工作列表
-  onShow() {
+  onReady() {
     // 显示打卡成功信息
     if (app.globalData.showSendMessage) {
       app.globalData.showSendMessage = false;

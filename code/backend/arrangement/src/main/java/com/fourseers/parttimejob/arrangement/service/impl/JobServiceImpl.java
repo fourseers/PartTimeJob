@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -208,7 +209,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount) {
+    public Page<Job> findJobsByGeoLocation(WechatUser user, BigDecimal longitude, BigDecimal latitude, int pageCount) {
         return jobDao.findJobsByGeoLocation(user, longitude, latitude, pageCount, PAGE_SIZE);
     }
 }

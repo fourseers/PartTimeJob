@@ -13,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -22,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
+
+import java.math.BigDecimal;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -46,8 +47,8 @@ public class WechatUserJobController {
     })
     @GetMapping("/jobs")
     public ResponseEntity<Response<Page<Job>>> getJobList(
-            @RequestParam(required = false) @Range(min=-180, max=180)  Float longitude,
-            @RequestParam(required = false) @Range(min=-90, max=90) Float latitude,
+            @RequestParam(required = false) BigDecimal longitude,
+            @RequestParam(required = false) BigDecimal latitude,
             @RequestHeader(defaultValue = "0") int pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {

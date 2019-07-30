@@ -1,6 +1,9 @@
 // pages/check/check.
 const { $Toast } = require("../../dist/base/index");
+var util = require("../../utils/util.js")
 const app = getApp();
+import request from "../../api/request.js"
+import { host, schedule } from "../../api/url.js"
 
 Page({
 
@@ -29,29 +32,11 @@ Page({
       app.globalData.showSendMessage = false;
       this.handleCheckSuccess();
     }
-    const data = [
-      {
-        year: '2019',
-        month: '7',
-        day: '16'
-      },
-      {
-        year: 2019,
-        month: 7,
-        day: 18,
-        todoText: '工作'
-      }
-    ];
-    // 异步请求t
-    setTimeout(() => {
-      this.calendar.setTodoLabels({
-        // circle: true,
-        pos: 'top',
-        days: data
-      });
-    }, 1000);
-    //this.calendar.enableArea(['2019-5-7', '2019-10-28']);
-    //this.calendar.switchView('week');
+
+    var req = new request();
+    var curr_date = new Date();
+    console.log(util.format)
+    req.getRequest
   },
 
   afterTapDay(e) {

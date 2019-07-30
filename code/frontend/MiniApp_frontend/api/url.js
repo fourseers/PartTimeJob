@@ -13,6 +13,8 @@ const cv_list = "/warehouse/user/cv-list"
 const cv_curd = "/warehouse/user/cv"
 const shop_inform = "/warehouse/user/shop?shop_id="
 const shop_score = "/warehouse/user/shop/score"
+const schedule = "/arrangement/user/schedule"
+const check_status = "/arrangement/user/check-status"
 
 module.exports = {
   login,
@@ -29,5 +31,7 @@ module.exports = {
   cv_list,
   cv_curd,
   shop_inform,
-  shop_score
+  shop_score,
+  schedule,
+  check_status
 }

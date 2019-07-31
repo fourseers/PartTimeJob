@@ -14,12 +14,12 @@
       is-link 
       url="/pages/job_detail/job_detail?id={{item.id}}" 
       title="{{item.name}}" 
-      label="{{item.detail}}"
+      label="{{item.detail}}......"
     >
       <view slot="icon">
         <i-avatar size="small">{{item.name}}</i-avatar>
       </view>
-      <view slot="footer">
+      <view>
         <i-tag
           wx:for="{{item.tags}}"
           wx:key="{{index}}"

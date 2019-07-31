@@ -68,7 +68,7 @@ Page({
           var new_job = {};
           new_job.id = job_list[i].job_id;
           new_job.name = job_list[i].job_name;
-          new_job.detail = job_list[i].job_detail;
+          new_job.detail = job_list[i].job_detail.slice(0, 50);
           new_job.tags = job_list[i].tag_list;
           new_jobs[parseInt(formal_length) + parseInt(i)] = new_job
         }

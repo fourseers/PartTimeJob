@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
 import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
+import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.elasticsearch.action.search.SearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -47,10 +49,12 @@ public class WechatUserJobController {
             @ApiResponse(code = 400, message = "invalid parameters")
     })
     @GetMapping("/jobs")
-    public ResponseEntity<Response<Page<Job>>> getJobList(
+    public ResponseEntity<Response<SearchResultDto>> getJobList(
             @RequestParam(required = false) @DecimalMin("-180") @DecimalMax("180") BigDecimal longitude,
             @RequestParam(required = false) @DecimalMin("-90") @DecimalMax("90") BigDecimal latitude,
-            @RequestHeader(defaultValue = "0") int pageCount,
+            @RequestParam(defaultValue = "0") int entryOffset,
+            @ApiParam(value = "determine whether take user tags into consideration or not")
+                @RequestParam(required = false, defaultValue = "true") Boolean useTag,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -60,14 +64,27 @@ public class WechatUserJobController {
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
         if(longitude == null && latitude == null) {
-            return ResponseBuilder.build(OK, jobService.findJobs(user, pageCount));
+            try {
+                return ResponseBuilder.build(OK, jobService.findJobs(user, useTag, entryOffset));
+            } catch (RuntimeException e) {
+                return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+            } catch (Exception e) {
+                return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+            }
         }
         else if(longitude == null || latitude == null)
             return ResponseBuilder.build(BAD_REQUEST, null,
                     "Longitude and latitude should both appear.");
-        else
-            return ResponseBuilder.build(OK,
-                    jobService.findJobsByGeoLocation(user, longitude, latitude, pageCount));
+        else {
+            try {
+                return ResponseBuilder.build(OK,
+                        jobService.findJobsByGeoLocation(user, useTag, longitude, latitude, entryOffset));
+            } catch (RuntimeException e) {
+                return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+            } catch (Exception e) {
+                return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+            }
+        }
     }
 
     @ApiOperation(value = "Get detailed information for one job.")

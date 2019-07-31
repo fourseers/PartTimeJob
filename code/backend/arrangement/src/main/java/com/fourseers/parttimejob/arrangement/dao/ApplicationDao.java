@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.arrangement.dao;
 
+import com.fourseers.parttimejob.arrangement.dto.ApplyUserEntryDto;
 import com.fourseers.parttimejob.arrangement.projection.ApplicationProjection;
 import com.fourseers.parttimejob.common.entity.Application;
 import com.fourseers.parttimejob.common.entity.Job;
@@ -28,4 +29,6 @@ public interface ApplicationDao {
     void update(Application application);
 
     List<Application> findWithin(WechatUser wechatUser, Date beginDate, Date endDate, Time beginTime, Time endTime);
+
+    Page<ApplyUserEntryDto> getApplicationsByUser(WechatUser wechatUser, int pageCount, int pageSize);
 }

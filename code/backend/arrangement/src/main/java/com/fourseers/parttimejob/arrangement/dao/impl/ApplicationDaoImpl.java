@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dao.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.ApplicationDao;
+import com.fourseers.parttimejob.arrangement.dto.ApplyUserEntryDto;
 import com.fourseers.parttimejob.arrangement.projection.ApplicationProjection;
 import com.fourseers.parttimejob.arrangement.repository.ApplicationRepository;
 import com.fourseers.parttimejob.common.entity.Application;
@@ -68,5 +69,11 @@ public class ApplicationDaoImpl implements ApplicationDao {
     @Override
     public List<Application> findWithin(WechatUser wechatUser, Date beginDate, Date endDate, Time beginTime, Time endTime) {
         return applicationRepository.getAlreadyOccupied(wechatUser, beginDate, endDate, beginTime, endTime);
+    }
+
+    @Override
+    public Page<ApplyUserEntryDto> getApplicationsByUser(WechatUser wechatUser, int pageCount, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageCount, pageSize);
+        return applicationRepository.getByWechatUser(wechatUser, pageRequest);
     }
 }

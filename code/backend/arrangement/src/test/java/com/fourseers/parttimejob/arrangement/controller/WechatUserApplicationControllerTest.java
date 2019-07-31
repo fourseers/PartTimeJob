@@ -558,4 +558,9 @@ public class WechatUserApplicationControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testUserGetApplicationList() throws Exception {
+
+    }
+
 } 

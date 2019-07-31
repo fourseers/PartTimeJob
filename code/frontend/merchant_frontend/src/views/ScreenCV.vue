@@ -16,14 +16,59 @@
                 <Carousel   class="content" v-model="carousel_index">
                     <li style="list-style:none" v-for="item in CVList">
                         <CarouselItem >
-                            <ul id="v-for-object" class="cv">
-                                <li v-for="(value, name) in item.cv ">
-                                    <p  class="cv-item">
-                                        {{ name }}: {{ value }}
+
+                            <div class="cv">
+                                <Row>
+                                    <p  class="cv-item2">
+                                        工作开始日期： {{item.applied_begin_date}}
                                     </p>
-                                    <br>
-                                </li>
-                            </ul>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        工作结束日期：{{item.applied_end_date}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        名称： {{item.cv.name}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        性别： {{item.cv.gender?"女":"男"}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        教育： {{    this.education_convert(item.cv.education)}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        身高： {{item.cv.height}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        体重： {{item.cv.weight}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        身份证号： {{item.cv.identity}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                      手机号： {{item.cv.phone}}
+                                    </p>
+                                </Row>
+                                <Row>
+                                    <p  class="cv-item2">
+                                        自我陈述： {{item.cv.statement}}
+                                    </p>
+                                </Row>
+                            </div>
                             <div class="buttons">
                                 <Col span="12">
                                     <Button type="success"  @click="hire(item.application_id)">雇佣</Button>
@@ -52,6 +97,7 @@
         name: "ScreeenCV",
         data () {
             return {
+
                 Cascader:{},
                 options:{},
                 total_elements_shop:10,
@@ -287,6 +333,39 @@
 
                     )
                 },
+                education_convert(education)
+                {
+                    if( education =="BELOW_SENIOR")
+                    {
+                        return "初中毕业及以下"
+                    }else if( education =="TECHICAL_JUNIOR")
+                    {
+
+                        return "中专毕业"
+                    }
+                    else if(
+                        education =="SENIOR_HIGH")
+                    {
+                        return "高中毕业"
+                    }
+                    else if(
+                        education =="JUNIOR_COLLEGE")
+                    {
+                        return "大专毕业"
+                    }
+                    else if(
+                        education =="BACHELOR")
+                    {
+                        return "本科毕业"
+                    }
+                    else if(
+                        education =="ABOVE_BACHELOR")
+                    {
+                        return "研究生毕业及以上"
+                    }
+
+
+                }
 
             }
 
@@ -329,6 +408,10 @@
     }
     .cv-item{
         float:left;
+    }
+    .cv-item2{
+        float:left;
+        font-size: large;
     }
     .head{
         margin :20px;

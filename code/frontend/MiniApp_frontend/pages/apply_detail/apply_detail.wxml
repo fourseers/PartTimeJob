@@ -1,0 +1,16 @@
+<!--pages/apply_detail/apply_detail.wxml-->
+<i-tabs current="{{ current_tab }}" bindchange="handleChangeTab" fixed>
+    <i-tab key="all" title="全部"></i-tab>
+    <i-tab key="pass" title="已通过"></i-tab>
+    <i-tab key="refuse" title="已拒绝"></i-tab>
+</i-tabs>
+
+<view class="container">
+  <i-cell-group>
+    <block wx:for="{{current_chosen}}" wx:key="index">
+      <i-cell title="{{item.name}}">
+        <view slot="footer">{{item.status}}</view>
+      </i-cell>
+    </block>
+  </i-cell-group>
+</view>

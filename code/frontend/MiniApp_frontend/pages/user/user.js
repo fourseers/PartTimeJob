@@ -30,15 +30,20 @@ Page({
         type: "activity",
       },
       {
+        title: "简历",
+        url: "/pages/cv_list/cv_list",
+        src: "/assets/icons/resume.png"
+      },
+      {
+        title: "应聘记录",
+        url: "/pages/apply_detail/apply_detail",
+        src: "/assets/icons/job.png"
+      },
+      {
         title: "关于",
         url: "/pages/index/index",
         src: "/assets/icons/about.png"
       },
-      {
-        title: "简历",
-        url: "/pages/cv_list/cv_list",
-        src: "/assets/icons/resume.png"
-      }
     ]
   },
 

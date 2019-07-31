@@ -179,6 +179,8 @@
 </template>
 <script>
 
+    import DateTime from "luxon/src/datetime";
+
     import {getShops} from '../util/getShops.js'
     export default {
 
@@ -332,15 +334,6 @@
                 return 2;
             },
 
-            begin_apply_date:function()
-            {
-                return this.get_added(this.formValidate.begin_apply_date,this.formValidate.begin_apply_time);
-            },
-            end_apply_date:function()
-            {
-                return this.get_added(this.formValidate.end_apply_date,this.formValidate.end_apply_time);
-            }
-
         },
         created: function () {
             if (!this.$root.logged) {
@@ -349,25 +342,6 @@
                 //获取第一页表格
                 this.mockTableData1 (0);
                 this.get_tags();
-            }
-            Date.prototype.Format = function (fmt) {
-                var o = {
-                    "M+": this.getMonth() + 1, //月份 
-                    "d+": this.getDate(), //日 
-                    "h+": this.getHours(), //小时 
-                    "m+": this.getMinutes(), //分 
-                    "s+": this.getSeconds(), //秒 
-                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-                    "S": this.getMilliseconds() //毫秒 
-                };
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-                for (var k in o){
-                    if (new RegExp("(" + k + ")").test(fmt)) {
-                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                    }
-                }
-                return fmt;
             }
 
         },
@@ -429,46 +403,30 @@
 
                 this.mockTableData1(index-1);
             },
-            format_only_date(d,t)
+            format_only_date(d,str)
             {
-                var newd=new Date;
-                newd.setTime(d.getTime() +1000* this.convert_to_seconds(t)- 8*3600*1000);
-                return new Date(d).Format("yyyy-MM-dd");
+                var a = str.split(':');
+                var y=d.getUTCFullYear();
+                var rettime=  DateTime.fromObject({year:y, month: d.getMonth()+1, day:d.getDate(), hour:  Number(a[0]), minute:  Number(a[1]), second: 0, zone: "UTC+8"}).toFormat( 'yyyy-MM-dd');
+
+                return rettime;
 
             },
-            format_time(t)
+            format_time(str)
             {
-                var d=new Date;
-                d.setTime(1000* this.convert_to_seconds(t)- 8*3600*1000);
-                return new Date(d).Format("hh:mm:ss")
+                var a = str.split(':');
+                var rettime=  DateTime.fromObject({year:1970, month: 1, day: 1, hour:  Number(a[0]), minute:  Number(a[1]), second: 0, zone: "UTC+8"}).toFormat( 'HH:mm:ss');
+                return rettime
             },
-            format_date(d)
+            format_date(d,str)
             {
-                return new Date(d).Format("yyyy-MM-dd hh:mm:ss");
-            },
-            get_added(date,time)
-            {
-                var t=new Date;
-                var t_s=date.getTime();
-                var seconds = this.convert_to_seconds(time);
-                t.setTime(t_s + 1000 * seconds);
-                return t;
-            },
-            convert_to_seconds(str)
-            {
-                var a = str.split(':'); // split it at the colons
+                var a = str.split(':');
+                var y=d.getUTCFullYear();
+                var rettime=  DateTime.fromObject({year:y, month: d.getMonth()+1, day:d.getDate(), hour:  Number(a[0]), minute:  Number(a[1]), zone: "UTC+8"}).toFormat( 'yyyy-MM-dd HH:mm:ss');
 
-                // minutes are worth 60 seconds. Hours are worth 60 minutes.
-                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60;
-
-                return seconds;
-            },
-            generate_date(date,seconds)
-            {
-                return new Date(date+seconds*1000);
+                return rettime;
             },
             handleSubmit(name) {
-                console.log( this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time))
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if( !this.formValidate.shop)
@@ -538,8 +496,8 @@
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
-                        begin_apply_time: this.format_date(this.begin_apply_date),
-                        end_apply_time:  this.format_date(this.end_apply_date),
+                        begin_apply_time: this.format_date(this.formValidate.begin_apply_date,  this.formValidate.begin_apply_time),
+                        end_apply_time:  this.format_date(this.formValidate.end_apply_date,  this.formValidate.end_apply_time),
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
                         salary: this.formValidate.salary

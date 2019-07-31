@@ -2,6 +2,7 @@ import VueTestUtils, {shallowMount,mount} from '@vue/test-utils'
 import Login from '@/views/Login.vue'
 import token from '@/util/token.js'
 
+import axios from 'axios'
 describe('Login.vue', () => {
     it('calls handleSubmit(\'formInline\') when click on button', () => {
 
@@ -33,7 +34,6 @@ describe('Login.vue', () => {
 })
 
 
-import axios from 'axios';
 describe('Login.vue', () => {
     it('login() returns response', done => {
 
@@ -46,7 +46,11 @@ describe('Login.vue', () => {
                 "expires_in": 41138,
             }, "status": 200, "message": "success"
         }
-        Login.methods.login("Tim Cook", "some password").then(response => {
+
+        const wrapper = shallowMount(Login)
+        const vm = wrapper.vm
+        vm.axios = axios;
+        vm.login("Tim Cook", "some password").then(response => {
             expect(response.data.scope).toEqual(goodresponse.data.scope);
             done();
         });
@@ -57,7 +61,6 @@ describe('Login.vue', () => {
 
 describe('Login.vue', () => {
     it('test savetoken ok ', done => {
-        const wrapper = shallowMount(Login)
         const goodresponse = {
             "data": {
                 "access_token": "ed7da69b-45c0-4a19-8536-ea8ccb40bacb",
@@ -67,7 +70,9 @@ describe('Login.vue', () => {
                 "expires_in": 41138,
             }, "status": 200, "message": "success"
         }
+        const wrapper = shallowMount(Login)
         const vm = wrapper.vm
+        vm.axios = axios;
         vm.login_process("Tim Cook", "some password").then(response => {
             expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
             done();
@@ -79,6 +84,7 @@ describe('Login.vue', () => {
 
     const wrapper = shallowMount(Login)
     const vm = wrapper.vm
+    vm.axios = axios;
     it('tests password wrong', async () => {
         // expect.assertions(1);
         await expect(vm.login_process("user_one", "user_one222")).rejects.toEqual(
@@ -90,25 +96,63 @@ describe('Login.vue', () => {
 describe('Login.vue', () => {
     const wrapper = shallowMount(Login)
     const vm = wrapper.vm
+    vm.axios = axios;
     it('tests no params ', async () => {
         // expect.assertions(1);
         await expect(vm.login_process("", "")).rejects.toEqual(
             400);
     });
 })
+describe('Login.vue', () => {
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = true;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Login,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
+    const vm = wrapper.vm
 
+    it('tests validate ', async () => {
+        // expect.assertions(1);
+
+        expect(vm.handleSubmit()).toEqual();
+    })
+})
 
 describe('Login.vue', () => {
-    const wrapper = mount(Login
-   )
-    const vm= wrapper.vm
-    it('tests handlesubmit ', async () => {
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = false;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Login,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
+    const vm = wrapper.vm
+
+    it('tests validate ', async () => {
         // expect.assertions(1);
-        vm. formInline= {
-            user: 'user_one',
-                password: 'user_one'
-        };
-        await expect(vm.handleSubmit()).toEqual()
-    });
+
+        expect(vm.handleSubmit()).toEqual();
+    })
 })
-//wrapper.find({ ref: 'foo' })

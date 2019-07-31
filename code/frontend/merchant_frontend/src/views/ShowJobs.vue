@@ -29,6 +29,7 @@
 
 <script>
 
+    import DateTime from "luxon/src/datetime";
     import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {
@@ -107,7 +108,7 @@
                         key: 'begin_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div', params.row.begin_time )
+                                h('div',params.row.begin_time  )
                             ])}
 
                     },
@@ -122,7 +123,16 @@
                     },
                     {
                         title: '岗位介绍',
-                        key: 'job_detail'
+                        key: 'job_detail',
+                        render: (h, params) => {
+                            return  h('Tooltip',{
+                                props:{
+                                    content:params.row.job_detail,
+                                    maxWidth:200
+                        }},
+                            [
+                                h('div', params.row.job_detail.substr(0,20) )
+                            ])}
                     },
                     {
                         title: '教育',

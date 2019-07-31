@@ -86,6 +86,7 @@
 
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             } else
             {
 

@@ -46,7 +46,7 @@ describe('Login.vue', () => {
                 "expires_in": 41138,
             }, "status": 200, "message": "success"
         }
-        Login.methods.login("user_one", "user_one").then(response => {
+        Login.methods.login("Tim Cook", "some password").then(response => {
             expect(response.data.scope).toEqual(goodresponse.data.scope);
             done();
         });
@@ -68,9 +68,8 @@ describe('Login.vue', () => {
             }, "status": 200, "message": "success"
         }
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
-
             done();
         });
     });
@@ -98,16 +97,6 @@ describe('Login.vue', () => {
     });
 })
 
-
-describe('Login.vue', () => {
-    const wrapper = shallowMount(Login)
-    const vm = wrapper.vm
-    it('tests no params ', async () => {
-        // expect.assertions(1);
-        await expect(vm.login_process("", "")).rejects.toEqual(
-            400);
-    });
-})
 
 describe('Login.vue', () => {
     const wrapper = mount(Login

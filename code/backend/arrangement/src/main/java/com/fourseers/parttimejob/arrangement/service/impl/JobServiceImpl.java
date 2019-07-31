@@ -6,19 +6,37 @@ import com.fourseers.parttimejob.arrangement.dao.JobDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
 import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
+import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
+import org.apache.lucene.spatial3d.geom.GeoDistance;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
+import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -35,6 +53,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     ApplicationDao applicationDao;
+
+    @Autowired
+    RestHighLevelClient esClient;
 
     @Value("${app.pagination.pageSize}")
     private int PAGE_SIZE;
@@ -204,12 +225,110 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Page<Job> findJobs(WechatUser user, int pageCount) {
-        return jobDao.findJobs(user, pageCount, PAGE_SIZE);
+    public SearchResultDto findJobs(WechatUser user, Boolean useTags, int entryOffset) throws IOException {
+//        return jobDao.findJobs(user, pageCount, PAGE_SIZE);
+        // es implementation
+        List<Etc.Education> edus = user.getEducation().getAllSatisfied();
+        StringBuilder sb = new StringBuilder();
+        for(Etc.Education edu: edus)
+            sb.append(edu.getName()).append(" ");
+
+        @SuppressWarnings("RedundantArrayCreation") BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .filter(QueryBuilders.termQuery("manual_stop", false))
+                .filter(QueryBuilders.matchQuery("education", sb.toString()))
+                .filter(QueryBuilders.termsQuery("need_gender", new int[]{user.getGender().compareTo(false), 2}));
+        if(useTags) {
+            List<String> tagNames = new ArrayList<>();
+            for(Tag tag: user.getTags())
+                tagNames.add(tag.getName());
+            String tags = String.join(" ", tagNames);
+            boolQueryBuilder.should(QueryBuilders.matchQuery("tags", tags))
+                    .should(QueryBuilders.matchQuery("job_name", tags))
+                    .should(QueryBuilders.matchQuery("job_detail", tags));
+        }
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(boolQueryBuilder);
+        sourceBuilder.from(entryOffset);
+        sourceBuilder.size(PAGE_SIZE);
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        SearchRequest request = new SearchRequest("parttimejob_job");
+        request.source(sourceBuilder);
+        // scroll functionality not utilized yet
+        // request.scroll(TimeValue.timeValueMinutes(1L));
+        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+//        if(response.isTerminatedEarly())
+//            throw new RuntimeException("Search engine terminated unexpectedly. Contact system admin.");
+        if(response.isTimedOut())
+            throw new RuntimeException("Search engine timeout. Contact system admin.");
+        response.getHits().getTotalHits().toString();
+        SearchResultDto ret = new SearchResultDto();
+        List<Map<String, Object>> hits = new ArrayList<>();
+        for(SearchHit singleHit: response.getHits().getHits())
+            hits.add(singleHit.getSourceAsMap());
+        ret.setContent(hits);
+        ret.setTotalHits(response.getHits().getTotalHits().value);
+        return ret;
     }
 
     @Override
-    public Page<Job> findJobsByGeoLocation(WechatUser user, BigDecimal longitude, BigDecimal latitude, int pageCount) {
-        return jobDao.findJobsByGeoLocation(user, longitude, latitude, pageCount, PAGE_SIZE);
+    public SearchResultDto findJobsByGeoLocation(WechatUser user, Boolean useTags, BigDecimal longitude, BigDecimal latitude, int entryOffset) throws IOException {
+        List<Etc.Education> edus = user.getEducation().getAllSatisfied();
+        GeoPoint currentLocation = new GeoPoint(latitude.doubleValue(), longitude.doubleValue());
+        StringBuilder sb = new StringBuilder();
+        for(Etc.Education edu: edus)
+            sb.append(edu.getName()).append(" ");
+
+        // geo location query
+        GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders.geoDistanceQuery("location")
+                .point(currentLocation).distance(5, DistanceUnit.KILOMETERS);
+
+        @SuppressWarnings("RedundantArrayCreation") BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                .filter(QueryBuilders.termQuery("manual_stop", false))
+                .filter(QueryBuilders.matchQuery("education", sb.toString()))
+                .filter(QueryBuilders.termsQuery("need_gender", new int[]{user.getGender().compareTo(false), 2}))
+                .filter(geoQueryBuilder);
+        if(useTags) {
+            List<String> tagNames = new ArrayList<>();
+            for(Tag tag: user.getTags())
+                tagNames.add(tag.getName());
+            String tags = String.join(" ", tagNames);
+            boolQueryBuilder.should(QueryBuilders.matchQuery("tags", tags))
+                    .should(QueryBuilders.matchQuery("job_name", tags))
+                    .should(QueryBuilders.matchQuery("job_detail", tags));
+
+        }
+
+        // sort by location
+
+        ScoreFunctionBuilder geoScoreFunction = ScoreFunctionBuilders.gaussDecayFunction("location", currentLocation, 1);
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQueryBuilder, geoScoreFunction)
+                .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY);
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(functionScoreQueryBuilder);
+        sourceBuilder.from(entryOffset);
+        sourceBuilder.size(PAGE_SIZE);
+        // not implemented
+        // TODO optimize performance by taking advantage of scrolling api
+//        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        SearchRequest request = new SearchRequest("parttimejob_job");
+        request.source(sourceBuilder);
+        // scroll functionality not utilized yet
+        // request.scroll(TimeValue.timeValueMinutes(1L));
+        SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
+//        if(response.isTerminatedEarly())
+//            throw new RuntimeException("Search engine terminated unexpectedly. Contact system admin.");
+        if(response.isTimedOut())
+            throw new RuntimeException("Search engine timeout. Contact system admin.");
+        response.getHits().getTotalHits().toString();
+        SearchResultDto ret = new SearchResultDto();
+        List<Map<String, Object>> hits = new ArrayList<>();
+        for(SearchHit singleHit: response.getHits().getHits())
+            hits.add(singleHit.getSourceAsMap());
+        ret.setContent(hits);
+        ret.setTotalHits(response.getHits().getTotalHits().value);
+        return ret;
     }
 }

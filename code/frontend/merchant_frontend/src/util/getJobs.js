@@ -53,7 +53,6 @@ export function getJobsByShop(pagenum,shop_id) {
                 resolve(data);
         })
             .catch(error => {
-
                 reject( error);
             })
     })

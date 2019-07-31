@@ -5,7 +5,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from "./src/router/path";
 
-import axios from 'axios';
+import axios from 'axios'
 axios.defaults.baseURL = "http://202.120.40.8:30552";
 VueTestUtils.config.mocks['$token'] =  token
 VueTestUtils.config.mocks['$Message'] =  {
@@ -28,5 +28,4 @@ const router = new VueRouter({
     mode: 'history',
     routes: routes
 });
-
 VueTestUtils.config.mocks['$router']= router

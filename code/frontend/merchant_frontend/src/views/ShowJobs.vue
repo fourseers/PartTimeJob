@@ -122,7 +122,16 @@
                     },
                     {
                         title: '岗位介绍',
-                        key: 'job_detail'
+                        key: 'job_detail',
+                        render: (h, params) => {
+                            return  h('Tooltip',{
+                                props:{
+                                    content:params.row.job_detail,
+                                    maxWidth:200
+                        }},
+                            [
+                                h('div', params.row.job_detail.substr(0,20) )
+                            ])}
                     },
                     {
                         title: '教育',

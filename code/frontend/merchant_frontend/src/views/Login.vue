@@ -29,7 +29,6 @@
 
 <script>
 
-  import axios from 'axios';
   import { Form } from 'iview';
   export default {
     name: 'Login',
@@ -97,7 +96,7 @@
       login(username, password){
         const  prefix ="auth"
         return new Promise((resolve, reject) => {
-            axios({
+            this.axios({
             method: 'POST',
             url: prefix + "/merchant/login",
             headers: {

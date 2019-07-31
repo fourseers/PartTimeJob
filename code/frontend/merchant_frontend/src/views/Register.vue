@@ -29,8 +29,6 @@
     </Layout>
 </template>
 <script>
-
-    import axios from 'axios';
     export default {
 
         name: "Register",
@@ -81,7 +79,7 @@
             {
                 var prefix="auth";
                 return new Promise((resolve, reject) => {
-                     axios({
+                    this.axios({
                         headers: {
                             'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                             'Content-type': 'application/json',
@@ -93,12 +91,12 @@
                             username: user,
                             password:  password
                         }
-                    }).then(response => {
-                        console.log(response.data);
-                        if(response.data.status === 200 )
+                    }).then(({ status, data }) => {
+                        console.log( data);
+                        if( status === 200 )
                         {
                             this.$Message.success('注册成功');
-                            this.$token.savetoken(response.data.data);
+                            this.$token.savetoken( data.data);
                             console.log(this.$token.loadToken());
                             this.$root.logged = true;
                             this.$router.push({ name: "postjob"});
@@ -112,14 +110,8 @@
                                 this.$Message.error('用户名已存在');
                             }
 
-                            if (error.response.data.status === 401) {
-                                this.$Message.error('auth错误');
-                            }
-                            if (error.response.data.status === 500) {
-                                this.$Message.error('服务器错误');
-                            }
                         }
-                        reject( error);
+                        reject( error.response.data.status);
                     })
                 });
             }

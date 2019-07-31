@@ -29,6 +29,7 @@
 
 <script>
 
+    import DateTime from "luxon/src/datetime";
     import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {
@@ -107,7 +108,7 @@
                         key: 'begin_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div', params.row.begin_time )
+                                h('div',params.row.begin_time  )
                             ])}
 
                     },

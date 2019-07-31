@@ -16,7 +16,7 @@
         </FormItem>
         <br>
         <FormItem>
-          <Button class="ivu-btn" @click="handleSubmit()" >登录</Button>
+          <Button class="ivu-btn" @click="handleSubmit('formInline')" >登录</Button>
         </FormItem>
       </Form>
     </Content>
@@ -55,16 +55,14 @@
       }
     },
     methods: {
-      handleSubmit() {
-        this.$refs.formInline.validate((valid) => {
+      handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
           if (valid) {
             this.login_process(this.formInline.user, this.formInline.password)
           } else {
             this.$Message.error('Fail!');
           }
-        }).catch(error => {
-          console.log( error);
-        });
+        })
       },
       //this.$Message.success('Success!');
       login_process( user,  password){
@@ -96,7 +94,7 @@
       login(username, password){
         const  prefix ="auth"
         return new Promise((resolve, reject) => {
-            this.axios({
+          this.axios({
             method: 'POST',
             url: prefix + "/merchant/login",
             headers: {

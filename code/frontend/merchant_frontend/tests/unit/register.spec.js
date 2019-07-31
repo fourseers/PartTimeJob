@@ -27,5 +27,68 @@ describe('Register.vue', () => {
             400);
     });
 
+})
 
+describe('Register.vue', () => {
+    const wrapper = shallowMount(Register)
+    const vm = wrapper.vm
+    vm.axios = axios;
+    it('tests no params ', async () => {
+        // expect.assertions(1);
+        await expect(vm.register("", "")).rejects.toEqual(
+            400);
+    });
+})
+describe('Register.vue', () => {
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = true;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Register,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
+    const vm = wrapper.vm
+
+    it('tests validate ', async () => {
+        // expect.assertions(1);
+
+        expect(vm.handleSubmit('formInline')).toEqual();
+    })
+})
+
+describe('Register.vue', () => {
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = false;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Register,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
+    const vm = wrapper.vm
+
+    it('tests validate ', async () => {
+        // expect.assertions(1);
+
+        expect(vm.handleSubmit('formInline')).toEqual();
+    })
 })

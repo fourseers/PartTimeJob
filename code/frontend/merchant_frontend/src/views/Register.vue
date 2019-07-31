@@ -29,13 +29,14 @@
     </Layout>
 </template>
 <script>
+    import { Form } from 'iview';
     export default {
-
         name: "Register",
+        components: {
+            'Form': Form
+        },
         data () {
             const validatePass = (rule, value, callback) => {
-                // console.log(rule)
-                // console.log(value)
                 if (value === '' || value !== this.formInline.password) {
                     callback(new Error('两次输入不一致'));
                 } else {

@@ -103,21 +103,56 @@ describe('Login.vue', () => {
             400);
     });
 })
-import form  from "D:\\PartTimeJob\\code\\frontend\\merchant_frontend\\node_modules\\iview\\src\\components\\form"
+describe('Login.vue', () => {
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = true;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Login,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
+    const vm = wrapper.vm
+
+    it('tests validate ', async () => {
+        // expect.assertions(1);
+
+        expect(vm.handleSubmit()).toEqual();
+    })
+})
 
 describe('Login.vue', () => {
-    const wrapper = shallowMount(Login, {
-        $refs: {
-            formInline: form
-        }
-    })
+    const Form={
+        render: () => {},
+        methods: {
+            validate(callback) {
+                return new Promise(resolve => {
+                    let valid = false;
+                    resolve(valid);
+                    callback(valid);
+                });
+            }
+        },
+    };
+    const wrapper = shallowMount(Login,{
+        stubs:{
+            'Form':  Form
+        }}
+    )
     const vm = wrapper.vm
-    it('tests handlesubmit ', async () => {
+
+    it('tests validate ', async () => {
         // expect.assertions(1);
-        vm.formInline = {
-            user: 'user_one',
-            password: 'user_one'
-        };
+
         expect(vm.handleSubmit()).toEqual();
     })
 })

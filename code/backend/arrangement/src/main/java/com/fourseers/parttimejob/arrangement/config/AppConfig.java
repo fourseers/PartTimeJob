@@ -4,13 +4,19 @@ import com.fourseers.parttimejob.arrangement.dto.JobDto;
 import com.fourseers.parttimejob.common.entity.Etc;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Tag;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.ArrayList;
@@ -21,6 +27,9 @@ import java.util.List;
 @EnableJpaRepositories(basePackages="com.fourseers.parttimejob")
 @EntityScan(basePackages="com.fourseers.parttimejob")
 public class AppConfig {
+
+    @Autowired
+    private Environment environment;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -46,5 +55,19 @@ public class AppConfig {
             }
         });
         return modelMapper;
+    }
+
+    @Bean
+    public RestHighLevelClient esClient() {
+        return new RestHighLevelClient(RestClient.builder(
+                new HttpHost(
+                        environment.getProperty("app.es.rest.host", "localhost"),
+                        Integer.parseInt(environment.getProperty("app.es.rest.port", "9200")),
+                        environment.getProperty("app.es.rest.protocol", "http")),
+                new HttpHost(
+                        environment.getProperty("app.es.comm.host", "localhost"),
+                        Integer.parseInt(environment.getProperty("app.es.comm.port", "9300")),
+                        environment.getProperty("app.es.comm.protocol", "http"))
+        ));
     }
 }

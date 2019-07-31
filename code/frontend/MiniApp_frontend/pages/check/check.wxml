@@ -8,19 +8,20 @@
 >
 </calendar>
 <i-panel title="工作安排（点击前往打卡）">
-  <i-cell-group>
+  <i-cell wx:if="{{checks.length == 0}}" title="没有工作！"></i-cell>
+  <i-cell-group wx:else>
     <i-cell
       wx:for="{{checks}}"
       wx:key="{{index}}"
-      url="/pages/check_inform/check_inform?id={{item.id}}" 
-      title="{{item.title}}" 
+      url="/pages/check_inform/check_inform?id={{item.job_id}}" 
+      title="{{item.job_name}}-{{item.shop_name}}" 
       is-link
     >
       <view slot="icon">
         <i-avatar size="small">砖</i-avatar>
       </view>
       <view slot="footer">
-        {{item.checkBeginTime}}~{{item.checkEndTime}}
+        {{item.begin_time}}~{{item.end_time}}
       </view>
     </i-cell>
   </i-cell-group>

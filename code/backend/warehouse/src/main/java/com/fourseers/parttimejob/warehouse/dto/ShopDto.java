@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.warehouse.dto;
 
+import java.math.BigDecimal;
+
 public class ShopDto {
 
     private Integer shopId;
@@ -7,8 +9,8 @@ public class ShopDto {
     private String province;
     private String city;
     private String address;
-    private Float longitude;
-    private Float latitude;
+    private BigDecimal longitude;
+    private BigDecimal latitude;
     private String brand;
     private Integer industry;
     private String introduction;
@@ -53,19 +55,19 @@ public class ShopDto {
         this.address = address;
     }
 
-    public Float getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
-    public Float getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 

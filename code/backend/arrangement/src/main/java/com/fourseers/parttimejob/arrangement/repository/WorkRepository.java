@@ -47,5 +47,9 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     Work findByWorkId(int workId);
 
+    @Query("from Work w where w.workDate = current_date and w.worker = ?1 and w.job = ?2")
+    Work findTodayByUserAndJob(WechatUser user, Job job);
+
     List<Work> findAllByWorker(WechatUser wechatUser);
+
 }

@@ -18,6 +18,7 @@ Page({
     longitude: 0.0,
     pageCount: 0,
     isLoading: false,
+    total_pages: 9999,
   },
 
   onReady() {
@@ -46,6 +47,9 @@ Page({
   },
 
   getUserJob() {
+    if (this.data.pageCount >= this.data.total_pages) {
+      return;
+    }
     var req = new request();
     req.getRequest(host + job_list, 
     {
@@ -71,7 +75,8 @@ Page({
         
         this.setData({
           jobs: new_jobs,
-          pageCount: this.data.pageCount + 1
+          pageCount: this.data.pageCount + 1,
+          total_pages: res.data.data.total_pages
         })
       }
     }).catch(err => {

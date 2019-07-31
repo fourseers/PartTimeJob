@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Entity
 public class Shop {
@@ -11,8 +12,8 @@ public class Shop {
     private String province;
     private String city;
     private String address;
-    private Float longitude;
-    private Float latitude;
+    private BigDecimal longitude;
+    private BigDecimal latitude;
     private String brand;
     private Industry industry;
     private String introduction;
@@ -65,19 +66,21 @@ public class Shop {
         this.address = address;
     }
 
-    public Float getLongitude() {
+    @Column(columnDefinition = "DECIMAL(10,6)")
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Float longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 
-    public Float getLatitude() {
+    @Column(columnDefinition = "DECIMAL(10,6)")
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Float latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 

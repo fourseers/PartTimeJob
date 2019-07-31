@@ -1,6 +1,9 @@
 // pages/check/check.
 const { $Toast } = require("../../dist/base/index");
+var util = require("../../utils/util.js")
 const app = getApp();
+import request from "../../api/request.js"
+import { host, schedule } from "../../api/url.js"
 
 Page({
 
@@ -10,52 +13,87 @@ Page({
   data: {
     calendar_config: {
       disablePastDay: true,
-      defaultDay: '2019-7-15',
     },
+    month_checks: {},
     checks: [
       {
-        title: "搬砖工打卡",
-        checkinTime: "8:30",
-        checkoutTime: "12:30",
-        canCheck: true,
-        id: 1,
+        job_name: "搬砖工打卡",
+        shop_name: "交大",
+        begin_time: "8:30",
+        end_time: "12:30",
+        job_id: 1,
       },
     ],
   },
 
   // onShow的时候向后端请求当前的工作列表
-  onShow() {
+  onReady() {
+    // 显示打卡成功信息
     if (app.globalData.showSendMessage) {
       app.globalData.showSendMessage = false;
       this.handleCheckSuccess();
     }
-    const data = [
-      {
-        year: '2019',
-        month: '7',
-        day: '16'
-      },
-      {
-        year: 2019,
-        month: 7,
-        day: 18,
-        todoText: '工作'
+
+    // 可以查看的工作从当天到30天后
+    var req = new request();
+    var begin_date = new Date();
+    var end_date = new Date();
+    end_date.setDate(begin_date.getDate() + 30)
+
+    // 拿到所有日期的list，
+    var json = [{
+      begin_date: util.formatDate(begin_date),
+      end_date: util.formatDate(end_date)
+    }]
+    var dates_list1 = util.getDates(json)
+    // 用JSON保存日期对应的工作表
+    var month_checks = {} 
+    for (var i in dates_list1) {
+      month_checks[dates_list1[i]] = new Array()
+    }
+
+    this.calendar.enableArea([util.formatDate(begin_date), util.formatDate(end_date)]);
+
+    req.getRequest(host + schedule, json[0], app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        var data = res.data.data;
+        for (var i in data) {
+          // 拿到第i个工作的工作日期的list
+          var dates_json = [{
+            begin_date: data[i].begin_date,
+            end_date: data[i].end_date,
+          }]
+          //填充month_checks
+          var date_list = util.getDates(dates_json)
+          for (var j in date_list) {
+            month_checks[date_list[j]].push({
+              job_name: data[i].job_name,
+              shop_name: data[i].shop_name,
+              begin_time: data[i].begin_time,
+              end_time: data[i].end_time,
+              job_id: data[i].job_id
+            })
+          }
+        }
+        this.setData({
+          month_checks: month_checks,
+          checks: month_checks[util.formatDate(begin_date)]
+        })
       }
-    ];
-    // 异步请求t
-    setTimeout(() => {
-      this.calendar.setTodoLabels({
-        // circle: true,
-        pos: 'top',
-        days: data
-      });
-    }, 1000);
-    //this.calendar.enableArea(['2019-5-7', '2019-10-28']);
-    //this.calendar.switchView('week');
+      else if (res.statusCode === 400) {
+        // TODO
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   },
 
   afterTapDay(e) {
-    console.log('afterTapDay', e.detail);
+    // console.log('afterTapDay', e.detail);
+    var format_date = e.detail.year + "-" + (String(e.detail.month).length == 1 ? "0" + e.detail.month : e.detail.month) + "-" + (String(e.detail.day).length == 1 ? "0" + e.detail.day : e.detail.day);
+    this.setData({
+      checks: this.data.month_checks[format_date]
+    })
   },
 
   whenChangeMonth(e) {

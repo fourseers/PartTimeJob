@@ -7,6 +7,8 @@ import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
+
 public interface JobService {
 
     void save(Job job, int shopId, String username);
@@ -16,7 +18,7 @@ public interface JobService {
     Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize);
 
     Page<Job> findJobs(WechatUser user, int pageCount);
-    Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount);
+    Page<Job> findJobsByGeoLocation(WechatUser user, BigDecimal longitude, BigDecimal latitude, int pageCount);
     Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
 
     boolean apply(WechatUser user, ApplyDto applyDto);

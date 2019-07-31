@@ -20,7 +20,7 @@ describe('getIndustry.js', () => {
     it('test getIndustry', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-          vm.login_process("user_one", "user_one").then(response => {
+          vm.login_process("Tim Cook", "some password").then(response => {
             // expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
             getIndustry().then(res  => {
                 expect(res.data[0].industry_id ).toEqual(1 );
@@ -37,7 +37,7 @@ describe('getIndustry.js', () => {
     it('test getIndustry', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             const wrapper2 = shallowMount(AddShop)
             const vm2 = wrapper2.vm
             vm2.get_industry().then(res  => {

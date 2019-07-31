@@ -32,7 +32,7 @@ describe('getJobs.js', () => {
     it('test getJobs.js', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             // expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
             getJobs(0).then(res  => {
                 expect(res.data.content[0].need_gender ).toEqual( 2);
@@ -47,7 +47,7 @@ describe('getJobs.js', () => {
     it('test getJobs.js', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             const wrapper2 = shallowMount(ShowJobs)
             const vm2 = wrapper2.vm
              vm2.mockTableData1(0).then(res  => {
@@ -63,9 +63,9 @@ describe('getJobs.js', () => {
     it('test getJobs  BY shop', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             // expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
-            getJobsByShop(0,11).then(res  => {
+            getJobsByShop(0,2).then(res  => {
                 expect(res.data.content[0].need_gender ).toEqual( 2);
                 done();
             })
@@ -80,10 +80,10 @@ describe('getJobs.js', () => {
     it('test getJobs by shop', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
+        vm.login_process("Tim Cook", "some password").then(response => {
             const wrapper2 = shallowMount(ShowJobs)
             const vm2 = wrapper2.vm
-            vm2.get_job_by_shop(0,11).then(res  => {
+            vm2.get_job_by_shop(0,2).then(res  => {
                 expect(res.data.content[0].need_gender ).toEqual( 2);
                 done();
             })

@@ -29,6 +29,8 @@
     </Layout>
 </template>
 <script>
+
+    import axios from 'axios';
     export default {
 
         name: "Register",
@@ -69,17 +71,17 @@
             handleSubmit: function (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.register();
+                        this.register(this.formInline.user,this.formInline.password);
                     } else {
                         this.$Message.error('Fail!');
                     }
                 })
             },
-            register()
+            register(user,password)
             {
                 var prefix="auth";
                 return new Promise((resolve, reject) => {
-                    this.axios({
+                     axios({
                         headers: {
                             'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
                             'Content-type': 'application/json',
@@ -88,8 +90,8 @@
                         method: 'post',
                         url: prefix +"/merchant/register",
                         data: {
-                            username: this.formInline.user,
-                            password: this.formInline.password
+                            username: user,
+                            password:  password
                         }
                     }).then(response => {
                         console.log(response.data);

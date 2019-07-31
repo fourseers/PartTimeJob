@@ -40,7 +40,7 @@
                                 </Row>
                                 <Row>
                                     <p  class="cv-item2">
-                                        教育： {{    this.education_convert(item.cv.education)}}
+                                        教育： {{education_convert(item.cv.education)}}
                                     </p>
                                 </Row>
                                 <Row>

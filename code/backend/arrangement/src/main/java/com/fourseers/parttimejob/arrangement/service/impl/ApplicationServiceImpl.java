@@ -43,7 +43,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private Integer DEFAULT_PAGE_SIZE;
 
     @Override
-    public Page<ApplyOutDto> getApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize) {
+    public Page<ApplyOutDto> getUnapprovedApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
@@ -56,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("job not exist or not belong to");
         }
 
-        Page<ApplicationProjection> applicationProjections = applicationDao.getApplicationsByJobId(jobId, pageCount, pageSize);
+        Page<ApplicationProjection> applicationProjections = applicationDao.getUnapprovedApplicationsByJobId(jobId, pageCount, pageSize);
 
         if (applicationProjections.isEmpty()) {
             throw new RuntimeException("application not exist");

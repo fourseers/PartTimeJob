@@ -25,8 +25,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
             "application.employTime as employTime, " +
             "application.cvId as cvId " +
             "from Application application " +
-            "where application.job.jobId = ?1")
-    Page<ApplicationProjection> getApplicationsByJobId(Integer jobId, Pageable pageable);
+            "where application.job.jobId = ?1 and application.status = false")
+    Page<ApplicationProjection> getUnapprovedApplicationsByJobId(Integer jobId, Pageable pageable);
 
     @Query("from Application app where app.status = true and app.job = ?1")
     List<Application> findApprovedByJob(Job job);

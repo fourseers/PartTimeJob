@@ -60,7 +60,7 @@
                                 </Row>
                                 <Row>
                                     <p  class="cv-item2">
-                                      手机号： {{item.cv.phone}}
+                                        手机号： {{item.cv.phone}}
                                     </p>
                                 </Row>
                                 <Row>
@@ -205,7 +205,7 @@
                                 page_count: index
                             }
                         }).then(({ status, data }) => {
-
+                            console.log(data)
                             resolve(data);
                         })
                             .catch(error => {
@@ -339,7 +339,7 @@
                     if( education =="BELOW_SENIOR")
                     {
                         return "初中毕业及以下"
-                    }else if( education =="TECHICAL_JUNIOR")
+                    }else if( education =="TECHNICAL_JUNIOR")
                     {
 
                         return "中专毕业"

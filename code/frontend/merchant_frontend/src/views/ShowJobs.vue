@@ -354,7 +354,7 @@
                 if( education =="BELOW_SENIOR")
                 {
                     return "初中毕业及以下"
-                }else if( education =="TECHICAL_JUNIOR")
+                }else if( education =="TECHNICAL_JUNIOR")
                 {
 
                     return "中专毕业"

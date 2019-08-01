@@ -43,14 +43,14 @@ App({
         }
       }
     });
-    /*
+    
     // 显示欢迎页面2秒后跳转到"我"页面
     setTimeout(function () {
       wx.reLaunch({
         url: "/pages/user/user",
       })
     }, 2000)
-    */
+    
   },
   globalData: {
     userInfo: null,

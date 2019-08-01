@@ -125,7 +125,7 @@ Page({
           end_apply_year: end_apply_date.getFullYear(),
           end_apply_month: end_apply_date.getMonth()+1,
           end_apply_date: end_apply_date.getDate(),
-          salary: info.salary,
+          salary: info.salary.toFixed(2),
           tags: info.tag_list,
           shop_id: info.shop.shop_id,
           shop_name: info.shop.shop_name,

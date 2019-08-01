@@ -1242,11 +1242,14 @@ export function setSelectedDays(selected, componentId) {
     });
     newSelectedDay = days;
   } else if (selected && selected.length) {
+    /*
     if (selectedDay && selectedDay.length) {
       newSelectedDay = uniqueArrayByDate(selectedDay.concat(selected));
     } else {
       newSelectedDay = selected;
     }
+    */
+    newSelectedDay = selected;
     const { year: curYear, month: curMonth } = days[0];
     const currentSelectedDays = [];
     newSelectedDay.forEach(item => {

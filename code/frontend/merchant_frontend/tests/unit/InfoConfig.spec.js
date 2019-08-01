@@ -9,9 +9,7 @@ describe('Info  ', () => {
 
         const wrapper = shallowMount(Login);
         const vm = wrapper.vm
-        vm.login_process("user_one", "user_one").then(response => {
-
-            vm.$root.logged=true;
+        vm.login_process("Tim Cook", "some password").then(response => {
             done();
         });
     });

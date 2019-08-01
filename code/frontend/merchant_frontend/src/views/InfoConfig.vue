@@ -61,38 +61,6 @@
                         }
                     })
             },
-            ChangeCompany()
-            {
-                console.log(this.$token.loadToken().access_token)
-                var prefix="/warehouse"
-                //测试用的url
-                 axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/company",
-                    data:  {
-                        company_name:this.formValidate.company_name
-                    }
-                }).then(response => {
-                    console.log(response);
-                    if(response.status ===  200)
-                    {
-                        console.log("success");
-                        this.$Message.success('成功');
-                    }
-
-                })
-                    .catch(error => {
-                        //JSON.stringify(error);
-                        this.$Message.error('失败');
-                        console.log(error)
-                    })
-            }
         }
     }
 </script>

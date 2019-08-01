@@ -179,7 +179,6 @@
 </template>
 <script>
 
-    import DateTime from "luxon/src/datetime";
 
     import {getShops} from '../util/getShops.js'
     export default {
@@ -344,7 +343,25 @@
                 this.mockTableData1 (0);
                 this.get_tags();
             }
-
+            Date.prototype.Format = function (fmt) {
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o){
+                    if (new RegExp("(" + k + ")").test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    }
+                }
+                return fmt;
+            }
         },
         methods: {
             get_tags()
@@ -404,30 +421,40 @@
 
                 this.mockTableData1(index-1);
             },
-            format_only_date(d,str)
+            format_only_date(d,t)
             {
-                var a = str.split(':');
-                var y=d.getUTCFullYear();
-                var rettime=  DateTime.fromObject({year:y, month: d.getMonth()+1, day:d.getDate(), hour:  Number(a[0]), minute:  Number(a[1]), second: 0, zone: "UTC+8"}).toFormat( 'yyyy-MM-dd');
-
-                return rettime;
+                var newd=new Date;
+                newd.setTime(d.getTime() + 1000* this.convert_to_seconds(t)- 8*3600*1000);
+                return new Date(d).Format("yyyy-MM-dd");
 
             },
             format_time(str)
             {
                 var a = str.split(':');
-                var rettime=  DateTime.fromObject({year:1970, month: 1, day: 1, hour:  Number(a[0]), minute:  Number(a[1]), second: 0, zone: "UTC+8"}).toFormat( 'HH:mm:ss');
-                return rettime
+                var retstr=a[0]+":"+a[1]+":"+"00"
+                return retstr;
             },
-            format_date(d,str)
+            convert_to_seconds(str)
             {
-                var a = str.split(':');
-                var y=d.getUTCFullYear();
-                var rettime=  DateTime.fromObject({year:y, month: d.getMonth()+1, day:d.getDate(), hour:  Number(a[0]), minute:  Number(a[1]), zone: "UTC+8"}).toFormat( 'yyyy-MM-dd HH:mm:ss');
-
-                return rettime;
+                var a = str.split(':'); // split it at the colons
+                // minutes are worth 60 seconds. Hours are worth 60 minutes.
+                var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60;
+                return seconds;
+            },
+            format_date(d,t)
+            {
+                var timestr= this.format_time(t)
+                var nd = new Date;
+                nd.setTime(d.getTime() + 1000* this.convert_to_seconds(t)- 8*3600*1000);
+                return new Date(d).Format("yyyy-MM-dd")+ " "+timestr;
+            },
+            printtime(){
+                console.log(this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time));
+                console.log(this.format_time(this.formValidate.begin_time))
+                console.log(this.format_date(this.formValidate.begin_apply_date,  this.formValidate.begin_apply_time),)
             },
             handleSubmit(name) {
+                this.printtime()
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if( !this.formValidate.shop)

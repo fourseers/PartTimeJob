@@ -197,7 +197,7 @@
                             okText: '我已支付',
                             cancelText: '取消支付',
                             onOk: () => {
-                              this.get_payment_status();
+                                this.get_payment_status();
                             },
                             onCancel: () => {
                                 this.$Message.info('Clicked cancel');
@@ -235,8 +235,17 @@
                     console.log(response.data.data);
                     if(response.status ===  200)
                     {
-                        this.$Message.success('支付成功');
-                       this.$router.push({name: "postjob"})
+                        if(response.data.data === "paid") {
+                            this.$Message.success('支付成功');
+                            this.$router.push({name: "postjob"})
+                        }else if(response.data.data === "paid")
+                        {
+                            this.$Message.success('您未支付');
+                        }
+                        else if (response.data.data === "pending")
+                        {
+                            this.$Message.success('未收到支付反馈，请稍后重试');
+                        }
                     }
                 })
             },

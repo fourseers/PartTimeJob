@@ -29,7 +29,6 @@
 
 <script>
 
-    import DateTime from "luxon/src/datetime";
     import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {

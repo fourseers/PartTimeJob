@@ -34,9 +34,9 @@ public class ApplicationDaoImpl implements ApplicationDao {
     }
 
     @Override
-    public Page<ApplicationProjection> getApplicationsByJobId(Integer jobId, int pageCount, int pageSize) {
+    public Page<ApplicationProjection> getUnapprovedApplicationsByJobId(Integer jobId, int pageCount, int pageSize) {
         Pageable pageable = PageRequest.of(pageCount, pageSize);
-        return applicationRepository.getApplicationsByJobId(jobId, pageable);
+        return applicationRepository.getUnapprovedApplicationsByJobId(jobId, pageable);
     }
 
     @Override

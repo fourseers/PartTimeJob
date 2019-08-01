@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 
 public interface ApplicationService {
 
-    Page<ApplyOutDto> getApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize);
+    Page<ApplyOutDto> getUnapprovedApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize);
 
     void rejectByUsernameAndApplicationId(String username, Integer applicationId);
 

@@ -15,7 +15,7 @@ public interface ApplicationDao {
 
     boolean addOne(Application application);
 
-    Page<ApplicationProjection> getApplicationsByJobId(Integer jobId, int pageCount, int pageSize);
+    Page<ApplicationProjection> getUnapprovedApplicationsByJobId(Integer jobId, int pageCount, int pageSize);
 
     List<Application> getAppliedByJob(Job job);
 

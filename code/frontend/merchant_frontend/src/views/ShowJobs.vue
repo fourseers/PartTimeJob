@@ -29,6 +29,7 @@
 
 <script>
 
+    import DateTime from "luxon/src/datetime";
     import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {
@@ -107,7 +108,7 @@
                         key: 'begin_date',
                         render: (h, params) => {
                             return  h('div',[
-                                h('div', params.row.begin_time )
+                                h('div',params.row.begin_time  )
                             ])}
 
                     },
@@ -122,14 +123,23 @@
                     },
                     {
                         title: '岗位介绍',
-                        key: 'job_detail'
+                        key: 'job_detail',
+                        render: (h, params) => {
+                            return  h('Tooltip',{
+                                props:{
+                                    content:params.row.job_detail,
+                                    maxWidth:200
+                        }},
+                            [
+                                h('div', params.row.job_detail.substr(0,20) )
+                            ])}
                     },
                     {
                         title: '教育',
                         key: 'education',
                         render: (h, params) => {
                             return  h('div',this.education_convert(params.row.education)
-                                    )}
+                            )}
 
                     },
                     {
@@ -151,7 +161,7 @@
                                     {
                                         params.row.manual_stop= !value;
                                         this.stopHire(params.row.job_id, params.row.manual_stop).then(res => {
-                                            console.log(res)
+                                                console.log(res)
                                                 if(res.status===200 &&  params.row.manual_stop)
                                                 {
                                                     this.$Message.success('停止招聘成功');
@@ -211,22 +221,8 @@
                         }
                         else {
                             //get jobs by shop
-                            getJobsByShop(0,val).then(res => {
-                                    console.log(res)
-                                    this.jobs = res.data.content
-                                    this.total_elements=res.data.total_elements
-                                    this.total_pages= res.total_pages
-                                },
-                                error => {
-                                    if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                                        this.$Message.error('暂无岗位');
-                                        console.log(error)
-                                    }
-                                    console.log(error)
-                                }
-                            )
 
-
+                            this.get_job_by_shop(0,val);
                         }
                     }
                 }
@@ -240,9 +236,31 @@
                 this.mockTableData1(0)
                 //get shops
                 this.mockTableData2(0)
-                 }
+            }
         },
         methods: {
+            get_job_by_shop(index,val)
+            {
+                return new Promise((resolve, reject) => {
+                    getJobsByShop(index, val).then(res => {
+                            console.log(res)
+                            this.jobs = res.data.content
+                            this.total_elements = res.data.total_elements
+                            this.total_pages = res.total_pages
+                            resolve(res);
+                        },
+                        error => {
+                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                this.$Message.error('暂无岗位');
+                                console.log(error)
+                            }
+                            console.log(error)
+                            reject(error.response.data.status);
+                        }
+                    )
+                })
+
+            },
             stopHire(id,stop)
             {
                 var prefix="arrangement";
@@ -275,20 +293,23 @@
                 var prefix = "/arrangement"
 
                 //get jobs
-                getJobs(pagenum).then(res => {
-                        console.log(res)
-                        this.jobs = res.data.content
-                        this.total_pages= res.total_pages
-                        this.total_elements = res.data.total_elements
-                    },
-                    error => {
-                        if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
-                            this.$Message.error('暂无岗位');
-                            console.log(error)
+                return new Promise((resolve, reject) => {
+                    getJobs(pagenum).then(res => {
+                            console.log(res)
+                            this.jobs = res.data.content
+                            this.total_pages = res.total_pages
+                            this.total_elements = res.data.total_elements
+                            resolve(res);
+                        },
+                        error => {
+                            if (error.response.data.status === 400 && error.response.data.message === "job not exist") {
+                                this.$Message.error('暂无岗位');
+                                console.log(error)
+                            }
+                            reject(error.response.data.status);
                         }
-                        console.log(error)
-                    }
-                )
+                    )
+                })
             },
             mockTableData2 (pagenum) {
                 //get shops
@@ -316,7 +337,7 @@
                 if(this.shop_chosen === "")
                 {this.mockTableData1(index-1);}
                 else
-                {this.mockTableData1(index-1,this.shop_chosen);}
+                {this.get_job_by_shop(index-1,this.shop_chosen);}
 
             },
             changeselectPage(index)

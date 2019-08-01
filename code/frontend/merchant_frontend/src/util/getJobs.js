@@ -17,15 +17,11 @@ export function getJobs(pagenum) {
             method: 'get',
             params:
                 {
-                    "page_count": pagenum?pagenum:0
+                    "page_count": pagenum
                 },
             url: prefix + "/merchant/jobs"
         }).then( ({ status, data }) => {
-            if (status === 200) {
                 resolve(data);
-            } else {
-                reject( data);
-            }
         })
             .catch(error => {
 
@@ -49,19 +45,14 @@ export function getJobsByShop(pagenum,shop_id) {
             method: 'get',
             params:
                 {
-                    "page_count": pagenum?pagenum:0,
+                    "page_count": pagenum,
                     "shop_id": shop_id
                 },
             url: prefix + "/merchant/jobs"
         }).then( ({ status, data }) => {
-            if (status === 200) {
                 resolve(data);
-            } else {
-                reject( data);
-            }
         })
             .catch(error => {
-
                 reject( error);
             })
     })

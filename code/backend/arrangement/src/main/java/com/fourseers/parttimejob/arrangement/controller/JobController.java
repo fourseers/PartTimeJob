@@ -171,7 +171,6 @@ public class JobController {
                     "starting from 0, with each page having 10 items.")
             @RequestParam(value = "page_count") Integer pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
-
         try {
             Page<ApplyOutDto> applyOutDtos = applicationService.getApplicationsByUsernameAndJobId(username, jobId, pageCount, PAGE_SIZE);
             return ResponseBuilder.build(HttpStatus.OK, applyOutDtos, "success");

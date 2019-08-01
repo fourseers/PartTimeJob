@@ -14,4 +14,5 @@ public interface WorkProjection {
     Integer getScore();
     Double getPayment();
     Boolean getPaid();
+    Boolean getRejected();
 }

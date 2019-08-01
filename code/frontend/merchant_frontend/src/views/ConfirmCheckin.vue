@@ -49,6 +49,10 @@
                         key: 'job_name'
                     },
                     {
+                        title: '工作日期',
+                        key: 'work_date'
+                    },
+                    {
                         title: '工作开始时间',
                         key: 'begin_time'
                     },

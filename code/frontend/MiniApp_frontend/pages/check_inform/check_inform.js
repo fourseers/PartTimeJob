@@ -2,7 +2,7 @@
 const app = getApp();
 const { $Toast } = require("../../dist/base/index");
 import request from "../../api/request.js"
-import { host, job_detail, apply_job, checkin } from "../../api/url.js"
+import { host, job_detail, check_status, checkin, checkout } from "../../api/url.js"
 var job_id = 0;
 var default_radius = 100;
 var default_check_avail = 15; //minutes
@@ -65,6 +65,14 @@ Page({
     });
 
     var req = new request();
+
+    req.getRequest(host + check_status, {
+      job_id: job_id
+    }, app.globalData.access_token).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    })
     //console.log("test");
     req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
       if(res.statusCode === 200) {

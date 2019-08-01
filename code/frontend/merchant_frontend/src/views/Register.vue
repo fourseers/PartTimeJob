@@ -29,13 +29,14 @@
     </Layout>
 </template>
 <script>
+    import { Form } from 'iview';
     export default {
-
         name: "Register",
+        components: {
+            'Form': Form
+        },
         data () {
             const validatePass = (rule, value, callback) => {
-                // console.log(rule)
-                // console.log(value)
                 if (value === '' || value !== this.formInline.password) {
                     callback(new Error('两次输入不一致'));
                 } else {
@@ -69,53 +70,51 @@
             handleSubmit: function (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.register();
+                        this.register(this.formInline.user,this.formInline.password);
                     } else {
                         this.$Message.error('Fail!');
                     }
                 })
             },
-           register()
+            register(user,password)
             {
                 var prefix="auth";
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/register",
-                    data: {
-                        username: this.formInline.user,
-                        password: this.formInline.password
-                    }
-                }).then(response => {
-                    console.log(response.data);
-                    if(response.data.status === 200 )
-                    {
-                        this.$Message.success('注册成功');
-                        this.$token.savetoken(response.data.data);
-                        console.log(this.$token.loadToken());
-                        this.$root.logged = true;
-                        this.$router.push({ name: "postjob"});
-                    }
-                }).catch(error=> {
-                    if(error.response){
-                        if(error.response.data.message === "User exists.")
+                return new Promise((resolve, reject) => {
+                    this.axios({
+                        headers: {
+                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Content-type': 'application/json',
+                            'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
+                        },
+                        method: 'post',
+                        url: prefix +"/merchant/register",
+                        data: {
+                            username: user,
+                            password:  password
+                        }
+                    }).then(({ status, data }) => {
+                        console.log( data);
+                        if( status === 200 )
                         {
-                            this.$Message.error('用户名已存在');
+                            this.$Message.success('注册成功');
+                            this.$token.savetoken( data.data);
+                            console.log(this.$token.loadToken());
+                            this.$root.logged = true;
+                            this.$router.push({ name: "postjob"});
                         }
+                        resolve(data);
 
-                        if (error.response.data.status === 401) {
-                            this.$Message.error('auth错误');
+                    }).catch(error=> {
+                        if(error.response){
+                            if(error.response.data.message === "User exists.")
+                            {
+                                this.$Message.error('用户名已存在');
+                            }
+
                         }
-                        if (error.response.data.status === 500) {
-                            this.$Message.error('服务器错误');
-                        }
-                    }
-                })
+                        reject( error.response.data.status);
+                    })
+                });
             }
         }
     }

@@ -2,6 +2,8 @@ package com.fourseers.parttimejob.common.entity;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Etc {
 
@@ -47,6 +49,19 @@ public class Etc {
 
         public boolean satisfies(Education requirement) {
             return satisfies(requirement, this);
+        }
+
+        public List<Education> getAllSatisfied() {
+            return getAllSatisfied(this);
+        }
+
+        public static List<Education> getAllSatisfied(Education requirement) {
+            List<Education> below = new ArrayList<>();
+            for(Education edu: Education.values()) {
+                if(edu.ordinal() <= requirement.ordinal())
+                    below.add(edu);
+            }
+            return below;
         }
 
     }

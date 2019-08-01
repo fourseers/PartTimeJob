@@ -19,6 +19,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
+
   },
   snapshotSerializers: [
     'jest-serializer-vue'
@@ -37,7 +38,9 @@ module.exports = {
      "**/*/*.{js,jsx,vue}",
   "!**/node_modules/**",
   "!**/vendor/**",
-     "!**/dist/**"
+     "!**/dist/**",
+     "!**/coverage/**",
+     "!**/*.config.js"
   ],
   setupFiles: [
     "<rootDir>/jest.init.js"

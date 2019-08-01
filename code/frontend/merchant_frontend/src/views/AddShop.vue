@@ -364,7 +364,6 @@
         padding-left:100px;
         background-color: #fff;
     }
-    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

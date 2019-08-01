@@ -142,7 +142,7 @@ public class JobServiceImpl implements JobService {
         CV cv = cvDao.getOne(applyDto.getCvId());
         if(cv == null)
             throw new RuntimeException("Invalid cv.");
-        if(cv.getUserId() != user.getUserId())
+        if(!cv.getUserId().equals(user.getUserId()))
             throw new RuntimeException("CV doesn't belong to user - check cv id.");
         if(job.getAppliedAmount() >= job.getNeedAmount()) {
             throw new RuntimeException("Sorry, no more seats available.");

@@ -106,6 +106,8 @@ public class MonthlyBillServiceImpl implements MonthlyBillService {
                 + "\"subject\":\"" + subject + "\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
+        System.out.println(alipayRequest.getBizContent());
+
         try {
             AlipayTradePagePayResponse response = alipayClient.pageExecute(alipayRequest);
             if (!response.isSuccess()) {

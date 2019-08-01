@@ -4,6 +4,7 @@ import com.fourseers.parttimejob.billing.dao.BillingDao;
 import com.fourseers.parttimejob.billing.dao.CompanyDao;
 import com.fourseers.parttimejob.billing.dao.MonthlyBillDao;
 import com.fourseers.parttimejob.billing.dao.WorkDao;
+import com.fourseers.parttimejob.billing.projection.BillingStatusProjection;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.common.entity.Billing;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 @Transactional
@@ -82,6 +85,32 @@ public class BillingServiceImpl implements BillingService {
         } else {
             return (double) 0;
         }
+    }
+
+    @Override
+    public List<BillingStatusProjection> getBillingStatus(String username, Integer fromYear, Integer fromMonth, Integer toYear, Integer toMonth) {
+
+        Company company = companyDao.findByUsername(username);
+
+        if (company == null) {
+            throw new RuntimeException("user does not belong to any company");
+        }
+
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.set(Calendar.YEAR, fromYear);
+        aCalendar.set(Calendar.MONTH, fromMonth - 1);
+        aCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date from = new Date(aCalendar.getTime().getTime());
+        aCalendar.set(Calendar.YEAR, toYear);
+        aCalendar.set(Calendar.MONTH, toMonth - 1);
+        aCalendar.set(Calendar.DAY_OF_MONTH, aCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(aCalendar.getTime().getTime());
+        if (from.after(to)) {
+            throw new RuntimeException("incorrect param");
+        }
+
+        return billingDao.getBillingStatus(company.getCompanyId(), from, to);
+
     }
 
 }

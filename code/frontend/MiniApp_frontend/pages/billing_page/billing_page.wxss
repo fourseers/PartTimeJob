@@ -1,1 +1,6 @@
 /* pages/billing_page/billing_page.wxss */
+
+.container {
+  margin-top: 128rpx;
+}
+

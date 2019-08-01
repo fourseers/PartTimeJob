@@ -2,11 +2,13 @@ package com.fourseers.parttimejob.arrangement.service.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.*;
 import com.fourseers.parttimejob.arrangement.dto.ApplyOutDto;
+import com.fourseers.parttimejob.arrangement.dto.ApplyUserEntryDto;
 import com.fourseers.parttimejob.arrangement.projection.ApplicationProjection;
 import com.fourseers.parttimejob.arrangement.service.ApplicationService;
 import com.fourseers.parttimejob.common.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.sql.Timestamp;
 
 @Service
 @Transactional
+
 public class ApplicationServiceImpl implements ApplicationService {
 
     @Autowired
@@ -36,8 +39,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Value("${app.pagination.pageSize}")
+    private Integer DEFAULT_PAGE_SIZE;
+
     @Override
-    public Page<ApplyOutDto> getApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize) {
+    public Page<ApplyOutDto> getUnapprovedApplicationsByUsernameAndJobId(String username, Integer jobId, int pageCount, int pageSize) {
         MerchantUser user = merchantUserDao.findByUsername(username);
 
         if (user.getCompany() == null) {
@@ -50,7 +56,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             throw new RuntimeException("job not exist or not belong to");
         }
 
-        Page<ApplicationProjection> applicationProjections = applicationDao.getApplicationsByJobId(jobId, pageCount, pageSize);
+        Page<ApplicationProjection> applicationProjections = applicationDao.getUnapprovedApplicationsByJobId(jobId, pageCount, pageSize);
 
         if (applicationProjections.isEmpty()) {
             throw new RuntimeException("application not exist");
@@ -121,5 +127,10 @@ public class ApplicationServiceImpl implements ApplicationService {
             work.setWorkDate(date);
             workDao.save(work);
         }
+    }
+
+    @Override
+    public Page<ApplyUserEntryDto> getApplicationsByWechatUser(WechatUser user, int pageCount) {
+        return applicationDao.getApplicationsByUser(user, pageCount, DEFAULT_PAGE_SIZE);
     }
 }

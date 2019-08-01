@@ -172,7 +172,7 @@ public class JobController {
             @RequestParam(value = "page_count") Integer pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
         try {
-            Page<ApplyOutDto> applyOutDtos = applicationService.getApplicationsByUsernameAndJobId(username, jobId, pageCount, PAGE_SIZE);
+            Page<ApplyOutDto> applyOutDtos = applicationService.getUnapprovedApplicationsByUsernameAndJobId(username, jobId, pageCount, PAGE_SIZE);
             return ResponseBuilder.build(HttpStatus.OK, applyOutDtos, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());

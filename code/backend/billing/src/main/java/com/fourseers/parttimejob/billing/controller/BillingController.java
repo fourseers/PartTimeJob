@@ -199,4 +199,29 @@ public class BillingController {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }
     }
+
+    @ApiOperation(value = "Merchant user get bill status of several continuous months")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/status", method = GET, produces = "application/json")
+    public ResponseEntity<Response<String>> monthlyPayStatus(
+            @ApiParam(value = "from_year, yyyy") @RequestParam(value = "from_year") Integer fromYear,
+            @ApiParam(value = "from_month, MM") @RequestParam(value = "from_month") Integer fromMonth,
+            @ApiParam(value = "to_year, yyyy") @RequestParam(value = "to_year") Integer toYear,
+            @ApiParam(value = "ti_month, MM") @RequestParam(value = "to_month") Integer toMonth,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            billingService.getBillingStatus(username, fromYear, fromMonth, toYear, toMonth);
+            return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
 }

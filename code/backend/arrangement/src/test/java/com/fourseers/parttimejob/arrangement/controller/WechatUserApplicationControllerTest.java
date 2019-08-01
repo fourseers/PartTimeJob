@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.repository.*;
 import com.fourseers.parttimejob.arrangement.service.JobService;
@@ -26,7 +27,8 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -559,8 +561,51 @@ public class WechatUserApplicationControllerTest {
     }
 
     @Test
-    public void testUserGetApplicationList() throws Exception {
+    public void testUserGetApplicationListSuccess() throws Exception {
+        // apply for multiple jobs first
+        Job job = jobRepository.getOne(goodJobId);
+        JSONObject req = new JSONObject()
+                .fluentPut("job_id", goodJobId)
+                .fluentPut("cv_id", userCVId)
+                .fluentPut("begin_date", job.getBeginDate().toString())
+                .fluentPut("end_date", job.getEndDate().toString());
+        mockMvc.perform(post("/user/apply")
+                .content(req.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isOk());
+        req.fluentPut("job_id", goodJob2Id);
+        mockMvc.perform(post("/user/apply")
+                .content(req.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isOk());
+
+        MvcResult result = mockMvc.perform(get("/user/applications")
+                .param("pageCount", "0")
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        JSONObject data = response.getJSONObject("data");
+        assertNotNull(data);
+        JSONArray content = data.getJSONArray("content");
+        assertNotNull(content);
+
+        assertEquals(2, content.size());
+        assertNull(content.getJSONObject(0).get("status"));
+        assertTrue(
+                content.getJSONObject(0).getDate("create_time").after(
+                    content.getJSONObject(1).getDate("create_time")));
 
     }
 
+    @Test
+    public void testUserGetApplicationListInvalidPageCount() throws Exception {
+        mockMvc.perform(get("/user/applications")
+                .param("pageCount", "-1")
+                .header("x-internal-token", userHeader))
+                .andExpect(status().isBadRequest());
+    }
 } 

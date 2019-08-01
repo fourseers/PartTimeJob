@@ -1,6 +1,8 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
+import com.fourseers.parttimejob.arrangement.dto.ApplyUserEntryDto;
 import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
+import com.fourseers.parttimejob.arrangement.service.ApplicationService;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
@@ -14,9 +16,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -32,6 +38,9 @@ public class WechatUserApplicationController {
 
     @Autowired
     private WechatUserService wechatUserService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private WorkService workService;
@@ -66,5 +75,30 @@ public class WechatUserApplicationController {
         }
     }
 
+    @ApiOperation(value = "User get recently filed applications in pages.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK, return list of applications"),
+            @ApiResponse(code = 400, message = "Invalid application, could be invalid auth token or page number.")
+    })
+    @GetMapping(value = "applications")
+    public ResponseEntity<Response<Page<ApplyUserEntryDto>>> getApplications(
+            @ApiParam("Page count, starts with 0, default page size is 10")
+            @RequestParam(defaultValue = "0") @PositiveOrZero Integer pageCount,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token ) {
+        if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if(user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+        try {
+            return ResponseBuilder.build(OK,
+                    applicationService.getApplicationsByWechatUser(user, pageCount));
+        } catch (RuntimeException e) {
+            return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
+        } catch (Exception e) {
+            return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
+        }
+    }
 
 }

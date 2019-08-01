@@ -50,7 +50,7 @@ App({
         url: "/pages/user/user",
       })
     }, 2000)
-    
+
   },
   globalData: {
     userInfo: null,

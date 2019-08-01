@@ -4,6 +4,7 @@ const app = getApp();
 import request from "../../api/request.js"
 import { host, job_detail, apply_job } from "../../api/url.js"
 var job_id = 0;
+var util = require("../../utils/util.js")
 
 Page({
 
@@ -31,19 +32,19 @@ Page({
   data: {
     job_name: "fourseers",
     job_detail: "这里是详细描述",
-    begin_year: (new Date()).getFullYear(),
-    begin_month: (new Date()).getMonth(),
-    begin_date: (new Date()).getDate(),
-    end_year: (new Date()).getFullYear(),
-    end_month: (new Date()).getMonth(),
-    end_date: (new Date()).getDate(),
+    //begin_year: (new Date()).getFullYear(),
+    //begin_month: (new Date()).getMonth(),
+    begin_date: "",
+    //end_year: (new Date()).getFullYear(),
+    //end_month: (new Date()).getMonth(),
+    end_date: "",
     need_amount: 4,
-    begin_apply_year: (new Date()).getFullYear(),
-    begin_apply_month: (new Date()).getMonth(),
-    begin_apply_date: (new Date()).getDate(),
-    end_apply_year: (new Date()).getFullYear(),
-    end_apply_month: (new Date()).getMonth(),
-    end_apply_date: (new Date()).getDate(),
+    //begin_apply_year: (new Date()).getFullYear(),
+    //begin_apply_month: (new Date()).getMonth(),
+    begin_apply_date: "",
+    //end_apply_year: (new Date()).getFullYear(),
+    //end_apply_month: (new Date()).getMonth(),
+    end_apply_date: "",
     salary: "5K-10K",
     create_time: new Date(),
     isLoading: false,
@@ -112,19 +113,19 @@ Page({
         this.setData({
           job_name: info.job_name,
           job_detail: info.job_detail,
-          begin_year: begin_date.getFullYear(),
-          begin_month: begin_date.getMonth()+1,
-          begin_date: begin_date.getDate(),
-          end_year: end_date.getFullYear(),
-          end_month: end_date.getMonth()+1,
-          end_date: end_date.getDate(),
+          //begin_year: begin_date.getFullYear(),
+          //begin_month: begin_date.getMonth()+1,
+          begin_date: util.formatDate(begin_date),
+          //end_year: end_date.getFullYear(),
+          //end_month: end_date.getMonth()+1,
+          end_date: util.formatDate(end_date),
           need_amount: 4,
-          begin_apply_year: begin_apply_date.getFullYear(),
-          begin_apply_month: begin_apply_date.getMonth()+1,
-          begin_apply_date: begin_apply_date.getDate(),
-          end_apply_year: end_apply_date.getFullYear(),
-          end_apply_month: end_apply_date.getMonth()+1,
-          end_apply_date: end_apply_date.getDate(),
+          //begin_apply_year: begin_apply_date.getFullYear(),
+          //begin_apply_month: begin_apply_date.getMonth()+1,
+          begin_apply_date: util.formatDate(begin_apply_date),
+          //end_apply_year: end_apply_date.getFullYear(),
+          //end_apply_month: end_apply_date.getMonth()+1,
+          end_apply_date: util.formatDate(end_apply_date),
           salary: info.salary.toFixed(2),
           tags: info.tag_list,
           shop_id: info.shop.shop_id,
@@ -165,7 +166,7 @@ Page({
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
     wx.navigateTo({
-      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_apply_year + "-" + this.data.begin_apply_month + "-" + this.data.begin_apply_date + "&end_date=" + this.data.end_apply_year + "-" + this.data.end_apply_month + "-" + this.data.end_apply_date,
+      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_date + "&end_date=" + this.data.end_date,
     })
   },
 

@@ -293,7 +293,7 @@ Page({
       isModified = true;
     }
     if (this.data.city_modified) {
-      postData.city = this.data.city;
+      postData.city = this.data.city_code;
       isModified = true;
     }
     if (this.data.education_modified) {

@@ -5,8 +5,7 @@
         font-size: 20px;">本月需支付总金额：{{this.sum}}
             </div>
             <div slot="footer" class="table-height">
-
-                <Button class="ivu-btn" @click="paybill(bill_id)" >确认支付</Button>
+                <Button id="btn1" class="ivu-btn" @click="paybill(bill_id)"  v-if="show"    >确认支付</Button>
             </div>
 
 
@@ -78,6 +77,7 @@
                 bill:[],
                 bill_id:0,
                 sum: this.getsum(),
+                show :true
             }
         },
         watch:
@@ -92,7 +92,29 @@
 
                 //获取第一页账单
                 this.mockTableData1(0)
-
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    params:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        if(response.data.data === "paid") {
+                            this.show=false
+                        }
+                    }
+                })
             }
 
         },

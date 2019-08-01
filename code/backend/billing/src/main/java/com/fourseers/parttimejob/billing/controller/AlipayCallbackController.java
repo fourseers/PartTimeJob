@@ -42,7 +42,7 @@ public class AlipayCallbackController {
         }
 
         if (!monthlyBill.getStatus().equals("success")) {
-            monthlyBill.setStatus("success");
+            monthlyBill.setStatus("paid");
             monthlyBillService.save(monthlyBill);
         }
 

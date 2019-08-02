@@ -240,9 +240,9 @@
                     if(this.addressCandidate[i].name === val)
                     {
                         console.log(this.addressCandidate[i])
-                        this.latitude = this.addressCandidate[i].location.split(",")[0];
-                        this.longitude=  this.addressCandidate[i].location.split(",")[1];
-                        var location = [this.latitude ,this.longitude];
+                        this.longitude = this.addressCandidate[i].location.split(",")[0];
+                        this.latitude=  this.addressCandidate[i].location.split(",")[1];
+                        var location = [  this.longitude ,  this.latitude];
                         this.center=location;
                         this.circle.center=location;
                         this.marker.position=location;

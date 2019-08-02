@@ -66,13 +66,17 @@ Page({
           //填充month_checks
           var date_list = util.getDates(dates_json)
           for (var j in date_list) {
-            month_checks[date_list[j]].push({
-              job_name: data[i].job_name,
-              shop_name: data[i].shop_name,
-              begin_time: data[i].begin_time,
-              end_time: data[i].end_time,
-              job_id: data[i].job_id
-            })
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (new Date(date_list[j]) >= today) {
+              month_checks[date_list[j]].push({
+                job_name: data[i].job_name,
+                shop_name: data[i].shop_name,
+                begin_time: data[i].begin_time,
+                end_time: data[i].end_time,
+                job_id: data[i].job_id
+              })
+            }
           }
         }
         this.setData({

@@ -59,7 +59,7 @@ Page({
         is_registered: app.globalData.is_registered
       });
       $Message({
-        content: '登陆成功',
+        content: '登录成功',
         type: 'success'
       });
     }

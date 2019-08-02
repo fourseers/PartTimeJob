@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.arrangement.controller;
 
 import com.fourseers.parttimejob.arrangement.dto.WorkRemarkDto;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
@@ -74,6 +75,33 @@ public class WorkController {
         try {
             workService.remark(username, workRemarkDto.getWorkId(), workRemarkDto.getScore());
             return ResponseBuilder.build(HttpStatus.OK, null, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+
+    @ApiOperation(value = "Work status")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to a company / shop not exist or not belong to"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/work/status", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Response<WorkStatusProjection>> getWorkStatus(
+            @RequestParam(value = "shop_id") Integer shopId,
+            @ApiParam(value = "from_year, yyyy") @RequestParam(value = "from_year") Integer fromYear,
+            @ApiParam(value = "from_month, MM") @RequestParam(value = "from_month") Integer fromMonth,
+            @ApiParam(value = "to_year, yyyy") @RequestParam(value = "to_year") Integer toYear,
+            @ApiParam(value = "to_month, MM") @RequestParam(value = "to_month") Integer toMonth,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            WorkStatusProjection workStatusProjection = workService.getWorkStatus(username, shopId, fromYear, fromMonth, toYear, toMonth);
+            return ResponseBuilder.build(HttpStatus.OK, workStatusProjection, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }

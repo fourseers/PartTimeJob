@@ -29,7 +29,6 @@
 
 <script>
 
-    import DateTime from "luxon/src/datetime";
     import {getJobs, getJobsByShop} from '../util/getJobs.js'
     import {getShops} from '../util/getShops.js'
     export default {
@@ -230,7 +229,8 @@
         created:function()
         {
             if(!this.$root.logged)
-            {this.$Message.warning('请登录');}
+            {this.$Message.warning('请登录');
+                this.$router.push({name: "login"})}
             else {
                 //get jobs
                 this.mockTableData1(0)
@@ -354,7 +354,7 @@
                 if( education =="BELOW_SENIOR")
                 {
                     return "初中毕业及以下"
-                }else if( education =="TECHICAL_JUNIOR")
+                }else if( education =="TECHNICAL_JUNIOR")
                 {
 
                     return "中专毕业"

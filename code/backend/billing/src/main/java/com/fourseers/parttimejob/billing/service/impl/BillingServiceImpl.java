@@ -5,12 +5,15 @@ import com.fourseers.parttimejob.billing.dao.CompanyDao;
 import com.fourseers.parttimejob.billing.dao.MonthlyBillDao;
 import com.fourseers.parttimejob.billing.dao.WorkDao;
 import com.fourseers.parttimejob.billing.projection.BillingStatusProjection;
+import com.fourseers.parttimejob.billing.projection.UserWorkEntryProjection;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.entity.Company;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.common.entity.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,9 @@ public class BillingServiceImpl implements BillingService {
 
     @Autowired
     MonthlyBillDao monthlyBillDao;
+
+    @Value("${app.pagination.pageSize}")
+    private Integer DEFAULT_PAGE_SIZE;
 
     public Page<WorkBillingProjection> getBillingsByUsernameOrderByBillIdDescInGivenPeriod(String username, Date fromDate, Date toDate, int pageCount, int pageSize) {
 
@@ -111,6 +117,11 @@ public class BillingServiceImpl implements BillingService {
 
         return billingDao.getBillingStatus(company.getCompanyId(), from, to);
 
+    }
+
+    @Override
+    public Page<UserWorkEntryProjection> getUserWork(WechatUser wechatUser, Integer pageCount) {
+        return workDao.getUserWorkAndBill(wechatUser, pageCount, DEFAULT_PAGE_SIZE);
     }
 
 }

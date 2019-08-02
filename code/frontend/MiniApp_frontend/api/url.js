@@ -17,6 +17,7 @@ const schedule = "/arrangement/user/schedule"
 const check_status = "/arrangement/user/check-status"
 const applied_time = "/arrangement/user/job/applied-time?job_id="
 const application_list = "/arrangement/user/applications"
+const billing = "/billing/user/works"
 
 module.exports = {
   login,
@@ -38,4 +39,5 @@ module.exports = {
   check_status,
   applied_time,
   application_list,
+  billing
 }

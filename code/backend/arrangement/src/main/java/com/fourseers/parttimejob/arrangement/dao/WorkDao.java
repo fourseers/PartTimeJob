@@ -1,8 +1,11 @@
 package com.fourseers.parttimejob.arrangement.dao;
 
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.data.domain.Page;
+
+import java.sql.Date;
 
 public interface WorkDao {
 
@@ -15,4 +18,6 @@ public interface WorkDao {
     Work findTodayByUserAndJob(WechatUser user, Job job);
 
     void save(Work work);
+
+    WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to);
 }

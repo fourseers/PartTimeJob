@@ -18,7 +18,9 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "and work.job.shop.company.companyId = ?1")
     Double getBillingAmountByCompanyIdInGivenPeriod(Integer companyId, Date from, Date to);
 
-    @Query("select sum(work.billing.payment) " +
+    @Query("select work.job.shop.shopId as shopId, " +
+            "work.job.shop.shopName as shopName, " +
+            "sum(work.billing.payment) as payment " +
             "from Work work " +
             "where work.workDate >= ?2 " +
             "and work.workDate <= ?3 " +
@@ -27,4 +29,5 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "group by work.job.shop.shopId " +
             "order by work.job.shop.shopId")
     List<BillingStatusProjection> getBillingStatusByCompanyIdInGivenPeriod(Integer companyId, Date from, Date to);
-}
+
+    }

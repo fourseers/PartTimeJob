@@ -40,10 +40,15 @@ Page({
         src: "/assets/icons/job.png"
       },
       {
+        title: "工资",
+        url: "/pages/billing_page/billing_page",
+        src: "/assets/icons/money.png"
+      },
+      {
         title: "关于",
         url: "/pages/index/index",
         src: "/assets/icons/about.png"
-      },
+      }
     ]
   },
 

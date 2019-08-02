@@ -3,6 +3,7 @@ const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js";
 import { host, user_info, register_data, modify_info } from "../../api/url.js";
+import { CITY_LIST } from "../../locale/citydata.js"
 
 Page({
 
@@ -106,9 +107,16 @@ Page({
           tags: toChosen
         })
         if (app.globalData.city === null) {
-          console.log(app.globalData.city);
+          // console.log(app.globalData.city);
+          var city_name = "";
+          for (var i in CITY_LIST) {
+            if (CITY_LIST[i].code === info.city) {
+              city_name = CITY_LIST[i].city;
+              break;
+            }
+          }
           this.setData({
-            city: info.city
+            city: city_name
           })
         }
       }

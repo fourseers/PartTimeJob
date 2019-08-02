@@ -16,6 +16,7 @@ const shop_score = "/warehouse/user/shop/score"
 const schedule = "/arrangement/user/schedule"
 const check_status = "/arrangement/user/check-status"
 const applied_time = "/arrangement/user/job/applied-time?job_id="
+const billing = "/billing/user/works"
 
 module.exports = {
   login,
@@ -35,5 +36,6 @@ module.exports = {
   shop_score,
   schedule,
   check_status,
-  applied_time
+  applied_time,
+  billing
 }

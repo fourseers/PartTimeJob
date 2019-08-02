@@ -16,7 +16,8 @@
     "pages/shop/shop",
     "pages/leave/leave",
     "pages/switchcity/switchcity",
-    "pages/choose_date/choose_date"
+    "pages/choose_date/choose_date",
+    "pages/billing_page/billing_page"
   ],
   "window": {
     "backgroundTextStyle": "light",

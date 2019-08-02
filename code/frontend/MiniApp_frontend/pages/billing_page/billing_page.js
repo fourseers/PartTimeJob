@@ -3,11 +3,11 @@ const app = getApp();
 import request from "../../api/request.js";
 import { host, billing } from "../../api/url.js";
 
+
 Page({
 
   /**
    * 页面的初始数据
-   * status
    */
   data: {
     page_count: 0,

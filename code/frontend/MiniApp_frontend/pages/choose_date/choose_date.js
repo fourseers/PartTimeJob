@@ -39,6 +39,7 @@ Page({
     job_id = options.id;
     begin_date = options.begin_date;
     end_date = options.end_date;
+    console.log(options)
   },
 
   onReady() {
@@ -80,7 +81,6 @@ Page({
         this.calendar.enableDays(able_dates);
         this.calendar.setSelectedDays(able_dates_json);
         // this.calendar.disableDay(unable_dates);
-        console.log(unable_dates)
         this.setData({
           calendar_config: new_config,
           unable_dates: unable_dates,

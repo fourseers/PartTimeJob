@@ -3,6 +3,7 @@ const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js"
 import { host, register, register_data } from "../../api/url.js"
+import { CITY_LIST } from "../../locale/citydata.js"
 
 Page({
   /*
@@ -74,11 +75,13 @@ Page({
         for (var index in tags) {
           tags[index].isChosen = false;
         }
+        for (var i in CITY_LIST) {
+          
+        }
         // 利用后端返回的tags和education来设置前端js的default
         this.setData({
           education_list: res.data.data.education,
           tags: tags,
-          city: app.globalData.userInfo.city,
           country: app.globalData.userInfo.country,
           gender: app.globalData.userInfo.gender
         })
@@ -306,7 +309,7 @@ Page({
             "identity": this.data.identity,
             "phone": this.data.phone_number,
             "country": this.data.country,
-            "city": this.data.city,
+            "city": this.data.city_code,
             "education": this.data.education,
             "token": res.code,
             "tags": tagIDs

@@ -17,6 +17,7 @@
     "pages/leave/leave",
     "pages/switchcity/switchcity",
     "pages/choose_date/choose_date",
+    "pages/apply_detail/apply_detail",
     "pages/billing_page/billing_page"
   ],
   "window": {

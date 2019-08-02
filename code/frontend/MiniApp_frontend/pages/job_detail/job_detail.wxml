@@ -33,10 +33,10 @@
 <i-panel i-class="date-box">
   <i-cell-group>
     <i-cell>
-      上班时间：{{begin_year}}年{{begin_month}}月{{begin_date}}日 ~ {{end_year}}年{{end_month}}月{{end_date}}日
+      上班时间：{{begin_date}} ~ {{end_date}}
     </i-cell>
     <i-cell>
-      报名时间：{{begin_apply_year}}年{{begin_apply_month}}月{{begin_apply_date}}日 ~ {{end_apply_year}}年{{end_apply_month}}月{{end_apply_date}}日
+      报名时间：{{begin_apply_date}} ~ {{end_apply_date}}
     </i-cell>
   </i-cell-group>
 </i-panel>

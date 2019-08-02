@@ -29,4 +29,5 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "group by work.job.shop.shopId " +
             "order by work.job.shop.shopId")
     List<BillingStatusProjection> getBillingStatusByCompanyIdInGivenPeriod(Integer companyId, Date from, Date to);
-}
+
+    }

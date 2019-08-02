@@ -2,6 +2,7 @@
 const app = getApp();
 import request from "../../api/request.js";
 import { host, application_list } from "../../api/url.js";
+var util = require("../../utils/util.js")
 
 Page({
 
@@ -58,9 +59,10 @@ Page({
           refuse: []
         }
         for (var i in list) {
+          var new_date = list[i].create_time.substring(0, 10);
           if (list[i].status === true) {
             var app = {
-              name: list[i].cv_id,
+              name: new_date,
               status: "已通过"
             }
             new_applications.all.push(app);
@@ -68,7 +70,7 @@ Page({
           }
           else if (list[i].status === false) {
             var app = {
-              name: list[i].cv_id,
+              name: new_date,
               status: "已拒绝"
             }
             new_applications.all.push(app);
@@ -76,7 +78,7 @@ Page({
           }
           else {
             var app = {
-              name: list[i].cv_id,
+              name: new_date,
               status: "待审核"
             }
             new_applications.all.push(app);

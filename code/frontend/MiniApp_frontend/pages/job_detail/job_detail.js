@@ -102,6 +102,10 @@ Page({
    * onShow的时候向后端请求店铺的位置信息
    */
   onShow() {
+    if (app.globalData.showSendMessage) {
+      this.handleSuccess();
+      app.globalData.showSendMessage = false;
+    }
     var req = new request();
     req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
       var info = res.data.data;
@@ -166,8 +170,15 @@ Page({
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
     wx.navigateTo({
-      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_date + "&end_date=" + this.data.end_date,
+      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_apply_date + "&end_date=" + this.data.end_apply_date,
     })
   },
+
+  handleSuccess() {
+    $Toast({
+      content: '申请岗位成功',
+      type: 'success'
+    });
+  }
 
 })

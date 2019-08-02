@@ -62,7 +62,7 @@ Page({
       job_id: job_id
     }, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
-        var data = this.data.data;
+        var data = res.data.data;
         this.setData({
           begin_check_time: data.expected_checkin,
           end_check_time: data.expected_checkout,
@@ -148,7 +148,7 @@ Page({
         })
       }
       else {
-        checkin();
+        this.checkin();
       }
     }
     else if (detail.index === 1){
@@ -160,7 +160,7 @@ Page({
         })
       }
       else {
-        checkout();
+        this.checkout();
       }
     }
     else if (detail.index === 2){

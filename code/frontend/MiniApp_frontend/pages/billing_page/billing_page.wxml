@@ -8,7 +8,7 @@
 <view class="container">
   <i-cell-group>
     <block wx:for="{{current_chosen}}" wx:key="index">
-      <i-cell title="{{item.name}}" label="{{item.value}}">
+      <i-cell title="{{item.name}}" label="{{item.date}}">
         <view slot="footer">{{item.status}}:{{item.value}}</view>
       </i-cell>
     </block>

@@ -1,6 +1,8 @@
 package com.fourseers.parttimejob.billing.repository;
 
+import com.fourseers.parttimejob.billing.projection.UserWorkEntryProjection;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
+import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.common.entity.Work;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +29,18 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     Page<WorkBillingProjection> getBillingsByCompanyIdOrderByBillIdDescInGivenPeriod(Integer companyId, Date fromDate, Date toDate, Pageable pageable);
 
     Work findByWorkId(Integer workId);
+
+    @Query(value = "select " +
+            " w.workId as workId" +
+            ",w.workDate as workDate" +
+            ",w.salaryConfirmed as salaryConfirmed" +
+            ",w.rejected as rejected" +
+            ",w.job.jobId as jobId" +
+            ",w.job.jobName as jobName" +
+            ",b.billId as billId" +
+            ",b.payment as payment" +
+            " from Work w left join Billing b" +
+            " on w.billing = b where w.worker= ?1")
+    Page<UserWorkEntryProjection> getUserWorkEntries(WechatUser user, Pageable pageable);
 }
+

@@ -58,7 +58,6 @@ Page({
           pass: [],
           refuse: []
         }
-
         for (var i in list) {
           var new_date = list[i].create_time.substring(0, 10);
           if (list[i].status === true) {

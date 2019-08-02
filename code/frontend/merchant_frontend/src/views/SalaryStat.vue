@@ -1,7 +1,32 @@
 <template>
-    <div class="chart">
-        <div>
-            <div style="width: 45%;height:500px ;border:1px solid rgb(180,180,180)" id="salary_chart"></div>
+    <div class="content">
+
+
+        <Row>
+            <Col span="3">
+                <p>开始年份月份</p>
+            </Col>
+            <Col span="4">
+                <Date-picker type="month" placeholder="Select month"    v-model="startmonth"></Date-picker>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="3">
+                <p>结束年份月份</p>
+            </Col>
+            <Col span="4">
+                <Date-picker type="month" placeholder="Select month"   v-model="endmonth" ></Date-picker>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="3">
+                <Button type="primary" @click="handleSubmit()">提交</Button>
+            </Col>
+        </Row>
+        <div class="chart">
+            <div>
+                <div style="width: 45%;height:500px ;border:1px solid rgb(180,180,180)" id="salary_chart"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -15,6 +40,8 @@
         name: "SalaryStat",
         data() {
             return {
+                startmonth:"",
+                endmonth:"",
                 echarts1_option:{
 //主体代码块 backgroundColor: '#45515a',
                     //标题
@@ -43,7 +70,7 @@
                         textStyle:{
                             color:'#c8c8d0'
                         },
-                        data:['店铺A','店铺B','店铺C','店铺D','店铺E']  //注意要和数据的name相对应
+                        data:[ ]   //注意要和数据的name相对应
                     },
                     //工具箱
                     toolbox:{
@@ -75,21 +102,7 @@
                             type:'pie',
                             radius : '55%',
                             center: ['50%', '50%'],
-                            data:[
-                                {value:335, name:'店铺A',  itemStyle: {
-                                        color: '#f3a683'
-                                    }},
-                                {value:310, name:'店铺B',itemStyle: {
-                                        color: '#ffeaa7'
-                                    }},
-                                {value:274, name:'店铺C',itemStyle: {
-                                        color: '#f8a5c2'
-                                    }},
-                                {value:235, name:'店铺D',itemStyle: {
-                                        color: '#63cdda'}},
-                                {value:400, name:'店铺E',itemStyle: {
-                                        color: '#ffb8b8'}}
-                            ].sort(function (a, b) { return a.value - b.value; }),
+                            data:[  ].sort(function (a, b) { return a.value - b.value; }),
                             roseType: 'radius',//角度和半径展现百分比，'area'只用半径展现
                             label: { //饼图图形的文本标签
                                 normal: {  //下同，normal指在普通情况下样式，而非高亮时样式
@@ -123,7 +136,22 @@
                         }
                     ]
 
-                }
+                },
+                itemstyle:[{
+                    itemStyle: {
+                        color: '#f3a683'
+                    }},
+                    {itemStyle: {
+                            color: '#f8a5c2'
+                        }},
+                    { itemStyle: {
+                            color: '#ffeaa7'
+                        }},
+                    {itemStyle: {
+                            color: '#63cdda'}},
+                    {itemStyle: {
+                            color: '#ffb8b8'}}
+                ]
             }
         },
         created:function()
@@ -131,6 +159,7 @@
 
             if(!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             }
             else{
                 //get stat
@@ -139,9 +168,52 @@
 //挂载前初始化echarts实例
         mounted: function () {
             // 基于准备好的dom，初始化echarts实例
-            let myChart = echarts.init(document.getElementById('salary_chart'))
-            // 绘制图表，this.echarts1_option是数据
-            myChart.setOption(this.echarts1_option)
+
+        },
+        methods:{
+            handleSubmit(){
+
+
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/status",
+                    params:  {
+                        from_year:Number(this.startmonth.getFullYear()),
+                        from_month:Number(this.startmonth.getMonth()+1),
+                        to_year:Number(this.endmonth.getFullYear()),
+                        to_month:Number(this.endmonth.getMonth()+1)
+                    }
+                }).then(response => {
+                    if(response.status ===  200)
+                    {
+                        const data = response.data.data;
+                        const arr=[];
+                        for(var i=0;i<data.length;i++)
+                        {
+                            this.echarts1_option.legend.data.push(data[i].shop_name)
+                            var ob={value:data[i].payment , name:data[i].shop_name , itemStyle:this.itemstyle[i%5].itemStyle}
+
+                            arr.push(ob);
+                        }
+                        this.echarts1_option.series[0].data= arr.sort(function (a, b) { return a.value - b.value; })
+                        let myChart = echarts.init(document.getElementById('salary_chart'))
+                        // 绘制图表，this.echarts1_option是数据
+                        console.log( this.echarts1_option.series[0].data)
+                        console.log( this.echarts1_option.legend.data)
+                        myChart.setOption(this.echarts1_option)
+                    }
+                })
+                    .catch(error => {
+
+                    })
+            }
         }
     }
 
@@ -149,9 +221,22 @@
 
 
 <style scoped>
+
+    .content{
+        padding-top:20px;
+        padding-left:100px;
+        background-color: #fff;
+    }
     .chart{
         margin-top:50px;
-        margin-left:200px;
+        margin-left:30px;
     }
+
+    .ivu-btn {
+        color: #fff;
+        background-color: #82ccd2;
+        border-color: #c8d6e5;
+    }
+
 </style>
 

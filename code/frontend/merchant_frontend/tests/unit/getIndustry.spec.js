@@ -27,7 +27,6 @@ describe('getIndustry.js', () => {
             // expect(token.loadToken().scope).toEqual(goodresponse.data.scope);
             getIndustry().then(res  => {
                 expect(res.data[0].industry_id ).toEqual(expect.any(Number) );
-
                 done();
             })
             done();
@@ -37,7 +36,7 @@ describe('getIndustry.js', () => {
 })
 
 describe('getIndustry.js', () => {
-    it('test getIndustry', done => {
+    it('test getIndustry addshop resolve data', done => {
         const wrapper = shallowMount(Login)
         const vm = wrapper.vm;
 

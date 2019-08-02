@@ -2,6 +2,7 @@ import {shallowMount,mount} from '@vue/test-utils'
 import Login from '@/views/Login.vue'
 import token from '@/util/token.js'
 
+import ManageShop from "../../src/views/ManageShop";
 import {getJobs, getJobsByShop} from '@/util/getJobs.js'
 
 import ShowJobs from "../../src/views/ShowJobs";
@@ -89,11 +90,18 @@ describe('getJobs.js', () => {
         vm.login_process("Tim Cook", "some password").then(response => {
             const wrapper2 = shallowMount(ShowJobs)
             const vm2 = wrapper2.vm
-            vm2.get_job_by_shop(0,370).then(res  => {
-                expect(res.data.content[0].need_gender ).toEqual( expect.any(Number));
+
+            const wrapper3 = shallowMount(ManageShop)
+            const vm3 = wrapper3.vm
+            vm3.mockTableData1(0).then(res => {
+                const shop_id =res.data.content[0].shop_id
+
+                vm2.get_job_by_shop(0, shop_id).then(res => {
+                    expect(res.data.content[0].need_gender).toEqual(expect.any(Number));
+                    done();
+                })
                 done();
-            })
-            done();
+            });
         });
-    });
+    })
 })

@@ -68,7 +68,7 @@ public class CheckServiceImpl implements CheckService {
 
 
         // get work entity
-        Work work = workRepository.getByJobAndWorker(job, user);
+        Work work = workRepository.findTodayByUserAndJob(user, job);
         if(work != null) {
             if (work.getCheckin() != null)
                 throw new RuntimeException("Already checked in.");
@@ -76,10 +76,7 @@ public class CheckServiceImpl implements CheckService {
                 throw new RuntimeException("Not within checkin time.");
         } else
             throw new RuntimeException("User doesn't work today at this job.");
-        work.setWorkDate(Date.valueOf(LocalDate.now()));
         work.setCheckin(Time.valueOf(LocalTime.now()));
-        work.setJob(job);
-        work.setWorker(user);
         workRepository.save(work);
         return true;
     }
@@ -99,7 +96,7 @@ public class CheckServiceImpl implements CheckService {
             throw new RuntimeException("User too far from check in location.");
 
         // old work entity
-        Work work = workRepository.getByJobAndWorker(job, user);
+        Work work = workRepository.findTodayByUserAndJob(user, job);
         if(work == null)
             throw new RuntimeException("User doesn't work today at this job.");
         if(work.getCheckin() == null)

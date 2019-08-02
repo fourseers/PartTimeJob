@@ -1,12 +1,14 @@
 package com.fourseers.parttimejob.arrangement.repository;
 
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface WorkRepository extends JpaRepository<Work, Integer> {
@@ -53,4 +55,11 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
 
     List<Work> findAllByWorker(WechatUser wechatUser);
 
+    @Query("select " +
+            "sum(case when work.checkin > work.expectedCheckin then 1 else 0 end) as lateRate, " +
+            "sum(case when work.checkout > work.expectedCheckout then 1 else 0 end) as leaveEarlyRate, " +
+            "1 as attendRate " +
+            "from Work work " +
+            "where work.job.shop.shopId = ?1 and work.workDate >= ?2 and work.workDate <= ?3")
+    WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to);
 }

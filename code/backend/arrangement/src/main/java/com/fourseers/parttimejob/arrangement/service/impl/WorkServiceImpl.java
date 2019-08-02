@@ -5,6 +5,7 @@ import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
 import com.fourseers.parttimejob.arrangement.dto.ScheduleDto;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
 import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -105,6 +108,43 @@ public class WorkServiceImpl implements WorkService {
             ret.add(scheduleDto);
         }
         return ret;
+    }
+
+    @Override
+    public WorkStatusProjection getWorkStatus(String username, Integer shopId, Integer fromYear, Integer fromMonth, Integer toYear, Integer toMonth) {
+
+        MerchantUser user = merchantUserDao.findByUsername(username);
+
+        if (user.getCompany() == null) {
+            throw new RuntimeException("user does not belong to a company");
+        }
+
+        boolean shopOwnedByUser = false;
+        for (Shop shop : user.getCompany().getShops()) {
+            if (shop.getShopId().equals(shopId)) {
+                shopOwnedByUser = true;
+                break;
+            }
+        }
+
+        if (!shopOwnedByUser) {
+            throw new RuntimeException("shop not exist or not belong to");
+        }
+
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.set(Calendar.YEAR, fromYear);
+        aCalendar.set(Calendar.MONTH, fromMonth - 1);
+        aCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date from = new Date(aCalendar.getTime().getTime());
+        aCalendar.set(Calendar.YEAR, toYear);
+        aCalendar.set(Calendar.MONTH, toMonth - 1);
+        aCalendar.set(Calendar.DAY_OF_MONTH, aCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(aCalendar.getTime().getTime());
+        if (from.after(to)) {
+            throw new RuntimeException("incorrect param");
+        }
+
+        return workDao.getWorkStatus(shopId, from, to);
     }
 
 }

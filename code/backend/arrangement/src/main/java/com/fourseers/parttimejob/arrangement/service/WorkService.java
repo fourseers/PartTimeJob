@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.arrangement.service;
 
 import com.fourseers.parttimejob.arrangement.dto.ScheduleDto;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import org.springframework.data.domain.Page;
 
@@ -17,4 +18,6 @@ public interface WorkService {
     void remark(String username, int workId, int score);
 
     List<ScheduleDto> getSchedule(WechatUser user, LocalDate beginDate, LocalDate endDate);
+
+    WorkStatusProjection getWorkStatus(String username, Integer shopId, Integer fromYear, Integer fromMonth, Integer toYear, Integer toMonth);
 }

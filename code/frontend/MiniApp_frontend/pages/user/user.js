@@ -38,6 +38,11 @@ Page({
         title: "简历",
         url: "/pages/cv_list/cv_list",
         src: "/assets/icons/resume.png"
+      },
+      {
+        title: "工资",
+        url: "/pages/billing_page/billing_page",
+        src: "/assets/icons/money.png"
       }
     ]
   },

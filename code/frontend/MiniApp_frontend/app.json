@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/billing_page/billing_page",
     "pages/index/index",
     "pages/cv_inform/cv_inform",
     "pages/timeline/timeline",
@@ -17,7 +16,8 @@
     "pages/shop/shop",
     "pages/leave/leave",
     "pages/switchcity/switchcity",
-    "pages/choose_date/choose_date"
+    "pages/choose_date/choose_date",
+    "pages/billing_page/billing_page"
   ],
   "window": {
     "backgroundTextStyle": "light",

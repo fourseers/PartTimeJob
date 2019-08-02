@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.arrangement.dao.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
+import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.arrangement.repository.WorkRepository;
 import com.fourseers.parttimejob.common.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Date;
 
 @Repository
 public class WorkDaoImpl implements WorkDao {
@@ -39,5 +42,10 @@ public class WorkDaoImpl implements WorkDao {
     @Override
     public void save(Work work) {
         workRepository.save(work);
+    }
+
+    @Override
+    public WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to) {
+        return workRepository.getWorkStatus(shopId, from, to);
     }
 }

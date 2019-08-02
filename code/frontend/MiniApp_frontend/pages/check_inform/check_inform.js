@@ -25,6 +25,8 @@ Page({
     job_name: "",
     begin_check_time: "",
     end_check_time: "",
+    isCheckin: false,
+    isCheckout: false,
     address: "",
     action_visible: false,
     actions: [
@@ -59,7 +61,15 @@ Page({
     req.getRequest(host + check_status, {
       job_id: job_id
     }, app.globalData.access_token).then(res => {
-      console.log(res)
+      if (res.statusCode === 200) {
+        var data = this.data.data;
+        this.setData({
+          begin_check_time: data.expected_checkin,
+          end_check_time: data.expected_checkout,
+          isCheckedin: data.checkin !== null,
+          isCheckedout: data.checkout !== null
+        })
+      }
     }).catch(err => {
       console.log(err)
     })
@@ -131,11 +141,27 @@ Page({
   handleClickItem({ detail }) {
     if (detail.index === 0){
       // console.log("上班打卡");
-      checkin();
+      if (this.data.isCheckedin) {
+        $Toast({
+          content: "您已完成上班打卡",
+          type: "warning"
+        })
+      }
+      else {
+        checkin();
+      }
     }
     else if (detail.index === 1){
       // console.log("下班打卡");
-      checkout();
+      if (this.data.isCheckedout) {
+        $Toast({
+          content: "您已完成下班打卡",
+          type: "warning"
+        })
+      }
+      else {
+        checkout();
+      }
     }
     else if (detail.index === 2){
       //console.log("请假")

@@ -98,7 +98,7 @@ public class MonthlyBillServiceImpl implements MonthlyBillService {
         alipayRequest.setNotifyUrl(ALIPAY_NOTIFY_URL);
 
         String tradeNo = monthlyBill.getMeta();
-        String amountStr = String.valueOf(monthlyBill.getAmount());
+        String amountStr = String.format("%.2f", monthlyBill.getAmount());
         String subject = "灵活用工月结账单";
 
         alipayRequest.setBizContent("{\"out_trade_no\":\"" + tradeNo + "\","

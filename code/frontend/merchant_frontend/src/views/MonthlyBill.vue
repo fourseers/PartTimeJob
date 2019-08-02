@@ -5,8 +5,7 @@
         font-size: 20px;">本月需支付总金额：{{this.sum}}
             </div>
             <div slot="footer" class="table-height">
-
-                <Button class="ivu-btn" @click="paybill(bill_id)" >确认支付</Button>
+                <Button id="btn1" class="ivu-btn" @click="paybill(bill_id)"  v-if="show"    >确认支付</Button>
             </div>
 
 
@@ -78,6 +77,7 @@
                 bill:[],
                 bill_id:0,
                 sum: this.getsum(),
+                show :true
             }
         },
         watch:
@@ -86,12 +86,35 @@
 
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             } else
             {
 
                 //获取第一页账单
                 this.mockTableData1(0)
-
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    params:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        if(response.data.data === "paid") {
+                            this.show=false
+                        }
+                    }
+                })
             }
 
         },
@@ -196,7 +219,7 @@
                             okText: '我已支付',
                             cancelText: '取消支付',
                             onOk: () => {
-                              this.get_payment_status();
+                                this.get_payment_status();
                             },
                             onCancel: () => {
                                 this.$Message.info('Clicked cancel');
@@ -234,8 +257,17 @@
                     console.log(response.data.data);
                     if(response.status ===  200)
                     {
-                        this.$Message.success('支付成功');
-                       this.$router.push({name: "postjob"})
+                        if(response.data.data === "paid") {
+                            this.$Message.success('支付成功');
+                            this.$router.push({name: "postjob"})
+                        }else if(response.data.data === "paid")
+                        {
+                            this.$Message.success('您未支付');
+                        }
+                        else if (response.data.data === "pending")
+                        {
+                            this.$Message.success('未收到支付反馈，请稍后重试');
+                        }
                     }
                 })
             },

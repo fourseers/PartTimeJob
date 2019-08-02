@@ -189,16 +189,13 @@
         },
         created:function(){
             if(!this.$root.logged)
-            {this.$Message.warning('请登录');}
+            {this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
+            }
             else {
                 //get industry
-                getIndustry().then(res => {
-                        console.log(  res.data)
-                        this.industry = res.data
-                    },
-                    error => {
-                        console.log(error)
-                    })
+                this.get_industry()
+
             }
             this.debouncedGetLocation = _.debounce(this.findAddress, 500)
         },
@@ -222,6 +219,20 @@
         computed:{
         },
         methods: {
+            get_industry()
+            {
+                return new Promise((resolve, reject) => {
+                    getIndustry().then(res => {
+                            console.log(res.data)
+                            this.industry = res.data
+                            resolve(res);
+                        },
+                        error => {
+                            console.log(error)
+                            reject(error.response.data.status);
+                        })
+                })
+            },
             locate(val)
             {
                 for(var i = 0 ;i < this. addressCandidate.length;i++)
@@ -353,7 +364,6 @@
         padding-left:100px;
         background-color: #fff;
     }
-    .
     .ivu-btn {
         color: #fff;
         background-color: #82ccd2;

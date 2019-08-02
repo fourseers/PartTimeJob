@@ -15,17 +15,12 @@ export function getShops(pagenum) {
             },
             method: 'get',
             params:
-                {"page_count": pagenum?pagenum:0},
+                {"page_count": pagenum},
             url: prefix + "/merchant/shops"
         }).then( ({ status, data }) => {
-            if (status === 200) {
                 resolve(data);
-            } else {
-                reject( data);
-            }
         })
             .catch(error => {
-
                 reject( error);
             })
     })

@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;
@@ -112,8 +113,8 @@ public class WechatUserScoreMerchantTest {
         shop.setProvince("310000");
         shop.setCity("310100");
         shop.setAddress("310101");
-        shop.setLongitude(new Integer(120).floatValue());
-        shop.setLatitude(new Integer(30).floatValue());
+        shop.setLongitude(new BigDecimal(120));
+        shop.setLatitude(new BigDecimal(30));
         shop.setBrand("Apple");
         shop.setIndustry(industry);
         shop.setIntroduction("Make Apple great again");

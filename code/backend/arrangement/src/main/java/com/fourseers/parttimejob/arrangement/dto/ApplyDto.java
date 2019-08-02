@@ -14,11 +14,11 @@ public class ApplyDto {
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd", timezone = "GMT+0")
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date beginDate;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd", timezone = "GMT+0")
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date endDate;
 
     public Integer getJobId() {

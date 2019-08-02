@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+
 @Repository
 public class JobDaoImpl implements JobDao {
 
@@ -51,7 +53,7 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public Page<Job> findJobsByGeoLocation(WechatUser user, float longitude, float latitude, int pageCount, int pageSize) {
+    public Page<Job> findJobsByGeoLocation(WechatUser user, BigDecimal longitude, BigDecimal latitude, int pageCount, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageCount, pageSize);
         return jobRepository.findByGeoLocation(longitude, latitude, pageRequest);
     }

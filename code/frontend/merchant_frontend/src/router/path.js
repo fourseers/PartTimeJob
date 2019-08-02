@@ -19,6 +19,7 @@ import BanUser from '../views/BanUser.vue'
 import Logout from '../views/Logout.vue'
 
 import AskForLeave from '../views/AskForLeave.vue'
+import PaymentSuccess from '../views/PaymentSuccess'
 const  routes =[
     {
         path: '/',
@@ -131,9 +132,12 @@ const  routes =[
         name: 'askforleave',
         component:AskForLeave
     }
-
-
-
+    ,
+    {
+        path: '/payment_success',
+        name: ':paymentsuccess',
+        component:PaymentSuccess
+    }
 
 
 ]

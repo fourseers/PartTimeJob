@@ -1,0 +1,16 @@
+<!--pages/billing_page/billing_page.wxml-->
+<i-tabs current="{{ current_tab }}" bindchange="handleChangeTab" fixed>
+    <i-tab key="all" title="全部"></i-tab>
+    <i-tab key="yes" title="已到账"></i-tab>
+    <i-tab key="no" title="未到账"></i-tab>
+</i-tabs>
+
+<view class="container">
+  <i-cell-group>
+    <block wx:for="{{current_chosen}}" wx:key="index">
+      <i-cell title="{{item.name}}" label="{{item.value}}">
+        <view slot="footer">{{item.status}}:{{item.value}}</view>
+      </i-cell>
+    </block>
+  </i-cell-group>
+</view>

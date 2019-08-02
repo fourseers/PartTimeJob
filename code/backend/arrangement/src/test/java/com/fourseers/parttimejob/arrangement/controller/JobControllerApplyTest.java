@@ -261,7 +261,7 @@ public class JobControllerApplyTest {
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
         assertEquals("success", response.getString("message"));
         assertNotNull(response.getJSONObject("data"));
-        assertEquals(3L, response.getJSONObject("data").getJSONArray("content").size());
+        assertEquals(1L, response.getJSONObject("data").getJSONArray("content").size());
     }
 
     @Test

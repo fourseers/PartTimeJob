@@ -4,6 +4,7 @@ import com.fourseers.parttimejob.billing.dto.BillingAmountDto;
 import com.fourseers.parttimejob.billing.dto.WorkBillingDto;
 import com.fourseers.parttimejob.billing.dto.WorkRejectDto;
 import com.fourseers.parttimejob.billing.dto.YearMonthDto;
+import com.fourseers.parttimejob.billing.projection.BillingStatusProjection;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
 import com.fourseers.parttimejob.billing.service.MonthlyBillService;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -195,6 +197,31 @@ public class BillingController {
         try {
             String status = monthlyBillService.findMonthlyPayStatusByUsernameAndYearAndMonth(username, year, month);
             return ResponseBuilder.build(HttpStatus.OK, status, "success");
+        } catch (RuntimeException ex) {
+            return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Merchant user get bill status of several continuous months")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "user does not belong to any company / incorrect param"),
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
+                    required = true, dataType = "string", paramType = "header")
+    })
+    @RequestMapping(value = "/status", method = GET, produces = "application/json")
+    public ResponseEntity<Response<List<BillingStatusProjection>>> monthlyPayStatus(
+            @ApiParam(value = "from_year, yyyy") @RequestParam(value = "from_year") Integer fromYear,
+            @ApiParam(value = "from_month, MM") @RequestParam(value = "from_month") Integer fromMonth,
+            @ApiParam(value = "to_year, yyyy") @RequestParam(value = "to_year") Integer toYear,
+            @ApiParam(value = "to_month, MM") @RequestParam(value = "to_month") Integer toMonth,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
+
+        try {
+            List<BillingStatusProjection> billingStatusProjectionList = billingService.getBillingStatus(username, fromYear, fromMonth, toYear, toMonth);
+            return ResponseBuilder.build(HttpStatus.OK, billingStatusProjectionList, "success");
         } catch (RuntimeException ex) {
             return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
         }

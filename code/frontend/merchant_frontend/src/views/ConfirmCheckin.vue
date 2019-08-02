@@ -49,6 +49,10 @@
                         key: 'job_name'
                     },
                     {
+                        title: '工作日期',
+                        key: 'work_date'
+                    },
+                    {
                         title: '工作开始时间',
                         key: 'begin_time'
                     },
@@ -153,6 +157,7 @@
         created:function() {
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"});
             } else {
                 //get checkin
                 // this.mockTableData1(0)

@@ -1,0 +1,5 @@
+/* pages/apply_detail/apply_detail.wxss */
+
+.container {
+  margin-top: 128rpx;
+}

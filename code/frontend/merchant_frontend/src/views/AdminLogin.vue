@@ -77,7 +77,6 @@
                             console.log(this.$token.loadToken());
                             this.$root.logged = true;
                             this.$root.admin=true;
-
                             console.log(   this.$root.admin);
                             this.$router.push({name: "banuser"})
                             resolve(res);

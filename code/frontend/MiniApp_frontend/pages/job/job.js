@@ -16,9 +16,9 @@ Page({
     position: "附近商家",
     latitude: 0.0,
     longitude: 0.0,
-    pageCount: 0,
+    jobCount: 0,
     isLoading: false,
-    total_pages: 9999,
+    total_hits: 9999,
   },
 
   onReady() {
@@ -47,16 +47,16 @@ Page({
   },
 
   getUserJob() {
-    if (this.data.pageCount >= this.data.total_pages) {
+    if (this.data.jobCount >= this.data.total_hits) {
       return;
     }
     var req = new request();
     req.getRequest(host + job_list, 
-    {
-      latitude: this.data.latitude,
-      longitude: this.data.longitude,
-      pageCount: this.data.pageCount,
-    }, app.globalData.access_token).then(res => {
+      {
+        latitude: this.data.latitude,
+        longitude: this.data.longitude,
+        entryOffset: this.data.jobCount,
+      }, app.globalData.access_token).then(res => {
       if(res.statusCode === 401){
         //console.log("user should login!");
       }
@@ -68,15 +68,24 @@ Page({
           var new_job = {};
           new_job.id = job_list[i].job_id;
           new_job.name = job_list[i].job_name;
-          new_job.detail = job_list[i].job_detail;
-          new_job.tags = job_list[i].tag_list;
+          new_job.detail = job_list[i].job_detail.slice(0, 50);
+          var tags = job_list[i].tags.split(" ");
+          var temp_tags = []
+          for (var index in tags) {
+            temp_tags.push({
+              id: index,
+              name: tags[index],
+            })
+          }
+          new_job.tags = temp_tags;
+          // new_job.tags
           new_jobs[parseInt(formal_length) + parseInt(i)] = new_job
         }
         
         this.setData({
           jobs: new_jobs,
-          pageCount: this.data.pageCount + 1,
-          total_pages: res.data.data.total_pages
+          jobCount: this.data.jobCount + 15,
+          total_hits: res.data.data.total_hits
         })
       }
     }).catch(err => {
@@ -86,8 +95,9 @@ Page({
 
   refresh() {
     this.setData({
-      pageCount: 0,
-      jobs: []
+      jobCount: 0,
+      jobs: [],
+      total_hits: 9999
     })
     this.getUserJob();
   },

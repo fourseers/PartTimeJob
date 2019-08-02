@@ -1,24 +1,25 @@
+
+process.env.VUE_CLI_BABEL_TARGET_NODE = true;
+process.env.VUE_CLI_BABEL_TRANSPILE_MODULES = true;
 module.exports = {
   moduleFileExtensions: [
     'js',
     'jsx',
     'json',
-    'vue',
-    "ts",
-    "tsx",
+    'vue'
   ],
 
   transform: {
     '^.+\\.vue$': 'vue-jest',
-    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '^.+\\.jsx?$': 'babel-jest',
-      "^.+\\.tsx?$": "ts-jest"
   },
   transformIgnorePatterns: [
     '/node_modules/'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
+
   },
   snapshotSerializers: [
     'jest-serializer-vue'
@@ -32,12 +33,14 @@ module.exports = {
     'jest-watch-typeahead/testname'
   ],
   collectCoverage:true,
-   collectCoverageFrom : [
-  "**/*.{js,jsx,vue}",
-     "**/*/*.{js,jsx,vue}",
-  "!**/node_modules/**",
-  "!**/vendor/**",
-     "!**/dist/**"
+  collectCoverageFrom : [
+    "**/*.{js,jsx,vue}",
+    "**/*/*.{js,jsx,vue}",
+    "!**/node_modules/**",
+    "!**/vendor/**",
+    "!**/dist/**",
+    "!**/coverage/**",
+    "!**/*.config.js"
   ],
   setupFiles: [
     "<rootDir>/jest.init.js"

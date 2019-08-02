@@ -22,9 +22,11 @@ Page({
     des_latitude: 0.0,
     markers: [],
     circles: [],
-    job_name: "为什么我一直在划水",
+    job_name: "",
     begin_check_time: "",
     end_check_time: "",
+    isCheckin: false,
+    isCheckout: false,
     address: "",
     action_visible: false,
     actions: [
@@ -54,22 +56,20 @@ Page({
    *    4. 允许打卡时间
    */
   onShow() {
-    wx.getLocation({
-      type: "gcj02",
-      success: res => {
-        this.setData({
-          longitude: res.longitude,
-          latitude: res.latitude,
-        })
-      }
-    });
-
     var req = new request();
 
     req.getRequest(host + check_status, {
       job_id: job_id
     }, app.globalData.access_token).then(res => {
-      console.log(res)
+      if (res.statusCode === 200) {
+        var data = this.data.data;
+        this.setData({
+          begin_check_time: data.expected_checkin,
+          end_check_time: data.expected_checkout,
+          isCheckedin: data.checkin !== null,
+          isCheckedout: data.checkout !== null
+        })
+      }
     }).catch(err => {
       console.log(err)
     })
@@ -80,14 +80,6 @@ Page({
         this.setData({
           job_name: info.job_name,
           address: info.shop.address,
-          begin_check_time: info.begin_time,
-          end_check_time: info.end_time,
-          markers: [{
-            id: 0,
-            latitude: res.latitude,
-            longitude: res.longitude,
-            name: '我的位置',
-          }]
         })
         wx.getLocation({
           type: "gcj02",
@@ -148,27 +140,78 @@ Page({
 
   handleClickItem({ detail }) {
     if (detail.index === 0){
-      console.log("上班打卡");
+      // console.log("上班打卡");
+      if (this.data.isCheckedin) {
+        $Toast({
+          content: "您已完成上班打卡",
+          type: "warning"
+        })
+      }
+      else {
+        checkin();
+      }
     }
     else if (detail.index === 1){
-      console.log("下班打卡");
+      // console.log("下班打卡");
+      if (this.data.isCheckedout) {
+        $Toast({
+          content: "您已完成下班打卡",
+          type: "warning"
+        })
+      }
+      else {
+        checkout();
+      }
     }
     else if (detail.index === 2){
       //console.log("请假")
+      $Toast({
+        content: "敬请期待",
+        type: "warning"
+      })
+      /*
       wx.navigateTo({
         url: "/pages/leave/leave",
       })
+      */
     }
     this.setData({
       action_visible: false,
     })
   },
 
-  checkin(e) {
+  checkin() {
     //console.log(e);
     var req = new request();
 
     req.postRequest(host + checkin, 
+    {
+      "job_id": job_id,
+      "latitude": this.data.latitude,
+      "longitude": this.data.longitude
+    }, app.globalData.access_token).then(res => {
+      if(res.statusCode === 200){
+        app.globalData.showSendMessage = true;
+        wx.navigateBack({
+          
+        })
+      }
+      if(res.statusCode === 400){
+        $Toast({
+          content: res.data.message,
+          type: 'error'
+        });
+      }
+    }).catch(err => {
+
+    })
+  },
+
+  checkout() {
+    //console.log(e);
+    var req = new request();
+
+    req.postRequest(host + checkout, 
     {
       "job_id": job_id,
       "latitude": this.data.latitude,

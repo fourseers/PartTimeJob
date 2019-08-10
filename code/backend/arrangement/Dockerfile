@@ -1,5 +1,8 @@
 FROM openjdk:8-jre-alpine
-VOLUME /tmp
-ADD target/arrangement-0.0.1-SNAPSHOT.jar arrangement-0.0.1-SNAPSHOT.jar
+COPY arrangement/target/arrangement-0.0.1-SNAPSHOT.jar /app/
 EXPOSE 8082 9082
-ENTRYPOINT ["java","-jar","arrangement-0.0.1-SNAPSHOT.jar"]
+ENV JAVA_OPTS=""
+ADD wait /wait
+RUN chmod +x /wait
+ENTRYPOINT ["sh", "-c", "/wait && java $JAVA_OPTS -jar /app/arrangement-0.0.1-SNAPSHOT.jar"]
+

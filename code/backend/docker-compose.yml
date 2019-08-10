@@ -1,0 +1,77 @@
+version: '3'
+services:
+  mysql-inner:
+    image: mysql
+    env_file: .env
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --lower_case_table_names=1 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake
+    network_mode: host
+
+  mongo:
+    image: mongo
+    network_mode: host
+
+  redis:
+    image: redis
+    network_mode: host
+
+  eureka:
+    build: 
+      context: .
+      dockerfile: eureka-server/Dockerfile
+    env_file: .env
+    ports:
+      - "$EUREKA_PORT:8761"
+
+  auth:
+    build: 
+      context: .
+      dockerfile: auth/Dockerfile
+    env_file: .env
+    network_mode: host
+    depends_on:
+      - mysql-inner
+      - eureka
+      - mongo
+      - redis
+  
+  gateway:
+    build: 
+      context: .
+      dockerfile: gateway/Dockerfile
+    env_file: .env
+    ports:
+      - "$GATEWAY_PORT:8079"
+    depends_on:
+      - eureka
+
+  billing:
+    build: 
+      context: .
+      dockerfile: billing/Dockerfile
+    env_file: .env
+    network_mode: host
+    depends_on:
+      - eureka
+
+  arrangement:
+    build: 
+      context: .
+      dockerfile: arrangement/Dockerfile
+    env_file: .env
+    network_mode: host
+    depends_on:
+      - eureka
+
+  warehouse:
+    build: 
+      context: .
+      dockerfile: warehouse/Dockerfile
+    env_file: .env
+    network_mode: host
+    depends_on:
+      - eureka

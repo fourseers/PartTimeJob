@@ -9,78 +9,138 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     command: --lower_case_table_names=1 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake
-    network_mode: host
+    ports:
+      - "3306:3306"
+    networks:
+      - webnet
 
   mongo:
     image: mongo
-    network_mode: host
+    ports:
+      - "27017:27017"
+    networks:
+      - webnet
 
   redis:
     image: redis
-    network_mode: host
+    ports:
+      - "6379:6379"
+    networks:
+      - webnet
 
   eureka:
+    image: localhost:5000/eureka
     build: 
       context: .
       dockerfile: eureka-server/Dockerfile
     env_file: .env
     ports:
       - "$EUREKA_PORT:8761"
+    networks:
+      - webnet
 
   auth:
+    image: localhost:5000/auth
     build: 
       context: .
       dockerfile: auth/Dockerfile
     env_file: .env
-    network_mode: host
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       SPRING_DATA_MONGODB_URI: mongodb://$MONGO_SERVER:27017/parttimejob_auth
       SPRING_REDIS_HOST: $REDIS_SERVER
       WAIT_HOSTS: $MYSQL_SERVER:3306, $MONGO_SERVER:27017, $REDIS_SERVER:6379, $EUREKA_SERVER:$EUREKA_PORT
       WAIT_HOSTS_TIMEOUT: 100
+    ports:
+      - "8080:8080"
+    networks:
+      - webnet
   
   gateway:
+    image: localhost:5000/gateway
     build: 
       context: .
       dockerfile: gateway/Dockerfile
     env_file: .env
-    ports:
-      - "$GATEWAY_PORT:8079"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       WAIT_HOSTS: $EUREKA_SERVER:$EUREKA_PORT
       WAIT_HOSTS_TIMEOUT: 100
+    ports:
+      - "$GATEWAY_PORT:8079"
+    networks:
+      - webnet
 
   billing:
+    image: localhost:5000/billing
     build: 
       context: .
       dockerfile: billing/Dockerfile
     env_file: .env
-    network_mode: host
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
       WAIT_HOSTS_TIMEOUT: 100
+    ports:
+      - "8083:8083"
+    networks:
+      - webnet
 
   arrangement:
+    image: localhost:5000/arrangement
     build: 
       context: .
       dockerfile: arrangement/Dockerfile
     env_file: .env
-    network_mode: host
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
       WAIT_HOSTS_TIMEOUT: 100
+    ports:
+      - "8082:8082"
+    networks:
+      - webnet
 
   warehouse:
+    image: localhost:5000/warehouse
     build: 
       context: .
       dockerfile: warehouse/Dockerfile
     env_file: .env
-    network_mode: host
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
       WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
       WAIT_HOSTS_TIMEOUT: 100
+    ports:
+      - "8084:8084"
+    networks:
+      - webnet
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    env_file: .env
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "$VISUALIZER_PORT:8080"
+    networks:
+      - webnet
+
+  portainer:
+    image: portainer/portainer
+    env_file: .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "$PORTAINER_PORT_1:8000"
+      - "$PORTAINER_PORT_2:9000"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    external: true

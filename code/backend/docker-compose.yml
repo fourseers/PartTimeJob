@@ -33,11 +33,12 @@ services:
       dockerfile: auth/Dockerfile
     env_file: .env
     network_mode: host
-    depends_on:
-      - mysql-inner
-      - eureka
-      - mongo
-      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      SPRING_DATA_MONGODB_URI: mongodb://$MONGO_SERVER:27017/parttimejob_auth
+      SPRING_REDIS_HOST: $REDIS_SERVER
+      WAIT_HOSTS: $MYSQL_SERVER:3306, $MONGO_SERVER:27017, $REDIS_SERVER:6379, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS_TIMEOUT: 100
   
   gateway:
     build: 
@@ -46,8 +47,10 @@ services:
     env_file: .env
     ports:
       - "$GATEWAY_PORT:8079"
-    depends_on:
-      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      WAIT_HOSTS: $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS_TIMEOUT: 100
 
   billing:
     build: 
@@ -55,8 +58,10 @@ services:
       dockerfile: billing/Dockerfile
     env_file: .env
     network_mode: host
-    depends_on:
-      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS_TIMEOUT: 100
 
   arrangement:
     build: 
@@ -64,8 +69,10 @@ services:
       dockerfile: arrangement/Dockerfile
     env_file: .env
     network_mode: host
-    depends_on:
-      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS_TIMEOUT: 100
 
   warehouse:
     build: 
@@ -73,5 +80,7 @@ services:
       dockerfile: warehouse/Dockerfile
     env_file: .env
     network_mode: host
-    depends_on:
-      - eureka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS_TIMEOUT: 100

@@ -1,5 +1,3 @@
-language: java
-
 jdk:
   - openjdk8
 
@@ -32,42 +30,60 @@ jobs:
     name: arrangement
     before_install:
     - cd code/backend/common
-    - mvn -U clean install -DskipTests=true -B -V
+    - mvn clean install -DskipTests=true -B -V
     - cd ../arrangement
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - name: billing
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn -U clean install -DskipTests=true -B -V
+    - mvn clean install -DskipTests=true -B -V
     - cd ../billing
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - name: warehouse
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn -U clean install -DskipTests=true -B -V
+    - mvn clean install -DskipTests=true -B -V
     - cd ../warehouse
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - name: common lib
     if: type = pull_request
     before_install:
     - cd code/backend/common
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - name: auth
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn -U clean install -DskipTests=true -B -V
+    - mvn clean install -DskipTests=true -B -V
     - cd ../auth
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - name: gateway
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn -U clean install -DskipTests=true -B -V
+    - mvn clean install -DskipTests=true -B -V
     - cd ../gateway
     - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - stage: deploy
     if: branch = develop AND type != pull_request
     name: deploy

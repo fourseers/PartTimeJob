@@ -32,21 +32,21 @@ jobs:
     name: arrangement
     before_install:
     - cd code/backend/common
-    - mvn clean install -DskipTests=true -B -V
+    - mvn -U clean install -DskipTests=true -B -V
     - cd ../arrangement
     - chmod +x ./mvnw
   - name: billing
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn clean install -DskipTests=true -B -V
+    - mvn -U clean install -DskipTests=true -B -V
     - cd ../billing
     - chmod +x ./mvnw
   - name: warehouse
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn clean install -DskipTests=true -B -V
+    - mvn -U clean install -DskipTests=true -B -V
     - cd ../warehouse
     - chmod +x ./mvnw
   - name: common lib
@@ -58,14 +58,14 @@ jobs:
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn clean install -DskipTests=true -B -V
+    - mvn -U clean install -DskipTests=true -B -V
     - cd ../auth
     - chmod +x ./mvnw
   - name: gateway
     if: type = pull_request
     before_install:
     - cd code/backend/common
-    - mvn clean install -DskipTests=true -B -V
+    - mvn -U clean install -DskipTests=true -B -V
     - cd ../gateway
     - chmod +x ./mvnw
   - stage: deploy

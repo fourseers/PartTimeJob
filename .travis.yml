@@ -25,6 +25,16 @@ services:
     
 jobs:
   include:
+  - stage: test-commonlib
+    if: type = pull_request
+    name: common lib
+    if: type = pull_request
+    before_install:
+    - cd code/backend/common
+    - chmod +x ./mvnw
+    script:
+    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - ./mvnw test -B
   - stage: test
     if: type = pull_request
     name: arrangement
@@ -52,14 +62,6 @@ jobs:
     - cd code/backend/common
     - mvn clean install -DskipTests=true -B -V
     - cd ../warehouse
-    - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
-  - name: common lib
-    if: type = pull_request
-    before_install:
-    - cd code/backend/common
     - chmod +x ./mvnw
     script:
     - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -99,5 +101,6 @@ jobs:
     - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_SECRET"
 
 stages:
+- test-commonlib
 - test
 - deploy

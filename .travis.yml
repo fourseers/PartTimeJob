@@ -8,9 +8,10 @@ branches:
     - develop
 
 # speed up building with maven cache
-cache:
-  directories:
-  - "$HOME/.m2"
+# it is removed here to refresh maven build
+# cache:
+#   directories:
+#   - "$HOME/.m2"
 
 services:
 - mysql

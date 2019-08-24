@@ -1,3 +1,5 @@
+language: java
+
 jdk:
   - openjdk8
 
@@ -8,10 +10,9 @@ branches:
     - develop
 
 # speed up building with maven cache
-# it is removed here to refresh maven build
-# cache:
-#   directories:
-#   - "$HOME/.m2"
+cache:
+  directories:
+  - "$HOME/.m2"
 
 services:
 - mysql
@@ -26,67 +27,42 @@ services:
     
 jobs:
   include:
-  - stage: test-commonlib
-    if: type = pull_request
-    name: common lib
-    if: type = pull_request
-    before_install:
-    - cd code/backend/common
-    - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - stage: test
     if: type = pull_request
     name: arrangement
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../arrangement
+    - cd arrangement
     - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - name: billing
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../billing
+    - cd billing
     - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - name: warehouse
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../warehouse
+    - cd warehouse
     - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - name: auth
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../auth
+    - cd auth
     - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - name: gateway
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../gateway
+    - cd gateway
     - chmod +x ./mvnw
-    script:
-    - ./mvnw -U install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - ./mvnw test -B
   - stage: deploy
     if: branch = develop AND type != pull_request
     name: deploy
@@ -102,6 +78,5 @@ jobs:
     - ssh rr_deploy -F rr_deploy_config -T "cd PartTimeJob/code/backend && git pull && ./deploy.py --local-ip=192.168.2.55 --eureka-port=30551 --gateway-port=30552 --appid=$WECHAT_APPID --secret=$WECHAT_SECRET"
 
 stages:
-- test-commonlib
 - test
 - deploy

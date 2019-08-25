@@ -43,17 +43,19 @@ services:
     networks:
       - webnet
 
-    config:
-      image: localhost:5000/config
-      hostname: config
-      build:
-        context: .
-        dockerfile: config-server/Dockerfile
-      # env_file: .env
-      ports:
-        - "8888:8888"
-      networks:
-        - webnet
+  config:
+    image: localhost:5000/config
+    hostname: config
+    build:
+      context: .
+      dockerfile: config-server/Dockerfile
+    # env_file: .env
+    volumes:
+      - ~/config:~/config
+    ports:
+      - "8888:8888"
+    networks:
+      - webnet
 
   auth:
     image: localhost:5000/auth

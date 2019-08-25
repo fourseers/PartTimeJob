@@ -68,13 +68,7 @@ services:
       dockerfile: auth/Dockerfile
     # env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-      SPRING_DATA_MONGODB_URI: mongodb://$MONGO_SERVER:27017/parttimejob_auth
-      SPRING_REDIS_HOST: $REDIS_SERVER
-      SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD
-      EUREKA_SERVER: $EUREKA_SERVER
-      EUREKA_PORT: $EUREKA_PORT
-      WAIT_HOSTS: $MYSQL_SERVER:3306, $MONGO_SERVER:27017, $REDIS_SERVER:6379, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS: mysql-inner:3306, mongo:27017, redis:6379, eureka:8761, config:8888
       WAIT_HOSTS_TIMEOUT: 300
     ports:
       - "8080:8080"
@@ -89,11 +83,7 @@ services:
       dockerfile: gateway/Dockerfile
     # env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD
-      EUREKA_SERVER: $EUREKA_SERVER
-      EUREKA_PORT: $EUREKA_PORT
-      WAIT_HOSTS: $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS: eureka:8761, config:8888
       WAIT_HOSTS_TIMEOUT: 300
     ports:
       - "$GATEWAY_EXTERNAL_PORT:8079"
@@ -108,11 +98,7 @@ services:
       dockerfile: billing/Dockerfile
     # env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD
-      EUREKA_SERVER: $EUREKA_SERVER
-      EUREKA_PORT: $EUREKA_PORT
-      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS: mysql-inner:3306, eureka:8761, config:8888
       WAIT_HOSTS_TIMEOUT: 300
     ports:
       - "8083:8083"
@@ -127,11 +113,7 @@ services:
       dockerfile: arrangement/Dockerfile
     # env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD
-      EUREKA_SERVER: $EUREKA_SERVER
-      EUREKA_PORT: $EUREKA_PORT
-      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS: mysql-inner:3306, eureka:8761, config:8888
       WAIT_HOSTS_TIMEOUT: 300
     ports:
       - "8082:8082"
@@ -146,11 +128,7 @@ services:
       dockerfile: warehouse/Dockerfile
     # env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://$MYSQL_SERVER:3306/parttimejob_user?useSSL=false&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD
-      EUREKA_SERVER: $EUREKA_SERVER
-      EUREKA_PORT: $EUREKA_PORT
-      WAIT_HOSTS: $MYSQL_SERVER:3306, $EUREKA_SERVER:$EUREKA_PORT
+      WAIT_HOSTS: mysql:3306, eureka:8761, config:8888
       WAIT_HOSTS_TIMEOUT: 300
     ports:
       - "8084:8084"

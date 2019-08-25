@@ -176,6 +176,7 @@
         <module>auth</module>
         <module>billing</module>
         <module>eureka-server</module>
+        <module>config-server</module>
         <module>gateway</module>
         <module>warehouse</module>
     </modules>

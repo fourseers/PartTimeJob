@@ -17,6 +17,11 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
+    inetutils:
+      ignored-interfaces:
+        - eth0
+        - eth2
+        - lo
 
 # registration center config
 eureka:

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/wallet/wallet",
     "pages/index/index",
     "pages/cv_inform/cv_inform",
     "pages/timeline/timeline",

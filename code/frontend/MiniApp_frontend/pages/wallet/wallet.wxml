@@ -1,0 +1,20 @@
+<!--pages/wallet/wallet.wxml-->
+<view class="container">
+  <i-panel title="上午XX:XX">
+    <i-cell title="XX.XX元" value="" label="余额">
+      <view slot="icon">
+        <i-avatar size="large" src="{{userInfo.avatarUrl}}"></i-avatar>
+      </view>
+      <view slot="footer">
+        {{}}
+      </view>
+    </i-cell>
+  </i-panel>
+
+  <i-panel title=" ">
+    <i-cell-group>
+      <i-cell is-link url="" title="支取"></i-cell>
+      <i-cell is-link url="" title="交易记录"></i-cell>
+    </i-cell-group>
+  </i-panel>
+</view>

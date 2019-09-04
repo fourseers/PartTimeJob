@@ -39,6 +39,7 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
             ",w.job.jobName as jobName" +
             ",b.billId as billId" +
             ",b.payment as payment" +
+            ",b.meta as meta" +
             " from Work w left join Billing b" +
             " on w.billing = b where w.worker= ?1")
     Page<UserWorkEntryProjection> getUserWorkEntries(WechatUser user, Pageable pageable);

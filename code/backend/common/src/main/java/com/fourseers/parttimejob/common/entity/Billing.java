@@ -1,10 +1,11 @@
 package com.fourseers.parttimejob.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
+import java.sql.Timestamp;
 
 @Entity
 public class Billing {
@@ -14,6 +15,8 @@ public class Billing {
     private String method;
     private String meta;
     private Work work;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +36,6 @@ public class Billing {
         this.payment = payment;
     }
 
-    @NotBlank
     public String getMethod() {
         return method;
     }
@@ -58,5 +60,23 @@ public class Billing {
 
     public void setWork(Work work) {
         this.work = work;
+    }
+
+    @CreationTimestamp
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    @UpdateTimestamp
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
     }
 }

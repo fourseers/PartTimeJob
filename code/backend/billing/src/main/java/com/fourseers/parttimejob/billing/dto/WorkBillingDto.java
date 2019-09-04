@@ -28,7 +28,7 @@ public class WorkBillingDto {
         this.payment = payment;
     }
 
-    @NotBlank
+
     public String getMethod() {
         return method;
     }

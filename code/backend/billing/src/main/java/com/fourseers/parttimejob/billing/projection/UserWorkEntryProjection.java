@@ -11,4 +11,5 @@ public interface UserWorkEntryProjection {
     String getJobName();
     Integer getBillId();
     Double getPayment();
+    String getMeta();
 }

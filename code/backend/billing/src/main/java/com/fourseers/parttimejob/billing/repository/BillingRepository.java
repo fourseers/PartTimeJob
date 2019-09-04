@@ -2,6 +2,9 @@ package com.fourseers.parttimejob.billing.repository;
 
 import com.fourseers.parttimejob.billing.projection.BillingStatusProjection;
 import com.fourseers.parttimejob.common.entity.Billing;
+import com.fourseers.parttimejob.common.entity.WechatUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -30,4 +33,15 @@ public interface BillingRepository extends JpaRepository<Billing, Integer> {
             "order by work.job.shop.shopId")
     List<BillingStatusProjection> getBillingStatusByCompanyIdInGivenPeriod(Integer companyId, Date from, Date to);
 
-    }
+    @Query("select sum(b.payment) from Billing b" +
+            " where b.work.worker = ?1 and (b.meta is null or length(trim(b.meta)) = 0)")
+    Double getUserBalance(WechatUser user);
+
+    @Query(value = "from Billing b where (b.meta is null or length(trim(b.meta)) = 0)" +
+            " and b.work.worker = ?1")
+    List<Billing> getBillingsToDraw(WechatUser user);
+
+    @Query(value = "from Billing b where b.meta is not null order by b.updateTime DESC",
+        countQuery = "select COUNT(b) from Billing b where b.meta is not null order by b.updateTime DESC")
+    Page<Billing> getBillingsDrawn(WechatUser user, Pageable pageRequest);
+}

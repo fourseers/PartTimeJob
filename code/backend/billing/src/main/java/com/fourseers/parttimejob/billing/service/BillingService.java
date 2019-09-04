@@ -21,4 +21,10 @@ public interface BillingService {
     List<BillingStatusProjection> getBillingStatus(String username, Integer fromYear, Integer fromMonth, Integer toYear, Integer toMonth);
 
     Page<UserWorkEntryProjection> getUserWork(WechatUser wechatUser, Integer pageCount);
+
+    Double drawAllMoney(WechatUser wechatUser);
+
+    Double getUserBalance(WechatUser user);
+
+    Page<Billing> getDrawnBillings(WechatUser user, int pageCount);
 }

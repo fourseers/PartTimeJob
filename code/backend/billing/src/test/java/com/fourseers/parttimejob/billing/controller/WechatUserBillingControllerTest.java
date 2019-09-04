@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.billing.repository.*;
+import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.entity.Work;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,15 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -55,17 +61,23 @@ public class WechatUserBillingControllerTest {
     private Job job;
     private WechatUser wechatUser;
     private String userToken;
+    private Billing bill;
+    private Work work;
 
     @Before
     public void before() throws Exception {
         job = jobRepository.getOne(1);
         wechatUser = wechatUserRepository.getOne(1);
         userToken = WECHAT_USER_PREFIX + wechatUserRepository.getOne(1).getOpenid();
+        // data.sql have four work entries and two bill entries
+        // two bill entries have 100 + 100 payment.
     }
 
     @After
     public void after() throws Exception {
+        // delete that
         workRepository.deleteAll();
+        billingRepository.deleteAll();
     }
 
     @Test
@@ -104,4 +116,64 @@ public class WechatUserBillingControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testGetUserBalance() throws Exception {
+        MvcResult result = mockMvc.perform(get("/user/balance")
+                .header("x-internal-token", userToken))
+                .andExpect(status().isOk()).andReturn();
+
+        JSONObject response = JSONObject.parseObject(result.getResponse().getContentAsString());
+        Double balance = response.getDouble("data");
+        assertEquals(Double.valueOf(200.0), balance);
+    }
+
+    @Test
+    public void testDrawAll() throws Exception {
+        MvcResult result = mockMvc.perform(post("/user/drawAll")
+                .header("x-internal-token", userToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSONObject.parseObject(result.getResponse().getContentAsString());
+        JSONObject data = response.getJSONObject("data");
+        assertNotNull(data);
+
+        assertTrue(data.getBoolean("success"));
+        assertEquals(Double.valueOf(200.0), data.getDouble("payment"));
+
+        // draw again to see if it would success again
+        result = mockMvc.perform(post("/user/drawAll")
+                .header("x-internal-token", userToken))
+                .andExpect(status().isOk())
+                .andReturn();
+        response = JSONObject.parseObject(result.getResponse().getContentAsString());
+        data = response.getJSONObject("data");
+        assertNotNull(data);
+        assertFalse(data.getBoolean("success"));
+        assertEquals(Double.valueOf(0.0), data.getDouble("payment"));
+    }
+
+    @Test
+    public void testGetDrawHistory() throws Exception {
+        // draw first
+        mockMvc.perform(post("/user/drawAll")
+                .header("x-internal-token", userToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // get list
+        MvcResult result = mockMvc.perform(get("/user/draw-history")
+                .header("x-internal-token", userToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSONObject.parseObject(result.getResponse().getContentAsString());
+        JSONObject data = response.getJSONObject("data");
+        assertNotNull(data);
+        assertEquals(Integer.valueOf(2), data.getInteger("total_elements"));
+        JSONArray content = data.getJSONArray("content");
+        assertNotNull(content);
+        assertEquals(Double.valueOf(100.0), content.getJSONObject(0).getDouble("payment"));
+        assertEquals(Double.valueOf(100.0), content.getJSONObject(1).getDouble("payment"));
+    }
 } 

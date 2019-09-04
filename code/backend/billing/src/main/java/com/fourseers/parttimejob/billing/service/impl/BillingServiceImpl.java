@@ -8,11 +8,13 @@ import com.fourseers.parttimejob.billing.projection.BillingStatusProjection;
 import com.fourseers.parttimejob.billing.projection.UserWorkEntryProjection;
 import com.fourseers.parttimejob.billing.projection.WorkBillingProjection;
 import com.fourseers.parttimejob.billing.service.BillingService;
+import com.fourseers.parttimejob.billing.service.PayService;
 import com.fourseers.parttimejob.common.entity.Billing;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.common.entity.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,9 @@ public class BillingServiceImpl implements BillingService {
 
     @Autowired
     MonthlyBillDao monthlyBillDao;
+
+    @Autowired
+    @Qualifier("mockPaymentService") PayService payService;
 
     @Value("${app.pagination.pageSize}")
     private Integer DEFAULT_PAGE_SIZE;
@@ -89,7 +94,7 @@ public class BillingServiceImpl implements BillingService {
         if (result != null) {
             return result;
         } else {
-            return (double) 0;
+            return 0.0;
         }
     }
 
@@ -122,6 +127,43 @@ public class BillingServiceImpl implements BillingService {
     @Override
     public Page<UserWorkEntryProjection> getUserWork(WechatUser wechatUser, Integer pageCount) {
         return workDao.getUserWorkAndBill(wechatUser, pageCount, DEFAULT_PAGE_SIZE);
+    }
+
+    @Override
+    public Double drawAllMoney(WechatUser wechatUser) {
+        List<Billing> bills =  billingDao.getBillingsToDraw(wechatUser);
+
+        double payment = 0;
+        for(Billing b: bills) {
+            payment += b.getPayment();
+        }
+        // use mock payment client to generate method and meta
+        PayService.PaymentResult result = payService.pay(wechatUser, payment);
+        if(result.isSuccess()) {
+            // set all method and meta in billing table
+            for(Billing b: bills) {
+                b.setMethod(payService.getMethod());
+                b.setMeta(result.getMeta());
+            }
+            billingDao.saveAll(bills);
+            return payment;
+        }
+        return 0.0;
+    }
+
+    /**
+     * Get user balance by summing all billing entries in database.
+     * @param user wechat user to calculate balance
+     * @return user balance
+     */
+    @Override
+    public Double getUserBalance(WechatUser user) {
+        return billingDao.getUserBalance(user);
+    }
+
+    @Override
+    public Page<Billing> getDrawnBillings(WechatUser user, int pageCount) {
+        return billingDao.getBillingsDrawn(user, pageCount, DEFAULT_PAGE_SIZE);
     }
 
 }

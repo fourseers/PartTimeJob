@@ -1,5 +1,7 @@
 // pages/wallet/wallet.js
 const app = getApp()
+import request from "../../api/request.js"
+import { host, balance } from "../../api/url.js"
 
 Page({
 
@@ -7,7 +9,19 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo: {}
+    userInfo: {
+    },
+    balance: 0.0,
+    cells: [
+      {
+        title: "支取记录",
+        url: ""
+      },
+      {
+        title: "工作记录",
+        url: "/pages/billing_page/billing_page"
+      },
+    ]
   },
 
   onShow() {
@@ -38,7 +52,18 @@ Page({
         }
       })
     }
-    console.log(this.data.userInfo)
+    // console.log(this.data.userInfo)
+    // 得到用户余额
+    var req = new request();
+    req.getRequest(host + balance, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        this.setData({
+          balance: res.data.data,
+        })
+      }
+    }).catch(err => {
+
+    })
   }
   
 })

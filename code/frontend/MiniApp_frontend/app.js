@@ -1,6 +1,6 @@
 //app.js
 import request from "./api/request.js"
-import { login } from "./api/url.js"
+import { host, login } from "./api/url.js"
 
 App({
   onLaunch: function () {
@@ -43,14 +43,14 @@ App({
         }
       }
     });
-    /*
+    
     // 显示欢迎页面2秒后跳转到"我"页面
     setTimeout(function () {
       wx.reLaunch({
         url: "/pages/user/user",
       })
     }, 2000)
-    */
+    
   },
   globalData: {
     userInfo: null,
@@ -58,7 +58,7 @@ App({
     is_registered: false,
     showSendMessage: false,
     showModifySuccess: false,
-    host: "http://47.103.112.85:30552",
+    host: host,
     access_token: null,
     refresh_token: null,
     token_expires_in: null,

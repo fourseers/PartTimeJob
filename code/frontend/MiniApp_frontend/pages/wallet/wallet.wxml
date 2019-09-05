@@ -1,7 +1,7 @@
 <!--pages/wallet/wallet.wxml-->
 <view class="container">
-  <i-panel title="上午XX:XX">
-    <i-cell title="XX.XX元" value="" label="余额">
+  <i-panel title=" ">
+    <i-cell title="{{balance}}元" value="" label="余额">
       <view slot="icon">
         <i-avatar size="large" src="{{userInfo.avatarUrl}}"></i-avatar>
       </view>
@@ -11,10 +11,11 @@
     </i-cell>
   </i-panel>
 
-  <i-panel title=" ">
+  <i-panel title="历史记录">
     <i-cell-group>
-      <i-cell is-link url="" title="支取"></i-cell>
-      <i-cell is-link url="" title="交易记录"></i-cell>
+      <block wx:for="{{cells}}" wx:key="index">
+        <i-cell is-link url="{{item.url}}" title="{{item.title}}"/>
+      </block>
     </i-cell-group>
   </i-panel>
 </view>

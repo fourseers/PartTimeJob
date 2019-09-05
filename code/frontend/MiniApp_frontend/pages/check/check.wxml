@@ -27,4 +27,8 @@
   </i-cell-group>
 </i-panel>
 
+<i-modal visible="{{back_to_main}}" title="请注册" actions="{{ actions }}" bind:click="handleClick">
+  <view>您还没有注册，无法访问当前页面</view>
+</i-modal>
+
 <i-toast id="toast" />

@@ -1,5 +1,6 @@
 // pages/check/check.
 const { $Toast } = require("../../dist/base/index");
+const { $Message } = require('../../dist/base/index');
 var util = require("../../utils/util.js")
 const app = getApp();
 import request from "../../api/request.js"
@@ -24,9 +25,23 @@ Page({
         job_id: 1,
       },
     ],
+    back_to_main: true,
+    actions: [
+      {
+        name: "确定"
+      }
+    ]
   },
 
-  // onShow的时候向后端请求当前的工作列表
+  onShow() {
+    if (app.globalData.is_registered === true) {
+      this.setData({
+        back_to_main: false
+      })
+    }
+  },
+
+  // onReady的时候向后端请求当前的工作列表
   onReady() {
     // 显示打卡成功信息
     if (app.globalData.showSendMessage) {
@@ -110,6 +125,13 @@ Page({
 
   afterCalendarRender(e) {
     //console.log('afterCalendarRender', e);
+  },
+
+  handleClick(e) {
+    //console.log(e)
+    wx.reLaunch({
+      url: "/pages/user/user",
+    })
   },
 
   //显示注册成功的toast

@@ -1,7 +1,8 @@
 // pages/wallet/wallet.js
 const app = getApp()
+const { $Toast } = require("../../dist/base/index");
 import request from "../../api/request.js"
-import { host, balance } from "../../api/url.js"
+import { host, balance, draw_all } from "../../api/url.js"
 
 Page({
 
@@ -15,11 +16,11 @@ Page({
     cells: [
       {
         title: "支取记录",
-        url: ""
+        url: "/pages/draw/draw"
       },
       {
         title: "工作记录",
-        url: "/pages/billing_page/billing_page"
+        url: "/pages/works/works"
       },
     ]
   },
@@ -60,6 +61,31 @@ Page({
         this.setData({
           balance: res.data.data,
         })
+      }
+    }).catch(err => {
+
+    })
+  },
+
+  handleClick() {
+    var req = new request();
+    req.postRequest(host + draw_all, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        if (res.data.message === "No money to draw.") {
+          $Toast({
+            content: '余额不足，无法提现',
+            type: 'warning'
+          });
+        }
+        else {
+          $Toast({
+            content: res.data.message,
+            type: 'success'
+          });
+          wx.navigateTo({
+            url: '/pages/draw/draw',
+          })
+        }
       }
     }).catch(err => {
 

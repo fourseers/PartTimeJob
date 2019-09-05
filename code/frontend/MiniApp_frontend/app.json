@@ -19,7 +19,8 @@
     "pages/choose_date/choose_date",
     "pages/apply_detail/apply_detail",
     "pages/works/works",
-    "pages/wallet/wallet"
+    "pages/wallet/wallet",
+    "pages/draw/draw"
   ],
   "window": {
     "backgroundTextStyle": "light",

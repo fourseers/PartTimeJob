@@ -19,3 +19,9 @@
     </i-cell-group>
   </i-panel>
 </view>
+
+<i-button class="check-button" bind:click="handleClick" type="success">
+  <text>提取余额</text>
+</i-button>
+
+<i-toast id="toast" />

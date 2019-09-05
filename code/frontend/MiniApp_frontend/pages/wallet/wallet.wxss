@@ -1,0 +1,7 @@
+/* pages/wallet/wallet.wxss */
+
+.check-button {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}

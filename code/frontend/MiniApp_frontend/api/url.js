@@ -1,6 +1,6 @@
 const login = "/auth/wechat/login"
 const register = "/auth/wechat/register"
-const host = "http://202.120.40.8:30552"
+const host = "http://47.103.112.85:30552"
 const register_data = "/warehouse/user/register-info"
 const user_info = "/warehouse/user/info"
 const modify_info = "/warehouse/user/info"
@@ -18,6 +18,9 @@ const check_status = "/arrangement/user/check-status"
 const applied_time = "/arrangement/user/job/applied-time?job_id="
 const application_list = "/arrangement/user/applications"
 const billing = "/billing/user/works"
+const balance = "/billing/user/balance"
+const draw_all = "/billing/user/drawAll"
+const draw_history = "/billing/user/draw-history"
 
 module.exports = {
   login,
@@ -39,5 +42,8 @@ module.exports = {
   check_status,
   applied_time,
   application_list,
-  billing
+  billing,
+  balance,
+  draw_all,
+  draw_history
 }

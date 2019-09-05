@@ -40,8 +40,8 @@ Page({
         src: "/assets/icons/job.png"
       },
       {
-        title: "工资",
-        url: "/pages/billing_page/billing_page",
+        title: "钱包",
+        url: "/pages/wallet/wallet",
         src: "/assets/icons/money.png"
       },
       {

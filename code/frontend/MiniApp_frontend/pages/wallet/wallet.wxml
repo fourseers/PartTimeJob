@@ -1,0 +1,27 @@
+<!--pages/wallet/wallet.wxml-->
+<view class="container">
+  <i-panel title=" ">
+    <i-cell title="{{balance}}元" value="" label="余额">
+      <view slot="icon">
+        <i-avatar size="large" src="{{userInfo.avatarUrl}}"></i-avatar>
+      </view>
+      <view slot="footer">
+        {{}}
+      </view>
+    </i-cell>
+  </i-panel>
+
+  <i-panel title="历史记录">
+    <i-cell-group>
+      <block wx:for="{{cells}}" wx:key="index">
+        <i-cell is-link url="{{item.url}}" title="{{item.title}}"/>
+      </block>
+    </i-cell-group>
+  </i-panel>
+</view>
+
+<i-button class="check-button" bind:click="handleClick" type="success">
+  <text>提取余额</text>
+</i-button>
+
+<i-toast id="toast" />

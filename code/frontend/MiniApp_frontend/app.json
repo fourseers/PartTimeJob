@@ -18,7 +18,9 @@
     "pages/switchcity/switchcity",
     "pages/choose_date/choose_date",
     "pages/apply_detail/apply_detail",
-    "pages/billing_page/billing_page"
+    "pages/works/works",
+    "pages/wallet/wallet",
+    "pages/draw/draw"
   ],
   "window": {
     "backgroundTextStyle": "light",

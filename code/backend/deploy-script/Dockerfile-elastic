@@ -1,0 +1,11 @@
+# my elastic container build file
+
+# note that the container we use in production is a snapshot image of this built container
+# since we need extra template data @ runtime
+# which can be found in es_template.json
+# remember to curl -XPUT that
+from elasticsearch:7.2.0
+
+ENV discovery.type=single-node
+COPY es_template.json /es_template.json
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.2.0/elasticsearch-analysis-ik-7.2.0.zip -b

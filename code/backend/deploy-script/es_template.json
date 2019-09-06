@@ -1,0 +1,1 @@
+{"index_patterns": ["parttimejob_job"],"mappings": {"properties": {"job_detail": {"type": "text","analyzer": "ik_max_word","search_analyzer": "ik_smart"},"job_tag_list": {"type": "text","analyzer": "ik_max_word","search_analyzer": "ik_smart"}}}} 

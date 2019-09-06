@@ -1,6 +1,6 @@
 //app.js
 import request from "./api/request.js"
-import { login } from "./api/url.js"
+import { host, login } from "./api/url.js"
 
 App({
   onLaunch: function () {
@@ -58,7 +58,7 @@ App({
     is_registered: false,
     showSendMessage: false,
     showModifySuccess: false,
-    host: "http://202.120.40.8:30552",
+    host: host,
     access_token: null,
     refresh_token: null,
     token_expires_in: null,

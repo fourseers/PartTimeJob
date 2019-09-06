@@ -1,0 +1,15 @@
+<!--pages/draw/draw.wxml-->
+<view class="container">
+  <i-panel title="支取记录">
+    <i-cell-group>
+      <i-cell wx:for="{{draw_history}}" wx:key="index" title="收款方式:{{item.method}}" label="时间:{{item.time}};\n订单号:{{item.meta}}">
+        <view slot="icon">
+          <i-avatar src="/assets/icons/money.png" shape="square"></i-avatar>
+        </view>
+        <view slot="footer">
+          {{item.payment}}元
+        </view>
+      </i-cell>
+    </i-cell-group>
+  </i-panel>
+</view>

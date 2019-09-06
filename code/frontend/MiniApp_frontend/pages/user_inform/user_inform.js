@@ -327,7 +327,7 @@ Page({
       this.setData({
         isLoading: true,
       })
-      console.log(postData);
+      //console.log(postData);
       req.postRequest(host + modify_info, JSON.stringify(postData), app.globalData.access_token).then(res => {
         if (res.statusCode === 200) {
           app.globalData.showModifySuccess = true;

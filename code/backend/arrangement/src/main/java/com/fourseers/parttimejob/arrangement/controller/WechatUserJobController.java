@@ -22,10 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 import static org.springframework.http.HttpStatus.*;
@@ -58,7 +55,7 @@ public class WechatUserJobController {
             @ApiParam("How many days before starting to work.")
                 @RequestParam(required = false) @Positive Integer daysToCome,
             @ApiParam("Salary range in CNY per day.")
-                @RequestParam(required = false) @Positive Double minSalary,
+                @RequestParam(required = false) @PositiveOrZero Double minSalary,
             @ApiParam("Salary range in CNY per day.")
                 @RequestParam(required = false) @Positive Double maxSalary,
             @RequestParam(defaultValue = "0") int entryOffset,

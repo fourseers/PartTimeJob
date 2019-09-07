@@ -60,8 +60,8 @@
 -->
 <i-button bind:click="register" type="primary" loading="{{isLoading}}">注册</i-button>
 
-<i-modal visible="{{show_modal}}" title="修改标签" actions="{{ actions }}" bind:click="handleTags">
-  <view>修改个人标签可以匹配到更适合您的岗位，是否立即去修改？</view>
+<i-modal visible="{{show_modal}}" title="修改倾向" actions="{{ actions }}" bind:click="handleTags">
+  <view>修改职业倾向可以匹配到更适合您的岗位，是否立即去修改？</view>
 </i-modal>
 
 <i-toast id="toast" />

@@ -1,6 +1,6 @@
 <!--pages/choose_date/choose_date.wxml-->
 <view class="container">
-  <i-panel title="请选择你要应聘的时间段"></i-panel>
+  <i-panel title="请选择你要应聘的工作日期"></i-panel>
   <calendar
     calendarConfig="{{calendar_config}}"
     bind:afterTapDay="afterTapDay"

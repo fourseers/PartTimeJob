@@ -5,7 +5,7 @@ const register_data = "/warehouse/user/register-info"
 const user_info = "/warehouse/user/info"
 const modify_info = "/warehouse/user/info"
 const job_list = "/arrangement/user/jobs"
-const job_detail = "/arrangement/user/job?job_id="
+const job_detail = "/arrangement/user/job?identifier="
 const apply_job = "/arrangement/user/apply"
 const checkin = "/arrangement/user/checkin"
 const checkout = "/arrangement/user/checkout"
@@ -21,6 +21,7 @@ const billing = "/billing/user/works"
 const balance = "/billing/user/balance"
 const draw_all = "/billing/user/drawAll"
 const draw_history = "/billing/user/draw-history"
+const jobs_smart = "/arrangement/user/jobs-smart"
 
 module.exports = {
   login,
@@ -45,5 +46,6 @@ module.exports = {
   billing,
   balance,
   draw_all,
-  draw_history
+  draw_history,
+  jobs_smart
 }

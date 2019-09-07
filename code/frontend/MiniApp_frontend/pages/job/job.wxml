@@ -7,6 +7,13 @@
       </view>
     </i-cell>
   </view>
+  <i-tabs current="{{ current_tab }}" bind:change="{{ handleChangeTab }}">
+    <block wx:for="{{ tabs }}" wx:key="index">
+      <i-tab key="{{ item.key }}" title="{{ item.title }}">
+        <picker></picker>
+      </i-tab>
+    </block>
+  </i-tabs>
   <i-cell-group>
     <i-cell 
       wx:for="{{jobs}}"

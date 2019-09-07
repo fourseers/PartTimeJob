@@ -19,6 +19,19 @@ Page({
     jobCount: 0,
     isLoading: false,
     total_hits: 9999,
+    tabs: [
+      {
+        key: "distance",
+        title: "距离"
+      }, {
+        key: "salary",
+        title: "工资"
+      }, {
+        key: "date",
+        title: "时间"
+      }
+    ],
+    current_tab: "distance",
   },
 
   onReady() {
@@ -140,6 +153,10 @@ Page({
       content: '申请岗位成功',
       type: 'success'
     });
+  },
+
+  handleChangeTab({ detail }) {
+    console.log(detail)
   }
 
 })

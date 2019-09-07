@@ -49,4 +49,5 @@
     </view>
   </i-cell>
 </i-panel>
+<i-action-sheet visible="{{ time_table_visible }}" actions="{{ time_table_actions }}" show-cancel bind:cancel="handleCancel" bind:click="handleClickItem" />
 <i-toast id="toast" />

@@ -19,7 +19,7 @@
       wx:for="{{jobs}}"
       wx:key="{{index}}"
       is-link 
-      url="/pages/job_detail/job_detail?id={{item.identifier}}" 
+      url="/pages/job_detail/job_detail?identifier={{item.identifier}}" 
       title="{{item.name}}" 
       label="{{item.detail}}......"
     >

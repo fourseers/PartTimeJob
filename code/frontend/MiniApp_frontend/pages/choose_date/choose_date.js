@@ -39,7 +39,7 @@ Page({
     job_id = options.id;
     begin_date = options.begin_date;
     end_date = options.end_date;
-    console.log(options)
+    // console.log(options)
   },
 
   onReady() {

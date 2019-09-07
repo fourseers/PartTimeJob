@@ -1,6 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dao.impl;
 
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
+import com.fourseers.parttimejob.arrangement.projection.WorkNotifyProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.arrangement.repository.WorkRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.util.List;
 
 @Repository
 public class WorkDaoImpl implements WorkDao {
@@ -47,5 +49,15 @@ public class WorkDaoImpl implements WorkDao {
     @Override
     public WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to) {
         return workRepository.getWorkStatus(shopId, from, to);
+    }
+
+    @Override
+    public List<WorkNotifyProjection> getNotCheckedIn() {
+        return workRepository.getNotCheckedIn();
+    }
+
+    @Override
+    public List<WorkNotifyProjection> getNotCheckedOut() {
+        return workRepository.getNotCheckedOut();
     }
 }

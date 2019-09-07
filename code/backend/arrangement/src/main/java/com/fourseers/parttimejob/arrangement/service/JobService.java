@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.util.GeoUtil;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -20,10 +21,15 @@ public interface JobService {
 
     Page<Job> findPageByShopIdAndUsername(int shopId, String username, int pageCount, int pageSize);
 
+    // wechat search
+    // based on jpa + jdbc
+    Page<Job> queryJobs(GeoUtil.Point location, Double geoRange,
+                        Integer daysToCome, Double minSalary, Double maxSalary, String tag, int entryOffset);
+    // based on elasticsearch
     SearchResultDto findJobs(WechatUser user, Boolean useTags, int entryOffset) throws IOException;
-    SearchResultDto findJobsByGeoLocation(WechatUser user, Boolean useTags, BigDecimal longitude, BigDecimal latitude, int pageCount) throws IOException;
-    Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
+    SearchResultDto findJobsByGeoLocation(WechatUser user, Boolean useTags, BigDecimal longitude, BigDecimal latitude, int entryOffset) throws IOException;
 
+    Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
     boolean apply(WechatUser user, ApplyDto applyDto);
     JobDetailedInfoProjection getJobDetail(int jobId);
     AppliedTimeDto getJobAppliedTime(int jobId);

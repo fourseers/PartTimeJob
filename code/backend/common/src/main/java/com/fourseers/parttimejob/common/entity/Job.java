@@ -16,6 +16,7 @@ import java.util.List;
 public class Job implements Cloneable {
 
     private Integer jobId;
+    private String identifier;
     private String jobName;
     private Date beginDate;
     private Date endDate;
@@ -32,7 +33,6 @@ public class Job implements Cloneable {
     private Double salary;
     private Shop shop;
     private Boolean manualStop = false;
-    private String identifier;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,16 @@ public class Job implements Cloneable {
 
     public void setJobId(Integer jobId) {
         this.jobId = jobId;
+    }
+
+//    @NotNull              // commented this out for test purposes
+    @Column(length = 40)    // reserve a couple bits
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     @NotBlank
@@ -193,14 +203,6 @@ public class Job implements Cloneable {
 
     public void setManualStop(Boolean manualStop) {
         this.manualStop = manualStop;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     public Job clone() throws CloneNotSupportedException {

@@ -4,4 +4,5 @@ RUN /usr/share/logstash/bin/logstash-plugin install logstash-input-jdbc \
 	&& /usr/share/logstash/bin/logstash-plugin install logstash-output-elasticsearch
 RUN rm -f /usr/share/logstash/pipeline/logstash.conf
 COPY logstash_mysql_pipeline.conf /usr/share/logstash/pipeline/
+COPY logstash_mysql_statement.sql /usr/share/logstash/pipeline/
 COPY mysql-connector-java-5.1.48.jar /usr/share/logstash/logstash-core/lib/jars/mysql-connector-java-5.1.48.jar

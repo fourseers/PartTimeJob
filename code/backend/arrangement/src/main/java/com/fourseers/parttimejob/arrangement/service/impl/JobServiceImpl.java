@@ -10,6 +10,7 @@ import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
+import com.fourseers.parttimejob.common.util.GeoUtil;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -22,7 +23,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -118,6 +118,22 @@ public class JobServiceImpl implements JobService {
         }
 
         throw new RuntimeException("shop not exist or not belong to");
+    }
+
+    @Override
+    public Page<Job> queryJobs(GeoUtil.Point location, Double geoRange, Integer daysToCome, Double minSalary, Double maxSalary, String tag, int entryOffset) {
+        if(geoRange == null)
+            geoRange = 30.0;
+        if(daysToCome == null)
+            daysToCome = 10000; // inf
+        if(minSalary == null)
+            minSalary = -1.0;
+        if(maxSalary == null)
+            maxSalary = 1e10;
+
+        int pageOffset = entryOffset / PAGE_SIZE;
+
+        return jobDao.queryJob(location, geoRange, daysToCome, minSalary, maxSalary, tag, pageOffset, PAGE_SIZE);
     }
 
     public Page<Job> findPageByUsername(String username, int pageCount, int pageSize) {
@@ -246,7 +262,8 @@ public class JobServiceImpl implements JobService {
             for(Tag tag: user.getTags())
                 tagNames.add(tag.getName());
             String tags = String.join(" ", tagNames);
-            boolQueryBuilder.should(QueryBuilders.matchQuery("tags", tags))
+            boolQueryBuilder
+//                    .should(QueryBuilders.matchQuery("tags", tags))
                     .should(QueryBuilders.matchQuery("job_name", tags))
                     .should(QueryBuilders.matchQuery("job_detail", tags));
         }
@@ -289,24 +306,34 @@ public class JobServiceImpl implements JobService {
 
         @SuppressWarnings("RedundantArrayCreation") BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
                 .filter(QueryBuilders.termQuery("manual_stop", false))
-                .filter(QueryBuilders.matchQuery("education", sb.toString()))
                 .filter(QueryBuilders.termsQuery("need_gender", new int[]{user.getGender().compareTo(false), 2}))
                 .filter(geoQueryBuilder);
+
+
         if(useTags) {
             List<String> tagNames = new ArrayList<>();
             for(Tag tag: user.getTags())
                 tagNames.add(tag.getName());
             String tags = String.join(" ", tagNames);
-            boolQueryBuilder.should(QueryBuilders.matchQuery("tags", tags))
+            boolQueryBuilder
+                    .should(QueryBuilders.matchQuery("tags", tags))
+                    .should(QueryBuilders.matchQuery("education", sb.toString()))
                     .should(QueryBuilders.matchQuery("job_name", tags))
                     .should(QueryBuilders.matchQuery("job_detail", tags));
 
         }
 
-        // sort by location
+        // score functions add salary weight and location weight
 
-        ScoreFunctionBuilder geoScoreFunction = ScoreFunctionBuilders.gaussDecayFunction("location", currentLocation, 1);
-        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQueryBuilder, geoScoreFunction)
+        FunctionScoreQueryBuilder.FilterFunctionBuilder functions[] = new FunctionScoreQueryBuilder.FilterFunctionBuilder[]
+        {
+                new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+                        ScoreFunctionBuilders.scriptFunction("Math.log(1 + doc['salary'].value)")),
+                new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+                        ScoreFunctionBuilders.gaussDecayFunction("location", currentLocation, 1000000))
+        };
+
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQueryBuilder, functions)
                 .scoreMode(FunctionScoreQuery.ScoreMode.MULTIPLY);
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -321,6 +348,7 @@ public class JobServiceImpl implements JobService {
         request.source(sourceBuilder);
         // scroll functionality not utilized yet
         // request.scroll(TimeValue.timeValueMinutes(1L));
+        System.out.println(request.toString());
         SearchResponse response = esClient.search(request, RequestOptions.DEFAULT);
 //        if(response.isTerminatedEarly())
 //            throw new RuntimeException("Search engine terminated unexpectedly. Contact system admin.");
@@ -329,10 +357,14 @@ public class JobServiceImpl implements JobService {
         response.getHits().getTotalHits().toString();
         SearchResultDto ret = new SearchResultDto();
         List<Map<String, Object>> hits = new ArrayList<>();
-        for(SearchHit singleHit: response.getHits().getHits())
+        for(SearchHit singleHit: response.getHits().getHits()) {
+            Map<String, Object> entry = singleHit.getSourceAsMap();
+            entry.put("score", singleHit.getScore() / response.getHits().getMaxScore());
             hits.add(singleHit.getSourceAsMap());
+        }
         ret.setContent(hits);
         ret.setTotalHits(response.getHits().getTotalHits().value);
         return ret;
     }
+
 }

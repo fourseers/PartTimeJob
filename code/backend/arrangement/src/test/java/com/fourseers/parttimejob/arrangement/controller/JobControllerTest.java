@@ -41,6 +41,11 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                .fluentAdd(2);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 1)
             .fluentPut("job_name", "seller")
             .fluentPut("begin_date", "2019-07-16")
@@ -52,6 +57,7 @@ public class JobControllerTest {
             .fluentPut("end_apply_time", "2019-07-15 16:00:00")
             .fluentPut("begin_time", "08:00:00")
             .fluentPut("end_time", "16:00:00")
+            .fluentPut("work_time", workTimeArray)
             .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
@@ -83,6 +89,11 @@ public class JobControllerTest {
         tagList.fluentAdd(1)
                .fluentAdd(2)
                .fluentAdd(3);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 1)
                 .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "2019-07-16")
@@ -92,8 +103,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
                 .fluentPut("end_apply_time", "2019-07-15 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
+                .fluentPut("work_time", workTimeArray)
                 .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
@@ -118,6 +128,11 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                .fluentAdd(2);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 3)
             .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "2019-07-16")
@@ -127,8 +142,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
                 .fluentPut("end_apply_time", "2019-07-15 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
+                .fluentPut("work_time", workTimeArray)
             .fluentPut("education", "本科毕业")
             .fluentPut("tag_list", tagList)
             .fluentPut("salary", 100);
@@ -153,6 +167,11 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                 .fluentAdd(2);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 3)
                 .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "2019-07-16")
@@ -162,8 +181,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
                 .fluentPut("end_apply_time", "2019-07-15 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
+                .fluentPut("work_time", workTimeArray)
                 .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
@@ -180,41 +198,6 @@ public class JobControllerTest {
     }
 
     @Test
-    public void addJobBeginAfterEnd() throws Exception {
-
-        String managerName = "葛越";
-
-        JSONObject body = new JSONObject();
-        JSONArray tagList = new JSONArray();
-        tagList.fluentAdd(1)
-                .fluentAdd(2);
-        body.fluentPut("shop_id", 2)
-                .fluentPut("job_name", "seller")
-                .fluentPut("begin_date", "2019-07-18")
-                .fluentPut("end_date", "2019-07-17")
-                .fluentPut("job_detail", "sell Apple products")
-                .fluentPut("need_gender", 2)
-                .fluentPut("need_amount", 10)
-                .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
-                .fluentPut("end_apply_time", "2019-07-15 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
-                .fluentPut("education", "本科毕业")
-                .fluentPut("tag_list", tagList)
-                .fluentPut("salary", 100);
-
-        MvcResult result = mockMvc.perform(post("/merchant/job")
-                .header("x-internal-token", managerName)
-                .content(body.toJSONString())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(400))
-                .andReturn();
-
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        assertEquals("time incorrect", response.getString("message"));
-    }
-
-    @Test
     public void addJobAcquireBeginAfterEnd() throws Exception {
 
         String managerName = "葛越";
@@ -223,6 +206,11 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                 .fluentAdd(2);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 2)
                 .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "2019-07-16")
@@ -232,8 +220,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
                 .fluentPut("end_apply_time", "2019-07-13 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
+                .fluentPut("work_time", workTimeArray)
                 .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", 100);
@@ -258,6 +245,11 @@ public class JobControllerTest {
         JSONArray tagList = new JSONArray();
         tagList.fluentAdd(1)
                 .fluentAdd(2);
+        JSONArray workTimeArray = new JSONArray();
+        JSONObject workTime = new JSONObject();
+        workTime.fluentPut("begin_time", "08:00:00")
+                .fluentPut("end_time", "16:00:00");
+        workTimeArray.fluentAdd(workTime);
         body.fluentPut("shop_id", 1)
                 .fluentPut("job_name", "seller")
                 .fluentPut("begin_date", "2019-07-16")
@@ -267,8 +259,7 @@ public class JobControllerTest {
                 .fluentPut("need_amount", 10)
                 .fluentPut("begin_apply_time", "2019-07-14 16:00:00")
                 .fluentPut("end_apply_time", "2019-07-15 16:00:00")
-                .fluentPut("begin_time", "08:00:00")
-                .fluentPut("end_time", "16:00:00")
+                .fluentPut("work_time", workTimeArray)
                 .fluentPut("education", "本科毕业")
                 .fluentPut("tag_list", tagList)
                 .fluentPut("salary", -1);

@@ -1,22 +1,20 @@
 package com.fourseers.parttimejob.arrangement.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
 import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
 import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
-import org.elasticsearch.action.search.SearchResponse;
 import org.springframework.data.domain.Page;
 
-import javax.naming.directory.SearchResult;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface JobService {
 
-    void save(Job job, int shopId, String username);
+    void save(List<Job> jobList, int shopId, String username);
 
     Job findByJobIdAndUsername(int jobId, String username);
 

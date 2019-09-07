@@ -2,6 +2,7 @@ package com.fourseers.parttimejob.arrangement.controller;
 
 import com.fourseers.parttimejob.arrangement.dto.ApplyOutDto;
 import com.fourseers.parttimejob.arrangement.dto.JobDto;
+import com.fourseers.parttimejob.arrangement.dto.TimePairDto;
 import com.fourseers.parttimejob.arrangement.service.ApplicationService;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.Job;
@@ -14,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/merchant")
@@ -43,20 +48,32 @@ public class JobController {
     public ResponseEntity<Response<Void>> addJob(@ApiParam(name = "data", value = "info about job")@RequestBody(required = true) JobDto jobDto,
                                                  @ApiParam(hidden=true) @RequestHeader("x-internal-token") String username) {
 
-        Job job;
+        Job jobTemplate;
+        List<Job> jobList = new ArrayList<>();
         try {
-            job = modelMapper.map(jobDto, Job.class);
-            job.setJobId(null);
+            jobTemplate = modelMapper.map(jobDto, Job.class);
+            jobTemplate.setJobId(null);
 
-            if (jobDto.getBeginDate().after(jobDto.getEndDate()) ||
-                    job.getBeginApplyTime().after(job.getEndApplyTime()) ||
-                    job.getEndApplyTime().after(job.getEndDate())) {
+            if (jobTemplate.getBeginApplyTime().after(jobTemplate.getEndApplyTime()) ||
+                    jobTemplate.getEndApplyTime().after(jobTemplate.getEndDate())) {
                 throw new RuntimeException("time incorrect");
             }
             if (jobDto.getSalary() < 0) {
                 throw new RuntimeException("incorrect param");
             }
-        } catch (RuntimeException ex) {
+
+            UUID uuid = UUID.randomUUID();
+
+            List<TimePairDto> timePairList = jobDto.getWorkTime();
+            for (TimePairDto timePair : timePairList) {
+                Job job = jobTemplate.clone();
+                job.setBeginTime(timePair.getBeginTime());
+                job.setEndTime(timePair.getEndTime());
+                job.setIdentifier(uuid.toString());
+                jobList.add(job);
+            }
+
+        } catch (RuntimeException | CloneNotSupportedException ex) {
             if (ex.getMessage().equals("time incorrect")) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, ex.getMessage());
             } else if (ex.getMessage().equals("incorrect param")) {
@@ -66,7 +83,7 @@ public class JobController {
         }
 
         try {
-            jobService.save(job, job.getShop().getShopId(), username);
+            jobService.save(jobList, jobTemplate.getShop().getShopId(), username);
         } catch (RuntimeException ex) {
             if (ex.getMessage().contains("TAG")) {
                 return ResponseBuilder.build(HttpStatus.BAD_REQUEST, null, "incorrect tag");

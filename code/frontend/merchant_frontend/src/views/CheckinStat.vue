@@ -135,7 +135,7 @@
                     xAxis: {
                         show: true,  // 是否显示
                         type: 'category',
-                        data: [ "某店铺"],
+                        data: [],
 
                         axisTick: {
                             alignWithLabel: true
@@ -216,7 +216,6 @@
                 }).then(response => {
                     if (response.status === 200) {
 
-
                         console.log( response.data.data  )
                         var ob= {
                                 name: ' ',
@@ -288,7 +287,14 @@
                         ob3.name = "早退率"
                         ob3.data.push(response.data.data.leave_early_rate*100)
                         this.echarts1_option.series.push(ob3);
-
+                        var shopname=""
+                        for (var i=0;i<this.shops.length;i++) {
+                                if (this.formValidate.shop ==this.shops[i].shop_id)
+                                {
+                                    shopname = this.shops[i].shop_name
+                                }
+                        }
+                        this.echarts1_option.xAxis.data.push(shopname)
 
                         let myChart = echarts.init(document.getElementById('post_chart'))
                         // 绘制图表，this.echarts1_option是数据

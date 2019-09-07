@@ -41,7 +41,6 @@
     import SalaryStat from './views/SalaryStat.vue'
     import CheckinStat from './views/CheckinStat.vue'
     import ScreenCV from './views/ScreenCV.vue'
-    import PostStat from './views/PostStat.vue'
     import ShowJobs from './views/ShowJobs.vue'
     import ShopDetail from './views/ShopDetail.vue'
     import Logout from './views/Logout.vue'
@@ -64,7 +63,6 @@
             SalaryStat,
             CheckinStat,
             ScreenCV,
-            PostStat,
             ShowJobs,
             ShopDetail,
             Logout

@@ -75,10 +75,6 @@
                 <Icon type="md-stats" />
                 统计信息
             </template>
-            <MenuItem name="14" to="/poststat">
-                <Icon type="ios-list-box" />
-                岗位统计
-            </MenuItem>
             <MenuItem name="15" to="/checkinstat">
                 <Icon type="md-clock" />
                 员工打卡

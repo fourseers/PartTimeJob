@@ -98,13 +98,13 @@
                 })
             },
             login(username, password){
-                const url = 'http://202.120.40.8:30552/auth/merchant/login';
+                const url = 'http://47.103.112.85:30552/auth/merchant/login';
                 return new Promise((resolve, reject) => {
                     axios({
                         method: 'POST',
                         url,
                         headers: {
-                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                             'Content-type': 'application/json',
                             'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
                         },

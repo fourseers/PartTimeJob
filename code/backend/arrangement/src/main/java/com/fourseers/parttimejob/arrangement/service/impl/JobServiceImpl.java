@@ -10,7 +10,6 @@ import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
-import org.apache.lucene.spatial3d.geom.GeoDistance;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -35,7 +34,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -60,15 +62,17 @@ public class JobServiceImpl implements JobService {
     @Value("${app.pagination.pageSize}")
     private int PAGE_SIZE;
 
-    public void save(Job job, int shopId, String username) {
+    public void save(List<Job> jobList, int shopId, String username) {
 
         MerchantUser merchantUser = merchantUserDao.findByUsername(username);
         Company company = merchantUser.getCompany();
 
         for (Shop shop : company.getShops()) {
             if (shop.getShopId().equals(shopId)) {
-                job.setShop(shop);
-                jobDao.save(job);
+                for (Job job : jobList) {
+                    job.setShop(shop);
+                    jobDao.save(job);
+                }
                 return;
             }
         }

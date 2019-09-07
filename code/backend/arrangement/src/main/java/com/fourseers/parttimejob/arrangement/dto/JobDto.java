@@ -19,6 +19,7 @@ public class JobDto {
     private Date endDate;
     private Time beginTime;
     private Time endTime;
+    private List<TimePairDto> workTime;
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
@@ -63,8 +64,6 @@ public class JobDto {
         this.endDate = endDate;
     }
 
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -73,14 +72,20 @@ public class JobDto {
         this.beginTime = beginTime;
     }
 
-    @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }
 
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
+    }
+
+    public List<TimePairDto> getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(List<TimePairDto> workTime) {
+        this.workTime = workTime;
     }
 
     @NotNull

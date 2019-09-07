@@ -21,7 +21,7 @@ public interface JobRepository extends JpaRepository<Job, Integer>, JpaSpecifica
     Job findByJobId(int jobId);
 
     // query is too much, so why not just leave it here
-    JobDetailedInfoProjection findJobByJobId(int jobId);
+    List<JobDetailedInfoProjection> findJobsByIdentifier(String identifier);
 
     List<Job> findByShop(Shop shop);
 

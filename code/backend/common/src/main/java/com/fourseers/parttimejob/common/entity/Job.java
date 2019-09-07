@@ -33,7 +33,6 @@ public class Job implements Cloneable {
     private Double salary;
     private Shop shop;
     private Boolean manualStop = false;
-    private String identifier;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -204,14 +203,6 @@ public class Job implements Cloneable {
 
     public void setManualStop(Boolean manualStop) {
         this.manualStop = manualStop;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 
     public Job clone() throws CloneNotSupportedException {

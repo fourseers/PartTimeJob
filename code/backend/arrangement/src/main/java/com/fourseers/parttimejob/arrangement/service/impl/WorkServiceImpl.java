@@ -4,6 +4,7 @@ import com.fourseers.parttimejob.arrangement.dao.ApplicationDao;
 import com.fourseers.parttimejob.arrangement.dao.MerchantUserDao;
 import com.fourseers.parttimejob.arrangement.dao.WorkDao;
 import com.fourseers.parttimejob.arrangement.dto.ScheduleDto;
+import com.fourseers.parttimejob.arrangement.projection.WorkNotifyProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.arrangement.service.WorkService;
@@ -145,6 +146,16 @@ public class WorkServiceImpl implements WorkService {
         }
 
         return workDao.getWorkStatus(shopId, from, to);
+    }
+
+    @Override
+    public List<WorkNotifyProjection> getNotCheckedIn() {
+        return workDao.getNotCheckedIn();
+    }
+
+    @Override
+    public List<WorkNotifyProjection> getNotCheckedOut() {
+        return workDao.getNotCheckedOut();
     }
 
 }

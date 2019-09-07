@@ -6,7 +6,6 @@ import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Tag;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -18,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 @Configuration
+@EnableScheduling
 @ComponentScan(basePackages="com.fourseers.parttimejob")
 @EnableJpaRepositories(basePackages="com.fourseers.parttimejob")
 @EntityScan(basePackages="com.fourseers.parttimejob")

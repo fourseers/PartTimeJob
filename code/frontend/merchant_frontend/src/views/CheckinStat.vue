@@ -199,7 +199,7 @@
                 var prefix = "/arrangement"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,

@@ -27,6 +27,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -117,8 +118,8 @@ public class WechatUserJobController {
             @ApiResponse(code = 400, message = "Invalid job id")
     })
     @GetMapping("/job")
-    public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
-            @RequestParam("job_id") @Min(1) int jobId,
+    public ResponseEntity<Response<List<JobDetailedInfoProjection>>> getJobDetail(
+            @RequestParam("identifier") String identifier,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -128,7 +129,7 @@ public class WechatUserJobController {
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
 
-        return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
+        return ResponseBuilder.build(OK, jobService.getJobDetail(identifier));
     }
 
     @ApiOperation(value = "Get applied dates for one job.")
@@ -154,7 +155,4 @@ public class WechatUserJobController {
             return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
     }
-
-
-
 }

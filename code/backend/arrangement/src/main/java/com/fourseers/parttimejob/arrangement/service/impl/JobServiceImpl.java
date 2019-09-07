@@ -214,9 +214,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobDetailedInfoProjection getJobDetail(int jobId) {
-        JobDetailedInfoProjection projection = jobDao.getJobDetail(jobId);
-        return projection;
+    public List<JobDetailedInfoProjection> getJobDetail(String identifier) {
+        return jobDao.getJobDetail(identifier);
     }
 
     @Override

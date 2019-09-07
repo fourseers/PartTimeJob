@@ -14,16 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class AliSms {
 
-    @Value("${app.sign_name}")
+    @Value("${app.sign_name:}")
     private String signName;
 
-    @Value("${app.template_code}")
+    @Value("${app.template_code:}")
     private String templateCode;
 
-    @Value("${app.aliyun_access_key_id}")
+    @Value("${app.aliyun_access_key_id:}")
     private String accessKeyId;
 
-    @Value("${app.aliyun_access_secret}")
+    @Value("${app.aliyun_access_secret:}")
     private String accessSecret;
 
     public void send(String phone, String name, String time, String work, String option) {

@@ -503,6 +503,70 @@
                 this.count.splice(index, 1);
             },
             postJob() {
+                //自动拆班
+               var  beginstr=  this.format_time(this.formValidate.begin_time)
+                var beginlist = beginstr.split(':')
+               var starthour = beginlist[1]=="00"?beginlist[0]:beginlist[0]+1
+
+               var  endstr= this.format_time(this.formValidate.end_time)
+                var endlist = endstr.split(':')
+                var endhour = endlist[0] //6 11 13 17 19 22
+
+                var work_time_list=[]
+                if(starthour <="06" && endhour>="11")
+                {
+                    // 6-11拆出来
+
+                    var timeslot_one= {
+                        "begin_time": "06:00:00",
+                        "end_time": "11:00:00"
+                    }
+                    work_time_list.push(timeslot_one)
+                    starthour = "11"
+                }
+                if(starthour <="11" && endhour>="13")
+                {
+                    // 11-13 拆出来
+
+                    var timeslot_two= {
+                        "begin_time": "11:00:00",
+                        "end_time": "13:00:00"
+                    }
+                    work_time_list.push(timeslot_two)
+                    starthour = "13"
+                }
+                if(starthour <="13" && endhour>="17")
+                {
+                    // 13-17 拆出来
+
+                    var timeslot_three= {
+                        "begin_time": "13:00:00",
+                        "end_time": "17:00:00"
+                    }
+                    work_time_list.push(timeslot_three)
+                    starthour = "17"
+                }
+                if(starthour <="17" && endhour>="19")
+                {
+                    // 13-17 拆出来
+
+                    var timeslot_four= {
+                        "begin_time": "17:00:00",
+                        "end_time": "19:00:00"
+                    }
+                    work_time_list.push(timeslot_four)
+                    starthour = "19"
+                }
+                if(starthour <="19" && endhour>="22")
+                {
+                    // 13-17 拆出来
+                    var timeslot_five={
+                        "begin_time": "19:00:00",
+                        "end_time": "22:00:00"
+                    }
+                    work_time_list.push(timeslot_five)
+                    starthour = "22 "
+                }
                 var prefix = "/arrangement"
                 //测试用的url
                 this.axios({
@@ -519,8 +583,8 @@
                         job_name: this.formValidate.job_name,
                         begin_date:  this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time),
                         end_date: this.format_only_date( this.formValidate.end_date,this.formValidate.end_time),
-                        begin_time:  this.format_time(this.formValidate.begin_time),
-                        end_time:  this.format_time(this.formValidate.end_time),
+                        begin_time: "",
+                        end_time:  "",
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
@@ -528,7 +592,8 @@
                         end_apply_time:  this.format_date(this.formValidate.end_apply_date,  this.formValidate.end_apply_time),
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
-                        salary: this.formValidate.salary
+                        salary: this.formValidate.salary,
+                        work_time:work_time_list,
                     }
                 }).then(response => {
                     console.log(response.data);

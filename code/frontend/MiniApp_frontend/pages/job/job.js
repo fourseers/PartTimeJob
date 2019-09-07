@@ -145,7 +145,8 @@ Page({
           new_job.id = job_list[i].job_id;
           new_job.name = job_list[i].job_name;
           new_job.detail = job_list[i].job_detail.slice(0, 50);
-
+          new_job.identifier = job_list[i].identifier;
+          
           var temp_tags = [];
           if (job_list[i].tags) {
             var tags = job_list[i].tags.split(" ");

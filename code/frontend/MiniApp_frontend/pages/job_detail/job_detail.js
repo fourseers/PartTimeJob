@@ -108,7 +108,7 @@ Page({
     }
     var req = new request();
     req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
-      var info = res.data.data;
+      var info = res.data.data[0];
       if (res.statusCode === 200) {
         var begin_date = new Date(info.begin_date);
         var end_date = new Date(info.end_date);

@@ -42,6 +42,7 @@
       </view>
     </i-cell>
   </i-cell-group>
+  <i-spin size="large" fix wx:if="{{ isSpinning }}"></i-spin>
 </view>
 <i-load-more loading="{{ isLoading }}" />
 <i-modal visible="{{back_to_main}}" title="请注册" actions="{{ actions }}" bind:click="handleClick">

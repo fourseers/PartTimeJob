@@ -1,4 +1,5 @@
 <!--pages/check/check.wxml-->
+<view>
 <calendar
   calendarConfig="{{calendar_config}}"
   bind:afterTapDay="afterTapDay"
@@ -26,6 +27,9 @@
     </i-cell>
   </i-cell-group>
 </i-panel>
+
+<i-spin size="large" fix wx:if="{{ isSpinning }}"></i-spin>
+</view>
 
 <i-modal visible="{{back_to_main}}" title="请注册" actions="{{ actions }}" bind:click="handleClick">
   <view>您还没有注册，无法访问当前页面</view>

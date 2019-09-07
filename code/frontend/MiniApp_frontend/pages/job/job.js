@@ -61,6 +61,7 @@ Page({
         name: "确定"
       }
     ],
+    isSpinning: true,
   },
 
   // 初始化标签picker
@@ -108,11 +109,13 @@ Page({
    * 如果从job_detail确认应聘并返回，那就显示应聘成功的toast
    */
   onShow(options) {
-
     if (app.globalData.showSendMessage) {
       this.handleSuccess();
       app.globalData.showSendMessage = false;
     }
+    this.setData({
+      isSpinning: false
+    })
   },
 
   getUserJob() {

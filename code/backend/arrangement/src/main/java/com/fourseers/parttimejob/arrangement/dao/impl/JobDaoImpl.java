@@ -6,15 +6,12 @@ import com.fourseers.parttimejob.arrangement.repository.JobRepository;
 import com.fourseers.parttimejob.common.entity.Company;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.Shop;
-import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.util.GeoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.math.BigDecimal;
 
 @Repository
 public class JobDaoImpl implements JobDao {
@@ -46,15 +43,15 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public Page<Job> findJobs(WechatUser user, int pageCount, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(
-                pageCount, pageSize, Sort.by("jobId").ascending());
-        return jobRepository.findAll(pageRequest);
-    }
-
-    @Override
-    public Page<Job> findJobsByGeoLocation(WechatUser user, BigDecimal longitude, BigDecimal latitude, int pageCount, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageCount, pageSize);
-        return jobRepository.findByGeoLocation(longitude, latitude, pageRequest);
+    public Page<Job> queryJob(GeoUtil.Point location, Double geoRange, Integer daysToCome, Double minSalary, Double maxSalary, String tag, int pageCount, int pageSize) {
+        Pageable pageRequest = PageRequest.of(pageCount, pageSize);
+        geoRange /= 111;    // a proximity in longitude/latitude
+        if(tag == null)
+            tag = "";
+        if(location == null)
+            return jobRepository.queryJob(daysToCome, minSalary, maxSalary, tag, pageRequest);
+        else
+            return jobRepository.queryJobByGeoLocation(location.getLongitude().doubleValue(), location.getLatitude().doubleValue(), geoRange,
+                    daysToCome, minSalary, maxSalary, tag, pageRequest);
     }
 }

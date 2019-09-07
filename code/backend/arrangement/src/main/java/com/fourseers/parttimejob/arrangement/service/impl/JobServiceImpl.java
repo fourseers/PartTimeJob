@@ -10,7 +10,7 @@ import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.common.entity.*;
-import org.apache.lucene.spatial3d.geom.GeoDistance;
+import com.fourseers.parttimejob.common.util.GeoUtil;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -35,7 +35,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -114,6 +117,22 @@ public class JobServiceImpl implements JobService {
         }
 
         throw new RuntimeException("shop not exist or not belong to");
+    }
+
+    @Override
+    public Page<Job> queryJobs(GeoUtil.Point location, Double geoRange, Integer daysToCome, Double minSalary, Double maxSalary, String tag, int entryOffset) {
+        if(geoRange == null)
+            geoRange = 30.0;
+        if(daysToCome == null)
+            daysToCome = 10000; // inf
+        if(minSalary == null)
+            minSalary = -1.0;
+        if(maxSalary == null)
+            maxSalary = 1e10;
+
+        int pageOffset = entryOffset / PAGE_SIZE;
+
+        return jobDao.queryJob(location, geoRange, daysToCome, minSalary, maxSalary, tag, pageOffset, PAGE_SIZE);
     }
 
     public Page<Job> findPageByUsername(String username, int pageCount, int pageSize) {
@@ -331,4 +350,5 @@ public class JobServiceImpl implements JobService {
         ret.setTotalHits(response.getHits().getTotalHits().value);
         return ret;
     }
+
 }

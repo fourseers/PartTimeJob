@@ -11,6 +11,7 @@ import java.util.List;
 public interface JobDetailedInfoProjection {
 
     Integer getJobId();
+    String getIdentifier();
     String getJobName();
     Date getBeginDate();
     Date getEndDate();

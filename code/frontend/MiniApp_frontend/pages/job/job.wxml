@@ -7,11 +7,11 @@
       </view>
     </i-cell>
   </view>
-  <i-tabs current="{{ current_tab }}" bind:change="{{ handleChangeTab }}">
+  <i-tabs current="{{ current_tab }}" bind:change="handleChangeTab">
     <block wx:for="{{ tabs }}" wx:key="index">
-      <i-tab key="{{ item.key }}" title="{{ item.title }}">
-        <picker></picker>
-      </i-tab>
+      <picker bind:change="{{ item.func }}" value="{{item.list.length}}" range="{{item.list}}">
+        <i-tab key="{{ item.key }}" title="{{ item.title }}"></i-tab>
+      </picker>
     </block>
   </i-tabs>
   <i-cell-group>

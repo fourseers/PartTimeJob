@@ -21,6 +21,7 @@ const billing = "/billing/user/works"
 const balance = "/billing/user/balance"
 const draw_all = "/billing/user/drawAll"
 const draw_history = "/billing/user/draw-history"
+const jobs_smart = "/arrangement/user/jobs-smart"
 
 module.exports = {
   login,
@@ -45,5 +46,6 @@ module.exports = {
   billing,
   balance,
   draw_all,
-  draw_history
+  draw_history,
+  jobs_smart
 }

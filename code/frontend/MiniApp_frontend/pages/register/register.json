@@ -9,6 +9,7 @@
     "i-button": "../../dist/button/index",
     "i-panel": "../../dist/panel/index",
     "i-checkbox-group": "../../dist/checkbox-group/index",
-    "i-checkbox": "../../dist/checkbox/index"
+    "i-checkbox": "../../dist/checkbox/index",
+    "i-modal": "../../dist/modal/index"
   }
 }

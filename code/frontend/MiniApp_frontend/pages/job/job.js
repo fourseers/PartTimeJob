@@ -1,5 +1,6 @@
 // pages/job/job.js
 const { $Toast } = require('../../dist/base/index');
+const { $Message } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
 import { host, job_list } from "../../api/url.js"
@@ -32,6 +33,12 @@ Page({
       }
     ],
     current_tab: "distance",
+    back_to_main: true,
+    actions: [
+      {
+        name: "确定"
+      }
+    ]
   },
 
   onReady() {
@@ -46,6 +53,12 @@ Page({
       }
     });
 
+    //判断用户是否注册
+    if (app.globalData.is_registered === true) {
+      this.setData({
+        back_to_main: false
+      })
+    }
   },
 
   /*
@@ -157,6 +170,13 @@ Page({
 
   handleChangeTab({ detail }) {
     console.log(detail)
+  },
+
+  handleClick(e) {
+    //console.log(e)
+    wx.reLaunch({
+      url: "/pages/user/user",
+    })
   }
 
 })

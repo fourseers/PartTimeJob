@@ -31,6 +31,37 @@ services:
     networks:
       - webnet
 
+  elasticsearch:
+    image: localhost:5000/myelastic
+    hostname: elasticsearch
+    ports:
+      - "$ES_REST_PORT:9200"
+      - "$ES_COMM_PORT:9300"
+    networks:
+      - webnet
+
+  logstash:
+    image: localhost:5000/mylogstash
+    build:
+      context: ./deploy-script
+      dockerfile: Dockerfile-logstash
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:$ES_REST_PORT"
+    ports:
+      - "$LOGSTASH_PORT:9600"
+    networks:
+      - webnet
+
+  kibana:
+    image: kibana:7.2.0
+    hostname: kibana
+    ports:
+      - "$KIBANA_PORT:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch
+    networks:
+      - webnet
+
   eureka:
     image: localhost:5000/eureka
     hostname: eureka

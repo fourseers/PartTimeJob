@@ -13,9 +13,10 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-public class Job {
+public class Job implements Cloneable {
 
     private Integer jobId;
+    private String identifier;
     private String jobName;
     private Date beginDate;
     private Date endDate;
@@ -41,6 +42,16 @@ public class Job {
 
     public void setJobId(Integer jobId) {
         this.jobId = jobId;
+    }
+
+//    @NotNull              // commented this out for test purposes
+    @Column(length = 40)    // reserve a couple bits
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     @NotBlank
@@ -192,5 +203,9 @@ public class Job {
 
     public void setManualStop(Boolean manualStop) {
         this.manualStop = manualStop;
+    }
+
+    public Job clone() throws CloneNotSupportedException {
+        return (Job) super.clone();
     }
 }

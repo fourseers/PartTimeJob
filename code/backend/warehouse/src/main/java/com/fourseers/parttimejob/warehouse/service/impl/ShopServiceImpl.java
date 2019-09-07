@@ -6,6 +6,7 @@ import com.fourseers.parttimejob.common.entity.WechatUser;
 import com.fourseers.parttimejob.warehouse.dao.MerchantUserDao;
 import com.fourseers.parttimejob.warehouse.dao.ScoreDao;
 import com.fourseers.parttimejob.warehouse.dao.ShopDao;
+import com.fourseers.parttimejob.warehouse.dao.WorkDao;
 import com.fourseers.parttimejob.warehouse.dto.ShopDto;
 import com.fourseers.parttimejob.warehouse.dto.UserShopDto;
 import com.fourseers.parttimejob.warehouse.projection.ShopBriefProjection;
@@ -30,6 +31,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ScoreDao scoreDao;
+
+    @Autowired
+    private WorkDao workDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -122,6 +126,8 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public boolean scoreShop(int shopId, WechatUser wechatUser, int score) {
+        if(!workDao.haveWorkedIn(wechatUser, shopId))
+            return false;
         return scoreDao.submitOne(wechatUser, shopId, score);
     }
 }

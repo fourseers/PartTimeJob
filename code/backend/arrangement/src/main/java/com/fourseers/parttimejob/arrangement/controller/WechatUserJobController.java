@@ -154,7 +154,4 @@ public class WechatUserJobController {
             return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
     }
-
-
-
 }

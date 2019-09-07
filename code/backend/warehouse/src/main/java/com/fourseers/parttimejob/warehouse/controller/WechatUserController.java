@@ -242,8 +242,8 @@ public class WechatUserController {
             if(shopService.scoreShop(scoreDto.getShopId(), user, scoreDto.getScore()))
                 return ResponseBuilder.buildEmpty(OK);
             else
-                // shouldn't happen at this point
-                return ResponseBuilder.buildEmpty(INTERNAL_SERVER_ERROR);
+                // never worked here
+                return ResponseBuilder.build(BAD_REQUEST, null, "User never worked at this shop before.");
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {

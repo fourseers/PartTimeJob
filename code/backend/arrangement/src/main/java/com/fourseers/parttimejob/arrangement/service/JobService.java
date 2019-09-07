@@ -11,10 +11,11 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface JobService {
 
-    void save(Job job, int shopId, String username);
+    void save(List<Job> jobList, int shopId, String username);
 
     Job findByJobIdAndUsername(int jobId, String username);
 

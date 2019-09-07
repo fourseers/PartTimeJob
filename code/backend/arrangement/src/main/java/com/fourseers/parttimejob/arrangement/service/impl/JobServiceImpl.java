@@ -62,15 +62,17 @@ public class JobServiceImpl implements JobService {
     @Value("${app.pagination.pageSize}")
     private int PAGE_SIZE;
 
-    public void save(Job job, int shopId, String username) {
+    public void save(List<Job> jobList, int shopId, String username) {
 
         MerchantUser merchantUser = merchantUserDao.findByUsername(username);
         Company company = merchantUser.getCompany();
 
         for (Shop shop : company.getShops()) {
             if (shop.getShopId().equals(shopId)) {
-                job.setShop(shop);
-                jobDao.save(job);
+                for (Job job : jobList) {
+                    job.setShop(shop);
+                    jobDao.save(job);
+                }
                 return;
             }
         }

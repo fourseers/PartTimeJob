@@ -1,5 +1,6 @@
 // pages/register/register.js
 const { $Toast } = require("../../dist/base/index");
+const { $Message } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
 import { host, register, register_data } from "../../api/url.js"
@@ -63,7 +64,17 @@ Page({
     education: "",
     education_list: [],
     isLoading: false,
-    city_code: ""
+    city_code: "",
+
+    show_modal: false,
+    actions: [
+      {
+        name: "立即修改",
+      },
+      {
+        name: "稍后再试",
+      }
+    ]
   },
 
   onReady() {
@@ -110,6 +121,20 @@ Page({
       })
       app.globalData.city = null;
       app.globalData.code = null;
+    }
+  },
+
+  handleTags(e) {
+    //console.log(e)
+    const index = e.detail.index;
+    if (index === 0) {
+      wx.redirectTo({
+        url: '/pages/user_inform/user_inform',
+      })
+    } else if (index === 1) {
+      wx.navigateBack({
+
+      })
     }
   },
 
@@ -328,8 +353,8 @@ Page({
               app.globalData.access_token = res.data.data.access_token;
               app.globalData.expires_in = res.data.data.expires_in;
               app.globalData.refresh_token = res.data.data.refresh_token;
-              wx.navigateBack({
-                
+              this.setData({
+                show_modal: true,
               })
             }
             else {

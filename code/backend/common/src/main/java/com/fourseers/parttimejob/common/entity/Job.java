@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-public class Job {
+public class Job implements Cloneable {
 
     private Integer jobId;
     private String identifier;
@@ -33,6 +33,7 @@ public class Job {
     private Double salary;
     private Shop shop;
     private Boolean manualStop = false;
+    private String identifier;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -203,5 +204,17 @@ public class Job {
 
     public void setManualStop(Boolean manualStop) {
         this.manualStop = manualStop;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public Job clone() throws CloneNotSupportedException {
+        return (Job) super.clone();
     }
 }

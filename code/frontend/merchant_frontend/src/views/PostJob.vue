@@ -181,6 +181,7 @@
 
 
     import {getShops} from '../util/getShops.js'
+
     export default {
 
         name: "PostJob",
@@ -507,10 +508,10 @@
                 var  work_time_list=[]
                 var  beginstr=  this.format_time(this.formValidate.begin_time)
                 var  endstr= this.format_time(this.formValidate.end_time)
-                    var timeslot_only= {
-                        "begin_time":   beginstr,
-                        "end_time": endstr
-                    }
+                var timeslot_only= {
+                    "begin_time":   beginstr,
+                    "end_time": endstr
+                }
                 work_time_list.push(timeslot_only)
                 return   work_time_list
             },
@@ -574,26 +575,49 @@
                 var endlist = endstr.split(':')
                 var endhour = endlist[0] //6 11 13 17 19 22
 
-              var   lasttime=work_time_list[work_time_list.length-1].end_time
-                    if(beginstr<work_time_list[0].begin_time)
-                    {
-                        var timeslot_prev= {
-                            "begin_time":beginstr,
-                            "end_time":work_time_list[0].begin_time
-                        }
-                        work_time_list.push(timeslot_prev)
+                var   lasttime=work_time_list[work_time_list.length-1].end_time
+                var endstr_index=work_time_list.length-1
+                // 30min 内合并
+                if (   beginstr<work_time_list[0].begin_time && this.convert_to_seconds(work_time_list[0].begin_time)- this.convert_to_seconds(beginstr)<= 60*30)
+                {
+                    work_time_list[0].begin_time = beginstr
 
+                }
+                else    if(beginstr<work_time_list[0].begin_time)
+                {
+                    //30min 外不合并
+                    var timeslot_prev= {
+                        "begin_time":beginstr,
+                        "end_time":work_time_list[0].begin_time
                     }
-                    if(endstr >  lasttime)
-                    {
-                        var timeslot_last= {
-                            "begin_time": lasttime,
-                            "end_time":endstr
-                        }
-                        work_time_list.push(timeslot_last)
+                    work_time_list.push(timeslot_prev)
+
+                }
+                // 30min 内合并
+                if (   endstr >  lasttime &&  this.convert_to_seconds(endstr)-this.convert_to_seconds( lasttime)<= 60*30)
+                {
+                    work_time_list[endstr_index].end_time = endstr
+                }
+                else if(endstr >  lasttime)
+                {
+                    //30min 外不合并
+                    var timeslot_last= {
+                        "begin_time": lasttime,
+                        "end_time":endstr
+                    }
+                    work_time_list.push(timeslot_last)
 
                 }
                 return work_time_list
+            },
+            format_work_list(    work_time_list)
+            {
+                var reslist=""
+                for(var i=0;i<    work_time_list.length;i++)
+                {
+                    reslist= reslist+"<p>"+work_time_list[i].begin_time+"-"+work_time_list[i].end_time+"</p>"
+                }
+                return reslist
             },
             postJob() {
                 var  work_time_list=[]
@@ -601,17 +625,18 @@
                 {
                     let config={
                         title: '请确认是否自动拆班',
-                        //   content: '<p>Content of dialog</p><p>Content of dialog</p>',
                         okText: '自动拆班',
                         cancelText: '不拆班',
+                        width:"300",
+                        content:"工作时间拆为"+this.format_work_list(this.divide_time(this.can_be_divided())),
                         onOk: () => {
                             //自动拆班
-                              work_time_list = this.divide_time(this.can_be_divided())
+                            work_time_list = this.divide_time(this.can_be_divided())
                             this.sendpost(work_time_list)
                         },
 
                         onCancel: () => {
-                             work_time_list = this.not_divide_time()
+                            work_time_list = this.not_divide_time()
                             this.sendpost(work_time_list)
                         },
                         style:{

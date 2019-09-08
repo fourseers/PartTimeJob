@@ -83,6 +83,8 @@ public class WechatUserScheduleControllerTest {
 
         // apply for one job
         Job job = jobRepository.getOne(jobId);
+        job.setIdentifier("455544fc-aa91-4daf-8190-fb7f1fd66751");
+        jobRepository.save(job);
         Application application = new Application();
         application.setStatus(true);    // approved
         application.setJob(job);
@@ -122,6 +124,8 @@ public class WechatUserScheduleControllerTest {
         assertEquals(application.getAppliedEndDate(), entry.getSqlDate("end_date"));
         assertEquals(application.getJob().getBeginTime().toString(), entry.getString("begin_time"));
         assertEquals(application.getJob().getEndTime().toString(), entry.getString("end_time"));
+        assertNotNull(entry.getString("identifier"));
+        assertEquals(application.getJob().getIdentifier(), entry.getString("identifier"));
         assertNotNull(entry.getInteger("shop_id"));
         assertNotNull(entry.getString("shop_name"));
     }

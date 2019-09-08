@@ -128,13 +128,11 @@ Page({
         latitude: this.data.latitude,
         longitude: this.data.longitude,
         entryOffset: this.data.jobCount,
-        /*
         daysToCome: this.data.daysToCome,
         geoRange: this.data.geoRange,
         maxSalary: this.data.maxSalary,
         minSalary: this.data.minSalary,
         tag: this.data.tag
-        */
       }, app.globalData.access_token).then(res => {
       if(res.statusCode === 401){
         //console.log("user should login!");
@@ -258,7 +256,7 @@ Page({
   },
 
   changeSalary(e) {
-    const max = ["", 50, 200, null];
+    const max = ["", 50, 200, 999999999];
     const min = ["", 0, 50, 200];
     this.setData({
       current_tab: "",

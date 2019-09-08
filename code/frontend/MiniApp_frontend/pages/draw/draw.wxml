@@ -2,7 +2,7 @@
 <view class="container">
   <i-panel title="支取记录">
     <i-cell-group>
-      <i-cell wx:for="{{history}}" wx:key="index" title="收款方式:{{item.method}}">
+      <i-cell wx:for="{{history}}" wx:key="index" title="收款方式:{{item.method}}" wx:if="{{item.meta}}">
         <view slot="icon">
           <i-avatar src="/assets/icons/money.png" shape="square"></i-avatar>
         </view>

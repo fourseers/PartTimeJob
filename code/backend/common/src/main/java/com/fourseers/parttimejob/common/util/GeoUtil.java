@@ -41,6 +41,7 @@ public class GeoUtil {
 
     public static boolean within(Point actual, Point dest) {
         // 0.001 in longitude / latitude is about 100m
-        return within(actual, dest, new BigDecimal(0.001f));
+        // change to 0.01(1km) here for test purposes.
+        return within(actual, dest, new BigDecimal(0.01f));
     }
 }

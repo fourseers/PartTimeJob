@@ -37,6 +37,8 @@ public class ApplyDto {
         this.cvId = cvId;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -45,6 +47,8 @@ public class ApplyDto {
         this.beginDate = beginDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }

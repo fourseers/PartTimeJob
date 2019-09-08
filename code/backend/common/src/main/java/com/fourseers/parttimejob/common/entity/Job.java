@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -64,6 +65,8 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -73,6 +76,8 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }
@@ -82,6 +87,7 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -91,6 +97,7 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }
@@ -131,6 +138,7 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getBeginApplyTime() {
         return beginApplyTime;
     }
@@ -140,6 +148,7 @@ public class Job implements Cloneable {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getEndApplyTime() {
         return endApplyTime;
     }

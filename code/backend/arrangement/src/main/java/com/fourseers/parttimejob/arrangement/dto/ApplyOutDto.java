@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fourseers.parttimejob.common.entity.CV;
 
 import java.sql.Date;
@@ -29,6 +30,7 @@ public class ApplyOutDto {
         this.applicationId = applicationId;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -37,6 +39,8 @@ public class ApplyOutDto {
         this.createTime = createTime;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getAppliedBeginDate() {
         return appliedBeginDate;
     }
@@ -45,6 +49,8 @@ public class ApplyOutDto {
         this.appliedBeginDate = appliedBeginDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getAppliedEndDate() {
         return appliedEndDate;
     }
@@ -61,6 +67,7 @@ public class ApplyOutDto {
         this.status = status;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getEmployTime() {
         return employTime;
     }

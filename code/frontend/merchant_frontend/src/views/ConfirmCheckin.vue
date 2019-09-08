@@ -310,9 +310,9 @@
                 url: prefix +"/merchant/billing/pay",
                 data:{
                     work_id: workid,
-                    meta:"this is meta",
+                    meta:"",
                     payment:payment,
-                    method:"this is method"
+                    method:""
                 }
             }).then(response => {
                 console.log(response);

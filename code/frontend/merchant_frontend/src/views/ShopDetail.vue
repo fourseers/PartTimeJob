@@ -83,10 +83,10 @@
                         { type: 'array', max: 2, message: '请选择城市', trigger: 'change' }
                     ],
                     address: [
-                        { required: true, message: '请填写品牌', trigger: 'change' }
+                        { required: true, message: '请填写地址', trigger: 'change' }
                     ],
                     brand: [
-                        { required: true, message: '请填写地址', trigger: 'change' }
+                        { required: true, message: '请填写品牌', trigger: 'change' }
                     ],
                     industry: [
                         { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },

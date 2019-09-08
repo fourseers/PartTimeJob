@@ -8,6 +8,7 @@ import java.sql.Time;
 public class ScheduleDto {
     // job info
     private Integer jobId;
+    private String identifier;
     private Integer shopId;
     private String jobName;
     private String shopName;
@@ -71,6 +72,14 @@ public class ScheduleDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public void setBeginTime(Time beginTime) {

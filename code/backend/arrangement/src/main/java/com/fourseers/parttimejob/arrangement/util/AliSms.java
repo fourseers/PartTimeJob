@@ -34,7 +34,7 @@ public class AliSms {
         JSONObject data = new JSONObject();
         data.fluentPut("name", name)
             .fluentPut("time", time)
-            .fluentPut("work", work)
+            .fluentPut("work", "工作")
             .fluentPut("option", option);
 
         DefaultProfile profile = DefaultProfile.getProfile("default", accessKeyId, accessSecret);

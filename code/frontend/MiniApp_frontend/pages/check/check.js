@@ -30,10 +30,14 @@ Page({
       {
         name: "确定"
       }
-    ]
+    ],
+    isSpinning: true
   },
 
   onShow() {
+    this.setData({
+      isSpinning: false
+    })
     if (app.globalData.is_registered === true) {
       this.setData({
         back_to_main: false

@@ -290,7 +290,7 @@ Page({
     var post_data = {
       education: this.data.education,
       experiences: this.data.experience,
-      gender: this.data.gender,
+      gender: !this.data.gender,
       height: this.data.height,
       identity: this.data.identity,
       name: this.data.name,

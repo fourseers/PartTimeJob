@@ -206,8 +206,11 @@ Page({
 
   handleClickItem(e) {
     //console.log(e)
+    this.setData({
+      time_table_visible: false
+    })
     wx.navigateTo({
-      url: "/pages/choose_date/choose_date?id=" + this.data.time_table_actions[e.detail.index].id + "&begin_date=" + this.data.begin_apply_date + "&end_date=" + this.data.end_apply_date,
+      url: "/pages/choose_date/choose_date?id=" + this.data.time_table_actions[e.detail.index].id + "&begin_date=" + this.data.begin_date + "&end_date=" + this.data.end_date,
     })
   }
 

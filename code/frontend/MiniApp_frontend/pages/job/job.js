@@ -140,6 +140,7 @@ Page({
         //console.log("user should login!");
       }
       if(res.statusCode === 200){
+        console.log(res)
         var job_list = res.data.data.content;
         var new_jobs = this.data.jobs;
         var formal_length = new_jobs.length;
@@ -149,6 +150,9 @@ Page({
           new_job.name = job_list[i].job_name;
           new_job.detail = job_list[i].job_detail.slice(0, 50);
           new_job.identifier = job_list[i].identifier;
+          if (job_list[i].score) {
+            new_job.score = (job_list[i].score * 100).toFixed(2)
+          }
           
           var temp_tags = [];
           if (job_list[i].tags) {

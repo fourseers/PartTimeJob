@@ -40,6 +40,9 @@
           {{item.name}}
         </i-tag>
       </view>
+      <view wx:if="{{item.score}}" class="rank">
+        <text class="rank-font">匹配程度:{{item.score}}%</text>
+      </view>
     </i-cell>
   </i-cell-group>
   <i-spin size="large" fix wx:if="{{ isSpinning }}"></i-spin>

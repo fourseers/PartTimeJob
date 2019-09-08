@@ -173,8 +173,8 @@
                         province: this.formValidate.province_city[0],
                         city:this.formValidate.province_city[1],
                         address:this.formValidate.address,
-                        longitude:this.longitude,
-                        latitude:this.latitude,
+                        longitude:this.$route.params.longitude,
+                        latitude:this.$route.params.latitude,
                         brand:this.formValidate.brand,
                         industry:this.formValidate.industry[0],
                         introduction:this.formValidate.introduction

@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -63,6 +64,7 @@ public class Billing {
     }
 
     @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -72,6 +74,7 @@ public class Billing {
     }
 
     @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getUpdateTime() {
         return updateTime;
     }

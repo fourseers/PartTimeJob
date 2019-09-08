@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class AppliedTimeDto {
             this.endDate = endDate;
         }
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd", timezone = "GMT+8")
         public Date getBeginDate() {
             return beginDate;
         }
@@ -25,6 +29,8 @@ public class AppliedTimeDto {
             this.beginDate = beginDate;
         }
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd", timezone = "GMT+8")
         public Date getEndDate() {
             return endDate;
         }

@@ -47,6 +47,8 @@ public class JobDto {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -56,6 +58,8 @@ public class JobDto {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }
@@ -64,6 +68,8 @@ public class JobDto {
         this.endDate = endDate;
     }
 
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -72,6 +78,8 @@ public class JobDto {
         this.beginTime = beginTime;
     }
 
+    @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }

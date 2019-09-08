@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class Application {
         this.applicationId = applicationId;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getCreateTime() {
         return createTime;
     }
@@ -66,6 +68,8 @@ public class Application {
         this.job = job;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getAppliedBeginDate() {
         return appliedBeginDate;
     }
@@ -74,6 +78,8 @@ public class Application {
         this.appliedBeginDate = appliedBeginDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getAppliedEndDate() {
         return appliedEndDate;
     }
@@ -82,6 +88,7 @@ public class Application {
         this.appliedEndDate = appliedEndDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getEmployTime() {
         return employTime;
     }

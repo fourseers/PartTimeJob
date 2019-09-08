@@ -595,15 +595,25 @@
                 }
                 return work_time_list
             },
+            format_work_list(    work_time_list)
+            {
+                var reslist=""
+                for(var i=0;i<    work_time_list.length;i++)
+                {
+                    reslist= reslist+"<p>"+work_time_list[i].begin_time+"-"+work_time_list[i].end_time+"</p>"
+                }
+                return reslist
+            },
             postJob() {
                 var  work_time_list=[]
                 if(this.can_be_divided().length != 0)
                 {
                     let config={
                         title: '请确认是否自动拆班',
-                        //   content: '<p>Content of dialog</p><p>Content of dialog</p>',
                         okText: '自动拆班',
                         cancelText: '不拆班',
+                        width:"300",
+                        content:"工作时间拆为"+this.format_work_list(this.divide_time(this.can_be_divided())),
                         onOk: () => {
                             //自动拆班
                               work_time_list = this.divide_time(this.can_be_divided())

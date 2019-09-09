@@ -14,3 +14,12 @@
   top: 0;
   width: 100%;
 }
+
+.rank {
+  text-align: right;
+}
+
+.rank-font {
+  font-size: 12px;
+  color: gray;
+}

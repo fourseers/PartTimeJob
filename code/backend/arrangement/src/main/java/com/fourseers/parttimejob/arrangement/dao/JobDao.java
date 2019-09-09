@@ -7,6 +7,8 @@ import com.fourseers.parttimejob.common.entity.Shop;
 import com.fourseers.parttimejob.common.util.GeoUtil;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface JobDao {
     void save(Job job);
 
@@ -16,7 +18,7 @@ public interface JobDao {
 
     Page<Job> findPageByCompany(Company company, int pageCount, int pageSize);
 
-    JobDetailedInfoProjection getJobDetail(int jobId);
+    List<JobDetailedInfoProjection> getJobDetail(String identifier);
 
     Page<Job> queryJob(GeoUtil.Point location, Double geoRange,
                        Integer daysToCome, Double minSalary, Double maxSalary, String tag, int pageCount, int pageSize);

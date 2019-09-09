@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class JobDaoImpl implements JobDao {
 
@@ -38,8 +40,8 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public JobDetailedInfoProjection getJobDetail(int jobId) {
-        return jobRepository.findJobByJobId(jobId);
+    public List<JobDetailedInfoProjection> getJobDetail(String identifier) {
+        return jobRepository.findJobsByIdentifier(identifier);
     }
 
     @Override

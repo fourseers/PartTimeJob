@@ -13,12 +13,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class WechatUserScoreMerchantTest {
 
     @Autowired
@@ -58,6 +67,12 @@ public class WechatUserScoreMerchantTest {
     @Autowired
     private ScoreRepository scoreRepository;
 
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Autowired
+    private WorkRepository workRepository;
+
     private Shop shop;
     private Integer initialScore = 4;
 
@@ -65,32 +80,40 @@ public class WechatUserScoreMerchantTest {
     private String WECHAT_USER_PREFIX;
 
     private String userToken1, userToken2;
+    private Job job;
+    private WechatUser wechatUser, wechatUser2;
 
     @Before
     public void before() throws Exception {
-        WechatUser wechatUser = new WechatUser();
-        wechatUser.setName("SJH");
-        wechatUser.setOpenid("FakeOpenId");
-        wechatUser.setGender(true);
-        wechatUser.setCountry("China");
-        wechatUser.setCity("Shanghai");
-        wechatUser.setEducation(Etc.Education.BELOW_SENIOR);
-        wechatUser.setIdentity("310110123412341234");
-        wechatUser.setPhone("13812345678");
-        wechatUser.setTags(new HashSet<>());
-        wechatUserRepository.save(wechatUser);
 
-        wechatUser = new WechatUser();
-        wechatUser.setName("CYJ");
-        wechatUser.setOpenid("FakeOpenId2");
-        wechatUser.setGender(true);
-        wechatUser.setCountry("China");
-        wechatUser.setCity("Shanghai");
-        wechatUser.setEducation(Etc.Education.BELOW_SENIOR);
-        wechatUser.setIdentity("310110123412345678");
-        wechatUser.setPhone("13812345678");
-        wechatUser.setTags(new HashSet<>());
-        wechatUserRepository.save(wechatUser);
+        WechatUser wechatUser1 = new WechatUser();
+        wechatUser1.setName("SJH");
+        wechatUser1.setOpenid("FakeOpenId");
+        wechatUser1.setGender(true);
+        wechatUser1.setCountry("China");
+        wechatUser1.setCity("Shanghai");
+        wechatUser1.setEducation(Etc.Education.BELOW_SENIOR);
+        wechatUser1.setIdentity("310110123412341234");
+        wechatUser1.setPhone("13812345678");
+        wechatUser1.setTags(new HashSet<>());
+        wechatUserRepository.save(wechatUser1);
+
+        wechatUser = wechatUser1;
+
+        wechatUser1 = new WechatUser();
+        wechatUser1.setName("CYJ");
+        wechatUser1.setOpenid("FakeOpenId2");
+        wechatUser1.setGender(true);
+        wechatUser1.setCountry("China");
+        wechatUser1.setCity("Shanghai");
+        wechatUser1.setEducation(Etc.Education.BELOW_SENIOR);
+        wechatUser1.setIdentity("310110123412345678");
+        wechatUser1.setPhone("13812345678");
+        wechatUser1.setTags(new HashSet<>());
+        wechatUserRepository.save(wechatUser1);
+
+        wechatUser2 = wechatUser1;
+
 
         userToken2 = WECHAT_USER_PREFIX + "FakeOpenId";
         userToken1 = WECHAT_USER_PREFIX + "FakeOpenId2";
@@ -120,14 +143,32 @@ public class WechatUserScoreMerchantTest {
         shop.setIntroduction("Make Apple great again");
         shopRepository.save(shop);
 
+        job = new Job();
+        job.setIdentifier(UUID.randomUUID().toString());
+        // we dont care about the rest
+        job.setSalary(100.0);
+        job.setEndApplyTime(Timestamp.valueOf(LocalDateTime.now()));
+        job.setBeginApplyTime(Timestamp.valueOf(LocalDateTime.now()));
+        job.setBeginTime(Time.valueOf(LocalTime.now()));
+        job.setEndTime(Time.valueOf(LocalTime.now()));
+        job.setNeedGender(0);
+        job.setNeedAmount(100);
+        job.setJobDetail("blablabla");
+        job.setJobName("hahaha");
+        job.setEducation(Etc.Education.SENIOR_HIGH);
+        job.setBeginDate(Date.valueOf(LocalDate.now()));
+        job.setEndDate(Date.valueOf(LocalDate.now()));
+        job.setShop(shop);
+        jobRepository.save(job);
+
         // insert initial remarks
         Score score = new Score();
         ScoreKey scoreKey = new ScoreKey();
-        scoreKey.setWechatUserId(wechatUser.getUserId());
+        scoreKey.setWechatUserId(wechatUser1.getUserId());
         scoreKey.setShopId(shop.getShopId());
         score.setScoreId(scoreKey);
         score.setShop(shop);
-        score.setWechatUser(wechatUser); // CYJ userToken1
+        score.setWechatUser(wechatUser1); // CYJ userToken1
         score.setScore(initialScore);
         scoreRepository.save(score);
     }
@@ -135,6 +176,8 @@ public class WechatUserScoreMerchantTest {
     @After
     public void after() throws Exception {
         scoreRepository.deleteAll();
+        workRepository.deleteAll();
+        jobRepository.deleteAll();
         shopRepository.deleteAll();
         companyRepository.deleteAll();
         merchantUserRepository.deleteAll();
@@ -189,6 +232,12 @@ public class WechatUserScoreMerchantTest {
 
     @Test
     public void testAddRemark() throws Exception {
+        // user need to actually have worked in the shop to make this work.
+        Work work = new Work();
+        work.setWorker(wechatUser);
+        work.setJob(job);
+        workRepository.save(work);
+
         JSONObject req = new JSONObject()
                 .fluentPut("shop_id", shop.getShopId())
                 .fluentPut("score", 5);
@@ -215,6 +264,12 @@ public class WechatUserScoreMerchantTest {
 
     @Test
     public void testModifyRemark() throws Exception {
+        // user need to actually have worked in the shop to make this work.
+        Work work = new Work();
+        work.setWorker(wechatUser2);
+        work.setJob(job);
+        workRepository.save(work);
+
         JSONObject req = new JSONObject()
                 .fluentPut("shop_id", shop.getShopId())
                 .fluentPut("score", 5);
@@ -266,5 +321,21 @@ public class WechatUserScoreMerchantTest {
                 .header("x-internal-token", userToken1))
                 .andExpect(status().is4xxClientError());
     }
+
+
+    @Test
+    public void testAddRemarkNeverWorked() throws Exception {
+        JSONObject req = new JSONObject()
+                .fluentPut("shop_id", shop.getShopId())
+                .fluentPut("score", 5);
+
+        // user 2 add a token
+        mockMvc.perform(post("/user/shop/score")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(req.toString())
+                .header("x-internal-token", userToken2))
+                .andExpect(status().isBadRequest());
+    }
+
 }
 

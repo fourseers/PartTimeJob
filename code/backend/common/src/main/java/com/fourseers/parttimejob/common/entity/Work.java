@@ -1,5 +1,7 @@
 package com.fourseers.parttimejob.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -32,6 +34,8 @@ public class Work {
         this.workId = workId;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getWorkDate() {
         return workDate;
     }
@@ -50,6 +54,7 @@ public class Work {
         this.score = score;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getCheckin() {
         return checkin;
     }
@@ -58,6 +63,7 @@ public class Work {
         this.checkin = checkin;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getCheckout() {
         return checkout;
     }
@@ -117,6 +123,7 @@ public class Work {
         this.billing = billing;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getExpectedCheckin() {
         return expectedCheckin;
     }
@@ -125,6 +132,7 @@ public class Work {
         this.expectedCheckin = expectedCheckin;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getExpectedCheckout() {
         return expectedCheckout;
     }

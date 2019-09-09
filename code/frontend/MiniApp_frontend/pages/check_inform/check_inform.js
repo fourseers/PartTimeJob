@@ -3,6 +3,7 @@ const app = getApp();
 const { $Toast } = require("../../dist/base/index");
 import request from "../../api/request.js"
 import { host, job_detail, check_status, checkin, checkout } from "../../api/url.js"
+var job_identifier = 0;
 var job_id = 0;
 var default_radius = 100;
 var default_check_avail = 15; //minutes
@@ -46,6 +47,7 @@ Page({
   onLoad(options){
     //console.log(options);
     job_id = options.id;
+    job_identifier = options.identifier;
   },
 
   /*
@@ -74,9 +76,9 @@ Page({
       console.log(err)
     })
     //console.log("test");
-    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
+    req.getRequest(host + job_detail + job_identifier, null, app.globalData.access_token).then(res => {
       if(res.statusCode === 200) {
-        var info = res.data.data;
+        var info = res.data.data[0];
         this.setData({
           job_name: info.job_name,
           address: info.shop.address,
@@ -84,6 +86,7 @@ Page({
         wx.getLocation({
           type: "gcj02",
           success: res => {
+            console.log(res)
             this.setData({
               longitude: res.longitude,
               latitude: res.latitude,
@@ -192,9 +195,15 @@ Page({
     }, app.globalData.access_token).then(res => {
       if(res.statusCode === 200){
         app.globalData.showSendMessage = true;
-        wx.navigateBack({
-          
+        $Toast({
+          content: "上班打卡成功",
+          type: "success"
         })
+        setTimeout(function () {
+          wx.navigateBack({
+
+          })
+        }, 2000)
       }
       if(res.statusCode === 400){
         $Toast({
@@ -219,9 +228,15 @@ Page({
     }, app.globalData.access_token).then(res => {
       if(res.statusCode === 200){
         app.globalData.showSendMessage = true;
-        wx.navigateBack({
-          
+        $Toast({
+          content: "下班打卡成功",
+          type: "success"
         })
+        setTimeout(function () {
+          wx.navigateBack({
+
+          })
+        }, 2000)
       }
       if(res.statusCode === 400){
         $Toast({

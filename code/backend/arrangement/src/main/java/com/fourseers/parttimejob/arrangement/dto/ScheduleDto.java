@@ -1,11 +1,14 @@
 package com.fourseers.parttimejob.arrangement.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Date;
 import java.sql.Time;
 
 public class ScheduleDto {
     // job info
     private Integer jobId;
+    private String identifier;
     private Integer shopId;
     private String jobName;
     private String shopName;
@@ -46,6 +49,8 @@ public class ScheduleDto {
         this.shopName = shopName;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -54,6 +59,8 @@ public class ScheduleDto {
         this.beginDate = beginDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }
@@ -62,14 +69,24 @@ public class ScheduleDto {
         this.endDate = endDate;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public void setBeginTime(Time beginTime) {
         this.beginTime = beginTime;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }

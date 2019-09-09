@@ -191,7 +191,7 @@
                 var prefix="/arrangement"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -242,7 +242,7 @@
                 var prefix="/arrangement"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -301,7 +301,7 @@
             var prefix="/billing"
             this.axios({
                 headers: {
-                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                    'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                     'Content-type': 'application/json',
                     'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                     'x-access-token': this.$token.loadToken().access_token,
@@ -310,9 +310,9 @@
                 url: prefix +"/merchant/billing/pay",
                 data:{
                     work_id: workid,
-                    meta:"this is meta",
+                    meta:"",
                     payment:payment,
-                    method:"this is method"
+                    method:""
                 }
             }).then(response => {
                 console.log(response);
@@ -339,7 +339,7 @@
             var prefix="/billing"
             this.axios({
                 headers: {
-                    'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                    'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                     'Content-type': 'application/json',
                     'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                     'x-access-token': this.$token.loadToken().access_token,

@@ -13,14 +13,7 @@ Page({
   data: {
     draw_count: 0,
     total_hits: 9999,
-    draw_history: [
-      {
-        payment: 100,
-        method: "微信",
-        time: "2019-9-5",
-        meta: "1250129751920we"
-      }
-    ]
+    history: []
   },
 
   onReady() {
@@ -35,20 +28,21 @@ Page({
     req.getRequest(host + draw_history,{pageCount: this.data.draw_count}, app.globalData.access_token).then(res => {
       if (res.statusCode === 200) {
         var content = res.data.data.content;
-        var new_history = this.data.draw_history;
+        var new_history = this.data.history;
         var formal_length = new_history.length;
-        for (var i in content) {
+        for (var i = 0; i < content.length; i++) {
           var his = {}
           his.payment = content[i].payment;
           his.method = content[i].method;
-          his.time = util.formatDate(content[i].create_time);
+          his.time = util.formatDate(new Date(content[i].create_time));
           his.meta = content[i].meta;
+          console.log(his)
           new_history[parseInt(formal_length) + parseInt(i)] = his;
         }
         this.setData({
-          draw_history: new_history,
+          history: new_history,
           draw_count: this.data.draw_count + 15,
-          total_hits: res.data.data.total_hits
+          total_hits: res.data.data.total_elements
         })
       }
       
@@ -61,7 +55,7 @@ Page({
     this.setData({
       draw_count: 0,
       total_hits: 9999,
-      draw_history: []
+      history: []
     })
     this.getDrawHistory();
   },

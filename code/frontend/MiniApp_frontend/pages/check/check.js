@@ -30,19 +30,12 @@ Page({
       {
         name: "确定"
       }
-    ]
+    ],
+    isSpinning: true
   },
 
+  // onShow的时候向后端请求当前的工作列表
   onShow() {
-    if (app.globalData.is_registered === true) {
-      this.setData({
-        back_to_main: false
-      })
-    }
-  },
-
-  // onReady的时候向后端请求当前的工作列表
-  onReady() {
     // 显示打卡成功信息
     if (app.globalData.showSendMessage) {
       app.globalData.showSendMessage = false;
@@ -89,7 +82,8 @@ Page({
                 shop_name: data[i].shop_name,
                 begin_time: data[i].begin_time,
                 end_time: data[i].end_time,
-                job_id: data[i].job_id
+                job_id: data[i].job_id,
+                identifier: data[i].identifier
               })
             }
           }
@@ -105,6 +99,15 @@ Page({
     }).catch(err => {
       console.log(err)
     })
+
+    this.setData({
+      isSpinning: false
+    })
+    if (app.globalData.is_registered === true) {
+      this.setData({
+        back_to_main: false
+      })
+    }
   },
 
   afterTapDay(e) {

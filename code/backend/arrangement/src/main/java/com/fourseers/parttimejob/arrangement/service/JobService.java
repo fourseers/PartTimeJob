@@ -31,7 +31,7 @@ public interface JobService {
 
     Page<Job> findPageByUsername(String username, int pageCount, int pageSize);
     boolean apply(WechatUser user, ApplyDto applyDto);
-    JobDetailedInfoProjection getJobDetail(int jobId);
+    List<JobDetailedInfoProjection> getJobDetail(String identifier);
     AppliedTimeDto getJobAppliedTime(int jobId);
 
     void setJobHiringState(Integer jobId, String username, Boolean stop);

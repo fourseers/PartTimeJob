@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.arrangement.repository;
 
+import com.fourseers.parttimejob.arrangement.projection.WorkNotifyProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkProjection;
 import com.fourseers.parttimejob.arrangement.projection.WorkStatusProjection;
 import com.fourseers.parttimejob.common.entity.*;
@@ -56,10 +57,28 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     List<Work> findAllByWorker(WechatUser wechatUser);
 
     @Query("select " +
-            "sum(case when work.checkin > work.expectedCheckin then 1 else 0 end) as lateRate, " +
-            "sum(case when work.checkout > work.expectedCheckout then 1 else 0 end) as leaveEarlyRate, " +
-            "1 as attendRate " +
+            "sum(case when work.checkin > work.expectedCheckin or work.checkin is null then 1 else 0 end) as lateRate, " +
+            "sum(case when work.checkout < work.expectedCheckout or work.checkout is null then 1 else 0 end) as leaveEarlyRate, " +
+            "sum(case when work.checkin is not null and work.checkout is not null then 1 else 0 end) as attendRate " +
             "from Work work " +
             "where work.job.shop.shopId = ?1 and work.workDate >= ?2 and work.workDate <= ?3")
     WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to);
+
+    @Query("select " +
+            "work.worker.name as username," +
+            "work.worker.phone as phone, " +
+            "work.job.jobName as jobname, " +
+            "work.expectedCheckin as time " +
+            "from Work work " +
+            "where work.checkin = null and work.workDate = current_date and abs(work.expectedCheckin - current_time) < 30")
+    List<WorkNotifyProjection> getNotCheckedIn();
+
+    @Query("select " +
+            "work.worker.name as username," +
+            "work.worker.phone as phone, " +
+            "work.job.jobName as jobname, " +
+            "work.expectedCheckout as time " +
+            "from Work work " +
+            "where work.checkout = null and work.workDate = current_date and abs(work.expectedCheckout - current_time) < 30")
+    List<WorkNotifyProjection> getNotCheckedOut();
 }

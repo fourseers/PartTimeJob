@@ -3,7 +3,7 @@ const { $Toast } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
 import { host, job_detail, apply_job } from "../../api/url.js"
-var job_id = 0;
+var identifier = 0;
 var util = require("../../utils/util.js")
 
 Page({
@@ -85,6 +85,8 @@ Page({
       longitude: 0.0,
       name: ''
     }],
+    time_table_visible: false,
+    time_table_actions: []
   },
 
   /**
@@ -92,9 +94,9 @@ Page({
    * onLoad的时候似乎不能调用this.setData，实际情况要与后端通信后决定
    */
   onLoad: (options) => {
-    //用options 中的job_id向后台请求更详细的信息
+    //用options 中的identifier向后台请求更详细的信息
     //console.log(options);
-    job_id = options.id;
+    identifier = options.identifier;
   },
 
   /* 
@@ -107,9 +109,11 @@ Page({
       app.globalData.showSendMessage = false;
     }
     var req = new request();
-    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
-      var info = res.data.data;
+    req.getRequest(host + job_detail + identifier, null, app.globalData.access_token).then(res => {
+
       if (res.statusCode === 200) {
+        var info = res.data.data[0];
+
         var begin_date = new Date(info.begin_date);
         var end_date = new Date(info.end_date);
         var begin_apply_date = new Date(info.begin_apply_time);
@@ -144,6 +148,19 @@ Page({
             name: info.shop.shop_name
           }]
         })
+
+        //获取并保存可报名的时间段及其对应id
+        var time_list = res.data.data;
+        var new_time_table = [];
+        for (var i in time_list) {
+          var new_time = {};
+          new_time.name = "时间段：" + time_list[i].begin_time + "~" + time_list[i].end_time;
+          new_time.id = time_list[i].job_id;
+          new_time_table.push(new_time)
+        }
+        this.setData({
+          time_table_actions: new_time_table
+        })
       }
     }).catch(err => {
       console.log(err);
@@ -169,8 +186,8 @@ Page({
 
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
-    wx.navigateTo({
-      url: "/pages/choose_date/choose_date?id=" + job_id + "&begin_date=" + this.data.begin_apply_date + "&end_date=" + this.data.end_apply_date,
+    this.setData({
+      time_table_visible: true
     })
   },
 
@@ -179,6 +196,22 @@ Page({
       content: '申请岗位成功',
       type: 'success'
     });
+  },
+
+  handleCancel() {
+    this.setData({
+      time_table_visible: false
+    })
+  },
+
+  handleClickItem(e) {
+    //console.log(e)
+    this.setData({
+      time_table_visible: false
+    })
+    wx.navigateTo({
+      url: "/pages/choose_date/choose_date?id=" + this.data.time_table_actions[e.detail.index].id + "&begin_date=" + this.data.begin_date + "&end_date=" + this.data.end_date,
+    })
   }
 
 })

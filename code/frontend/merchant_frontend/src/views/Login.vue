@@ -29,10 +29,12 @@
 
 <script>
 
-  import axios from 'axios/index';
-
+  import { Form } from 'iview';
   export default {
     name: 'Login',
+    components: {
+      'Form': Form
+    },
     data() {
       return {
         state: "",
@@ -76,28 +78,27 @@
                   },
                   error => {
                     console.log(error.response);
-                    if (error.response) {
-                      if (error.response.data.status === 400) {
-                        this.$Message.error('用户名或者密码错误');
-                      }
-                     else {
-                      this.$Message.error('登录失败');
+                      if (error.response) {
+                    //   if (error.response.data.status === 400) {
+                     //   this.$Message.error('用户名或者密码错误');
+                     // }
+                     // else {
+                        this.$Message.error('登录失败');
+                      //}
                     }
-                    }
-
                     reject(error.response.data.status);
                   }
           );
         })
       },
       login(username, password){
-        const url = 'http://202.120.40.8:30552/auth/merchant/login';
+        const  prefix ="auth"
         return new Promise((resolve, reject) => {
-          axios({
+          this.axios({
             method: 'POST',
-            url,
+            url: prefix + "/merchant/login",
             headers: {
-              'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+              'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
               'Content-type': 'application/json',
               'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
             },

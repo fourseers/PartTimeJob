@@ -83,10 +83,10 @@
                         { type: 'array', max: 2, message: '请选择城市', trigger: 'change' }
                     ],
                     address: [
-                        { required: true, message: '请填写品牌', trigger: 'change' }
+                        { required: true, message: '请填写地址', trigger: 'change' }
                     ],
                     brand: [
-                        { required: true, message: '请填写地址', trigger: 'change' }
+                        { required: true, message: '请填写品牌', trigger: 'change' }
                     ],
                     industry: [
                         { required: true, type: 'array', min: 1, message: '至少选择一个营业领域', trigger: 'change' },
@@ -109,7 +109,7 @@
                 var prefix="/warehouse"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -160,7 +160,7 @@
                 var prefix="/warehouse"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -173,8 +173,8 @@
                         province: this.formValidate.province_city[0],
                         city:this.formValidate.province_city[1],
                         address:this.formValidate.address,
-                        longitude:this.longitude,
-                        latitude:this.latitude,
+                        longitude:this.$route.params.longitude,
+                        latitude:this.$route.params.latitude,
                         brand:this.formValidate.brand,
                         industry:this.formValidate.industry[0],
                         introduction:this.formValidate.introduction

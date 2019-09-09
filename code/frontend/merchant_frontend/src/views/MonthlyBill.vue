@@ -2,11 +2,10 @@
     <div class="content">
         <Table border :columns="columns7" :data="bill">
             <div slot="header" class="table-height" style="
-        font-size: 20px;">月末账单</div>
+        font-size: 20px;">本月需支付总金额：{{this.sum}}
+            </div>
             <div slot="footer" class="table-height">
-                本月需支付总金额：{{this.sum}}
-
-                <Button class="ivu-btn" @click="paybill(this.bill_id)" >确认支付</Button>
+                <Button id="btn1" class="ivu-btn" @click="paybill(bill_id)"  v-if="show"    >确认支付</Button>
             </div>
 
 
@@ -71,13 +70,14 @@
                         title: '支付状态',
                         key: 'paid',
                         render: (h, params) => {
-                            return  h('div', params.row.paid?"已支付":"拒绝支付")
+                            return  h('div', params.row.paid?"已支付给员工":"拒绝支付")
                         }
                     }
                 ],
                 bill:[],
                 bill_id:0,
                 sum: this.getsum(),
+                show :true
             }
         },
         watch:
@@ -86,24 +86,80 @@
 
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             } else
             {
 
                 //获取第一页账单
                 this.mockTableData1(0)
-
-                this.getsum();
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    params:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        if(response.data.data === "paid") {
+                            this.show=false
+                        }
+                    }
+                })
             }
 
         },
         methods: {
+            former_month()
+            {
+
+                var myDate = new Date();
+                var newd=new Date;
+                newd.setTime(myDate.getTime() - 8*3600*1000);
+
+                newd.getFullYear(); //获取完整的年份(4位,1970-????)
+                newd.getMonth(); //获取当前月份(0-11,0代表1月)
+                var month = newd.getMonth() === 0?12:newd.getMonth()
+                newd.setDate(0);
+                var year=newd.getMonth() === 0?  newd.getFullYear()-1:  newd.getFullYear();
+                return {
+                    from:year.toString()+"-"+month.toString()+"-"+"1",
+                    to:year.toString()+"-"+month.toString()+"-"+newd.getDate()
+                }
+            },
+            former_month2()
+            {
+
+                var myDate = new Date();
+                var newd=new Date;
+                newd.setTime(myDate.getTime() - 8*3600*1000);
+
+                newd.getFullYear(); //获取完整的年份(4位,1970-????)
+                newd.getMonth(); //获取当前月份(0-11,0代表1月)
+                var month = newd.getMonth() === 0?12:newd.getMonth()
+                var year=newd.getMonth() === 0?  newd.getFullYear()-1:  newd.getFullYear();
+                return {
+                    year:year.toString(),
+                    month:month.toString()
+                }
+            },
             getsum()
             {
 
+                console.log( this.former_month())
                 var prefix="/billing"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -111,8 +167,8 @@
                     method: 'get',
                     url: prefix +"/merchant/billing/sum",
                     params:{
-                        from:"2019-07-02",
-                        to:"2020-07-02",
+                        from:this.former_month().from,
+                        to:this.former_month().to
                     }
                 }).then(response => {
                     console.log(response);
@@ -121,27 +177,106 @@
                         this.sum = response.data.data.amount;
 
                     }
-                    console.log( this.bill_id)
                 })
                     .catch(error => {
-                        console.log(error.response)
-
+                        console.log(error)
 
                     })
             },
 
-            paybill( bill_id)
+            paybill( )
             {
-                //pay bills
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'post',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    data:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {//response.data.data;
 
+                        let dwSafari
+                        dwSafari=window.open();
+                        dwSafari.document.open();
+                        let dataObj=response.data.data;
+                        let html=  dataObj.replace(/[^\u0000-\u00FF]/g,function($0){return escape($0).replace(/(%u)(\w{4})/gi,"&#x$2;")});
+                        dwSafari.document.write("<html><head><title></title><meta charset='utf-8'><body>"+dataObj+"</body></html>")
+                        dwSafari.document.forms[0].submit()
+                        dwSafari.document.close()
+                        let config={
+                            title: '请确认支付',
+                            //   content: '<p>Content of dialog</p><p>Content of dialog</p>',
+                            okText: '我已支付',
+                            cancelText: '取消支付',
+                            onOk: () => {
+                                this.get_payment_status();
+                            },
+                            onCancel: () => {
+                                this.$Message.info('Clicked cancel');
+                            },
+                            style:{
 
+                            }
+                        }
+                        this.$Modal.confirm(config)
+                    }
+                })
+                    .catch(error => {
+                        console.log(error)
+
+                    })
+
+            },
+            get_payment_status()
+            {
+                var prefix="/billing"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix +"/merchant/billing/monthly-pay",
+                    params:{
+                        year:this.former_month2().year,
+                        month:this.former_month2().month
+                    }
+                }).then(response => {
+                    console.log(response.data.data);
+                    if(response.status ===  200)
+                    {
+                        if(response.data.data === "paid") {
+                            this.$Message.success('支付成功');
+                            this.$router.push({name: "postjob"})
+                        }else if(response.data.data === "paid")
+                        {
+                            this.$Message.success('您未支付');
+                        }
+                        else if (response.data.data === "pending")
+                        {
+                            this.$Message.success('未收到支付反馈，请稍后重试');
+                        }
+                    }
+                })
             },
             mockTableData1(pagenum) {
                 //get bills
                 var prefix="/billing"
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -150,6 +285,8 @@
                     url: prefix +"/merchant/billing",
                     params:{
                         page_count:pagenum,
+                        from:this.former_month().from,
+                        to:this.former_month().to
                     }
                 }).then(response => {
                     console.log(response);
@@ -159,7 +296,6 @@
                         this.bill_id = response.data.data.content.bill_id;
 
                     }
-                    console.log( this.bill_id)
                 })
                     .catch(error => {
                         console.log(error.response)

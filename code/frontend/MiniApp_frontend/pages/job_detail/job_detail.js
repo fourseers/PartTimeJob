@@ -3,7 +3,8 @@ const { $Toast } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
 import { host, job_detail, apply_job } from "../../api/url.js"
-var job_id = 0;
+var identifier = 0;
+var util = require("../../utils/util.js")
 
 Page({
 
@@ -31,19 +32,19 @@ Page({
   data: {
     job_name: "fourseers",
     job_detail: "这里是详细描述",
-    begin_year: (new Date()).getFullYear(),
-    begin_month: (new Date()).getMonth(),
-    begin_date: (new Date()).getDate(),
-    end_year: (new Date()).getFullYear(),
-    end_month: (new Date()).getMonth(),
-    end_date: (new Date()).getDate(),
+    //begin_year: (new Date()).getFullYear(),
+    //begin_month: (new Date()).getMonth(),
+    begin_date: "",
+    //end_year: (new Date()).getFullYear(),
+    //end_month: (new Date()).getMonth(),
+    end_date: "",
     need_amount: 4,
-    begin_apply_year: (new Date()).getFullYear(),
-    begin_apply_month: (new Date()).getMonth(),
-    begin_apply_date: (new Date()).getDate(),
-    end_apply_year: (new Date()).getFullYear(),
-    end_apply_month: (new Date()).getMonth(),
-    end_apply_date: (new Date()).getDate(),
+    //begin_apply_year: (new Date()).getFullYear(),
+    //begin_apply_month: (new Date()).getMonth(),
+    begin_apply_date: "",
+    //end_apply_year: (new Date()).getFullYear(),
+    //end_apply_month: (new Date()).getMonth(),
+    end_apply_date: "",
     salary: "5K-10K",
     create_time: new Date(),
     isLoading: false,
@@ -76,7 +77,6 @@ Page({
     //shop_id不用显示，但是可以用于跳转页面
     shop_id: 0,
     //用于对话框的变量
-    visible: false,
     longitude: 0.0,
     latitude: 0.0,
     markers: [{
@@ -85,6 +85,8 @@ Page({
       longitude: 0.0,
       name: ''
     }],
+    time_table_visible: false,
+    time_table_actions: []
   },
 
   /**
@@ -92,9 +94,9 @@ Page({
    * onLoad的时候似乎不能调用this.setData，实际情况要与后端通信后决定
    */
   onLoad: (options) => {
-    //用options 中的job_id向后台请求更详细的信息
+    //用options 中的identifier向后台请求更详细的信息
     //console.log(options);
-    job_id = options.id;
+    identifier = options.identifier;
   },
 
   /* 
@@ -102,10 +104,16 @@ Page({
    * onShow的时候向后端请求店铺的位置信息
    */
   onShow() {
+    if (app.globalData.showSendMessage) {
+      this.handleSuccess();
+      app.globalData.showSendMessage = false;
+    }
     var req = new request();
-    req.getRequest(host + job_detail + job_id, null, app.globalData.access_token).then(res => {
-      var info = res.data.data;
+    req.getRequest(host + job_detail + identifier, null, app.globalData.access_token).then(res => {
+
       if (res.statusCode === 200) {
+        var info = res.data.data[0];
+
         var begin_date = new Date(info.begin_date);
         var end_date = new Date(info.end_date);
         var begin_apply_date = new Date(info.begin_apply_time);
@@ -113,21 +121,22 @@ Page({
         this.setData({
           job_name: info.job_name,
           job_detail: info.job_detail,
-          begin_year: begin_date.getFullYear(),
-          begin_month: begin_date.getMonth()+1,
-          begin_date: begin_date.getDate(),
-          end_year: end_date.getFullYear(),
-          end_month: end_date.getMonth()+1,
-          end_date: end_date.getDate(),
+          //begin_year: begin_date.getFullYear(),
+          //begin_month: begin_date.getMonth()+1,
+          begin_date: util.formatDate(begin_date),
+          //end_year: end_date.getFullYear(),
+          //end_month: end_date.getMonth()+1,
+          end_date: util.formatDate(end_date),
           need_amount: 4,
-          begin_apply_year: begin_apply_date.getFullYear(),
-          begin_apply_month: begin_apply_date.getMonth()+1,
-          begin_apply_date: begin_apply_date.getDate(),
-          end_apply_year: end_apply_date.getFullYear(),
-          end_apply_month: end_apply_date.getMonth()+1,
-          end_apply_date: end_apply_date.getDate(),
-          salary: info.salary,
+          //begin_apply_year: begin_apply_date.getFullYear(),
+          //begin_apply_month: begin_apply_date.getMonth()+1,
+          begin_apply_date: util.formatDate(begin_apply_date),
+          //end_apply_year: end_apply_date.getFullYear(),
+          //end_apply_month: end_apply_date.getMonth()+1,
+          end_apply_date: util.formatDate(end_apply_date),
+          salary: info.salary.toFixed(2),
           tags: info.tag_list,
+          shop_id: info.shop.shop_id,
           shop_name: info.shop.shop_name,
           address: info.shop.address,
           longitude: info.shop.longitude,
@@ -138,6 +147,19 @@ Page({
             longitude: info.shop.longitude,
             name: info.shop.shop_name
           }]
+        })
+
+        //获取并保存可报名的时间段及其对应id
+        var time_list = res.data.data;
+        var new_time_table = [];
+        for (var i in time_list) {
+          var new_time = {};
+          new_time.name = "时间段：" + time_list[i].begin_time + "~" + time_list[i].end_time;
+          new_time.id = time_list[i].job_id;
+          new_time_table.push(new_time)
+        }
+        this.setData({
+          time_table_actions: new_time_table
         })
       }
     }).catch(err => {
@@ -165,46 +187,30 @@ Page({
   // 按立即报名按钮后弹出对话框
   handleClickApply() {
     this.setData({
-      visible: true
+      time_table_visible: true
+    })
+  },
+
+  handleSuccess() {
+    $Toast({
+      content: '申请岗位成功',
+      type: 'success'
     });
   },
 
-  // 对话框确定后发送岗位申请
-  handleSendApply() {
-    // 发送岗位申请请求
-    var req = new request();
+  handleCancel() {
     this.setData({
-      isLoading: true,
-    })
-    req.postRequest(host + apply_job, {
-      job_id: parseInt(job_id),
-      cv_id: "5d365f928ba346f03eb1177a",//5d318647a095e24d3285f8ea
-    }, app.globalData.access_token).then(res => {
-      if(res.statusCode === 200){
-        app.globalData.showSendMessage = true;
-        wx.navigateBack({
-
-        })
-      }
-      if(res.statusCode === 400){
-        this.handleClose();
-        $Toast({
-          content: res.data.message,
-          type: 'error'
-        });
-        this.setData({
-          isLoading: false,
-        })
-      }
-    }).catch(err => {
-      console.log(err)
+      time_table_visible: false
     })
   },
 
-  // 对话框取消后隐藏对话框
-  handleClose() {
+  handleClickItem(e) {
+    //console.log(e)
     this.setData({
-      visible: false
+      time_table_visible: false
+    })
+    wx.navigateTo({
+      url: "/pages/choose_date/choose_date?id=" + this.data.time_table_actions[e.detail.index].id + "&begin_date=" + this.data.begin_date + "&end_date=" + this.data.end_date,
     })
   }
 

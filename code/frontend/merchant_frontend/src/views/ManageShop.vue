@@ -114,11 +114,12 @@
                 total_pages:2,
             }
         },
-        created: function() {
+      created: function() {
 
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
-            } else { 
+                this.$router.push({name: "login"})
+            } else {
 
                 //获取第一页表格
                 this.mockTableData1 (0);
@@ -135,25 +136,26 @@
 
         methods: {
             mockTableData1 (pagenum) {
-                //get shops
-                getShops(pagenum).then(res => {
-                    console.log( res.data)
-                        this.shops  = res.data.content
-                    },
-                    error => {
-                        if (error.response) {
-                            if (error.response.data.status === 400 && error.response.data.message === "no shops") {
-                                console.log(error.response);
-                                this.$Message.error('暂无店铺');
-                            } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
-                                console.log(error.response);
-                                this.$Message.error('参数错误');
+                return new Promise((resolve, reject) => {
+                    getShops(pagenum).then(res => {
+                            console.log(res.data)
+                            this.shops = res.data.content
+                            resolve(res);
+                        },
+                        error => {
+                            if (error.response) {
+                                if (error.response.data.status === 400 && error.response.data.message === "no shops") {
+                                    console.log(error.response);
+                                    this.$Message.error('暂无店铺');
+                                } else if (error.response.data.status === 400 && error.response.data.message === "incorrect param") {
+                                    console.log(error.response);
+                                    this.$Message.error('参数错误');
+                                }
+                                reject(error.response.data.status);
                             }
                         }
-
-                    }
-
-                )
+                    )
+                })
             },changePage (index) {
                 // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
 

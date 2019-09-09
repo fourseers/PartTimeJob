@@ -21,6 +21,7 @@
     <view slot="footer">{{education}}</view>
   </i-cell>
 </i-panel>
+<!--
 <i-panel title="职业倾向" hide-border="{{ true }}">
   <i-cell title="已选倾向">
     <view wx:if="{{chosen_tags.length===0}}">
@@ -56,6 +57,11 @@
     </i-tag>
   </block>
 </i-panel>
+-->
 <i-button bind:click="register" type="primary" loading="{{isLoading}}">注册</i-button>
+
+<i-modal visible="{{show_modal}}" title="修改倾向" actions="{{ actions }}" bind:click="handleTags">
+  <view>修改职业倾向可以匹配到更适合您的岗位，是否立即去修改？</view>
+</i-modal>
 
 <i-toast id="toast" />

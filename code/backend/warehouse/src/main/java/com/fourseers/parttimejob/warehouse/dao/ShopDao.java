@@ -14,6 +14,10 @@ public interface ShopDao {
 
     Shop findByShopIdAndUsername(int shopId, String username);
 
+    Shop findByShopId(int shopId);
+
+    Float getAvgScore(Shop shop);
+
     Page<Shop> findPageByUserId(int userId, int pageCount, int pageSize);
 
     Page<Shop> findPageByUsername(String username, int pageCount, int pageSize);

@@ -7,6 +7,7 @@
     </Layout>
 </template>
 <script>
+    import  axios from"axios";
     export default {
         name: "InfoConfig",
         data () {
@@ -22,13 +23,22 @@
         {
             if(!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             }
             else {
+                this.getcompany();
+            }
+        },
+
+        methods: {
+            getcompany()
+            {
+
                 var prefix = "/warehouse"
                 //测试用的url
-                this.axios({
+                 axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -50,42 +60,7 @@
                             }
                         }
                     })
-            }
-        },
-
-        methods: {
-            ChangeCompany()
-            {
-                console.log(this.$token.loadToken().access_token)
-                var prefix="/warehouse"
-                //测试用的url
-                this.axios({
-                    headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
-                        'Content-type': 'application/json',
-                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
-                        'x-access-token': this.$token.loadToken().access_token,
-                    },
-                    method: 'post',
-                    url: prefix +"/merchant/company",
-                    data:  {
-                        company_name:this.formValidate.company_name
-                    }
-                }).then(response => {
-                    console.log(response);
-                    if(response.status ===  200)
-                    {
-                        console.log("success");
-                        this.$Message.success('成功');
-                    }
-
-                })
-                    .catch(error => {
-                        //JSON.stringify(error);
-                        this.$Message.error('失败');
-                        console.log(error)
-                    })
-            }
+            },
         }
     }
 </script>

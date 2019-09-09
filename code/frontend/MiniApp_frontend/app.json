@@ -13,7 +13,14 @@
     "pages/check_inform/check_inform",
     "pages/user/user",
     "pages/cv_list/cv_list",
-    "pages/switchcity/switchcity"
+    "pages/shop/shop",
+    "pages/leave/leave",
+    "pages/switchcity/switchcity",
+    "pages/choose_date/choose_date",
+    "pages/apply_detail/apply_detail",
+    "pages/works/works",
+    "pages/wallet/wallet",
+    "pages/draw/draw"
   ],
   "window": {
     "backgroundTextStyle": "light",

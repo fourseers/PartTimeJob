@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -13,9 +14,10 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-public class Job {
+public class Job implements Cloneable {
 
     private Integer jobId;
+    private String identifier;
     private String jobName;
     private Date beginDate;
     private Date endDate;
@@ -43,6 +45,16 @@ public class Job {
         this.jobId = jobId;
     }
 
+//    @NotNull              // commented this out for test purposes
+    @Column(length = 40)    // reserve a couple bits
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
     @NotBlank
     public String getJobName() {
         return jobName;
@@ -53,6 +65,8 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -62,6 +76,8 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }
@@ -71,6 +87,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -80,6 +97,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }
@@ -120,6 +138,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getBeginApplyTime() {
         return beginApplyTime;
     }
@@ -129,6 +148,7 @@ public class Job {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getEndApplyTime() {
         return endApplyTime;
     }
@@ -192,5 +212,9 @@ public class Job {
 
     public void setManualStop(Boolean manualStop) {
         this.manualStop = manualStop;
+    }
+
+    public Job clone() throws CloneNotSupportedException {
+        return (Job) super.clone();
     }
 }

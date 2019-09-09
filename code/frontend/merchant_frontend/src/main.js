@@ -10,7 +10,7 @@ import 'iview/dist/styles/iview.css';
 import echarts from 'echarts'
 Vue.prototype.$echarts = echarts
 
-axios.defaults.baseURL = "http://202.120.40.8:30552";
+axios.defaults.baseURL = "http://47.103.112.85:30552";
 //部署服务器
 
 import Element from 'element-ui'
@@ -22,7 +22,6 @@ Vue.prototype.axios = axios;
 Vue.prototype.$token = token;
 
 const router = new VueRouter({
-  mode: 'history',
   routes: routes
 });
 Vue.config.productionTip = false;

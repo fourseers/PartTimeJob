@@ -6,7 +6,7 @@
     </view>
     <view slot="footer">
       <view>
-        {{salary}}元/月
+        {{salary}}元/天
       </view>
     </view>
   </i-cell>
@@ -33,19 +33,21 @@
 <i-panel i-class="date-box">
   <i-cell-group>
     <i-cell>
-      上班时间：{{begin_year}}年{{begin_month}}月{{begin_date}}日 ~ {{end_year}}年{{end_month}}月{{end_date}}日
+      上班时间：{{begin_date}} ~ {{end_date}}
     </i-cell>
     <i-cell>
-      报名时间：{{begin_apply_year}}年{{begin_apply_month}}月{{begin_apply_date}}日 ~ {{end_apply_year}}年{{end_apply_month}}月{{end_apply_date}}日
+      报名时间：{{begin_apply_date}} ~ {{end_apply_date}}
     </i-cell>
   </i-cell-group>
 </i-panel>
 <i-panel>
   <i-cell title="工作地点" label="{{address}}"></i-cell>
   <map class="job-map" latitude="{{latitude}}" longitude="{{longitude}}" markers="{{markers}}"></map>
-  <i-cell title="公司信息" label="{{shop_name}}--{{address}}"></i-cell>
+  <i-cell title="公司信息" label="{{shop_name}}--{{address}}" is-link url="/pages/shop/shop?id={{shop_id}}">
+    <view slot="footer">
+      查看详细
+    </view>
+  </i-cell>
 </i-panel>
+<i-action-sheet visible="{{ time_table_visible }}" actions="{{ time_table_actions }}" show-cancel bind:cancel="handleCancel" bind:click="handleClickItem" />
 <i-toast id="toast" />
-<i-modal visible="{{ visible }}" bind:ok="handleSendApply" bind:cancel="handleClose">
-    <view>您确定要应聘这个岗位吗</view>
-</i-modal>

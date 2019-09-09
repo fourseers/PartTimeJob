@@ -19,6 +19,7 @@ public class JobDto {
     private Date endDate;
     private Time beginTime;
     private Time endTime;
+    private List<TimePairDto> workTime;
     private String jobDetail;
     private Integer needGender;
     private Integer needAmount;
@@ -46,6 +47,8 @@ public class JobDto {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getBeginDate() {
         return beginDate;
     }
@@ -55,6 +58,8 @@ public class JobDto {
     }
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd", timezone = "GMT+8")
     public Date getEndDate() {
         return endDate;
     }
@@ -64,7 +69,7 @@ public class JobDto {
     }
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+0")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getBeginTime() {
         return beginTime;
     }
@@ -74,13 +79,21 @@ public class JobDto {
     }
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+0")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT+8")
     public Time getEndTime() {
         return endTime;
     }
 
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
+    }
+
+    public List<TimePairDto> getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(List<TimePairDto> workTime) {
+        this.workTime = workTime;
     }
 
     @NotNull
@@ -114,7 +127,7 @@ public class JobDto {
     }
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+0")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getBeginApplyTime() {
         return beginApplyTime;
     }
@@ -124,7 +137,7 @@ public class JobDto {
     }
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+0")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public Timestamp getEndApplyTime() {
         return endApplyTime;
     }

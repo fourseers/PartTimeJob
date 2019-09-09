@@ -150,9 +150,10 @@
                     </Row>
                     <Row>
 
-                        <FormItem label="Tag" prop="job_tag">
-                            <Tag  v-model="formValidate.tag_list" v-for="item in count" :key="item" :name="item" closable @on-close="handleClose2">{{ item }}</Tag>
-                            <Button icon="ios-add" type="dashed" size="small" @click="handleAdd">添加标签</Button>
+                        <FormItem label="Tag"  prop="job_tag">
+                            <CheckboxGroup v-model="formValidate.job_tag" v-for="item in job_tags">
+                                <Checkbox :label="item.id "  >{{item.name}}</Checkbox>
+                            </CheckboxGroup>
 
                         </FormItem>
 
@@ -178,7 +179,9 @@
 </template>
 <script>
 
+
     import {getShops} from '../util/getShops.js'
+
     export default {
 
         name: "PostJob",
@@ -249,6 +252,7 @@
                 }, 1000)
             };
             return {
+                job_tags:[],
                 pagenum2:1,
                 total_elements_shop:0,
                 startTimeOptions: {}, //开始日期设置
@@ -271,10 +275,9 @@
                     end_apply_date: '',
                     job_detail: '',
                     need_amount: '',
-                    job_tag: [1],
+                    job_tag: [],
                     salary: ''
                 },
-                count: ["标签1", "标签2"],
                 ruleValidate: {
                     job_name: [
                         {required: true, message: '请填写岗位名称', trigger: 'blur'},
@@ -295,7 +298,7 @@
                         {required: true, type: 'array', min: 1, message: '请选择岗位要求的性别', trigger: 'change'}
                     ],
                     education: [
-                        {required: true, type: 'array', max: 1, message: '最少选择一个学历', trigger: 'change'}
+                        {required: true, type: 'array', max: 1, message: '最多选择一个学历', trigger: 'change'}
                     ],
                     begin_apply_date: [
                         {required: true, type: 'date', message: '请选择招聘开始时间', trigger: 'change'},
@@ -331,32 +334,25 @@
                 return 2;
             },
 
-            begin_apply_date:function()
-            {
-                return this.get_added(this.formValidate.begin_apply_date,this.formValidate.begin_apply_time);
-            },
-            end_apply_date:function()
-            {
-                return this.get_added(this.formValidate.end_apply_date,this.formValidate.end_apply_time);
-            }
-
         },
         created: function () {
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             } else {
                 //获取第一页表格
                 this.mockTableData1 (0);
+                this.get_tags();
             }
             Date.prototype.Format = function (fmt) {
                 var o = {
-                    "M+": this.getMonth() + 1, //月份 
-                    "d+": this.getDate(), //日 
-                    "h+": this.getHours(), //小时 
-                    "m+": this.getMinutes(), //分 
-                    "s+": this.getSeconds(), //秒 
-                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-                    "S": this.getMilliseconds() //毫秒 
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
                 };
                 if (/(y+)/.test(fmt))
                     fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
@@ -367,9 +363,39 @@
                 }
                 return fmt;
             }
-
         },
         methods: {
+            get_tags()
+            {
+                var prefix = "/warehouse"
+                //测试用的url
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/tags",
+                }).then(response => {
+                    console.log(response.data);
+                    if (response.status === 200) {
+                        this.job_tags = response.data.data;
+
+                    }
+                })
+                    .catch(error => {
+                        if (error.response) {
+                            if (error.response.data.status === 400) {
+
+                            }
+                        }
+                        JSON.stringify(error);
+                        console.log(error)
+                    })
+
+            },
             mockTableData1 (pagenum) {
                 //get shops
                 getShops(pagenum).then(res => {
@@ -396,42 +422,40 @@
 
                 this.mockTableData1(index-1);
             },
-            format_only_date(d)
+            format_only_date(d,t)
             {
+                var newd=new Date;
+                newd.setTime(d.getTime() + 1000* this.convert_to_seconds(t)- 8*3600*1000);
                 return new Date(d).Format("yyyy-MM-dd");
+
             },
-            format_time(t)
+            format_time(str)
             {
-                var d=new Date;
-                d.setTime(1000* this.convert_to_seconds(t)- 8*3600*1000);
-                return new Date(d).Format("hh:mm:ss")
-            },
-            format_date(d)
-            {
-                return new Date(d).Format("yyyy-MM-dd hh:mm:ss");
-            },
-            get_added(date,time)
-            {
-                var t=new Date;
-                var t_s=date.getTime();
-                var seconds = this.convert_to_seconds(time);
-                t.setTime(t_s + 1000 * seconds);
-                return t;
+                var a = str.split(':');
+                var retstr=a[0]+":"+a[1]+":"+"00"
+                return retstr;
             },
             convert_to_seconds(str)
             {
                 var a = str.split(':'); // split it at the colons
-
                 // minutes are worth 60 seconds. Hours are worth 60 minutes.
                 var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60;
-
                 return seconds;
             },
-            generate_date(date,seconds)
+            format_date(d,t)
             {
-                return new Date(date+seconds*1000);
+                var timestr= this.format_time(t)
+                var nd = new Date;
+                nd.setTime(d.getTime() + 1000* this.convert_to_seconds(t)- 8*3600*1000);
+                return new Date(d).Format("yyyy-MM-dd")+ " "+timestr;
+            },
+            printtime(){
+                console.log(this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time));
+                console.log(this.format_time(this.formValidate.begin_time))
+                console.log(this.format_date(this.formValidate.begin_apply_date,  this.formValidate.begin_apply_time),)
             },
             handleSubmit(name) {
+                this.printtime()
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if( !this.formValidate.shop)
@@ -446,6 +470,10 @@
                             this.postJob()
                         }
                         else {
+
+                            this.formValidate.begin_date=""
+                            this.formValidate.end_date=""
+
                             this.$Message.error("工作开始日期不能比招聘结束时间早");
 
                             this.startTimeOptions= {};
@@ -475,12 +503,163 @@
                 const index = this.count.indexOf(name);
                 this.count.splice(index, 1);
             },
+            not_divide_time()
+            {
+                var  work_time_list=[]
+                var  beginstr=  this.format_time(this.formValidate.begin_time)
+                var  endstr= this.format_time(this.formValidate.end_time)
+                var timeslot_only= {
+                    "begin_time":   beginstr,
+                    "end_time": endstr
+                }
+                work_time_list.push(timeslot_only)
+                return   work_time_list
+            },
+            can_be_divided()
+            {
+                var timeslot_one= {
+                    "begin_time": "06:00:00",
+                    "end_time": "11:00:00"
+                }
+                var timeslot_two= {
+                    "begin_time": "11:00:00",
+                    "end_time": "13:00:00"
+                }
+                var timeslot_three= {
+                    "begin_time": "13:00:00",
+                    "end_time": "17:00:00"
+                }
+                var timeslot_four= {
+                    "begin_time": "17:00:00",
+                    "end_time": "19:00:00"
+                }
+                var timeslot_five={
+                    "begin_time": "19:00:00",
+                    "end_time": "22:00:00"
+                }
+                var  work_time_list=[]
+                var  beginstr=  this.format_time(this.formValidate.begin_time)
+                var beginlist = beginstr.split(':')
+                var starthour = beginlist[1]=="00"?beginlist[0]:beginlist[0]+1
+
+                var  endstr= this.format_time(this.formValidate.end_time)
+                var endlist = endstr.split(':')
+                var endhour = endlist[0] //6 11 13 17 19 22
+
+                if(starthour <="06" && endhour>="11")
+                {
+                    work_time_list.push(timeslot_one)
+                }
+                if(starthour <="11" && endhour>="13") {
+                    work_time_list.push(timeslot_two)
+                }
+                if(starthour <="13" && endhour>="17") {
+                    work_time_list.push(timeslot_three)
+                }
+                if(starthour <="17" && endhour>="19"){
+                    work_time_list.push(timeslot_four)
+                }
+                if(starthour <="19" && endhour>="22")
+                {
+                    work_time_list.push(timeslot_five)
+                }
+                return work_time_list
+            },
+            divide_time( work_time_list)
+            {
+                var  beginstr=  this.format_time(this.formValidate.begin_time)
+                var beginlist = beginstr.split(':')
+                var starthour = beginlist[1]=="00"?beginlist[0]:beginlist[0]+1
+
+                var  endstr= this.format_time(this.formValidate.end_time)
+                var endlist = endstr.split(':')
+                var endhour = endlist[0] //6 11 13 17 19 22
+
+                var   lasttime=work_time_list[work_time_list.length-1].end_time
+                var endstr_index=work_time_list.length-1
+                // 30min 内合并
+                if (   beginstr<work_time_list[0].begin_time && this.convert_to_seconds(work_time_list[0].begin_time)- this.convert_to_seconds(beginstr)<= 60*30)
+                {
+                    work_time_list[0].begin_time = beginstr
+
+                }
+                else    if(beginstr<work_time_list[0].begin_time)
+                {
+                    //30min 外不合并
+                    var timeslot_prev= {
+                        "begin_time":beginstr,
+                        "end_time":work_time_list[0].begin_time
+                    }
+                    work_time_list.push(timeslot_prev)
+
+                }
+                // 30min 内合并
+                if (   endstr >  lasttime &&  this.convert_to_seconds(endstr)-this.convert_to_seconds( lasttime)<= 60*30)
+                {
+                    work_time_list[endstr_index].end_time = endstr
+                }
+                else if(endstr >  lasttime)
+                {
+                    //30min 外不合并
+                    var timeslot_last= {
+                        "begin_time": lasttime,
+                        "end_time":endstr
+                    }
+                    work_time_list.push(timeslot_last)
+
+                }
+                return work_time_list
+            },
+            format_work_list(    work_time_list)
+            {
+                var reslist=""
+                for(var i=0;i<    work_time_list.length;i++)
+                {
+                    reslist= reslist+"<p>"+work_time_list[i].begin_time+"-"+work_time_list[i].end_time+"</p>"
+                }
+                return reslist
+            },
             postJob() {
+                var  work_time_list=[]
+                if(this.can_be_divided().length != 0)
+                {
+                    let config={
+                        title: '请确认是否自动拆班',
+                        okText: '自动拆班',
+                        cancelText: '不拆班',
+                        width:"300",
+                        content:"工作时间拆为"+this.format_work_list(this.divide_time(this.can_be_divided())),
+                        onOk: () => {
+                            //自动拆班
+                            work_time_list = this.divide_time(this.can_be_divided())
+                            this.sendpost(work_time_list)
+                        },
+
+                        onCancel: () => {
+                            work_time_list = this.not_divide_time()
+                            this.sendpost(work_time_list)
+                        },
+                        style:{
+
+                        }
+                    }
+                    this.$Modal.confirm(config)
+                }
+                else
+                {
+                    work_time_list = this.not_divide_time()
+                    this.sendpost(work_time_list)
+                }
+
+            },
+            sendpost(work_time_list)
+            {
+
                 var prefix = "/arrangement"
                 //测试用的url
                 this.axios({
                     headers: {
-                        'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                         'Content-type': 'application/json',
                         'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
                         'x-access-token': this.$token.loadToken().access_token,
@@ -490,18 +669,19 @@
                     data: {
                         shop_id: this.formValidate.shop,
                         job_name: this.formValidate.job_name,
-                        begin_date:  this.format_only_date(this.formValidate.begin_date),
-                        end_date: this.format_only_date( this.formValidate.end_date),
-                        begin_time:  this.format_time(this.formValidate.begin_time),
-                        end_time:  this.format_time(this.formValidate.end_time),
+                        begin_date:  this.format_only_date(this.formValidate.begin_date,this.formValidate.begin_time),
+                        end_date: this.format_only_date( this.formValidate.end_date,this.formValidate.end_time),
+                        begin_time: "00:00:00",
+                        end_time:  "00:00:00",
                         job_detail: this.formValidate.job_detail,
                         need_gender: this.gender_need,
                         need_amount: this.formValidate.need_amount,
-                        begin_apply_time: this.format_date(this.begin_apply_date),
-                        end_apply_time:  this.format_date(this.end_apply_date),
+                        begin_apply_time: this.format_date(this.formValidate.begin_apply_date,  this.formValidate.begin_apply_time),
+                        end_apply_time:  this.format_date(this.formValidate.end_apply_date,  this.formValidate.end_apply_time),
                         education: this.formValidate.education[0],
                         tag_list: this.formValidate.job_tag,
-                        salary: this.formValidate.salary
+                        salary: this.formValidate.salary,
+                        work_time:work_time_list,
                     }
                 }).then(response => {
                     console.log(response.data);
@@ -521,7 +701,6 @@
                         JSON.stringify(error);
                         console.log(error)
                     })
-
             },
             startTimeChange: function (e) { //设置工作开始时间
                 this.starttime = e;

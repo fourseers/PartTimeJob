@@ -1,11 +1,11 @@
 // pages/cv_inform/cv_inform.js
 const { $Toast } = require("../../dist/base/index");
+const app = getApp();
+import request from "../../api/request.js"
+import { host, register_data, cv_curd, user_info } from "../../api/url.js"
+var job_id;
 
 Page({
-
-  onLoad(options) {
-    console.log(options);
-  },
 
   /**
    * 页面的初始数据
@@ -14,6 +14,7 @@ Page({
     exp_index: ["经历1"],
     experience: [""],
     del_modal_visible: false,
+    title: "",
     name: "",
     name_error: false,
     gender: false,
@@ -23,7 +24,104 @@ Page({
     phone_error: false,
     identity: "",
     identity_error: false,
-    evaluation: ""
+    evaluation: "",
+    education_list: [],
+    education: "",
+    isLoading: false,
+  },
+
+  onLoad(options) {
+    job_id = options.id;
+  },
+
+  onReady() {
+    var req = new request();
+    req.getRequest(host + register_data, null).then(res => {
+      if (res.statusCode === 200) {
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          education_list: res.data.data.education,
+        })
+      }
+      else if (res.statusCode === 400) {
+        // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
+
+    req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        var info = res.data.data.info;
+        this.setData({
+          name: info.name,
+          gender: info.gender,
+          phone_number: info.phone,
+          identity: info.identity,
+          education: info.education
+        })
+      }
+      if (res.statusCode === 400) {
+        // TODO: 添加请求不返回200的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
+  },
+
+  onShow(options){
+    if(job_id === "0"){
+      //console.log("添加简历")
+    }
+    else{ //向后端请求该id的简历的信息
+      //console.log("修改简历")
+      var req = new request();
+      req.getRequest(host + cv_curd + "?cv_id=" + job_id, null, app.globalData.access_token).then(res => {
+        //console.log(res);
+        if(res.statusCode === 200) {
+          var data = res.data.data;
+          if (data.experiences.length > 1) {
+            var new_exp_index = this.data.exp_index;
+            for (var i in data.experiences) {
+              new_exp_index[i] = "经历" + (parseInt(i) + 1)
+            }
+            this.setData({
+              exp_index: new_exp_index
+            })
+          }
+          this.setData({
+            education: data.education,
+            experience: data.experiences,
+            gender: data.gender,
+            height: data.height,
+            identity: data.identity,
+            name: data.name,
+            phone_number: data.phone,
+            evaluation: data.statement,
+            title: data.title,
+            weight: data.weight
+          })
+        }
+        else if(res.statusCode === 400) {
+          
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  },
+
+  getTitle(e) {
+    this.setData({
+      title: e.detail.detail.value
+    })
   },
 
   //每次更新name的input组件后都重新获取name
@@ -93,6 +191,13 @@ Page({
         identity_error: false
       })
     }
+  },
+
+  //每次更新education的input组件后都重新获取education
+  getEducation(e) {
+    this.setData({
+      education: this.data.education_list[e.detail.value]
+    })
   },
 
   //每次更新evaluation的input组件后都重新获取evaluation
@@ -199,7 +304,75 @@ Page({
         return;
       }
     }
-    console.log("amd yes");
-  }
+    // 向后端请求，添加一条新的简历
+    var req = new request();
+    var post_data = {
+      education: this.data.education,
+      experiences: this.data.experience,
+      gender: !this.data.gender,
+      height: this.data.height,
+      identity: this.data.identity,
+      name: this.data.name,
+      phone: this.data.phone_number,
+      statement: this.data.evaluation,
+      title: this.data.title,
+      weight: this.data.weight
+    }
+    this.setData({
+      isLoading: true,
+    })
+    if (job_id === "0") {
+      req.postRequest(host + cv_curd, post_data, app.globalData.access_token).then(res => {
+        if (res.statusCode === 200) {
+          $Toast({
+            content: "保存简历成功",
+            type: "success"
+          });
+          setTimeout(function () {
+            wx.navigateBack({
 
+            })
+          }, 1000)
+        }
+        else if (res.statusCode === 400) {
+          $Toast({
+            content: "保存简历失败，请重试",
+            type: "error"
+          });
+        }
+        this.setData({
+          isLoading: false,
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+    else {
+      post_data.cv_id = job_id;
+      req.putRequest(host + cv_curd, post_data, app.globalData.access_token).then(res => {
+        if (res.statusCode === 200) {
+          $Toast({
+            content: "保存简历成功",
+            type: "success"
+          });
+          setTimeout(function () {
+            wx.navigateBack({
+
+            })
+          }, 1000)
+        }
+        else if (res.statusCode === 400) {
+          $Toast({
+            content: "保存简历失败，请重试",
+            type: "error"
+          });
+        }
+        this.setData({
+          isLoading: false,
+        })
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  }
 })

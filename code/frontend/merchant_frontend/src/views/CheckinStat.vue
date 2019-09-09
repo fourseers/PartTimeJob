@@ -2,13 +2,38 @@
 
 
     <Content class="content">
-        <Select v-model="formValidate.shop" placeholder="选择店铺"  style="width:200px;  margin:10px">
-            <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id"> {{ item.shop_name }}</Option>
-            <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changePage"></Page>
-        </Select>
-
-        <Table border :columns="columns7" :data="data6"></Table>
-
+        <Row>
+            <Col span="3">
+                <p>选择店铺</p>
+            </Col>
+            <Col span="3">
+                <Select v-model="formValidate.shop" placeholder="选择店铺"  style="width:200px;  ">
+                    <Option v-for="item in shops" :value="item.shop_id" :key="item.shop_id"> {{ item.shop_name }}</Option>
+                    <Page :total="total_elements_shop" :current="pagenum2"  @on-change="changePage"></Page>
+                </Select>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="3">
+                <p>开始年份月份</p>
+            </Col>
+            <Col span="4">
+                <Date-picker type="month" placeholder="Select month"    v-model="startmonth"></Date-picker>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="3">
+                <p>结束年份月份</p>
+            </Col>
+            <Col span="4">
+                <Date-picker type="month" placeholder="Select month"   v-model="endmonth" ></Date-picker>
+            </Col>
+        </Row>
+        <Row>
+            <Col span="3">
+                <Button type="primary" @click="handleSubmit()">提交</Button>
+            </Col>
+        </Row>
         <div class="chart">
             <div>
                 <div style="width: 45%;height:500px ;border:1px solid rgb(180,180,180); margin:10px" id="post_chart"></div>
@@ -24,15 +49,17 @@
     import {getShops} from '../util/getShops.js'
     export default {
         name: "CheckinStat",
-        data () {
+        data() {
             return {
-                total_elements_shop:10,
-                pagenum2:1,
+                total_elements_shop: 10,
+                pagenum2: 1,
 
-                shops:[],
+                shops: [],
                 formValidate: {
-                    shop:""
+                    shop: ""
                 },
+                startmonth: "",
+                endmonth: "",
                 columns7: [
                     {
                         title: 'Name',
@@ -42,6 +69,10 @@
                                 h('strong', params.row.name)
                             ]);
                         }
+                    },
+                    {
+                        title: '岗位名称',
+                        key: 'job_name'
                     },
                     {
                         title: '工作开始时间',
@@ -83,27 +114,11 @@
                             ]);
                         }
                     }],
-                data6: [
-                    {
-                        name: 'John Brown',
-                        begin_time:"2020-2-2",
-                        checkin_time:"2026-2-2",
-                        end_time:"2020-2-3",
-                        checkout_time:"2020-2-2"
-                    },
-                    {
-                        name: 'John Brown',
-                        begin_time:"2020-2-2",
-                        checkin_time:"2026-2-2",
-                        end_time:"2020-2-3",
-                        checkout_time:"2020-2-2"
-                    }
-                ],
-                echarts1_option:{
+                data6: [],
+                echarts1_option: {
                     color: ['#003366', '#006699', '#4cabce', '#e5323e'],
                     title: {
                         text: '员工打卡情况',
-                        subtext: '某个店铺'
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -117,16 +132,16 @@
                             saveAsImage: {}
                         }
                     },
-                    xAxis:  {
+                    xAxis: {
                         show: true,  // 是否显示
                         type: 'category',
-                        data: ["员工1","员工2","员工3","员工4"],
+                        data: [],
 
                         axisTick: {
                             alignWithLabel: true
                         },
                         axisLabel: {
-                            interval:0
+                            interval: 0
                         }
                     },
                     yAxis: {
@@ -139,95 +154,6 @@
                         }
                     },
                     series: [
-                        {
-                            name: '迟到率',
-                            type: 'bar',
-                            barGap: 0,
-                            label: this.labelOption,
-                            data: [2, 35, 50,22],
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true, //开启显示
-                                        position: 'top', //在上方显示
-
-                                        formatter: '{b}\n{c}%',
-                                        textStyle: { //数值样式
-                                            color: 'black',
-                                            fontSize: 16
-                                        }
-                                    }
-                                }
-                            },
-
-                        },
-                        {
-                            name: '早退率',
-                            type: 'bar',
-                            barGap: 0,
-                            label: this.labelOption,
-                            data: [2, 32, 31,22],
-
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true, //开启显示
-                                        position: 'top', //在上方显示,
-
-                                        formatter: '{b}\n{c}%',
-                                        textStyle: { //数值样式
-                                            color: 'black',
-                                            fontSize: 16
-                                        }
-                                    }
-                                }
-                            },
-                        },
-
-                        {
-                            name: '出勤率',
-                            type: 'bar',
-                            barGap: 0,
-                            label: this.labelOption,
-                            data: [2, 92, 70,22],
-
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true, //开启显示
-                                        position: 'top', //在上方显示,
-
-                                        formatter: '{b}\n{c}%',
-                                        textStyle: { //数值样式
-                                            color: 'black',
-                                            fontSize: 16
-                                        }
-                                    }
-                                }
-                            },
-                        },
-
-                        {
-                            name:  'Wetland',
-                            type: 'bar',
-                            barGap: 0,
-                            label: this.labelOption,
-                            data: [2, 32, 30,21],
-
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true, //开启显示
-                                        position: 'top', //在上方显示 ,
-                                        formatter: '{b}\n{c}%',
-                                        textStyle: { //数值样式
-                                            color: 'black',
-                                            fontSize: 16
-                                        }
-                                    }
-                                }
-                            },
-                        },
                     ]
 
                 }
@@ -236,18 +162,14 @@
 
 //挂载前初始化echarts实例
         mounted: function () {
-            // 基于准备好的dom，初始化echarts实例
-            let myChart = echarts.init(document.getElementById('post_chart'))
-            // 绘制图表，this.echarts1_option是数据
-            myChart.setOption(this.echarts1_option)
         },
         created: function () {
             if (!this.$root.logged) {
                 this.$Message.warning('请登录');
+                this.$router.push({name: "login"})
             } else {
-
                 //get shops
-                getShops().then(res => {
+                getShops(0).then(res => {
                         console.log(res.data.content)
                         this.shops = res.data.content
                         this.total_elements_shop = res.data.total_elements
@@ -270,13 +192,124 @@
             }
 
         },
-        methods:{
+        methods: {
+            handleSubmit() {
 
-            mockTableData1 (pagenum) {
+
+                var prefix = "/arrangement"
+                this.axios({
+                    headers: {
+                        'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
+                        'Content-type': 'application/json',
+                        'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng==',
+                        'x-access-token': this.$token.loadToken().access_token,
+                    },
+                    method: 'get',
+                    url: prefix + "/merchant/work/status",
+                    params: {
+                        from_year: Number(this.startmonth.getFullYear()),
+                        from_month: Number(this.startmonth.getMonth() + 1),
+                        to_year: Number(this.endmonth.getFullYear()),
+                        to_month: Number(this.endmonth.getMonth() + 1),
+                        shop_id:this.formValidate.shop
+                    }
+                }).then(response => {
+                    if (response.status === 200) {
+
+                        console.log( response.data.data  )
+                        var ob= {
+                                name: ' ',
+                                type: 'bar',
+                                barGap: 0,
+                                label: this.labelOption ,
+                                data: [ ],
+                                itemStyle: {
+                                    normal: {
+                                        label: {
+                                            show: true, //开启显示
+                                            position: 'top', //在上方显示
+                                            formatter:'{c}%',
+                                            textStyle: { //数值样式
+                                                color: 'black',
+                                                fontSize: 16
+                                            }
+                                        }
+                                    }
+                                },
+                            }
+                        ob.name = "签到率"
+                        ob.data.push(response.data.data.attend_rate*100 )
+                        this.echarts1_option.series.push(ob);
+                        var ob2= {
+                            name: ' ',
+                            type: 'bar',
+                            barGap: 0,
+                            label: this.labelOption,
+                            data: [ ],
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示
+                                        formatter:'{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
+                        }
+                        ob2.name = "迟到率"
+
+                        ob2.data.push(response.data.data.late_rate*100 )
+                        this.echarts1_option.series.push(ob2);
+                        var ob3= {
+                            name: ' ',
+                            type: 'bar',
+                            barGap: 0,
+                            label: this.labelOption,
+                            data: [ ],
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true, //开启显示
+                                        position: 'top', //在上方显示
+                                        formatter:'{c}%',
+                                        textStyle: { //数值样式
+                                            color: 'black',
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            },
+                        }
+                        ob3.name = "早退率"
+                        ob3.data.push(response.data.data.leave_early_rate*100)
+                        this.echarts1_option.series.push(ob3);
+                        var shopname=""
+                        for (var i=0;i<this.shops.length;i++) {
+                                if (this.formValidate.shop ==this.shops[i].shop_id)
+                                {
+                                    shopname = this.shops[i].shop_name
+                                }
+                        }
+                        this.echarts1_option.xAxis.data.push(shopname)
+
+                        let myChart = echarts.init(document.getElementById('post_chart'))
+                        // 绘制图表，this.echarts1_option是数据
+                        myChart.setOption(this.echarts1_option)
+                    }
+                })
+                    .catch(error => {
+
+                    })
+            },
+            mockTableData1(pagenum) {
                 //get shops
                 getShops(pagenum).then(res => {
-                        console.log( res.data)
-                        this.shops  = res.data.content
+                        console.log(res.data)
+                        this.shops = res.data.content
                     },
                     error => {
                         if (error.response) {
@@ -290,12 +323,11 @@
                         }
 
                     }
-
                 )
-            },changePage (index) {
+            }, changePage(index) {
                 // The simulated data is changed directly here, and the actual usage scenario should fetch the data from the server
 
-                this.mockTableData1(index-1);
+                this.mockTableData1(index - 1);
             },
         }
     }
@@ -306,5 +338,11 @@
         margin:10px 50px 50px;
         background-color: #fff;
         height:500px;
+    }
+
+    .ivu-btn {
+        color: #fff;
+        background-color: #82ccd2;
+        border-color: #c8d6e5;
     }
 </style>

@@ -1,5 +1,7 @@
 FROM openjdk:8-jre-alpine
-VOLUME /tmp
-ADD target/eureka-server-0.0.1-SNAPSHOT.jar eureka-server-0.0.1-SNAPSHOT.jar
+COPY eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar /app/
 EXPOSE 8761 9761
-ENTRYPOINT ["java","-jar","eureka-server-0.0.1-SNAPSHOT.jar"]
+ENV JAVA_OPTS=""
+ADD wait /wait
+RUN chmod +x /wait
+ENTRYPOINT ["sh", "-c", "/wait && java $JAVA_OPTS -jar /app/eureka-server-0.0.1-SNAPSHOT.jar"]

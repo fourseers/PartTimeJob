@@ -1,5 +1,4 @@
 <template>
-
     <Layout>
         <Content class="content" v-if="!this.$root.logged  " >
             <br>
@@ -17,7 +16,7 @@
                 </FormItem>
                 <br>
                 <FormItem>
-                    <Button class="ivu-btn" @click="handleSubmit('formInline')" >登录</Button>
+                    <Button class="ivu-btn" @click="handleSubmit()" >登录</Button>
                 </FormItem>
             </Form>
         </Content>
@@ -31,9 +30,12 @@
 <script>
 
     import axios from 'axios/index';
-
+    import { Form } from 'iview';
     export default {
         name: 'Login',
+        components: {
+            'Form': Form
+        },
         data() {
             return {
                 state: "",
@@ -54,55 +56,55 @@
             }
         },
         methods: {
-            handleSubmit(name) {
-                this.$refs[name].validate((valid) => {
+            handleSubmit() {
+                this.$refs.formInline.validate((valid) => {
                     if (valid) {
-                        //this.$Message.success('Success!');
-                        this.login(this.formInline.user, this.formInline.password).then(res => {
-                                console.log(res);
-                                this.$token.savetoken(res.data);
-                                this.$Message.success('登录成功');
-                                console.log(this.$token.loadToken());
-                                this.$root.logged =true;
-                                this.$root.admin = true;
-                                this.$router.push({ name: "banuser"})
-                            },
-                            error => {
-
-                                console.log(error.response);
-                                if (error.response) {
-                                    if (error.response.data.status === 400) {
-                                        this.$Message.error('用户名或者密码错误');
-                                    }
-
-                                    if (error.response.data.status === 401) {
-                                        this.$Message.error('auth错误');
-                                    }
-                                    if (error.response.data.status === 500) {
-                                        this.$Message.error('服务器错误');
-                                    }
-                                }
-                                else
-                                {
-                                    this.$Message.error('登录失败');
-                                }
-
-                                // 执行失败的回调函数
-                            });
-
+                        this.login_process(this.formInline.user, this.formInline.password)
                     } else {
                         this.$Message.error('Fail!');
                     }
+                }).catch(error => {
+                    console.log( error);
+                });
+            },
+            //this.$Message.success('Success!');
+            login_process( user,  password){
+                return new Promise((resolve, reject) => {
+                    this.login(user, password).then( res=> {
+                            console.log(res);
+                            this.$token.savetoken(res.data);
+                            this.$Message.success('登录成功');
+                            console.log(this.$token.loadToken());
+                            this.$root.logged = true;
+                            this.$root.admin=true;
+                            console.log(   this.$root.admin);
+                            this.$router.push({name: "banuser"})
+                            resolve(res);
+                        },
+                        error => {
+                            console.log(error.response);
+                            if (error.response) {
+                                if (error.response.data.status === 400) {
+                                    this.$Message.error('用户名或者密码错误');
+                                }
+                                else {
+                                    this.$Message.error('登录失败');
+                                }
+                            }
+
+                            reject(error.response.data.status);
+                        }
+                    );
                 })
             },
-            login(username, password) {
-                const url = 'http://202.120.40.8:30552/auth/merchant/login';
+            login(username, password){
+                const url = 'http://47.103.112.85:30552/auth/merchant/login';
                 return new Promise((resolve, reject) => {
                     axios({
                         method: 'POST',
                         url,
                         headers: {
-                            'Access-Control-Allow-Origin': "http://202.120.40.8:30552",
+                            'Access-Control-Allow-Origin': "http://47.103.112.85:30552",
                             'Content-type': 'application/json',
                             'Authorization': 'Basic d2ViQ2xpZW50OjEyMzQ1Ng=='
                         },
@@ -113,8 +115,6 @@
                     }).then(({ status, data }) => {
                         if (status === 200) {
                             resolve(data);
-                        } else {
-                            reject( data);
                         }
                     }).catch(error => {
                         reject( error);
@@ -124,7 +124,6 @@
         }
     }
 </script>
-
 
 <style scoped>
     .content{
@@ -137,4 +136,5 @@
         border-color: #c8d6e5;
     }
 </style>
+
 

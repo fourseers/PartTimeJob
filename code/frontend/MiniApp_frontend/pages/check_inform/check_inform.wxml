@@ -11,8 +11,9 @@
     <i-cell>打卡地点：{{address}}</i-cell>
   </i-cell-group>
 </i-panel>
-<i-button class="check-button" bind:click="handleCheck" type="success">
-  <text>打卡</text>
+<i-button class="check-button" bind:click="handleClick" type="success">
+  <text>选择</text>
 </i-button>
 
+<i-action-sheet visible="{{ action_visible }}" actions="{{ actions }}" show-cancel bind:cancel="handleCancel" bind:click="handleClickItem" />
 <i-toast id="toast" />

@@ -1,5 +1,6 @@
 {
   "usingComponents": {
+    "i-spin": "../../dist/spin/index",
     "i-tabs": "../../dist/tabs/index",
     "i-tab": "../../dist/tab/index",
     "i-toast": "../../dist/toast/index",
@@ -8,7 +9,9 @@
     "i-tag": "../../dist/tag/index",
     "i-cell-group": "../../dist/cell-group/index",
     "i-cell": "../../dist/cell/index",
-    "i-panel": "../../dist/panel/index"
+    "i-panel": "../../dist/panel/index",
+    "i-load-more": "../../dist/load-more/index",
+    "i-modal": "../../dist/modal/index"
   },
   "enablePullDownRefresh": true
 }

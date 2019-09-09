@@ -1,1 +1,11 @@
 /* pages/cv_list/cv_list.wxss */
+
+.add-button {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+
+.container {
+  margin-bottom: 128rpx;
+}

@@ -1242,11 +1242,14 @@ export function setSelectedDays(selected, componentId) {
     });
     newSelectedDay = days;
   } else if (selected && selected.length) {
+    /*
     if (selectedDay && selectedDay.length) {
       newSelectedDay = uniqueArrayByDate(selectedDay.concat(selected));
     } else {
       newSelectedDay = selected;
     }
+    */
+    newSelectedDay = selected;
     const { year: curYear, month: curMonth } = days[0];
     const currentSelectedDays = [];
     newSelectedDay.forEach(item => {
@@ -1260,6 +1263,52 @@ export function setSelectedDays(selected, componentId) {
       ) {
         item.choosed = true;
         item.showTodoLabel = false;
+      }
+    });
+  }
+  setCalendarConfig('multi', true);
+  setData({
+    'calendar.days': days,
+    'calendar.selectedDay': newSelectedDay
+  });
+}
+
+export function setUnselectedDays(selected, componentId) {
+  bindCurrentComponent(componentId, this);
+  const config = getCalendarConfig();
+  if (!config.multi) {
+    return warn('单选模式下不能设置多日期选中，请配置 multi');
+  }
+  const { selectedDay, days } = getData('calendar');
+  let newSelectedDay = [];
+  if (!selected) {
+    days.map(item => {
+      item.choosed = false;
+      item.showTodoLabel = true;
+    });
+    newSelectedDay = days;
+  } else if (selected && selected.length) {
+    /*
+    if (selectedDay && selectedDay.length) {
+      newSelectedDay = uniqueArrayByDate(selectedDay.concat(selected));
+    } else {
+      newSelectedDay = selected;
+    }
+    */
+    newSelectedDay = selected;
+    const { year: curYear, month: curMonth } = days[0];
+    const currentSelectedDays = [];
+    newSelectedDay.forEach(item => {
+      if (+item.year === +curYear && +item.month === +curMonth) {
+        currentSelectedDays.push(`${item.year}-${item.month}-${item.day}`);
+      }
+    });
+    days.map(item => {
+      if (
+        currentSelectedDays.includes(`${item.year}-${item.month}-${item.day}`)
+      ) {
+        item.choosed = false;
+        item.showTodoLabel = true;
       }
     });
   }
@@ -1285,7 +1334,8 @@ function mountEventsOnPage(page) {
     setTodoLabels,
     deleteTodoLabels,
     clearTodoLabels,
-    setSelectedDays
+    setSelectedDays,
+    setUnselectedDays
   };
 }
 

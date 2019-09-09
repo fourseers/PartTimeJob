@@ -1,4 +1,8 @@
 // pages/cv_list/cv_list.js
+const app = getApp();
+import request from "../../api/request.js";
+import { host, cv_list } from "../../api/url.js";
+
 Page({
 
   /**
@@ -17,5 +21,23 @@ Page({
     ]
   },
 
+  onShow() {
+    var req = new request();
+    req.getRequest(host + cv_list, null, app.globalData.access_token).then(res => {
+      if(res.statusCode === 200) {
+        this.setData({
+          cv_list: res.data.data
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  },
+
+  handleAdd() {
+    wx.navigateTo({
+      url: "/pages/cv_inform/cv_inform?id=0",
+    })
+  }
 
 })

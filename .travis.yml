@@ -31,42 +31,37 @@ jobs:
     if: type = pull_request
     name: arrangement
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../arrangement
+    - cd arrangement
     - chmod +x ./mvnw
   - name: billing
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../billing
+    - cd billing
     - chmod +x ./mvnw
   - name: warehouse
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../warehouse
-    - chmod +x ./mvnw
-  - name: common lib
-    if: type = pull_request
-    before_install:
-    - cd code/backend/common
+    - cd warehouse
     - chmod +x ./mvnw
   - name: auth
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../auth
+    - cd auth
     - chmod +x ./mvnw
   - name: gateway
     if: type = pull_request
     before_install:
-    - cd code/backend/common
+    - cd code/backend
     - mvn clean install -DskipTests=true -B -V
-    - cd ../gateway
+    - cd gateway
     - chmod +x ./mvnw
   - stage: deploy
     if: branch = develop AND type != pull_request

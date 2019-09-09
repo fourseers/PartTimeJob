@@ -3,10 +3,7 @@ package com.fourseers.parttimejob.arrangement.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fourseers.parttimejob.arrangement.repository.CVRepository;
-import com.fourseers.parttimejob.arrangement.repository.JobRepository;
-import com.fourseers.parttimejob.arrangement.repository.ShopRepository;
-import com.fourseers.parttimejob.arrangement.repository.WechatUserRepository;
+import com.fourseers.parttimejob.arrangement.repository.*;
 import com.fourseers.parttimejob.common.entity.*;
 import org.junit.After;
 import org.junit.Before;
@@ -16,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,10 +25,10 @@ import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -45,8 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@Transactional
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class WechatUserJobControllerTest {
 
     @Autowired
@@ -57,6 +53,9 @@ public class WechatUserJobControllerTest {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -71,6 +70,7 @@ public class WechatUserJobControllerTest {
     private String invalidUserHeader;
     private String userCVId;
     private Integer goodJobId, noEduJobId, outdateJobId, fullJobId, femaleJobId;
+    private String goodJobIdentifier;
     private Integer stoppedJobId;
 
     @Value("${app.wechat_user_prefix}")
@@ -118,6 +118,7 @@ public class WechatUserJobControllerTest {
 
         Job job = new Job();
         job.setNeedAmount(50);
+        job.setIdentifier(UUID.randomUUID().toString());
         job.setJobDetail("job detail...");
         job.setBeginApplyTime(yesterday);
         job.setEndApplyTime(tomorrow);
@@ -132,6 +133,7 @@ public class WechatUserJobControllerTest {
         job.setNeedGender(2);
         jobRepository.save(job);
         goodJobId = job.getJobId();
+        goodJobIdentifier = job.getIdentifier();
 
         job = new Job();
         job.setNeedAmount(50);
@@ -226,53 +228,53 @@ public class WechatUserJobControllerTest {
      * Method: getJobList(@RequestParam(required = false) Float longitude, @RequestParam(required = false) Float latitude, @RequestHeader(defaultValue = "0") int pageCount, @RequestHeader("x-internal-token") String token)
      *
      */
-    @Test
-    public void testGetJobListSuccess() throws Exception {
-        MvcResult result = mockMvc.perform(get("/user/jobs")
-                .header("x-internal-token", userHeader))
-                .andExpect(status().isOk())
-                .andReturn();
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        JSONObject data = response.getJSONObject("data");
-        JSONArray content = data.getJSONArray("content");
-        // pagination
-        assertTrue(content.size() < 20);
-        // content based on ids
-        assertEquals(1, content.getJSONObject(0).getIntValue("job_id"));
-    }
+//    @Test
+//    public void testGetJobListSuccess() throws Exception {
+//        MvcResult result = mockMvc.perform(get("/user/jobs")
+//                .header("x-internal-token", userHeader))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+//        JSONObject data = response.getJSONObject("data");
+//        JSONArray content = data.getJSONArray("content");
+//        // pagination
+//        assertTrue(content.size() < 20);
+//        // content based on ids
+//        assertEquals(1, content.getJSONObject(0).getIntValue("job_id"));
+//    }
 
-    @Transactional
-    @Test
-    public void testGetJobListViaGeoLocation() throws Exception {
-        float longitude = 120, latitude = 30;
-        MvcResult result = mockMvc.perform(get("/user/jobs")
-                .param("longitude", String.valueOf(longitude))
-                .param("latitude", String.valueOf(latitude))
-                .header("x-internal-token", userHeader))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        JSONObject data = response.getJSONObject("data");
-        JSONArray content = data.getJSONArray("content");
-        // pagination
-        assertTrue(content.size() < 20);
-        // content based on geolocation
-        float prev = 0;
-        // test sorting
-        for (int i = 0; i < content.size(); i++) {
-            JSONObject curObj = content.getJSONObject(i);
-            // figure out if it's the right order
-            Integer jobId = curObj.getInteger("job_id");
-            assertNotNull(jobId);
-            Job job = jobRepository.getOne(jobId);
-            assertNotNull(job);
-            Shop shop = job.getShop();
-            float cur = Math.abs(shop.getLatitude() - latitude) +
-                    Math.abs(shop.getLongitude() - longitude);
-            assertTrue(cur >= prev);
-        }
-    }
+//    @Transactional
+//    @Test
+//    public void testGetJobListViaGeoLocation() throws Exception {
+//        float longitude = 120, latitude = 30;
+//        MvcResult result = mockMvc.perform(get("/user/jobs")
+//                .param("longitude", String.valueOf(longitude))
+//                .param("latitude", String.valueOf(latitude))
+//                .header("x-internal-token", userHeader))
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+//        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+//        JSONObject data = response.getJSONObject("data");
+//        JSONArray content = data.getJSONArray("content");
+//        // pagination
+//        assertTrue(content.size() < 20);
+//        // content based on geolocation
+//        float prev = 0;
+//        // test sorting
+//        for (int i = 0; i < content.size(); i++) {
+//            JSONObject curObj = content.getJSONObject(i);
+//            // figure out if it's the right order
+//            Integer jobId = curObj.getInteger("job_id");
+//            assertNotNull(jobId);
+//            Job job = jobRepository.getOne(jobId);
+//            assertNotNull(job);
+//            Shop shop = job.getShop();
+//            float cur = Math.abs(shop.getLatitude().floatValue() - latitude) +
+//                    Math.abs(shop.getLongitude().floatValue() - longitude);
+//            assertTrue(cur >= prev);
+//        }
+//    }
 
     @Test
     public void testGetJobListIncompleteGeoLocation() throws Exception {
@@ -318,14 +320,16 @@ public class WechatUserJobControllerTest {
     @Test
     public void testGetJobSuccess() throws Exception {
         MvcResult result = mockMvc.perform(get("/user/job")
-                .param("job_id", goodJobId.toString())
+                .param("identifier", goodJobIdentifier)
                 .header("x-internal-token", userHeader))
                 .andExpect(status().isOk())
                 .andReturn();
 
         JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
-        JSONObject data = response.getJSONObject("data");
-        assertNotNull(data);
+        JSONArray dataAll = response.getJSONArray("data");
+        assertNotNull(dataAll);
+        assertEquals(1, dataAll.size());
+        JSONObject data = dataAll.getJSONObject(0);
         JSONObject shop = data.getJSONObject("shop");
         assertNotNull(shop);
         assertNotNull(shop.getFloat("longitude"));
@@ -357,146 +361,15 @@ public class WechatUserJobControllerTest {
     @Test
     public void testGetJobNoAuthToken() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("job_id", "1"))
+                .param("job_id", goodJobId.toString()))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
     public void testGetJobInvalidAuthToken() throws Exception {
         mockMvc.perform(get("/user/job")
-                .param("job_id", goodJobId.toString())
+                .param("identifier", goodJobIdentifier)
                 .header("x-internal-token", invalidUserHeader))
                 .andExpect(status().isForbidden());
     }
-
-    @Test
-    public void testUserApplyJobSuccess() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", goodJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().isOk())
-                .andReturn();
-    }
-
-
-    @Test
-    public void testUserApplyJobNoJobId() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoCV() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", goodJobId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobMissedApplicationDate() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", outdateJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoEdu() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", noEduJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-
-    @Test
-    public void testUserApplyJobInvalidCV() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", noEduJobId)
-                .fluentPut("cv_id", 10000);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobInvalidJob() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", 1000)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobNoMoreSeats() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", fullJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobDifferentGender() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", femaleJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-    @Test
-    public void testUserApplyJobManuallyStopped() throws Exception {
-        JSONObject req = new JSONObject()
-                .fluentPut("job_id", stoppedJobId)
-                .fluentPut("cv_id", userCVId);
-        MvcResult result = mockMvc.perform(post("/user/apply")
-                .content(req.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("x-internal-token", userHeader))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
-    }
-
-} 
+}

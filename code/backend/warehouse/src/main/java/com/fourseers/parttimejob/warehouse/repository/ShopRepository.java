@@ -34,4 +34,5 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
     @Query("select shop.id as shopId, shop.shopName as shopName from Shop shop inner join MerchantUser merchantUser " +
            "on merchantUser.username = ?1 and shop.company = merchantUser.company")
     List<ShopBriefProjection> findShopBriefByUsername(String username);
+
 }

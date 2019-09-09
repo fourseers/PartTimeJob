@@ -1,11 +1,13 @@
 package com.fourseers.parttimejob.arrangement.controller;
 
-import com.fourseers.parttimejob.arrangement.dto.ApplyDto;
+import com.fourseers.parttimejob.arrangement.dto.AppliedTimeDto;
+import com.fourseers.parttimejob.arrangement.dto.SearchResultDto;
 import com.fourseers.parttimejob.arrangement.projection.JobDetailedInfoProjection;
 import com.fourseers.parttimejob.arrangement.service.JobService;
 import com.fourseers.parttimejob.arrangement.service.WechatUserService;
 import com.fourseers.parttimejob.common.entity.Job;
 import com.fourseers.parttimejob.common.entity.WechatUser;
+import com.fourseers.parttimejob.common.util.GeoUtil;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.common.util.UserDecoder;
@@ -13,7 +15,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.*;
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -39,16 +42,26 @@ public class WechatUserJobController {
     @Autowired
     private WechatUserService wechatUserService;
 
-    @ApiOperation(value = "Get paged available jobs for user.")
+    @ApiOperation(value = "Get paged available jobs for user according to the filter provided.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
             @ApiResponse(code = 400, message = "invalid parameters")
     })
     @GetMapping("/jobs")
     public ResponseEntity<Response<Page<Job>>> getJobList(
-            @RequestParam(required = false) @Range(min=-180, max=180)  Float longitude,
-            @RequestParam(required = false) @Range(min=-90, max=90) Float latitude,
-            @RequestHeader(defaultValue = "0") int pageCount,
+            @RequestParam(required = false) @DecimalMin("-180") @DecimalMax("180") BigDecimal longitude,
+            @RequestParam(required = false) @DecimalMin("-90") @DecimalMax("90") BigDecimal latitude,
+            @ApiParam("Geo location range in kilometers.")
+                @RequestParam(required = false, defaultValue = "30.0") @Positive Double geoRange,
+            @ApiParam("How many days before starting to work.")
+                @RequestParam(required = false) @Positive Integer daysToCome,
+            @ApiParam("Salary range in CNY per day.")
+                @RequestParam(required = false) @PositiveOrZero Double minSalary,
+            @ApiParam("Salary range in CNY per day.")
+                @RequestParam(required = false) @Positive Double maxSalary,
+            @RequestParam(defaultValue = "0") int entryOffset,
+            @ApiParam(value = "Tag filtered.")
+                @RequestParam(required = false) String tag,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -57,15 +70,43 @@ public class WechatUserJobController {
                 UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
-        if(longitude == null && latitude == null) {
-            return ResponseBuilder.build(OK, jobService.findJobs(user, pageCount));
+
+        if(longitude == null ^ latitude == null)
+            return ResponseBuilder.build(BAD_REQUEST, null, "Longitude and latitude should appear together.");
+        else if(minSalary == null ^ maxSalary == null)
+            return ResponseBuilder.build(BAD_REQUEST, null, "minSalary and maxSalary should appear together.");
+
+
+        GeoUtil.Point position = null;
+        if(longitude != null)
+            position = new GeoUtil.Point(longitude, latitude);
+        return ResponseBuilder.build(OK,
+                jobService.queryJobs(position, geoRange, daysToCome, minSalary, maxSalary, tag, entryOffset));
+    }
+
+    @ApiOperation(value = "Get paged available jobs for user using elastic stack.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "invalid parameters")
+    })
+    @GetMapping("/jobs-smart")
+    public ResponseEntity<Response<SearchResultDto>> getJobListSmart(
+            @RequestParam @DecimalMin("-180") @DecimalMax("180") BigDecimal longitude,
+            @RequestParam @DecimalMin("-90") @DecimalMax("90") BigDecimal latitude,
+            @RequestParam(required = false, defaultValue = "0") Integer entryOffset,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
+        if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
+            return ResponseBuilder.buildEmpty(BAD_REQUEST);
+        WechatUser user = wechatUserService.getUserByOpenid(
+                UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
+        if(user == null)
+            return ResponseBuilder.buildEmpty(FORBIDDEN);
+        try {
+            return ResponseBuilder.build(OK, jobService.findJobsByGeoLocation(user, true, longitude, latitude, entryOffset));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
-        else if(longitude == null || latitude == null)
-            return ResponseBuilder.build(BAD_REQUEST, null,
-                    "Longitude and latitude should both appear.");
-        else
-            return ResponseBuilder.build(OK,
-                    jobService.findJobsByGeoLocation(user, longitude, latitude, pageCount));
     }
 
     @ApiOperation(value = "Get detailed information for one job.")
@@ -74,8 +115,8 @@ public class WechatUserJobController {
             @ApiResponse(code = 400, message = "Invalid job id")
     })
     @GetMapping("/job")
-    public ResponseEntity<Response<JobDetailedInfoProjection>> getJobDetail(
-            @RequestParam("job_id") @Min(1) int jobId,
+    public ResponseEntity<Response<List<JobDetailedInfoProjection>>> getJobDetail(
+            @RequestParam("identifier") String identifier,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
     ) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
@@ -85,38 +126,30 @@ public class WechatUserJobController {
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
 
-        return ResponseBuilder.build(OK, jobService.getJobDetail(jobId));
+        return ResponseBuilder.build(OK, jobService.getJobDetail(identifier));
     }
 
-    @ApiOperation(value = "User apply for job with a set of cv.")
+    @ApiOperation(value = "Get applied dates for one job.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Application success"),
-            @ApiResponse(code = 400, message = "Invalid application. Consult message field for further info.")
+            @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "invalid job id")
     })
-    @PostMapping(value = "apply")
-    public ResponseEntity<Response<Void>> applyJob(
-            @ApiParam("Param in json, contains jobId and cvId") @RequestBody ApplyDto params,
-            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token
-    ) {
+    @GetMapping("/job/applied-time")
+    public ResponseEntity<Response<AppliedTimeDto>> getAppliedDates(
+            @ApiParam @RequestParam("job_id") Integer jobId,
+            @ApiParam(hidden = true) @RequestHeader("x-internal-token") String token) {
         if(!UserDecoder.isWechatUser(token, WECHAT_USER_PREFIX))
             return ResponseBuilder.buildEmpty(BAD_REQUEST);
         WechatUser user = wechatUserService.getUserByOpenid(
                 UserDecoder.getWechatUserOpenid(token, WECHAT_USER_PREFIX));
         if(user == null)
             return ResponseBuilder.buildEmpty(FORBIDDEN);
-        Integer jobId = params.getJobId();
-        String cvId = params.getCvId();
-        if(jobId == null || cvId == null) {
-            return ResponseBuilder.build(BAD_REQUEST, null, "Missing params.");
-        }
         try {
-            jobService.apply(user, jobId, cvId);
-            return ResponseBuilder.buildEmpty(OK);
+            return ResponseBuilder.build(OK, jobService.getJobAppliedTime(jobId));
         } catch (RuntimeException e) {
             return ResponseBuilder.build(BAD_REQUEST, null, e.getMessage());
         } catch (Exception e) {
             return ResponseBuilder.build(INTERNAL_SERVER_ERROR, null, e.getMessage());
         }
     }
-
 }

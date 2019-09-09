@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BillingControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     public void getBillingsOnePageSuccess() throws Exception {
@@ -33,6 +33,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -49,6 +51,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "666")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -64,6 +68,8 @@ public class BillingControllerTest {
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "-1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -74,11 +80,31 @@ public class BillingControllerTest {
     }
 
     @Test
+    public void getBillingsPageNoBilling() throws Exception {
+        String bossname = "罗永浩";
+
+        MvcResult result = mockMvc.perform(get("/merchant/billing")
+                .header("x-internal-token", bossname)
+                .param("from", "2018-07-01")
+                .param("to", "2018-07-31")
+                .param("page_count", "0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("no bills", response.getString("message"));
+    }
+
+    @Test
     public void getBillingsPageNoCompany() throws Exception {
         String bossname = "poor user";
 
         MvcResult result = mockMvc.perform(get("/merchant/billing")
                 .header("x-internal-token", bossname)
+
+                .param("from", "2019-07-01")
+                .param("to", "2019-07-31")
                 .param("page_count", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400))
@@ -178,6 +204,114 @@ public class BillingControllerTest {
             .fluentPut("method", "微信支付")
             .fluentPut("meta", null);
         MvcResult result = mockMvc.perform(post("/merchant/billing/pay")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkSuccess() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("success", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkNotExist() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 666);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work not exist or not belong to current company", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkAlreadyPaid() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 1);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work already paid", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkAlreadyRejected() throws Exception {
+        String bossname = "罗永浩";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 4);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("work already rejected", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkUserNoCompany() throws Exception {
+        String bossname = "Poor user";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2)
+                .fluentPut("payment", 100)
+                .fluentPut("method", "微信支付")
+                .fluentPut("meta", null);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
+                .header("x-internal-token", bossname)
+                .content(body.toString())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(400))
+                .andReturn();
+
+        JSONObject response = JSON.parseObject(result.getResponse().getContentAsString());
+        assertEquals("user does not belong to any company", response.getString("message"));
+    }
+
+    @Test
+    public void rejectWorkNotBelongTo() throws Exception {
+        String bossname = "Tim Cook";
+
+        JSONObject body = new JSONObject();
+        body.fluentPut("work_id", 2)
+                .fluentPut("payment", 100)
+                .fluentPut("method", "微信支付")
+                .fluentPut("meta", null);
+        MvcResult result = mockMvc.perform(post("/merchant/billing/reject")
                 .header("x-internal-token", bossname)
                 .content(body.toString())
                 .contentType(MediaType.APPLICATION_JSON))

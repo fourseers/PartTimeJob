@@ -3,6 +3,7 @@ const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js";
 import { host, user_info, register_data, modify_info } from "../../api/url.js";
+import { CITY_LIST } from "../../locale/citydata.js"
 
 Page({
 
@@ -35,7 +36,7 @@ Page({
     city_code: ""
   },
 
-  onShow(){
+  onReady(){
     var req = new request();
 
     // 向后台获取注册元数据, 包括文化水平list、tags list
@@ -61,6 +62,21 @@ Page({
       // console.log(err);
       // TODO: 添加请求失败的处理
     });
+    
+  },
+
+  onShow(){
+    // 在通过api调用数据后再更新从city selector获得的数据
+    if (app.globalData.city !== null) {
+      console.log(app.globalData.city);
+      this.setData({
+        city: app.globalData.city,
+        city_code: app.globalData.code,
+        city_modified: true,
+      })
+      app.globalData.city = null;
+      app.globalData.code = null;
+    }
   },
 
   getUserInfo() {
@@ -91,25 +107,21 @@ Page({
           tags: toChosen
         })
         if (app.globalData.city === null) {
-          console.log(app.globalData.city);
+          // console.log(app.globalData.city);
+          var city_name = "";
+          for (var i in CITY_LIST) {
+            if (CITY_LIST[i].code === info.city) {
+              city_name = CITY_LIST[i].city;
+              break;
+            }
+          }
           this.setData({
-            city: info.city
+            city: city_name
           })
         }
       }
       if (res.statusCode === 400) {
         // TODO: 添加请求不返回200的处理
-      }
-      // 在通过api调用数据后再更新从city selector获得的数据
-      if (app.globalData.city !== null) {
-        console.log(app.globalData.city);
-        this.setData({
-          city: app.globalData.city,
-          city_code: app.globalData.code,
-          city_modified: true,
-        })
-        app.globalData.city = null;
-        app.globalData.code = null;
       }
     }).catch(err => {
       // console.log(err);
@@ -289,7 +301,7 @@ Page({
       isModified = true;
     }
     if (this.data.city_modified) {
-      postData.city = this.data.city;
+      postData.city = this.data.city_code;
       isModified = true;
     }
     if (this.data.education_modified) {
@@ -315,7 +327,7 @@ Page({
       this.setData({
         isLoading: true,
       })
-      console.log(postData);
+      //console.log(postData);
       req.postRequest(host + modify_info, JSON.stringify(postData), app.globalData.access_token).then(res => {
         if (res.statusCode === 200) {
           app.globalData.showModifySuccess = true;

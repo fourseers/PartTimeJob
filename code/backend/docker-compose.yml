@@ -1,0 +1,200 @@
+version: '3'
+services:
+  mysql-inner:
+    image: mysql
+    hostname: mysql
+    # env_file: .env
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --sql-mode="" --lower_case_table_names=1 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake
+    ports:
+      - "3306:3306"
+    networks:
+      - webnet
+
+  mongo:
+    image: mongo
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - webnet
+
+  redis:
+    image: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - webnet
+
+  elasticsearch:
+    image: localhost:5000/myelastic
+    hostname: elasticsearch
+    ports:
+      - "$ES_REST_PORT:9200"
+      - "$ES_COMM_PORT:9300"
+    networks:
+      - webnet
+
+  logstash:
+    image: localhost:5000/mylogstash
+    build:
+      context: ./deploy-script
+      dockerfile: Dockerfile-logstash
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:$ES_REST_PORT"
+    ports:
+      - "$LOGSTASH_PORT:9600"
+    networks:
+      - webnet
+
+  kibana:
+    image: kibana:7.2.0
+    hostname: kibana
+    ports:
+      - "$KIBANA_PORT:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch
+    networks:
+      - webnet
+
+  eureka:
+    image: localhost:5000/eureka
+    hostname: eureka
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
+    # env_file: .env
+    ports:
+      - "$EUREKA_EXTERNAL_PORT:8761"
+    environment:
+      WAIT_HOSTS: config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+    networks:
+      - webnet
+
+  config:
+    image: localhost:5000/config
+    hostname: config
+    build:
+      context: .
+      dockerfile: config-server/Dockerfile
+    # env_file: .env
+    volumes:
+      - ~/config:/config
+    ports:
+      - "8888:8888"
+    networks:
+      - webnet
+
+  auth:
+    image: localhost:5000/auth
+    hostname: auth
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    # env_file: .env
+    environment:
+      WAIT_HOSTS: mysql-inner:3306, mongo:27017, redis:6379, eureka:8761, config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+    ports:
+      - "8080:8080"
+    networks:
+      - webnet
+
+  gateway:
+    image: localhost:5000/gateway
+    hostname: gateway
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    # env_file: .env
+    environment:
+      WAIT_HOSTS: eureka:8761, config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+    ports:
+      - "$GATEWAY_EXTERNAL_PORT:8079"
+    networks:
+      - webnet
+
+  billing:
+    image: localhost:5000/billing
+    hostname: billing
+    build:
+      context: .
+      dockerfile: billing/Dockerfile
+    # env_file: .env
+    environment:
+      WAIT_HOSTS: mysql-inner:3306, eureka:8761, config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+    ports:
+      - "8083:8083"
+    networks:
+      - webnet
+
+  arrangement:
+    image: localhost:5000/arrangement
+    hostname: arrangement
+    build:
+      context: .
+      dockerfile: arrangement/Dockerfile
+    # env_file: .env
+    environment:
+      WAIT_HOSTS: mysql-inner:3306, eureka:8761, config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+      ES_REST_HOST: "${ES_REST_HOST}"
+      ES_COMM_HOST: "${ES_COMM_HOST}"
+    ports:
+      - "8082:8082"
+    networks:
+      - webnet
+
+  warehouse:
+    image: localhost:5000/warehouse
+    hostname: warehouse
+    build:
+      context: .
+      dockerfile: warehouse/Dockerfile
+    # env_file: .env
+    environment:
+      WAIT_HOSTS: mysql-inner:3306, eureka:8761, config:8888
+      WAIT_HOSTS_TIMEOUT: 300
+    ports:
+      - "8084:8084"
+    networks:
+      - webnet
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    hostname: visualizer
+    # env_file: .env
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "$VISUALIZER_PORT:8080"
+    networks:
+      - webnet
+
+  portainer:
+    image: portainer/portainer
+    hostname: portainer
+    # env_file: .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "$PORTAINER_PORT_1:8000"
+      - "$PORTAINER_PORT_2:9000"
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    external: true

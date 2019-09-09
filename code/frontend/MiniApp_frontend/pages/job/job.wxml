@@ -7,19 +7,26 @@
       </view>
     </i-cell>
   </view>
+  <i-tabs current="{{ current_tab }}" bind:change="handleChangeTab">
+    <block wx:for="{{ tabs }}" wx:key="index">
+      <picker bind:change="{{ item.func }}" value="{{item.list.length}}" range="{{item.list}}">
+        <i-tab key="{{ item.key }}" title="{{ item.title }}"></i-tab>
+      </picker>
+    </block>
+  </i-tabs>
   <i-cell-group>
     <i-cell 
       wx:for="{{jobs}}"
       wx:key="{{index}}"
       is-link 
-      url="/pages/job_detail/job_detail?id={{item.id}}" 
+      url="/pages/job_detail/job_detail?identifier={{item.identifier}}" 
       title="{{item.name}}" 
-      label="{{item.detail}}"
+      label="{{item.detail}}......"
     >
       <view slot="icon">
         <i-avatar size="small">{{item.name}}</i-avatar>
       </view>
-      <view slot="footer">
+      <view>
         <i-tag
           wx:for="{{item.tags}}"
           wx:key="{{index}}"
@@ -33,7 +40,15 @@
           {{item.name}}
         </i-tag>
       </view>
+      <view wx:if="{{item.score}}" class="rank">
+        <text class="rank-font">匹配程度:{{item.score}}%</text>
+      </view>
     </i-cell>
   </i-cell-group>
+  <i-spin size="large" fix wx:if="{{ isSpinning }}"></i-spin>
 </view>
+<i-load-more loading="{{ isLoading }}" />
+<i-modal visible="{{back_to_main}}" title="请注册" actions="{{ actions }}" bind:click="handleClick">
+  <view>您还没有注册，无法访问当前页面</view>
+</i-modal>
 <i-toast id="toast" />

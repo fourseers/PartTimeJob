@@ -11,13 +11,14 @@ import AddCompany from '../views/AddCompany.vue'
 import SalaryStat from '../views/SalaryStat.vue'
 import CheckinStat from '../views/CheckinStat.vue'
 import ScreenCV from '../views/ScreenCV.vue'
-import PostStat from '../views/PostStat.vue'
 import ShowJobs from '../views/ShowJobs.vue'
 import ShopDetail from '../views/ShopDetail.vue'
 import AdminLogin from '../views/AdminLogin.vue'
 import BanUser from '../views/BanUser.vue'
 import Logout from '../views/Logout.vue'
 
+import AskForLeave from '../views/AskForLeave.vue'
+import PaymentSuccess from '../views/PaymentSuccess'
 const  routes =[
     {
         path: '/',
@@ -96,12 +97,6 @@ const  routes =[
 
     ,
     {
-        path: '/poststat',
-        name: 'poststat',
-        component:PostStat
-    }
-    ,
-    {
         path: '/screenCV',
         name: 'screenCV',
         component:ScreenCV
@@ -124,8 +119,18 @@ const  routes =[
         name: 'logout',
         component:Logout
     }
-
-
+    ,
+    {
+        path: '/askforleave',
+        name: 'askforleave',
+        component:AskForLeave
+    }
+    ,
+    {
+        path: '/payment_success',
+        name: ':paymentsuccess',
+        component:PaymentSuccess
+    }
 
 
 ]

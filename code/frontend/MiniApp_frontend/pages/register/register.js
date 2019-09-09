@@ -1,8 +1,10 @@
 // pages/register/register.js
 const { $Toast } = require("../../dist/base/index");
+const { $Message } = require('../../dist/base/index');
 const app = getApp();
 import request from "../../api/request.js"
 import { host, register, register_data } from "../../api/url.js"
+import { CITY_LIST } from "../../locale/citydata.js"
 
 Page({
   /*
@@ -62,7 +64,46 @@ Page({
     education: "",
     education_list: [],
     isLoading: false,
-    city_code: ""
+    city_code: "",
+
+    show_modal: false,
+    actions: [
+      {
+        name: "立即修改",
+      },
+      {
+        name: "稍后再改",
+      }
+    ]
+  },
+
+  onReady() {
+    var req = new request();
+    req.getRequest(host + register_data, null).then(res => {
+      if (res.statusCode === 200) {
+        // 给后端返回的tags的列表中的每个json都添加isChosen字段
+        var tags = res.data.data.tags;
+        for (var index in tags) {
+          tags[index].isChosen = false;
+        }
+        for (var i in CITY_LIST) {
+          
+        }
+        // 利用后端返回的tags和education来设置前端js的default
+        this.setData({
+          education_list: res.data.data.education,
+          tags: tags,
+          country: app.globalData.userInfo.country,
+          gender: app.globalData.userInfo.gender
+        })
+      }
+      else if (res.statusCode === 400) {
+        // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
   },
 
   /* 
@@ -71,30 +112,6 @@ Page({
    */
   onShow(){
     //console.log(app.globalData.userInfo);
-    var req = new request();
-    req.getRequest(host + register_data, null).then(res => {
-      if(res.statusCode === 200){
-        // 给后端返回的tags的列表中的每个json都添加isChosen字段
-        var tags = res.data.data.tags;
-        for (var index in tags) {
-          tags[index].isChosen = false;
-        }
-        // 利用后端返回的tags和education来设置前端js的default
-        this.setData({
-          education_list: res.data.data.education,
-          tags: tags,
-          city: app.globalData.userInfo.city,
-          country: app.globalData.userInfo.country,
-          gender: app.globalData.userInfo.gender
-        })
-      }
-      else if (res.statusCode === 400){
-        // TODO: 添加请求失败的处理
-      }
-    }).catch(err => {
-      // console.log(err);
-      // TODO: 添加请求失败的处理
-    });
 
     if (app.globalData.city !== null) {
       console.log(app.globalData.city);
@@ -104,6 +121,20 @@ Page({
       })
       app.globalData.city = null;
       app.globalData.code = null;
+    }
+  },
+
+  handleTags(e) {
+    //console.log(e)
+    const index = e.detail.index;
+    if (index === 0) {
+      wx.redirectTo({
+        url: '/pages/user_inform/user_inform',
+      })
+    } else if (index === 1) {
+      wx.navigateBack({
+
+      })
     }
   },
 
@@ -303,7 +334,7 @@ Page({
             "identity": this.data.identity,
             "phone": this.data.phone_number,
             "country": this.data.country,
-            "city": this.data.city,
+            "city": this.data.city_code,
             "education": this.data.education,
             "token": res.code,
             "tags": tagIDs
@@ -322,16 +353,16 @@ Page({
               app.globalData.access_token = res.data.data.access_token;
               app.globalData.expires_in = res.data.data.expires_in;
               app.globalData.refresh_token = res.data.data.refresh_token;
-              wx.navigateBack({
-                
+              this.setData({
+                show_modal: true,
               })
             }
             else {
               app.globalData.is_registered = false;
-              this.setData({
-                isLoading: false
-              });
             }
+            this.setData({
+              isLoading: false
+            });
           }).catch(err => {
             console.log(err)
             this.setData({

@@ -2,6 +2,8 @@ insert into industry (industry_name) values ('IT');
 insert into merchant_user (username, password) values ('Tim Cook', 'some password');
 insert into wechat_user (city, country, education, gender, identity, name, openid, phone)
     values ('Shanghai', 'China', '高中毕业', true, '310110123412341234', 'CYJ', 'fakeOpenid', '13812345678');
+insert into wechat_user (city, country, education, gender, identity, name, openid, phone)
+values ('Shanghai', 'China', '高中毕业', true, '310110123412345678', 'SJH', 'fakeOpenid2', '13812348765');
 insert into company (company_name, boss_user_id) values ('Apple', 1);
 update merchant_user set company_company_id = 1 where username = 'Tim Cook';
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values
@@ -10,7 +12,7 @@ insert into shop (address, brand, city, industry_industry_id, introduction, lati
 ('310101', 'Apple', '310100', 1, 'Make Apple great again', 30, 120, '310000', 'Apple iamp II', 1);
 insert into merchant_user (username, password) values ('葛越', 'another password');
 update merchant_user set company_company_id = 1 where username = '葛越';
-insert into merchant_user (username, password) values ('罗永浩', 'Chuizi nb');
+insert into merchant_user (username, password) values ( '罗永浩', 'Chuizi nb');
 insert into company (company_name, boss_user_id) values ('锤子', 3);
 update merchant_user set company_company_id = 2 where username = '罗永浩';
 insert into shop (address, brand, city, industry_industry_id, introduction, latitude, longitude, province, shop_name, company_company_id) values

@@ -78,13 +78,13 @@
                   },
                   error => {
                     console.log(error.response);
-                    if (error.response) {
-                      if (error.response.data.status === 400) {
-                        this.$Message.error('用户名或者密码错误');
-                      }
-                      else {
+                      if (error.response) {
+                    //   if (error.response.data.status === 400) {
+                     //   this.$Message.error('用户名或者密码错误');
+                     // }
+                     // else {
                         this.$Message.error('登录失败');
-                      }
+                      //}
                     }
                     reject(error.response.data.status);
                   }

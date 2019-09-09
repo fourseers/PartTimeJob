@@ -2,7 +2,7 @@
 const { $Toast } = require("../../dist/base/index");
 const app = getApp();
 import request from "../../api/request.js"
-import { host, register_data, cv_curd } from "../../api/url.js"
+import { host, register_data, cv_curd, user_info } from "../../api/url.js"
 var job_id;
 
 Page({
@@ -50,6 +50,25 @@ Page({
       }
       else if (res.statusCode === 400) {
         // TODO: 添加请求失败的处理
+      }
+    }).catch(err => {
+      // console.log(err);
+      // TODO: 添加请求失败的处理
+    });
+
+    req.getRequest(host + user_info, null, app.globalData.access_token).then(res => {
+      if (res.statusCode === 200) {
+        var info = res.data.data.info;
+        this.setData({
+          name: info.name,
+          gender: info.gender,
+          phone_number: info.phone,
+          identity: info.identity,
+          education: info.education
+        })
+      }
+      if (res.statusCode === 400) {
+        // TODO: 添加请求不返回200的处理
       }
     }).catch(err => {
       // console.log(err);
@@ -290,7 +309,7 @@ Page({
     var post_data = {
       education: this.data.education,
       experiences: this.data.experience,
-      gender: this.data.gender,
+      gender: !this.data.gender,
       height: this.data.height,
       identity: this.data.identity,
       name: this.data.name,

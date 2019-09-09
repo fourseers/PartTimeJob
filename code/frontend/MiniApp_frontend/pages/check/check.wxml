@@ -14,7 +14,7 @@
     <i-cell
       wx:for="{{checks}}"
       wx:key="{{index}}"
-      url="/pages/check_inform/check_inform?id={{item.job_id}}" 
+      url="/pages/check_inform/check_inform?identifier={{item.identifier}}&id={{item.job_id}}" 
       title="{{item.job_name}}-{{item.shop_name}}" 
       is-link
     >

@@ -128,18 +128,17 @@ Page({
         latitude: this.data.latitude,
         longitude: this.data.longitude,
         entryOffset: this.data.jobCount,
-        /*
         daysToCome: this.data.daysToCome,
         geoRange: this.data.geoRange,
         maxSalary: this.data.maxSalary,
         minSalary: this.data.minSalary,
         tag: this.data.tag
-        */
       }, app.globalData.access_token).then(res => {
       if(res.statusCode === 401){
         //console.log("user should login!");
       }
       if(res.statusCode === 200){
+        console.log(res)
         var job_list = res.data.data.content;
         var new_jobs = this.data.jobs;
         var formal_length = new_jobs.length;
@@ -149,6 +148,9 @@ Page({
           new_job.name = job_list[i].job_name;
           new_job.detail = job_list[i].job_detail.slice(0, 50);
           new_job.identifier = job_list[i].identifier;
+          if (job_list[i].score) {
+            new_job.score = (job_list[i].score * 100).toFixed(2)
+          }
           
           var temp_tags = [];
           if (job_list[i].tags) {
@@ -254,7 +256,7 @@ Page({
   },
 
   changeSalary(e) {
-    const max = ["", 50, 200, null];
+    const max = ["", 50, 200, 999999999];
     const min = ["", 0, 50, 200];
     this.setData({
       current_tab: "",

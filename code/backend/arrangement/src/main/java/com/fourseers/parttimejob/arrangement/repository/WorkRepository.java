@@ -57,9 +57,9 @@ public interface WorkRepository extends JpaRepository<Work, Integer> {
     List<Work> findAllByWorker(WechatUser wechatUser);
 
     @Query("select " +
-            "sum(case when work.checkin > work.expectedCheckin then 1 else 0 end) as lateRate, " +
-            "sum(case when work.checkout > work.expectedCheckout then 1 else 0 end) as leaveEarlyRate, " +
-            "1 as attendRate " +
+            "sum(case when work.checkin > work.expectedCheckin or work.checkin is null then 1 else 0 end) as lateRate, " +
+            "sum(case when work.checkout < work.expectedCheckout or work.checkout is null then 1 else 0 end) as leaveEarlyRate, " +
+            "sum(case when work.checkin is not null and work.checkout is not null then 1 else 0 end) as attendRate " +
             "from Work work " +
             "where work.job.shop.shopId = ?1 and work.workDate >= ?2 and work.workDate <= ?3")
     WorkStatusProjection getWorkStatus(Integer shopId, Date from, Date to);

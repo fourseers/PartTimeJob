@@ -55,6 +55,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userCredential.setPassword(passwordEncoder.encode(WECHAT_PASSWD_PLACEHOLDER));
             userCredential.setRole(ROLE_USER);
             userCredential.setRid(wechatUser.getUserId());
+            userCredential.setBanned(false);
         } else {
             // merchant user
             MerchantUser merchantUser = merchantUserService.findByUsername(s);
@@ -64,6 +65,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             userCredential.setRole(ROLE_MERCHANT);
             userCredential.setUsername(merchantUser.getUsername());
             userCredential.setPassword(passwordEncoder.encode(merchantUser.getPassword()));
+            userCredential.setBanned(merchantUser.getBanned());
         }
 
         return new SecurityUser(userCredential);

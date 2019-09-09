@@ -19,6 +19,8 @@ public class UserCredential implements Serializable {
 
     private Role role;
 
+    private Boolean banned;
+
     public String getUsername() {
         return username;
     }
@@ -49,5 +51,13 @@ public class UserCredential implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getBanned() {
+        return banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
     }
 }

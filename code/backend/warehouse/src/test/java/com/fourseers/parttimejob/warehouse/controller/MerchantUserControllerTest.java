@@ -8,6 +8,7 @@ import com.fourseers.parttimejob.warehouse.projection.MerchantUserInfoProjection
 import com.fourseers.parttimejob.warehouse.service.CompanyService;
 import com.fourseers.parttimejob.warehouse.service.MerchantUserService;
 import com.fourseers.parttimejob.warehouse.service.ShopService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -43,10 +43,20 @@ public class MerchantUserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Before
+    public void before() throws Exception {
+        // spawn admin use here
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setUsername("admin");
+        merchantUser.setPassword("admin");
+        merchantUser.setBanned(false);
+        merchantUserService.save(merchantUser);
+    }
+
     @Test
     public void getUserSuccess() throws Exception {
         String username = "Tim Cook";
-        String admin = "God";
+        String admin = "admin";
 
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUsername(username);
@@ -75,7 +85,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void getUserNotExist() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MvcResult result = mockMvc.perform(get("/admin/merchant-user")
                 .header("x-internal-token", admin)
@@ -90,7 +100,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void getOnePageUsersSuccess() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MerchantUser merchantUser1 = new MerchantUser();
         merchantUser1.setUsername("Tim Cook");
@@ -117,7 +127,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void getUsersFromLastPageSuccess() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         for (int i = 0; i < 95; i++) {
             MerchantUser merchantUser = new MerchantUser();
@@ -144,7 +154,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void getOnePageUsersNotExist() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MvcResult result = mockMvc.perform(get("/admin/merchant-users")
                 .header("x-internal-token", admin)
@@ -161,7 +171,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void banUserSuccess() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUsername("Evil");
@@ -186,7 +196,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void unbanUserSuccess() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUsername("Not evil");
@@ -212,7 +222,7 @@ public class MerchantUserControllerTest {
 
     @Test
     public void banUserNotExist() throws Exception {
-        String admin = "God";
+        String admin = "admin";
 
         MvcResult result = mockMvc.perform(put("/admin/merchant-user/ban")
                 .header("x-internal-token", admin)

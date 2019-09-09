@@ -1,5 +1,6 @@
 package com.fourseers.parttimejob.warehouse.controller;
 
+import com.fourseers.parttimejob.common.entity.MerchantUser;
 import com.fourseers.parttimejob.common.util.Response;
 import com.fourseers.parttimejob.common.util.ResponseBuilder;
 import com.fourseers.parttimejob.warehouse.projection.MerchantUserInfoProjection;
@@ -44,6 +45,7 @@ public class MerchantUserController {
     @ApiOperation(value = "Get merchant users by page")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "success"),
+            @ApiResponse(code = 400, message = "You are not admin.")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "x-access-token", value = "Authorization token",
@@ -54,9 +56,13 @@ public class MerchantUserController {
             @ApiParam(value = "This param tells the server which page to query, starting from 0, with each page having 10 items.")
             @RequestParam(value = "page_count") Integer pageCount,
             @ApiParam(hidden = true) @RequestHeader("x-internal-token") String username) {
-        Page<MerchantUserInfoProjection> users = merchantUserService.findPageBrief(pageCount, PAGE_SIZE);
+        MerchantUser merchantUser = merchantUserService.findByUsername(username);
 
-        return ResponseBuilder.build(HttpStatus.OK, users, "success");
+        if(merchantUser.getUsername().equals("admin")) {
+            Page<MerchantUserInfoProjection> users = merchantUserService.findPageBrief(pageCount, PAGE_SIZE);
+            return ResponseBuilder.build(HttpStatus.OK, users, "success");
+        } else
+            return ResponseBuilder.build(HttpStatus.FORBIDDEN, null, "You are not admin.");
     }
 
     @ApiOperation(value = "Ban one merchant user")
